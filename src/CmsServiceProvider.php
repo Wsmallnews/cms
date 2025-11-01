@@ -8,8 +8,9 @@ use Filament\Support\Assets\Css;
 use Filament\Support\Assets\Js;
 use Filament\Support\Facades\FilamentAsset;
 use Filament\Support\Facades\FilamentIcon;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Filesystem\Filesystem;
-use Livewire\Features\SupportTesting\Testable;
+use Livewire\Livewire;
 use Spatie\LaravelPackageTools\Commands\InstallCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
@@ -18,17 +19,12 @@ use Wsmallnews\Cms\Testing\TestsCms;
 
 class CmsServiceProvider extends PackageServiceProvider
 {
-    public static string $name = 'cms';
+    public static string $name = 'sn-cms';
 
-    public static string $viewNamespace = 'cms';
+    public static string $viewNamespace = 'sn-cms';
 
     public function configurePackage(Package $package): void
     {
-        /*
-         * This class is a Package Service Provider
-         *
-         * More info: https://github.com/spatie/laravel-package-tools
-         */
         $package->name(static::$name)
             ->hasCommands($this->getCommands())
             ->hasInstallCommand(function (InstallCommand $command) {
@@ -47,6 +43,7 @@ class CmsServiceProvider extends PackageServiceProvider
 
         if (file_exists($package->basePath('/../database/migrations'))) {
             $package->hasMigrations($this->getMigrations());
+            $package->runsMigrations();
         }
 
         if (file_exists($package->basePath('/../resources/lang'))) {
@@ -62,6 +59,12 @@ class CmsServiceProvider extends PackageServiceProvider
 
     public function packageBooted(): void
     {
+        // / 注册模型别名
+        Relation::enforceMorphMap([
+            // 'sn_category' => CategoryModel::class,
+        ]);
+
+
         // Asset Registration
         FilamentAsset::register(
             $this->getAssets(),
@@ -84,9 +87,6 @@ class CmsServiceProvider extends PackageServiceProvider
                 ], 'cms-stubs');
             }
         }
-
-        // Testing
-        Testable::mixin(new TestsCms);
     }
 
     protected function getAssetPackageName(): ?string
@@ -101,8 +101,8 @@ class CmsServiceProvider extends PackageServiceProvider
     {
         return [
             // AlpineComponent::make('cms', __DIR__ . '/../resources/dist/components/cms.js'),
-            Css::make('cms-styles', __DIR__ . '/../resources/dist/cms.css'),
-            Js::make('cms-scripts', __DIR__ . '/../resources/dist/cms.js'),
+            // Css::make('cms-styles', __DIR__ . '/../resources/dist/cms.css'),
+            // Js::make('cms-scripts', __DIR__ . '/../resources/dist/cms.js'),
         ];
     }
 
@@ -146,7 +146,7 @@ class CmsServiceProvider extends PackageServiceProvider
     protected function getMigrations(): array
     {
         return [
-            'create_cms_table',
+            // 'create_cms_table',
         ];
     }
 }
