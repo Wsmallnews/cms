@@ -7,12 +7,10 @@ use App\Enums\Navigations\Type as NavigationTypeEnum;
 use App\Features\NavigationType;
 use App\Models\Navigation as NavigationModel;
 use BezhanSalleh\FilamentShield\Traits\HasPageShield;
-use Filament\Facades\Filament;
 use Filament\Forms;
 use Filament\Infolists;
 use Filament\Schemas;
 use Filament\Schemas\Components\Utilities\Get;
-use Kalnoy\Nestedset\QueryBuilder;
 use UnitEnum;
 use Wsmallnews\FilamentNestedset\Pages\NestedsetPage;
 
@@ -55,13 +53,11 @@ class Navigation extends NestedsetPage
         return [
             Infolists\Components\TextEntry::make('description')
                 ->label('描述')
-                ->visible(fn($state): bool => $state ? true : false),
+                ->visible(fn ($state): bool => $state ? true : false),
             Infolists\Components\IconEntry::make('status')
                 ->label('状态'),
         ];
     }
-
-
 
     protected function schema(array $arguments): array
     {
@@ -89,7 +85,7 @@ class Navigation extends NestedsetPage
                 }),
             Forms\Components\TextInput::make('slug')
                 ->label('导航标识')
-                ->unique(ignorable: fn(?NavigationModel $record): ?NavigationModel => $record)
+                ->unique(ignorable: fn (?NavigationModel $record): ?NavigationModel => $record)
                 ->required()
                 ->maxLength(255)
                 ->visible(function (Get $get) {
@@ -167,7 +163,7 @@ class Navigation extends NestedsetPage
                                 ->helperText('路由参数, 没有则不设置')
                                 ->reorderable()
                                 ->required()
-                                ->visible(fn(Get $get): bool => $get('has_routes')),
+                                ->visible(fn (Get $get): bool => $get('has_routes')),
                         ])
                         ->columns(1)
                         ->columnSpan(1),
@@ -203,11 +199,12 @@ class Navigation extends NestedsetPage
                 ->visible(function (Get $get) {
                     return $get('type') == NavigationTypeEnum::Content;
                 })
-                ->afterStateUpdated(fn (Forms\Components\Select $component, $state) => $state && $component
-                    ->getContainer()
-                    ->getComponent('dynamicExtrasFields')       // 当 dynamicExtrasFields visible = false, 也就是不可见时， 这里获取的是 null
-                    ?->getChildSchema()
-                    ->fill()
+                ->afterStateUpdated(
+                    fn (Forms\Components\Select $component, $state) => $state && $component
+                        ->getContainer()
+                        ->getComponent('dynamicExtrasFields')       // 当 dynamicExtrasFields visible = false, 也就是不可见时， 这里获取的是 null
+                        ?->getChildSchema()
+                        ->fill()
                 ),
 
             Schemas\Components\Fieldset::make('extras')
@@ -228,7 +225,7 @@ class Navigation extends NestedsetPage
                 ->inline()
                 ->options(Status::class)
                 ->default(Status::Normal)
-                ->required()
+                ->required(),
         ];
     }
 }

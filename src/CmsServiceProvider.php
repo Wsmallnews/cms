@@ -10,12 +10,10 @@ use Filament\Support\Facades\FilamentAsset;
 use Filament\Support\Facades\FilamentIcon;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Filesystem\Filesystem;
-use Livewire\Livewire;
 use Spatie\LaravelPackageTools\Commands\InstallCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 use Wsmallnews\Cms\Commands\CmsCommand;
-use Wsmallnews\Cms\Testing\TestsCms;
 
 class CmsServiceProvider extends PackageServiceProvider
 {
@@ -63,7 +61,6 @@ class CmsServiceProvider extends PackageServiceProvider
         Relation::enforceMorphMap([
             // 'sn_category' => CategoryModel::class,
         ]);
-
 
         // Asset Registration
         FilamentAsset::register(

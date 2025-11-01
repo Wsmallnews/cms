@@ -2,28 +2,28 @@
 
 namespace Wsmallnews\Cms\Models;
 
-use Wsmallnews\Cms\Enums\NavigationStatus as NavigationStatusEnum;
-use Wsmallnews\Cms\Enums\NavigationType as NavigationTypeEnum;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
+use Kalnoy\Nestedset\NodeTrait;
+use Spatie\Activitylog\LogOptions;
 // use RalphJSmit\Laravel\SEO\Schema\ArticleSchema;
 // use RalphJSmit\Laravel\SEO\SchemaCollection;
 // use RalphJSmit\Laravel\SEO\Support\HasSEO;
 // use RalphJSmit\Laravel\SEO\Support\SEOData;
-use Kalnoy\Nestedset\NodeTrait;
-use Kalnoy\Nestedset\NestedSet;
-use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Wsmallnews\Cms\Enums\NavigationStatus as NavigationStatusEnum;
+use Wsmallnews\Cms\Enums\NavigationType as NavigationTypeEnum;
 
 class Navigation extends Model implements HasMedia
 {
-    use NodeTrait;
     use InteractsWithMedia;
     // use HasSEO;
     use LogsActivity;
+
+    use NodeTrait;
 
     protected $table = 'navigations';
 
@@ -33,28 +33,24 @@ class Navigation extends Model implements HasMedia
         'options' => 'array',
     ];
 
-
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
             ->logAll()
             ->logOnlyDirty()
             ->dontLogIfAttributesChangedOnly(['order_column', 'updated_at'])        // 如果只更新排序，则忽略不记录日志
-            ->setDescriptionForEvent(fn(string $eventName) => "This model has been {$eventName}");
+            ->setDescriptionForEvent(fn (string $eventName) => "This model has been {$eventName}");
     }
-
 
     public function getScopeAttributes(): array
     {
         return ['team_id'];
     }
 
-
     public function getRouteKeyName()
     {
         return 'slug';
     }
-
 
     // public function getDynamicSEOData(): SEOData
     // {
@@ -64,7 +60,6 @@ class Navigation extends Model implements HasMedia
     //         image: $this->getFirstMediaUrl('banner')
     //     );
     // }
-
 
     public function resolveNavigation($navigation)
     {
@@ -101,18 +96,15 @@ class Navigation extends Model implements HasMedia
         return $navigation;
     }
 
-
     public function scopeNormal($query)
     {
         return $query->where('status', NavigationStatus::Normal);
     }
 
-
     public function scopeHidden($query)
     {
         return $query->where('status', NavigationStatus::Hidden);
     }
-
 
     public function content(): MorphOne
     {

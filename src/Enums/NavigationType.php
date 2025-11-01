@@ -7,7 +7,6 @@ use Wsmallnews\Support\Enums\Traits\EnumHelper;
 
 enum NavigationType: string implements HasLabel
 {
-
     use EnumHelper;
 
     case Child = 'child';

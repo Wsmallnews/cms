@@ -29,12 +29,12 @@ final class NavigationTypeResource extends BaseResource
 
     public static function getScopeType(): string
     {
-        return static::getCustomProperty('scopeType') ?? parent::getScopeType();
+        return self::getCustomProperty('scopeType') ?? parent::getScopeType();
     }
 
     public static function getScopeId(): int
     {
-        return static::getCustomProperty('scopeId') ?? parent::getScopeId();
+        return self::getCustomProperty('scopeId') ?? parent::getScopeId();
     }
 
     public static function getEssentialsPlugin(): ?CmsPlugin

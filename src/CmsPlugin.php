@@ -49,7 +49,6 @@ class CmsPlugin implements Plugin
         return $plugin;
     }
 
-
     /**
      * 资源默认值
      */
