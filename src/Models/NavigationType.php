@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Wsmallnews\Cms\Enums\NavigationTypeStatus;
+use Wsmallnews\Cms\Support\Utils;
 use Wsmallnews\Support\Models\SupportModel;
 
 class NavigationType extends SupportModel
@@ -38,6 +39,6 @@ class NavigationType extends SupportModel
 
     public function team(): BelongsTo
     {
-        return $this->belongsTo(Team::class);
+        return $this->belongsTo(Utils::getTenantModel());
     }
 }

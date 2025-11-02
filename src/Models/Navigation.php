@@ -6,45 +6,33 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Kalnoy\Nestedset\NodeTrait;
-use Spatie\Activitylog\LogOptions;
-// use RalphJSmit\Laravel\SEO\Schema\ArticleSchema;
-// use RalphJSmit\Laravel\SEO\SchemaCollection;
-// use RalphJSmit\Laravel\SEO\Support\HasSEO;
-// use RalphJSmit\Laravel\SEO\Support\SEOData;
-use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Wsmallnews\Cms\Enums\NavigationStatus as NavigationStatusEnum;
 use Wsmallnews\Cms\Enums\NavigationType as NavigationTypeEnum;
+use Wsmallnews\Cms\Support\Utils;
 
 class Navigation extends Model implements HasMedia
 {
     use InteractsWithMedia;
-    // use HasSEO;
-    use LogsActivity;
-
     use NodeTrait;
 
-    protected $table = 'navigations';
+    protected $table = 'sn_navigations';
 
     protected $casts = [
         'type' => NavigationTypeEnum::class,
-        'status' => NavigationStatusEnum::class,
         'options' => 'array',
+        'status' => NavigationStatusEnum::class,
     ];
-
-    public function getActivitylogOptions(): LogOptions
-    {
-        return LogOptions::defaults()
-            ->logAll()
-            ->logOnlyDirty()
-            ->dontLogIfAttributesChangedOnly(['order_column', 'updated_at'])        // 如果只更新排序，则忽略不记录日志
-            ->setDescriptionForEvent(fn (string $eventName) => "This model has been {$eventName}");
-    }
 
     public function getScopeAttributes(): array
     {
-        return ['team_id'];
+        $scopes = ['scope_type', 'scope_id', 'type_id'];
+        if (Utils::isTenancyEnabled()) {        // 多租户 时，自动增加 租户相关参数
+            $scopes[] = 'team_id';
+        }
+
+        return $scopes;
     }
 
     public function getRouteKeyName()
@@ -52,14 +40,6 @@ class Navigation extends Model implements HasMedia
         return 'slug';
     }
 
-    // public function getDynamicSEOData(): SEOData
-    // {
-    //     return new SEOData(
-    //         title: $this->name,
-    //         description: $this->description,
-    //         image: $this->getFirstMediaUrl('banner')
-    //     );
-    // }
 
     public function resolveNavigation($navigation)
     {
@@ -98,12 +78,12 @@ class Navigation extends Model implements HasMedia
 
     public function scopeNormal($query)
     {
-        return $query->where('status', NavigationStatus::Normal);
+        return $query->where('status', NavigationStatusEnum::Normal);
     }
 
     public function scopeHidden($query)
     {
-        return $query->where('status', NavigationStatus::Hidden);
+        return $query->where('status', NavigationStatusEnum::Hidden);
     }
 
     public function content(): MorphOne
@@ -113,6 +93,6 @@ class Navigation extends Model implements HasMedia
 
     public function team(): BelongsTo
     {
-        return $this->belongsTo(Team::class);
+        return $this->belongsTo(Utils::getTenantModel());
     }
 }

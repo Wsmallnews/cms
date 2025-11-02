@@ -10,10 +10,15 @@ use Filament\Support\Facades\FilamentAsset;
 use Filament\Support\Facades\FilamentIcon;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Filesystem\Filesystem;
+use Livewire\Livewire;
 use Spatie\LaravelPackageTools\Commands\InstallCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 use Wsmallnews\Cms\Commands\CmsCommand;
+use Wsmallnews\Cms\Filament\Pages\Navigation\Components\BaseNavigation;
+use Wsmallnews\Cms\Models\Navigation as NavigationModel;
+use Wsmallnews\Cms\Models\NavigationType as NavigationTypeModel;
+use Wsmallnews\Cms\Models\Content as ContentModel;
 
 class CmsServiceProvider extends PackageServiceProvider
 {
@@ -53,13 +58,21 @@ class CmsServiceProvider extends PackageServiceProvider
         }
     }
 
-    public function packageRegistered(): void {}
+    public function packageRegistered(): void 
+    {
+        // 注册内容类型注册器
+        $this->app->singleton(ContentRegistry::class, function (): ContentRegistry {
+            return new ContentRegistry;
+        });
+    }
 
     public function packageBooted(): void
     {
         // / 注册模型别名
         Relation::enforceMorphMap([
-            // 'sn_category' => CategoryModel::class,
+            'sn_navigation' => NavigationModel::class,
+            'sn_navigation_type' => NavigationTypeModel::class,
+            'sn_content' => ContentModel::class,
         ]);
 
         // Asset Registration
@@ -84,6 +97,9 @@ class CmsServiceProvider extends PackageServiceProvider
                 ], 'cms-stubs');
             }
         }
+
+        // 注册组件
+        Livewire::component('sn-fi-navigation', BaseNavigation::class);
     }
 
     protected function getAssetPackageName(): ?string
@@ -143,7 +159,9 @@ class CmsServiceProvider extends PackageServiceProvider
     protected function getMigrations(): array
     {
         return [
-            // 'create_cms_table',
+            '2025_11_01_183836_create_sn_navigation_types_table',
+            '2025_11_01_211931_create_sn_navigations_table',
+            '2025_11_01_213119_create_sn_contents_table'
         ];
     }
 }

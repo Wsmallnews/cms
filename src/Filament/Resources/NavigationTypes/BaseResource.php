@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 use UnitEnum;
 use Wsmallnews\Cms\Filament\Resources\NavigationTypes\Schemas\NavigationTypeForm;
 use Wsmallnews\Cms\Filament\Resources\NavigationTypes\Tables\NavigationTypesTable;
-// use Wsmallnews\Cms\Filament\Widgets\Category as CategoryWidgets;
+use Wsmallnews\Cms\Filament\Pages\Navigation\Widgets\NavigationManage as NavigationManageWidgets;
 use Wsmallnews\Cms\Models\NavigationType;
 use Wsmallnews\Support\Filament\Resources\Concerns\Scopeable;
 
@@ -53,7 +53,7 @@ abstract class BaseResource extends Resource
     public static function getWidgets(): array
     {
         return [
-            // NavigationWidgets::class,
+            NavigationManageWidgets::class,
         ];
     }
 

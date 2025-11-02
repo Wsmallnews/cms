@@ -1,65 +1,19 @@
 <?php
 
-namespace App\Filament\Pages;
+namespace Wsmallnews\Cms\Filament\Pages\Navigation\Schemas;
 
-use App\Enums\Navigations\Status;
-use App\Enums\Navigations\Type as NavigationTypeEnum;
-use App\Features\NavigationType;
-use App\Models\Navigation as NavigationModel;
-use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Filament\Forms;
-use Filament\Infolists;
 use Filament\Schemas;
 use Filament\Schemas\Components\Utilities\Get;
-use UnitEnum;
-use Wsmallnews\FilamentNestedset\Pages\NestedsetPage;
+use Guava\IconPicker\Forms\Components\IconPicker;
+use Wsmallnews\Cms\Enums\NavigationStatus;
+use Wsmallnews\Cms\Enums\NavigationType as NavigationTypeEnum;
+use Wsmallnews\Cms\Facades\ContentRegistry;
+use Wsmallnews\Cms\Models\Navigation as NavigationModel;
 
-class Navigation extends NestedsetPage
+class NavigationForm
 {
-    use HasPageShield;
-
-    public string $emptyLabel = '导航数据为空';
-
-    protected static ?string $model = NavigationModel::class;
-
-    protected static ?string $modelLabel = '导航管理';
-
-    protected static ?string $title = '导航管理';
-
-    protected static ?string $navigationLabel = '导航管理';
-
-    protected static string | UnitEnum | null $navigationGroup = '网站管理';
-
-    protected static ?string $slug = 'navigations';
-
-    protected static string $recordTitleAttribute = 'name';
-
-    protected static ?string $pluralModelLabel = '导航管理';
-
-    protected static ?int $navigationSort = 1;
-
-    public function createSchema($arguments): array
-    {
-        return $this->schema($arguments);
-    }
-
-    public function editSchema($arguments): array
-    {
-        return $this->schema($arguments);
-    }
-
-    public function infolistSchema(): array
-    {
-        return [
-            Infolists\Components\TextEntry::make('description')
-                ->label('描述')
-                ->visible(fn ($state): bool => $state ? true : false),
-            Infolists\Components\IconEntry::make('status')
-                ->label('状态'),
-        ];
-    }
-
-    protected function schema(array $arguments): array
+    public static function forms(array $arguments = []): array
     {
         return [
             Forms\Components\Select::make('type')
@@ -74,6 +28,52 @@ class Navigation extends NestedsetPage
                 ->required(),
             Forms\Components\Textarea::make('description')->label('描述'),
 
+            Forms\Components\ToggleButtons::make('options.icon_type')
+                ->label('导航图标')
+                ->options([
+                    'none' => '无图标',
+                    'icon' => 'icon图标',
+                    'image' => '图片图标',
+                ])
+                ->default('none')
+                ->inline(),
+            Schemas\Components\FieldSet::make('icons')
+                ->label('icon 图标')
+                ->schema([
+                    IconPicker::make('options.icon')
+                        ->label('图标')
+                        ->placeholder('请选择图标'),
+                    IconPicker::make('options.active_icon')
+                        ->label('活动图标')
+                        ->placeholder('请选择活动图标'),
+                ])
+                ->visibleJs(<<<'JS'
+                    $get('options.icon_type') == 'icon'
+                JS),
+            Schemas\Components\FieldSet::make('image_icons')
+                ->label('图片图标')
+                ->schema([
+                    Forms\Components\FileUpload::make('options.icon_src')
+                        ->label('图标')
+                        ->image()
+                        // ->directory(Product::getImageDirectory())
+                        ->openable()
+                        ->downloadable()
+                        ->uploadingMessage('图标上传中...')
+                        ->imagePreviewHeight('100'),
+                    Forms\Components\FileUpload::make('options.active_icon_src')
+                        ->label('活动图标')
+                        ->image()
+                        // ->directory(Product::getImageDirectory())
+                        ->openable()
+                        ->downloadable()
+                        ->uploadingMessage('活动图标上传中...')
+                        ->imagePreviewHeight('100'),
+                ])
+                ->visibleJs(<<<'JS'
+                    $get('options.icon_type') == 'image'
+                JS),
+
             Forms\Components\Toggle::make('options.footer_show')
                 ->label('底部显示')
                 ->default(false)
@@ -85,7 +85,8 @@ class Navigation extends NestedsetPage
                 }),
             Forms\Components\TextInput::make('slug')
                 ->label('导航标识')
-                ->unique(ignorable: fn (?NavigationModel $record): ?NavigationModel => $record)
+                // @sn todo 导航标识唯一性需要附加条件
+                ->unique(ignorable: fn(?NavigationModel $record): ?NavigationModel => $record)
                 ->required()
                 ->maxLength(255)
                 ->visible(function (Get $get) {
@@ -114,7 +115,7 @@ class Navigation extends NestedsetPage
                 ->default('_self')
                 ->required()
                 ->visible(function (Get $get) {
-                    // 没有子导航了，就显示跳转类型
+                    // 不是子导航了，就显示跳转类型
                     return $get('type') != NavigationTypeEnum::Child;
                 }),
 
@@ -127,7 +128,7 @@ class Navigation extends NestedsetPage
                         ->required(),
                 ])
                 ->visible(function (Get $get) {
-                    // 没有子导航了，就显示跳转类型
+                    // page 单页，设置内容详情
                     return $get('type') == NavigationTypeEnum::Page;
                 }),
 
@@ -163,7 +164,7 @@ class Navigation extends NestedsetPage
                                 ->helperText('路由参数, 没有则不设置')
                                 ->reorderable()
                                 ->required()
-                                ->visible(fn (Get $get): bool => $get('has_routes')),
+                                ->visible(fn(Get $get): bool => $get('has_routes')),
                         ])
                         ->columns(1)
                         ->columnSpan(1),
@@ -180,12 +181,12 @@ class Navigation extends NestedsetPage
                                 ->helperText('查询参数, 拼接在地址栏后面, 没有则不设置')
                                 ->reorderable()
                                 ->required()
-                                ->visible(fn (Get $get): bool => $get('has_queries')),
+                                ->visible(fn(Get $get): bool => $get('has_queries')),
                         ])
                         ->columns(1)
                         ->columnSpan(1),
                 ])->visible(function (Get $get) {
-                    // 内容类型的导航，选了内容类型，并且内容类型有 form 表单
+                    // 路由可以设置路由参数
                     return $get('type') == NavigationTypeEnum::Route;
                 })
                 ->columns(2)
@@ -193,14 +194,14 @@ class Navigation extends NestedsetPage
 
             Forms\Components\Select::make('options.type')
                 ->label('内容类型')
-                ->options(NavigationType::make()->getOptions())
+                ->options(ContentRegistry::getOptions())
                 ->live()
                 ->required()
                 ->visible(function (Get $get) {
                     return $get('type') == NavigationTypeEnum::Content;
                 })
                 ->afterStateUpdated(
-                    fn (Forms\Components\Select $component, $state) => $state && $component
+                    fn(Forms\Components\Select $component, $state) => $state && $component
                         ->getContainer()
                         ->getComponent('dynamicExtrasFields')       // 当 dynamicExtrasFields visible = false, 也就是不可见时， 这里获取的是 null
                         ?->getChildSchema()
@@ -210,9 +211,9 @@ class Navigation extends NestedsetPage
             Schemas\Components\Fieldset::make('extras')
                 ->label('选项')
                 ->schema(function (Get $get) {
-                    return NavigationType::make()->getTypeForms($get('options.type'), ['fields' => $get()]);
+                    return ContentRegistry::getTypeForms($get('options.type'), ['fields' => $get()]);
                 })->visible(function (Get $get) {
-                    $hasForms = NavigationType::make()->hasForms($get('options.type'), ['fields' => $get()]);
+                    $hasForms = ContentRegistry::hasForms($get('options.type'), ['fields' => $get()]);
 
                     // 内容类型的导航，选了内容类型，并且内容类型有 form 表单
                     return ($get('type') == NavigationTypeEnum::Content) && filled($get('options.type')) && $hasForms;
@@ -223,8 +224,8 @@ class Navigation extends NestedsetPage
             Forms\Components\Radio::make('status')
                 ->label('导航状态')
                 ->inline()
-                ->options(Status::class)
-                ->default(Status::Normal)
+                ->options(NavigationStatus::class)
+                ->default(NavigationStatus::Normal)
                 ->required(),
         ];
     }

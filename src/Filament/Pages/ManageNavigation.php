@@ -1,15 +1,13 @@
 <?php
 
-namespace Wsmallnews\Cms\Filament\Resources\NavigationTypes;
+namespace Wsmallnews\Cms\Filament\Pages;
 
 use BezhanSalleh\PluginEssentials\Concerns;
 use Wsmallnews\Cms\CmsPlugin;
-use Wsmallnews\Cms\Concerns\Resource\HasCustomProperties;
-use Wsmallnews\Cms\Filament\Resources\NavigationTypes\Pages\CreateNavigationType;
-use Wsmallnews\Cms\Filament\Resources\NavigationTypes\Pages\EditNavigationType;
-use Wsmallnews\Cms\Filament\Resources\NavigationTypes\Pages\ListNavigationTypes;
+use Wsmallnews\Cms\Filament\Pages\Navigation\ManageBase as ManageBaseNavigationPage;
+use Wsmallnews\Support\Concerns\Resource\HasCustomProperties;
 
-final class NavigationTypeResource extends BaseResource
+final class ManageNavigation extends ManageBaseNavigationPage
 {
     use Concerns\Resource\BelongsToParent;
     use Concerns\Resource\BelongsToTenant;
@@ -17,15 +15,6 @@ final class NavigationTypeResource extends BaseResource
     use Concerns\Resource\HasLabels;
     use Concerns\Resource\HasNavigation;
     use HasCustomProperties;
-
-    public static function getPages(): array
-    {
-        return [
-            'index' => ListNavigationTypes::route('/'),
-            'create' => CreateNavigationType::route('/create'),
-            'edit' => EditNavigationType::route('/{record}/edit'),
-        ];
-    }
 
     public static function getScopeType(): string
     {

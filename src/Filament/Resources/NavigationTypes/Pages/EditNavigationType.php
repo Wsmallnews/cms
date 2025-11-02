@@ -7,7 +7,7 @@ use Filament\Actions\ForceDeleteAction;
 use Filament\Actions\RestoreAction;
 use Filament\Resources\Pages\EditRecord;
 use Wsmallnews\Cms\Filament\Resources\NavigationTypes\NavigationTypeResource;
-use Wsmallnews\Cms\Filament\Widgets\Navigation;
+use Wsmallnews\Cms\Filament\Pages\Navigation\Widgets\NavigationManage as NavigationManageWidgets;
 
 class EditNavigationType extends EditRecord
 {
@@ -25,7 +25,7 @@ class EditNavigationType extends EditRecord
     protected function getFooterWidgets(): array
     {
         return [
-            // Navigation::class,
+            NavigationManageWidgets::class,
         ];
     }
 }

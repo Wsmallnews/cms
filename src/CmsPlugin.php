@@ -7,7 +7,10 @@ use Filament\Contracts\Plugin;
 use Filament\Panel;
 use Filament\Support\Concerns\EvaluatesClosures;
 use Filament\Support\Icons\Heroicon;
-use Wsmallnews\Category\Concerns\Plugin\HasCustomProperties;
+use Wsmallnews\Cms\Filament\Resources\NavigationTypes\NavigationTypeResource;
+use Wsmallnews\Cms\Filament\Pages\Navigation as NavigationPage;
+use Wsmallnews\Cms\Filament\Pages\ManageNavigation as ManageNavigationPage;
+use Wsmallnews\Support\Concerns\Plugin\HasCustomProperties;
 
 class CmsPlugin implements Plugin
 {
@@ -28,7 +31,12 @@ class CmsPlugin implements Plugin
 
     public function register(Panel $panel): void
     {
-        //
+        $panel->resources([
+            NavigationTypeResource::class,
+        ])->pages([
+            NavigationPage::class,
+            ManageNavigationPage::class,
+        ]);
     }
 
     public function boot(Panel $panel): void
@@ -55,24 +63,24 @@ class CmsPlugin implements Plugin
     protected function getPluginDefaults(): array
     {
         return [
-            // 'resources' => [
-            //     CategoryTypeResource::class => [
-            //         'modelLabel' => '分类类型',
-            //         'pluralModelLabel' => '分类类型',
+            'resources' => [
+                NavigationTypeResource::class => [
+                    'modelLabel' => '分类类型',
+                    'pluralModelLabel' => '分类类型2',
 
-            //         'navigationGroup' => '分类管理',
-            //         'navigationLabel' => '分类类型',
-            //         'navigationIcon' => Heroicon::Bars3,
-            //         'activeNavigationIcon' => Heroicon::Bars3,
-            //         'navigationSort' => 1,
-            //         'navigationBadge' => null,
-            //         'navigationBadgeColor' => null,
-            //         'navigationParentItem' => null,
-            //         'registerNavigation' => true,
+                    'navigationGroup' => '分类管理',
+                    'navigationLabel' => '分类类型',
+                    'navigationIcon' => Heroicon::Bars3,
+                    'activeNavigationIcon' => Heroicon::Bars3,
+                    'navigationSort' => 1,
+                    'navigationBadge' => null,
+                    'navigationBadgeColor' => null,
+                    'navigationParentItem' => null,
+                    'registerNavigation' => true,
 
-            //         'globalSearchResultsLimit' => 50,
-            //     ],
-            // ],
+                    'globalSearchResultsLimit' => 50,
+                ],
+            ],
         ];
     }
 }
