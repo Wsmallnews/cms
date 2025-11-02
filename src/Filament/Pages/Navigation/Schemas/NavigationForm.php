@@ -86,7 +86,7 @@ class NavigationForm
             Forms\Components\TextInput::make('slug')
                 ->label('导航标识')
                 // @sn todo 导航标识唯一性需要附加条件
-                ->unique(ignorable: fn(?NavigationModel $record): ?NavigationModel => $record)
+                ->unique(ignorable: fn (?NavigationModel $record): ?NavigationModel => $record)
                 ->required()
                 ->maxLength(255)
                 ->visible(function (Get $get) {
@@ -164,7 +164,7 @@ class NavigationForm
                                 ->helperText('路由参数, 没有则不设置')
                                 ->reorderable()
                                 ->required()
-                                ->visible(fn(Get $get): bool => $get('has_routes')),
+                                ->visible(fn (Get $get): bool => $get('has_routes')),
                         ])
                         ->columns(1)
                         ->columnSpan(1),
@@ -181,7 +181,7 @@ class NavigationForm
                                 ->helperText('查询参数, 拼接在地址栏后面, 没有则不设置')
                                 ->reorderable()
                                 ->required()
-                                ->visible(fn(Get $get): bool => $get('has_queries')),
+                                ->visible(fn (Get $get): bool => $get('has_queries')),
                         ])
                         ->columns(1)
                         ->columnSpan(1),
@@ -201,7 +201,7 @@ class NavigationForm
                     return $get('type') == NavigationTypeEnum::Content;
                 })
                 ->afterStateUpdated(
-                    fn(Forms\Components\Select $component, $state) => $state && $component
+                    fn (Forms\Components\Select $component, $state) => $state && $component
                         ->getContainer()
                         ->getComponent('dynamicExtrasFields')       // 当 dynamicExtrasFields visible = false, 也就是不可见时， 这里获取的是 null
                         ?->getChildSchema()

@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static array getOptions()
  * @method static bool hasForms(string $type, array $arguments = [])
  * @method static array getTypeForms(string $type, array $arguments = [])
- * 
+ *
  * @see \Wsmallnews\Cms\ContentRegistry
  */
 class ContentRegistry extends Facade

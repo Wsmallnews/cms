@@ -7,9 +7,9 @@ use Filament\Contracts\Plugin;
 use Filament\Panel;
 use Filament\Support\Concerns\EvaluatesClosures;
 use Filament\Support\Icons\Heroicon;
-use Wsmallnews\Cms\Filament\Resources\NavigationTypes\NavigationTypeResource;
-use Wsmallnews\Cms\Filament\Pages\Navigation as NavigationPage;
 use Wsmallnews\Cms\Filament\Pages\ManageNavigation as ManageNavigationPage;
+use Wsmallnews\Cms\Filament\Pages\Navigation as NavigationPage;
+use Wsmallnews\Cms\Filament\Resources\NavigationTypes\NavigationTypeResource;
 use Wsmallnews\Support\Concerns\Plugin\HasCustomProperties;
 
 class CmsPlugin implements Plugin

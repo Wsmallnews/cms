@@ -16,9 +16,9 @@ use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 use Wsmallnews\Cms\Commands\CmsCommand;
 use Wsmallnews\Cms\Filament\Pages\Navigation\Components\BaseNavigation;
+use Wsmallnews\Cms\Models\Content as ContentModel;
 use Wsmallnews\Cms\Models\Navigation as NavigationModel;
 use Wsmallnews\Cms\Models\NavigationType as NavigationTypeModel;
-use Wsmallnews\Cms\Models\Content as ContentModel;
 
 class CmsServiceProvider extends PackageServiceProvider
 {
@@ -58,7 +58,7 @@ class CmsServiceProvider extends PackageServiceProvider
         }
     }
 
-    public function packageRegistered(): void 
+    public function packageRegistered(): void
     {
         // 注册内容类型注册器
         $this->app->singleton(ContentRegistry::class, function (): ContentRegistry {
@@ -161,7 +161,7 @@ class CmsServiceProvider extends PackageServiceProvider
         return [
             '2025_11_01_183836_create_sn_navigation_types_table',
             '2025_11_01_211931_create_sn_navigations_table',
-            '2025_11_01_213119_create_sn_contents_table'
+            '2025_11_01_213119_create_sn_contents_table',
         ];
     }
 }

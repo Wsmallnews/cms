@@ -10,9 +10,9 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use UnitEnum;
+use Wsmallnews\Cms\Filament\Pages\Navigation\Widgets\NavigationManage as NavigationManageWidgets;
 use Wsmallnews\Cms\Filament\Resources\NavigationTypes\Schemas\NavigationTypeForm;
 use Wsmallnews\Cms\Filament\Resources\NavigationTypes\Tables\NavigationTypesTable;
-use Wsmallnews\Cms\Filament\Pages\Navigation\Widgets\NavigationManage as NavigationManageWidgets;
 use Wsmallnews\Cms\Models\NavigationType;
 use Wsmallnews\Support\Filament\Resources\Concerns\Scopeable;
 

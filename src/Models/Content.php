@@ -18,7 +18,6 @@ class Content extends Model
         return $this->morphTo();
     }
 
-
     public function team(): BelongsTo
     {
         return $this->belongsTo(Utils::getTenantModel());

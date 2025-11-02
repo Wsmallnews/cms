@@ -58,14 +58,14 @@ abstract class ManageBase extends Page
 
                     return $forms;
                 })
-                ->livewireSubmitHandler('save')
-                ->footer([
-                    Schemas\Components\Actions::make([
-                        Actions\Action::make('save')
-                            ->submit('save')
-                            ->keyBindings(['mod+s']),
+                    ->livewireSubmitHandler('save')
+                    ->footer([
+                        Schemas\Components\Actions::make([
+                            Actions\Action::make('save')
+                                ->submit('save')
+                                ->keyBindings(['mod+s']),
+                        ]),
                     ]),
-                ]),
             ])
             ->record($this->record)
             ->statePath('data');

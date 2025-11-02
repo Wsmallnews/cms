@@ -40,7 +40,6 @@ class Navigation extends Model implements HasMedia
         return 'slug';
     }
 
-
     public function resolveNavigation($navigation)
     {
         $url = null;
