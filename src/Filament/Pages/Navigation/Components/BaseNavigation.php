@@ -44,7 +44,7 @@ class BaseNavigation extends NestedsetPage
 
     public function mount(): void
     {
-        static::$level = $this->navigationType?->level ?: 1;
+        static::$level = $this->navigationType?->level;
 
         (isset($this->properties['emptyLabel']) && filled($this->properties['emptyLabel'])) && static::$emptyLabel = $this->properties['emptyLabel'];
 
