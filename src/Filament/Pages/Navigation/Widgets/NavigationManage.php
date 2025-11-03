@@ -12,6 +12,6 @@ class NavigationManage extends Widget
     public ?array $properties = [];
 
     protected int | string | array $columnSpan = 'full';
-    
+
     protected string $view = 'sn-cms::filament.pages.navigation.widgets.navigation-manage';
 }
