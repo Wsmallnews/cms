@@ -25,6 +25,7 @@ class EditNavigationType extends EditRecord
     protected function getFooterWidgets(): array
     {
         $record = $this->getRecord();
+
         return [
             NavigationManageWidgets::make([
                 'properties' => static::getResource()::getProperties() ?? [],
