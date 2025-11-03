@@ -16,11 +16,6 @@ final class Navigation extends BaseNavigationPage
     use Concerns\Resource\HasNavigation;
     use HasCustomProperties;
 
-    public function getLevel(): ?int
-    {
-        return self::getCustomProperty('level') ?? parent::getLevel();
-    }
-
     public static function getScopeType(): string
     {
         return self::getCustomProperty('scopeType') ?? parent::getScopeType();
@@ -29,6 +24,16 @@ final class Navigation extends BaseNavigationPage
     public static function getScopeId(): int
     {
         return self::getCustomProperty('scopeId') ?? parent::getScopeId();
+    }
+
+    public function getLevel(): ?int
+    {
+        return self::getCustomProperty('level') ?? parent::getLevel();
+    }
+
+    public function getEmptyLabel(): ?string
+    {
+        return self::getCustomProperty('emptyLabel') ?? parent::getEmptyLabel();
     }
 
     public static function getEssentialsPlugin(): ?CmsPlugin

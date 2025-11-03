@@ -100,4 +100,11 @@ abstract class ManageBase extends Page
             ->scopeable(static::getScopeType(), static::getScopeId())
             ->first();
     }
+
+    public function getProperties(): array
+    {
+        return [
+            'emptyLabel' => method_exists($this, 'getEmptyLabel') ? $this->getEmptyLabel() : null,
+        ];
+    }
 }

@@ -65,20 +65,84 @@ class CmsPlugin implements Plugin
         return [
             'resources' => [
                 NavigationTypeResource::class => [
-                    'modelLabel' => '分类类型',
-                    'pluralModelLabel' => '分类类型2',
+                    // hasLabels
+                    'modelLabel' => '导航类型',
+                    'pluralModelLabel' => '导航类型',
+                    'recordTitleAttribute' => 'name',
+                    // 'titleCaseModelLabel' => true,
 
-                    'navigationGroup' => '分类管理',
-                    'navigationLabel' => '分类类型',
-                    'navigationIcon' => Heroicon::Bars3,
-                    'activeNavigationIcon' => Heroicon::Bars3,
+                    // hasNavigation
+                    'navigationLabel' => '导航类型',
+                    'navigationIcon' => Heroicon::Bars3BottomLeft,
+                    'activeNavigationIcon' => Heroicon::Bars3BottomLeft,
+                    'navigationGroup' => '导航管理',
                     'navigationSort' => 1,
                     'navigationBadge' => null,
                     'navigationBadgeColor' => null,
                     'navigationParentItem' => null,
                     'registerNavigation' => true,
 
+                    // hasGlobalSearch
+                    'globallySearchable' => false,
                     'globalSearchResultsLimit' => 50,
+                    'forceGlobalSearchCaseInsensitive' => null,
+                    'splitGlobalSearchTerms' => false,
+
+                    // belongsToParent
+                    'parentResource' => null,
+
+                    // BelongsToTenant
+                    'scopeToTenant' => true,
+                    'tenantRelationshipName' => null,
+                    'tenantOwnershipRelationshipName' => null,
+                ],
+                ManageNavigationPage::class => [
+                    // hasLabels
+                    'recordTitleAttribute' => 'name',
+
+                    // hasNavigation
+                    'navigationLabel' => '导航设置',
+                    'navigationIcon' => Heroicon::Bars3,
+                    'activeNavigationIcon' => Heroicon::Bars3,
+                    'navigationGroup' => '导航管理',
+                    'navigationSort' => 1,
+                    'navigationBadge' => null,
+                    'navigationBadgeColor' => null,
+                    'navigationParentItem' => null,
+                    'registerNavigation' => true,
+
+                    // hasGlobalSearch
+                    'globallySearchable' => false,
+                    'globalSearchResultsLimit' => 50,
+                    'forceGlobalSearchCaseInsensitive' => null,
+                    'splitGlobalSearchTerms' => false,
+
+                    // belongsToParent
+                    'parentResource' => null,
+                ],
+                NavigationPage::class => [
+                    // hasLabels
+                    'recordTitleAttribute' => 'name',
+
+                    // hasNavigation
+                    'navigationLabel' => '导航',
+                    'navigationIcon' => Heroicon::Bars3,
+                    'activeNavigationIcon' => Heroicon::Bars3,
+                    'navigationGroup' => '导航管理',
+                    'navigationSort' => 1,
+                    'navigationBadge' => null,
+                    'navigationBadgeColor' => null,
+                    'navigationParentItem' => null,
+                    'registerNavigation' => true,
+
+                    // hasGlobalSearch
+                    'globallySearchable' => false,
+                    'globalSearchResultsLimit' => 50,
+                    'forceGlobalSearchCaseInsensitive' => null,
+                    'splitGlobalSearchTerms' => false,
+
+                    // belongsToParent
+                    'parentResource' => null,
                 ],
             ],
         ];

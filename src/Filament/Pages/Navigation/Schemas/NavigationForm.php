@@ -211,9 +211,9 @@ class NavigationForm
             Schemas\Components\Fieldset::make('extras')
                 ->label('选项')
                 ->schema(function (Get $get) {
-                    return ContentRegistry::getTypeForms($get('options.type'), ['fields' => $get()]);
+                    return filled($get('options.type')) ? ContentRegistry::getTypeForms($get('options.type'), ['fields' => $get()]) : [];
                 })->visible(function (Get $get) {
-                    $hasForms = ContentRegistry::hasForms($get('options.type'), ['fields' => $get()]);
+                    $hasForms = filled($get('options.type')) ? ContentRegistry::hasForms($get('options.type'), ['fields' => $get()]) : false;
 
                     // 内容类型的导航，选了内容类型，并且内容类型有 form 表单
                     return ($get('type') == NavigationTypeEnum::Content) && filled($get('options.type')) && $hasForms;

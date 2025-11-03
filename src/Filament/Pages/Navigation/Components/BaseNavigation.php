@@ -16,7 +16,9 @@ class BaseNavigation extends NestedsetPage
     // 所属类型
     public ?NavigationTypeModel $navigationType = null;
 
-    public string $emptyLabel = '导航数据为空';
+    public ?array $properties = [];
+
+    protected static ?string $emptyLabel = '导航数据为空';
 
     protected static ?string $model = NavigationModel::class;
 
@@ -42,7 +44,9 @@ class BaseNavigation extends NestedsetPage
 
     public function mount(): void
     {
-        $this->level = $this->navigationType?->level ?: 1;
+        static::$level = $this->navigationType?->level ?: 1;
+
+        (isset($this->properties['emptyLabel']) && filled($this->properties['emptyLabel'])) && static::$emptyLabel = $this->properties['emptyLabel'];
 
         parent::mount();
     }
@@ -78,12 +82,5 @@ class BaseNavigation extends NestedsetPage
     protected function schema(array $arguments): array
     {
         return NavigationForm::forms($arguments);
-    }
-
-    public function getEmptyLabel(): ?string
-    {
-        return '组件的属性这里要解决';
-
-        return static::getCustomProperty('emptyLabel') ?? parent::getEmptyLabel();
     }
 }

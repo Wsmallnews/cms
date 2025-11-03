@@ -37,6 +37,13 @@ final class NavigationTypeResource extends BaseResource
         return self::getCustomProperty('scopeId') ?? parent::getScopeId();
     }
 
+    public static function getProperties(): array
+    {
+        return [
+            'emptyLabel' => self::getCustomProperty('emptyLabel') ?? null,
+        ];
+    }
+
     public static function getEssentialsPlugin(): ?CmsPlugin
     {
         return CmsPlugin::get();

@@ -26,6 +26,11 @@ final class ManageNavigation extends ManageBaseNavigationPage
         return self::getCustomProperty('scopeId') ?? parent::getScopeId();
     }
 
+    public function getEmptyLabel(): ?string
+    {
+        return self::getCustomProperty('emptyLabel');
+    }
+
     public static function getEssentialsPlugin(): ?CmsPlugin
     {
         return CmsPlugin::get();

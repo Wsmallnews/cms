@@ -7,9 +7,11 @@ use Wsmallnews\Cms\Models\NavigationType;
 
 class NavigationManage extends Widget
 {
-    protected string $view = 'sn-cms::filament.pages.navigation.widgets.navigation-manage';
+    public ?NavigationType $record = null;
+
+    public ?array $properties = [];
 
     protected int | string | array $columnSpan = 'full';
-
-    public ?NavigationType $record = null;
+    
+    protected string $view = 'sn-cms::filament.pages.navigation.widgets.navigation-manage';
 }
