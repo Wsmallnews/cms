@@ -17,8 +17,6 @@ abstract class Base extends BaseNavigation
      */
     public ?array $data = [];
 
-    public ?int $level = null;
-
     public ?NavigationTypeModel $navigationType = null;
 
     public function mount(): void
@@ -34,7 +32,7 @@ abstract class Base extends BaseNavigation
                 static::getScopeInfo(),
                 [
                     'name' => Str::title(static::getScopeType()),
-                    'level' => $this->level ?? 1,
+                    'level' => static::getLevel(),
                     'status' => NavigationTypeStatus::Normal,
                 ]
             );

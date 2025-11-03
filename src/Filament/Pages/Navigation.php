@@ -16,7 +16,10 @@ final class Navigation extends BaseNavigationPage
     use Concerns\Resource\HasNavigation;
     use HasCustomProperties;
 
-    public ?int $level = 2;
+    public function getLevel(): ?int
+    {
+        return self::getCustomProperty('level') ?? parent::getLevel();
+    }
 
     public static function getScopeType(): string
     {
