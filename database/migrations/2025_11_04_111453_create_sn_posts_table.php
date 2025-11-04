@@ -6,20 +6,23 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    public function up()
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
     {
-        Schema::create('sn_navigation_types', function (Blueprint $table) {
-            $table->comment('导航类别');
+        Schema::create('sn_posts', function (Blueprint $table) {
+            $table->comment('图文内容');
             $table->engine = 'InnoDB';
             $table->id();
             $table->unsignedBigInteger('team_id')->nullable()->comment('团队ID');
             $table->string('scope_type', 60)->nullable()->comment('范围类型');
             $table->unsignedBigInteger('scope_id')->default(0)->comment('范围');
 
-            $table->string('name')->nullable()->comment('名称');
-            $table->tinyInteger('level')->nullable()->comment('层级');
+            $table->string('title')->nullable()->comment('标题');
             $table->string('description')->nullable()->comment('描述');
-
+            $table->unsignedBigInteger('views')->default(0)->comment('浏览量');
+            
             $table->json('options')->nullable()->comment('选项');
             $table->string('status')->nullable()->comment('状态');
             $table->unsignedInteger('order_column')->nullable()->comment('排序');
@@ -29,6 +32,12 @@ return new class extends Migration
             $table->index(['scope_type', 'scope_id']);
             $table->index('order_column');
         });
+
+        Schema::create('sn_category_post', function (Blueprint $table) {
+            $table->foreignIdFor(\Wsmallnews\Category\Models\Category::class)->constrained(table: 'sn_categories')->cascadeOnDelete();
+            $table->foreignIdFor(\Wsmallnews\Cms\Models\Post::class)->constrained(table: 'sn_posts')->cascadeOnDelete();
+            $table->primary(['category_id', 'post_id']);
+        });
     }
 
     /**
@@ -36,6 +45,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('sn_navigation_types');
+        Schema::dropIfExists('sn_category_post');
+        Schema::dropIfExists('sn_posts');
     }
 };

@@ -15,8 +15,6 @@ class NavigationType extends SupportModel
 
     protected $table = 'sn_navigation_types';
 
-    protected $guarded = [];
-
     protected $casts = [
         'options' => 'array',
         'status' => NavigationTypeStatus::class,

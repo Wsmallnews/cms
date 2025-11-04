@@ -11,8 +11,9 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 use Wsmallnews\Cms\Enums\NavigationStatus as NavigationStatusEnum;
 use Wsmallnews\Cms\Enums\NavigationType as NavigationTypeEnum;
 use Wsmallnews\Cms\Support\Utils;
+use Wsmallnews\Support\Models\SupportModel;
 
-class Navigation extends Model implements HasMedia
+class Navigation extends SupportModel implements HasMedia
 {
     use InteractsWithMedia;
     use NodeTrait;

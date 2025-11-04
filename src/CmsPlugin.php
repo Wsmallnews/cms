@@ -7,9 +7,11 @@ use Filament\Contracts\Plugin;
 use Filament\Panel;
 use Filament\Support\Concerns\EvaluatesClosures;
 use Filament\Support\Icons\Heroicon;
+use Wsmallnews\Cms\Filament\Pages\Category as CategoryPage;
 use Wsmallnews\Cms\Filament\Pages\ManageNavigation as ManageNavigationPage;
 use Wsmallnews\Cms\Filament\Pages\Navigation as NavigationPage;
 use Wsmallnews\Cms\Filament\Resources\NavigationTypes\NavigationTypeResource;
+use Wsmallnews\Cms\Filament\Resources\Posts\PostResource;
 use Wsmallnews\Support\Concerns\Plugin\HasCustomProperties;
 
 class CmsPlugin implements Plugin
@@ -32,10 +34,10 @@ class CmsPlugin implements Plugin
     public function register(Panel $panel): void
     {
         $panel->resources([
-            NavigationTypeResource::class,
+            PostResource::class,
         ])->pages([
             NavigationPage::class,
-            ManageNavigationPage::class,
+            CategoryPage::class
         ]);
     }
 
@@ -144,6 +146,75 @@ class CmsPlugin implements Plugin
                     // belongsToParent
                     'parentResource' => null,
                 ],
+                PostResource::class => [
+                    // hasLabels
+                    'modelLabel' => '图文内容',
+                    'pluralModelLabel' => '图文内容',
+                    'recordTitleAttribute' => 'title',
+                    // 'titleCaseModelLabel' => true,
+
+                    // hasNavigation
+                    'navigationLabel' => '图文管理',
+                    'navigationIcon' => Heroicon::Bars3BottomLeft,
+                    'activeNavigationIcon' => Heroicon::Bars3BottomLeft,
+                    'navigationGroup' => 'Cms管理',
+                    'navigationSort' => 1,
+                    'navigationBadge' => null,
+                    'navigationBadgeColor' => null,
+                    'navigationParentItem' => null,
+                    'registerNavigation' => true,
+
+                    // hasGlobalSearch
+                    'globallySearchable' => false,
+                    'globalSearchResultsLimit' => 50,
+                    'forceGlobalSearchCaseInsensitive' => null,
+                    'splitGlobalSearchTerms' => false,
+
+                    // belongsToParent
+                    'parentResource' => null,
+
+                    // BelongsToTenant
+                    'scopeToTenant' => true,
+                    'tenantRelationshipName' => null,
+                    'tenantOwnershipRelationshipName' => null,
+
+                    // HasCustomProperties
+                    'customProperties' => [
+                        'scopeType' => 'cms',
+                        'scopeId' => 0,
+                    ]
+                ],
+                CategoryPage::class => [
+                    // hasLabels
+                    'modelLabel' => '分类',
+                    'pluralModelLabel' => '图文分类管理',
+                    'recordTitleAttribute' => 'name',
+
+                    // hasNavigation
+                    'navigationLabel' => '图文分类',
+                    'navigationIcon' => Heroicon::Bars3,
+                    'activeNavigationIcon' => Heroicon::Bars3,
+                    'navigationGroup' => 'Cms管理',
+                    'navigationSort' => 1,
+                    'navigationBadge' => null,
+                    'navigationBadgeColor' => null,
+                    'navigationParentItem' => '图文管理',
+                    'registerNavigation' => true,
+
+                    // hasGlobalSearch
+                    'globallySearchable' => false,
+                    'globalSearchResultsLimit' => 50,
+                    'forceGlobalSearchCaseInsensitive' => null,
+                    'splitGlobalSearchTerms' => false,
+
+                    // belongsToParent
+                    'parentResource' => null,
+
+                    // HasCustomProperties
+                    'customProperties' => [
+                        'level' => 2
+                    ]
+                ]
             ],
         ];
     }

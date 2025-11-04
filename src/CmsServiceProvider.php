@@ -19,6 +19,7 @@ use Wsmallnews\Cms\Filament\Pages\Navigation\Components\BaseNavigation;
 use Wsmallnews\Cms\Models\Content as ContentModel;
 use Wsmallnews\Cms\Models\Navigation as NavigationModel;
 use Wsmallnews\Cms\Models\NavigationType as NavigationTypeModel;
+use Wsmallnews\Cms\Models\Post as PostModel;
 
 class CmsServiceProvider extends PackageServiceProvider
 {
@@ -70,9 +71,10 @@ class CmsServiceProvider extends PackageServiceProvider
     {
         // / 注册模型别名
         Relation::enforceMorphMap([
+            'sn_content' => ContentModel::class,
             'sn_navigation' => NavigationModel::class,
             'sn_navigation_type' => NavigationTypeModel::class,
-            'sn_content' => ContentModel::class,
+            'sn_post' => PostModel::class,
         ]);
 
         // Asset Registration
@@ -162,6 +164,7 @@ class CmsServiceProvider extends PackageServiceProvider
             '2025_11_01_183836_create_sn_navigation_types_table',
             '2025_11_01_211931_create_sn_navigations_table',
             '2025_11_01_213119_create_sn_contents_table',
+            '2025_11_04_111453_create_sn_posts_table',
         ];
     }
 }
