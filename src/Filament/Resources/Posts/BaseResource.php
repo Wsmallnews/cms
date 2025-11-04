@@ -49,7 +49,6 @@ abstract class BaseResource extends Resource
         return PostsTable::configure($table);
     }
 
-
     public static function getPages(): array
     {
         return [

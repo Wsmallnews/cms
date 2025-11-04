@@ -2,11 +2,10 @@
 
 namespace Wsmallnews\Cms\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
@@ -29,7 +28,6 @@ class Post extends SupportModel implements HasMedia
         'status' => PostStatus::class,
     ];
 
-
     // public function scopeScopeTenant($query)
     // {
     //     if (has_tenancy()) {
@@ -38,7 +36,6 @@ class Post extends SupportModel implements HasMedia
     //         return $query->whereNull('team_id');
     //     }
     // }
-
 
     /**
      * post 分类多对多查询
@@ -50,24 +47,20 @@ class Post extends SupportModel implements HasMedia
     //     });
     // }
 
-
     public function scopeNormal($query)
     {
         return $query->where('status', PostStatus::Normal);
     }
-
 
     public function scopeHidden($query)
     {
         return $query->where('status', PostStatus::Hidden);
     }
 
-
     public function content(): MorphOne
     {
         return $this->morphOne(Content::class, 'contentable');
     }
-
 
     public function categories(): BelongsToMany
     {

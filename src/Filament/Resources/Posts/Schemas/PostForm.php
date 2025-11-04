@@ -104,8 +104,8 @@ class PostForm
                         ->options(PostStatus::class),
                 ])->grow(false),
             ])
-            ->columnSpanFull()
-            ->from('lg')
+                ->columnSpanFull()
+                ->from('lg'),
         ];
     }
 }

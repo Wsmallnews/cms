@@ -2,7 +2,6 @@
 
 namespace Wsmallnews\Cms\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Wsmallnews\Cms\Support\Utils;

@@ -23,7 +23,7 @@ class PostsTable
                 Tables\Columns\TextColumn::make('title')
                     ->label('标题')
                     ->searchable()
-                    ->description(fn($record) => $record->description)
+                    ->description(fn ($record) => $record->description)
                     ->limit(50)
                     ->tooltip(function (Tables\Columns\TextColumn $column): ?string {
                         $state = $column->getState();

@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('title')->nullable()->comment('标题');
             $table->string('description')->nullable()->comment('描述');
             $table->unsignedBigInteger('views')->default(0)->comment('浏览量');
-            
+
             $table->json('options')->nullable()->comment('选项');
             $table->string('status')->nullable()->comment('状态');
             $table->unsignedInteger('order_column')->nullable()->comment('排序');

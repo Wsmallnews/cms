@@ -37,7 +37,7 @@ class CmsPlugin implements Plugin
             PostResource::class,
         ])->pages([
             NavigationPage::class,
-            CategoryPage::class
+            CategoryPage::class,
         ]);
     }
 
@@ -182,7 +182,7 @@ class CmsPlugin implements Plugin
                     'customProperties' => [
                         'scopeType' => 'cms',
                         'scopeId' => 0,
-                    ]
+                    ],
                 ],
                 CategoryPage::class => [
                     // hasLabels
@@ -212,9 +212,9 @@ class CmsPlugin implements Plugin
 
                     // HasCustomProperties
                     'customProperties' => [
-                        'level' => 2
-                    ]
-                ]
+                        'level' => 2,
+                    ],
+                ],
             ],
         ];
     }

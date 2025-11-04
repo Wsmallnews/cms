@@ -24,7 +24,6 @@ class ListPosts extends ListRecords
         ];
     }
 
-
     // protected function getTableQuery(): ?Builder
     // {
     //     $query = static::getResource()::getEloquentQuery();
@@ -46,7 +45,6 @@ class ListPosts extends ListRecords
     //     return $query;
     // }
 
-
     /**
      * @return array<NavigationItem | NavigationGroup>
      */
@@ -66,8 +64,6 @@ class ListPosts extends ListRecords
     //     return $navigations;
     // }
 
-
-
     // private function getNavigationsByCategories(Collection $categories): array
     // {
     //     $navigations[] = NavigationItem::make()
@@ -84,7 +80,6 @@ class ListPosts extends ListRecords
 
     //     return $navigations;
     // }
-
 
     // private function getNavigationItemsByCategories(Collection $categories)
     // {
