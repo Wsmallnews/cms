@@ -4,28 +4,23 @@ namespace Wsmallnews\Cms\Livewire\Navigation;
 
 use Illuminate\Support\Arr;
 use Kalnoy\Nestedset\QueryBuilder;
-use Wsmallnews\Cms\Enums\NavigationType as NavigationTypeEnum;
 use Wsmallnews\Cms\ContentRegistry;
+use Wsmallnews\Cms\Enums\NavigationType as NavigationTypeEnum;
 use Wsmallnews\Cms\Livewire\Common\BasePage;
 use Wsmallnews\Cms\Livewire\Navigation\Components\Content;
 use Wsmallnews\Cms\Models\Navigation as NavigationModel;
 
 class Navigation extends BasePage
 {
-
     public string $slug;
-
 
     /**
      * 先这样解决， queryBuilder 不支持调用 Nestedset 的 scoped 方法
-     *
-     * @return string|QueryBuilder
      */
-    private function getModel(): string|QueryBuilder
+    private function getModel(): string | QueryBuilder
     {
         return NavigationModel::scoped(has_tenancy() ? ['team_id' => current_tenant()->id] : []);
     }
-
 
     public function render()
     {
@@ -37,7 +32,7 @@ class Navigation extends BasePage
         // 处理上级导航的 url_info
         $prevNavigation = null;
         $parents = $parents->reverse()->map(function (NavigationModel $navigation) use (&$prevNavigation) {
-            $navigation =  $navigation->resolveNavigation($navigation);
+            $navigation = $navigation->resolveNavigation($navigation);
 
             // 如果上级没有 url，则使用下级的 url
             $urlInfo = $navigation->url_info; // 先获取数组
@@ -45,6 +40,7 @@ class Navigation extends BasePage
             $navigation->url_info = $urlInfo; // 重新赋值
 
             $prevNavigation = $navigation;      // 保存当前导航
+
             return $navigation;
         })->reverse();
 
@@ -66,13 +62,14 @@ class Navigation extends BasePage
 
             $components = Arr::mapWithKeys($components, function ($component, $key) use ($navigation) {
                 $extras = $navigation->options['_extras'] ?? [];          // 额外表单参数，和固定参数合并
+
                 return is_scalar($component) ? [$component => $extras] : [$key => array_merge($component, $extras)];
             });
         } elseif ($navigation->type == NavigationTypeEnum::Page) {
             $components = [
                 Content::class => [         // 内容组件
                     'content' => $navigation->content,
-                ]
+                ],
             ];
         }
 

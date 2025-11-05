@@ -127,7 +127,7 @@ class CmsServiceProvider extends PackageServiceProvider
             [
                 'type' => 'posts',
                 'label' => '图文列表',
-                'forms' => fn($fields) => [
+                'forms' => fn ($fields) => [
                     // 多选分类
                     SelectTree::make('category_ids')->label('选择分类')
                         ->query(query: function () {
@@ -142,24 +142,24 @@ class CmsServiceProvider extends PackageServiceProvider
                         ->treeKey('postCategories'),
                 ],
                 'components' => [
-                    \Wsmallnews\Cms\Livewire\Post\Components\Posts::class
-                ]
+                    \Wsmallnews\Cms\Livewire\Post\Components\Posts::class,
+                ],
             ],
             [
                 'type' => 'post-detail',
                 'label' => '图文详情',
-                'forms' => fn($fields) => [
+                'forms' => fn ($fields) => [
                     Select::make('id')->label('选择图文')
                         ->options(PostModel::normal()->scopeable(PostResource::getScopeType(), PostResource::getScopeId())->limit(30)->pluck('title', 'id'))
-                        ->getSearchResultsUsing(fn(string $search): array => PostModel::normal()->scopeable(PostResource::getScopeType(), PostResource::getScopeId())->where('title', 'like', "%{$search}%")->limit(30)->pluck('title', 'id')->toArray())
+                        ->getSearchResultsUsing(fn (string $search): array => PostModel::normal()->scopeable(PostResource::getScopeType(), PostResource::getScopeId())->where('title', 'like', "%{$search}%")->limit(30)->pluck('title', 'id')->toArray())
                         ->placeholder('请选择图文详情')
                         ->searchable()
                         ->preload()
                         ->required(),
                 ],
                 'components' => [
-                    \Wsmallnews\Cms\Livewire\Post\Components\Post::class
-                ]
+                    \Wsmallnews\Cms\Livewire\Post\Components\Post::class,
+                ],
             ],
         ]);
     }

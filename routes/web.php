@@ -1,13 +1,13 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
 use Wsmallnews\Cms\Livewire\Index;
 use Wsmallnews\Cms\Livewire\Navigation\Navigation;
-use Wsmallnews\Cms\Livewire\Post\Posts;
 use Wsmallnews\Cms\Livewire\Post\Post;
 // use App\Http\Middleware\IdentifyTenant;
-use Illuminate\Support\Facades\Route;
+use Wsmallnews\Cms\Livewire\Post\Posts;
 
-Route::prefix("cms")
+Route::prefix('cms')
     ->name('cms.')
     ->group(function () {
         Route::get('/', Index::class)->name('index');
@@ -15,7 +15,6 @@ Route::prefix("cms")
         Route::get('/posts', Posts::class)->name('posts');
         Route::get('/posts/{id}', Post::class)->name('posts.show');
     });
-
 
 // Route::prefix("tenant/{tenant:slug}")
 //     ->name('tenant.')
@@ -30,7 +29,6 @@ Route::prefix("cms")
 //         Route::get('/personnels', Personnels::class)->name('personnels');
 //         Route::get('/personnels/{id}', Personnel::class)->name('personnels.show');
 //     });
-
 
 // Route::get('test', function () {
 //     // $panel = Filament::getCurrentPanel();

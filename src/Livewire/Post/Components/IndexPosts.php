@@ -2,8 +2,8 @@
 
 namespace Wsmallnews\Cms\Livewire\Post\Components;
 
-use Wsmallnews\Cms\Models\Post;
 use Wsmallnews\Cms\Livewire\Common\Components\BaseComponent;
+use Wsmallnews\Cms\Models\Post;
 
 class IndexPosts extends BaseComponent
 {

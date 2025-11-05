@@ -15,7 +15,6 @@ class Posts extends BasePage
         $this->category_id = request()->get('category_id', 0);
     }
 
-
     public function render()
     {
         return view('sn-cms::livewire.posts', []);

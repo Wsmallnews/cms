@@ -3,12 +3,11 @@
 namespace Wsmallnews\Cms\Livewire\Common\Components;
 
 use Wsmallnews\Cms\Models\Navigation as NavigationModel;
+
 // use Wsmallnews\Cms\Settings\GeneralSettings;
-use Livewire\Component;
 
 class Footer extends BaseComponent
 {
-
     public function render()
     {
         $navigations = NavigationModel::scoped(has_tenancy() ? ['team_id' => current_tenant()->id] : [])
