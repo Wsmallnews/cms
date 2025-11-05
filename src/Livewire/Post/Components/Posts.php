@@ -7,8 +7,8 @@ use Illuminate\Support\Collection;
 use Livewire\WithoutUrlPagination;
 use Wsmallnews\Category\Models\Category as CategoryModel;
 use Wsmallnews\Cms\Livewire\Common\Components\BaseComponent;
-use Wsmallnews\Support\Livewire\Traits\CanPagination;
 use Wsmallnews\Cms\Models\Post as PostModel;
+use Wsmallnews\Support\Livewire\Traits\CanPagination;
 
 class Posts extends BaseComponent
 {
@@ -33,7 +33,6 @@ class Posts extends BaseComponent
         return $this->posts;
     }
 
-
     public function render()
     {
         $categoryIds = Arr::wrap($this->category_ids);
@@ -55,7 +54,7 @@ class Posts extends BaseComponent
         $this->posts = $this->withPagination($query);
 
         return view('sn-cms::livewire.components.posts', [
-            'paginatorLink' => $this->links
+            'paginatorLink' => $this->links,
         ]);
     }
 }

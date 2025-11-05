@@ -7,7 +7,6 @@ use Wsmallnews\Cms\Livewire\Common\BasePage;
 
 class Index extends BasePage
 {
-
     #[Title('首页')]
     public function render()
     {

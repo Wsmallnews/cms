@@ -7,7 +7,6 @@ use Wsmallnews\Cms\Models\Navigation as NavigationModel;
 
 class Navigation extends BaseComponent
 {
-
     public function getNavigations()
     {
         return NavigationModel::scoped(has_tenancy() ? ['team_id' => current_tenant()->id] : [])
@@ -16,7 +15,6 @@ class Navigation extends BaseComponent
                 return $navigation->resolveNavigation($navigation);
             })->toTree();
     }
-
 
     public function render()
     {
