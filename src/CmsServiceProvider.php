@@ -2,6 +2,8 @@
 
 namespace Wsmallnews\Cms;
 
+use CodeWithDennis\FilamentSelectTree\SelectTree;
+use Filament\Forms\Components\Select;
 use Filament\Support\Assets\AlpineComponent;
 use Filament\Support\Assets\Asset;
 use Filament\Support\Assets\Css;
@@ -14,8 +16,11 @@ use Livewire\Livewire;
 use Spatie\LaravelPackageTools\Commands\InstallCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
+use Wsmallnews\Category\Models\Category as CategoryModel;
 use Wsmallnews\Cms\Commands\CmsCommand;
+use Wsmallnews\Cms\Facades\ContentRegistry as ContentRegistryFacade;
 use Wsmallnews\Cms\Filament\Pages\Navigation\Components\BaseNavigation;
+use Wsmallnews\Cms\Filament\Resources\Posts\PostResource;
 use Wsmallnews\Cms\Models\Content as ContentModel;
 use Wsmallnews\Cms\Models\Navigation as NavigationModel;
 use Wsmallnews\Cms\Models\NavigationType as NavigationTypeModel;
@@ -43,6 +48,10 @@ class CmsServiceProvider extends PackageServiceProvider
 
         if (file_exists($package->basePath("/../config/{$configFileName}.php"))) {
             $package->hasConfigFile();
+        }
+
+        if (file_exists($package->basePath('/../routes'))) {
+            $package->hasRoutes($this->getRoutes());
         }
 
         if (file_exists($package->basePath('/../database/migrations'))) {
@@ -100,8 +109,59 @@ class CmsServiceProvider extends PackageServiceProvider
             }
         }
 
-        // 注册组件
+        // 注册组件 (panel 组件)
         Livewire::component('sn-fi-navigation', BaseNavigation::class);
+
+        // 注册组件 (前端组件)
+        Livewire::component('sn-components-footer', \Wsmallnews\Cms\Livewire\Common\Components\Footer::class);
+        // 导航相关
+        Livewire::component('sn-components-navigation', \Wsmallnews\Cms\Livewire\Navigation\Components\Navigation::class);
+        Livewire::component('sn-components-navigation-content', \Wsmallnews\Cms\Livewire\Navigation\Components\Content::class);
+        // 内容相关
+        Livewire::component('sn-components-index-posts', \Wsmallnews\Cms\Livewire\Post\Components\IndexPosts::class);
+        Livewire::component('sn-components-posts', \Wsmallnews\Cms\Livewire\Post\Components\Posts::class);
+        Livewire::component('sn-components-post', \Wsmallnews\Cms\Livewire\Post\Components\Post::class);
+
+        // 注册导航内容
+        ContentRegistryFacade::registers([
+            [
+                'type' => 'posts',
+                'label' => '图文列表',
+                'forms' => fn($fields) => [
+                    // 多选分类
+                    SelectTree::make('category_ids')->label('选择分类')
+                        ->query(query: function () {
+                            return CategoryModel::scopeable(PostResource::getScopeType(), PostResource::getScopeId());
+                        }, titleAttribute: 'name', parentAttribute: 'parent_id')
+                        ->searchable()
+                        ->multiple()
+                        ->enableBranchNode()
+                        ->withCount()
+                        ->placeholder(__('请选择图文分类'))
+                        ->emptyLabel(__('未搜索到分类'))
+                        ->treeKey('postCategories'),
+                ],
+                'components' => [
+                    \Wsmallnews\Cms\Livewire\Post\Components\Posts::class
+                ]
+            ],
+            [
+                'type' => 'post-detail',
+                'label' => '图文详情',
+                'forms' => fn($fields) => [
+                    Select::make('id')->label('选择图文')
+                        ->options(PostModel::normal()->scopeable(PostResource::getScopeType(), PostResource::getScopeId())->limit(30)->pluck('title', 'id'))
+                        ->getSearchResultsUsing(fn(string $search): array => PostModel::normal()->scopeable(PostResource::getScopeType(), PostResource::getScopeId())->where('title', 'like', "%{$search}%")->limit(30)->pluck('title', 'id')->toArray())
+                        ->placeholder('请选择图文详情')
+                        ->searchable()
+                        ->preload()
+                        ->required(),
+                ],
+                'components' => [
+                    \Wsmallnews\Cms\Livewire\Post\Components\Post::class
+                ]
+            ],
+        ]);
     }
 
     protected function getAssetPackageName(): ?string
@@ -144,7 +204,7 @@ class CmsServiceProvider extends PackageServiceProvider
      */
     protected function getRoutes(): array
     {
-        return [];
+        return ['web'];
     }
 
     /**
