@@ -42,15 +42,6 @@ class BaseNavigation extends NestedsetPage
 
     protected static ?int $navigationSort = 1;
 
-    public function mount(): void
-    {
-        static::$level = $this->navigationType?->level;
-
-        (isset($this->properties['emptyLabel']) && filled($this->properties['emptyLabel'])) && static::$emptyLabel = $this->properties['emptyLabel'];
-
-        parent::mount();
-    }
-
     public function createSchema($arguments): array
     {
         $arguments = array_merge($arguments, $this->nestedScoped());
@@ -68,6 +59,16 @@ class BaseNavigation extends NestedsetPage
     public function infolistSchema(): array
     {
         return NavigationInfolist::infolist();
+    }
+
+    public function getLevel(): ?int
+    {
+        return $this->navigationType?->level;
+    }
+
+    public function getEmptyLabel(): ?string
+    {
+        return (isset($this->properties['emptyLabel']) && filled($this->properties['emptyLabel'])) ? $this->properties['emptyLabel'] : parent::getEmptyLabel();
     }
 
     protected function nestedScoped()
