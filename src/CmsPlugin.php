@@ -8,6 +8,7 @@ use Filament\Panel;
 use Filament\Support\Concerns\EvaluatesClosures;
 use Filament\Support\Icons\Heroicon;
 use Wsmallnews\Cms\Filament\Pages\Category as CategoryPage;
+use Wsmallnews\Cms\Filament\Pages\GeneralSetting as GeneralSettingPage;
 use Wsmallnews\Cms\Filament\Pages\ManageNavigation as ManageNavigationPage;
 use Wsmallnews\Cms\Filament\Pages\Navigation as NavigationPage;
 use Wsmallnews\Cms\Filament\Resources\NavigationTypes\NavigationTypeResource;
@@ -38,6 +39,7 @@ class CmsPlugin implements Plugin
         ])->pages([
             NavigationPage::class,
             CategoryPage::class,
+            GeneralSettingPage::class,
         ]);
     }
 
@@ -214,6 +216,24 @@ class CmsPlugin implements Plugin
                     'customProperties' => [
                         'level' => 2,
                     ],
+                ],
+                GeneralSettingPage::class => [
+                    // hasLabels
+                    'recordTitleAttribute' => 'name',
+
+                    // hasNavigation
+                    'navigationLabel' => '基础设置',
+                    'navigationIcon' => Heroicon::OutlinedCog6Tooth,
+                    'activeNavigationIcon' => Heroicon::OutlinedCog6Tooth,
+                    'navigationGroup' => '设置管理',
+                    'navigationSort' => 1,
+                    'navigationBadge' => null,
+                    'navigationBadgeColor' => null,
+                    'navigationParentItem' => null,
+                    'registerNavigation' => true,
+
+                    // belongsToParent
+                    'parentResource' => null,
                 ],
             ],
         ];

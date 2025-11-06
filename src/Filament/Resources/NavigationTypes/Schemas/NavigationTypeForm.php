@@ -23,8 +23,8 @@ class NavigationTypeForm
             Schemas\Components\Flex::make([
                 Schemas\Components\Group::make()->schema([
                     Schemas\Components\Section::make('基础信息')->schema([
-                        Forms\Components\TextInput::make('name')->label('导航名称')
-                            ->placeholder('请输入导航名称')
+                        Forms\Components\TextInput::make('name')->label('类别名称')
+                            ->placeholder('请输入类别名称')
                             ->required()
                             ->columnSpan(1),
                         Forms\Components\Radio::make('level')->label('层级')
@@ -39,7 +39,7 @@ class NavigationTypeForm
                             ->default(1)
                             ->inline()
                             ->required()
-                            ->helperText(fn ($operation) => $operation === 'create' ? '请认真设置自己需要的层级' : '修改层级将导致嵌套集层级异常, 请谨慎修改')
+                            ->helperText(fn ($operation) => $operation === 'create' ? '请认真设置自己需要的层级' : '如降低层级，不会自动删除多余的子导航, 请谨慎修改')
                             ->columnSpan(1),
                         Forms\Components\TextInput::make('description')->label('类别描述')
                             ->placeholder('请输入类别描述')
