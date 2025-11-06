@@ -79,7 +79,7 @@ class CmsPlugin implements Plugin
                     'navigationLabel' => '导航类型',
                     'navigationIcon' => Heroicon::Bars3BottomLeft,
                     'activeNavigationIcon' => Heroicon::Bars3BottomLeft,
-                    'navigationGroup' => '导航管理',
+                    'navigationGroup' => 'Cms管理',
                     'navigationSort' => 1,
                     'navigationBadge' => null,
                     'navigationBadgeColor' => null,
@@ -99,6 +99,11 @@ class CmsPlugin implements Plugin
                     'scopeToTenant' => true,
                     'tenantRelationshipName' => null,
                     'tenantOwnershipRelationshipName' => null,
+
+                    'customProperties' => [
+                        'scopeType' => 'cms',
+                        'scopeId' => 0,
+                    ],
                 ],
                 ManageNavigationPage::class => [
                     // hasLabels
@@ -108,7 +113,7 @@ class CmsPlugin implements Plugin
                     'navigationLabel' => '导航设置',
                     'navigationIcon' => Heroicon::Bars3,
                     'activeNavigationIcon' => Heroicon::Bars3,
-                    'navigationGroup' => '导航管理',
+                    'navigationGroup' => 'Cms管理',
                     'navigationSort' => 1,
                     'navigationBadge' => null,
                     'navigationBadgeColor' => null,
@@ -123,6 +128,11 @@ class CmsPlugin implements Plugin
 
                     // belongsToParent
                     'parentResource' => null,
+
+                    'customProperties' => [
+                        'scopeType' => 'cms',
+                        'scopeId' => 0,
+                    ],
                 ],
                 NavigationPage::class => [
                     // hasLabels
@@ -132,7 +142,7 @@ class CmsPlugin implements Plugin
                     'navigationLabel' => '导航',
                     'navigationIcon' => Heroicon::Bars3,
                     'activeNavigationIcon' => Heroicon::Bars3,
-                    'navigationGroup' => '导航管理',
+                    'navigationGroup' => 'Cms管理',
                     'navigationSort' => 1,
                     'navigationBadge' => null,
                     'navigationBadgeColor' => null,
@@ -147,6 +157,11 @@ class CmsPlugin implements Plugin
 
                     // belongsToParent
                     'parentResource' => null,
+
+                    'customProperties' => [
+                        'scopeType' => 'cms',
+                        'scopeId' => 0,
+                    ],
                 ],
                 PostResource::class => [
                     // hasLabels
@@ -160,7 +175,7 @@ class CmsPlugin implements Plugin
                     'navigationIcon' => Heroicon::Bars3BottomLeft,
                     'activeNavigationIcon' => Heroicon::Bars3BottomLeft,
                     'navigationGroup' => 'Cms管理',
-                    'navigationSort' => 1,
+                    'navigationSort' => 2,
                     'navigationBadge' => null,
                     'navigationBadgeColor' => null,
                     'navigationParentItem' => null,
@@ -214,6 +229,8 @@ class CmsPlugin implements Plugin
 
                     // HasCustomProperties
                     'customProperties' => [
+                        'scopeType' => 'cms',
+                        'scopeId' => 0,
                         'level' => 2,
                     ],
                 ],
@@ -225,8 +242,8 @@ class CmsPlugin implements Plugin
                     'navigationLabel' => '基础设置',
                     'navigationIcon' => Heroicon::OutlinedCog6Tooth,
                     'activeNavigationIcon' => Heroicon::OutlinedCog6Tooth,
-                    'navigationGroup' => '设置管理',
-                    'navigationSort' => 1,
+                    'navigationGroup' => 'Cms管理',
+                    'navigationSort' => 3,
                     'navigationBadge' => null,
                     'navigationBadgeColor' => null,
                     'navigationParentItem' => null,

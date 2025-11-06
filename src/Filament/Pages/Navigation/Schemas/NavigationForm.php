@@ -108,20 +108,20 @@ class NavigationForm
                     // 只有内容 和 页面 需要设置标识
                     return in_array($get('type'), [NavigationTypeEnum::Page, NavigationTypeEnum::Content]);
                 }),
-            Forms\Components\SpatieMediaLibraryFileUpload::make('banner')->label('导航Banner')
-                ->collection('banner')
-                ->image()
-                ->openable()
-                ->downloadable()
-                ->uploadingMessage('Banner 上传中...')
-                ->imagePreviewHeight('200')
-                // ->visibleJs(<<<'JS'
-                //     ['page', 'content'].includes($get('type'))
-                // JS),
-                ->visible(function (Get $get) {
-                    // 只有内容 和 页面 需要设置 Banner
-                    return in_array($get('type'), [NavigationTypeEnum::Page, NavigationTypeEnum::Content]);
-                }),
+            // Forms\Components\SpatieMediaLibraryFileUpload::make('banner')->label('导航Banner')
+            //     ->collection('banner')
+            //     ->image()
+            //     ->openable()
+            //     ->downloadable()
+            //     ->uploadingMessage('Banner 上传中...')
+            //     ->imagePreviewHeight('200')
+            //     // ->visibleJs(<<<'JS'
+            //     //     ['page', 'content'].includes($get('type'))
+            //     // JS),
+            //     ->visible(function (Get $get) {
+            //         // 只有内容 和 页面 需要设置 Banner
+            //         return in_array($get('type'), [NavigationTypeEnum::Page, NavigationTypeEnum::Content]);
+            //     }),
             Forms\Components\Select::make('options.target')
                 ->label('跳转类型')
                 ->options([

@@ -8,8 +8,8 @@ use Filament\Forms;
 use Filament\Pages\SettingsPage;
 use Filament\Schemas;
 use Filament\Schemas\Schema;
-use Filament\Support\Icons\Heroicon;
 use UnitEnum;
+use Wsmallnews\Cms\CmsPlugin;
 use Wsmallnews\Cms\Settings\GeneralSettings;
 use Wsmallnews\Support\Concerns\Resource\HasCustomProperties;
 
@@ -67,5 +67,10 @@ class GeneralSetting extends SettingsPage
                         ->imagePreviewHeight('100'),
                 ])->columns(2)
             ]);
+    }
+
+    public static function getEssentialsPlugin(): ?CmsPlugin
+    {
+        return CmsPlugin::get();
     }
 }
