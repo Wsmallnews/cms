@@ -193,7 +193,7 @@ class NavigationForm
                                 // ->visibleJs(<<<'JS'
                                 //     $get('has_routes')
                                 // JS),
-                                ->visible(fn(Get $get): bool => $get('has_routes')),
+                                ->visible(fn (Get $get): bool => $get('has_routes')),
                         ])
                         ->columns(1)
                         ->columnSpan(1),

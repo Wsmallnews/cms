@@ -2,14 +2,11 @@
 
 namespace Wsmallnews\Cms\Filament\Pages;
 
-use BackedEnum;
 use BezhanSalleh\PluginEssentials\Concerns;
 use Filament\Forms;
 use Filament\Pages\SettingsPage;
 use Filament\Schemas;
 use Filament\Schemas\Schema;
-use Filament\Support\Icons\Heroicon;
-use UnitEnum;
 use Wsmallnews\Cms\Settings\GeneralSettings;
 use Wsmallnews\Support\Concerns\Resource\HasCustomProperties;
 
@@ -65,7 +62,7 @@ class GeneralSetting extends SettingsPage
                         ->downloadable()
                         ->uploadingMessage('公众号二维码上传中...')
                         ->imagePreviewHeight('100'),
-                ])->columns(2)
+                ])->columns(2),
             ]);
     }
 }

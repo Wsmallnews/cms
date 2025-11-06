@@ -31,12 +31,10 @@ class GeneralSettings extends Settings
         return 'cms_general';
     }
 
-
     public static function repository(): ?string
     {
         return 'database';
     }
-
 
     // public static function cacheKey(): string
     // {
