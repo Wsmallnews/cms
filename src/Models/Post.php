@@ -28,14 +28,14 @@ class Post extends SupportModel implements HasMedia
         'status' => PostStatus::class,
     ];
 
-    // public function scopeScopeTenant($query)
-    // {
-    //     if (has_tenancy()) {
-    //         return $query->where('team_id', current_tenant()->id);
-    //     } else {
-    //         return $query->whereNull('team_id');
-    //     }
-    // }
+    public function scopeScopeTenant($query)
+    {
+        if (has_tenancy()) {
+            return $query->where('team_id', current_tenant()->id);
+        } else {
+            return $query->whereNull('team_id');
+        }
+    }
 
     /**
      * post 分类多对多查询

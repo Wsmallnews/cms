@@ -30,7 +30,7 @@
             <div class="w-full md:w-1/3 flex flex-col px-4 gap-4">
                 <div class="text-gray-800 font-bold text-xl text-center leading-6">关注或联系我们</div>
                 <div class="text-gray-600 text-base text-center leading-5">添加微信或关注官方微信</div>
-                {{-- <div class="flex justify-center">
+                <div class="flex justify-center">
                     @if ($general->wechat_qrcode)
                         <img class="w-[100px] h-[100px] mr-[12px]" src="{{ files_url($general->wechat_qrcode) }}" />
                     @endif
@@ -55,13 +55,13 @@
                         <div class="min-w-20 text-gray-600 text-base leading-5">联系地址：</div>
                         <div class="text-gray-600 text-lg leading-6">{{ $general->address }}</div>
                     </div>
-                @endif --}}
+                @endif
             </div>
         </div>
 
         <div class="w-full h-12 border-t border-gray-300 flex items-center justify-center text-base text-gray-500">
-            {{-- Copyright © {{ $general->copytime }} {{ $general->copyright }} 版权所有 &nbsp;
-            <a href="{{ $general->beian_url }}" target="_blank">{{ $general->beian_no }}</a> --}}
+            Copyright © {{ $general->copytime }} {{ $general->copyright }} 版权所有 &nbsp;
+            <a href="{{ $general->beian_url }}" target="_blank">{{ $general->beian_no }}</a>
         </div>
     </div>
 </div>

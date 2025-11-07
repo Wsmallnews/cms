@@ -1,0 +1,6 @@
+<x-dynamic-component :component="$wrapperView" class="w-full">
+    <div class="w-full flex items-center gap-2 text-sm text-gray-500 text-left">
+        当前位置 :
+        {{-- <x-filament::breadcrumbs :breadcrumbs="$breadcrumbs" /> --}}
+    </div>
+</x-dynamic-component>

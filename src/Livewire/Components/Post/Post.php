@@ -1,16 +1,16 @@
 <?php
 
-namespace Wsmallnews\Cms\Livewire\Post\Components;
+namespace Wsmallnews\Cms\Livewire\Components\Post;
 
 use Illuminate\Database\Eloquent\Model;
-use Wsmallnews\Cms\Livewire\Common\Components\BaseComponent;
+use Wsmallnews\Cms\Livewire\Components\Base;
 use Wsmallnews\Cms\Models\Post as PostModel;
 
-class Post extends BaseComponent
+class Post extends Base
 {
     public int $id;
 
-    public string $wrapperView = 'base.block';
+    public string $wrapperView = 'sn-support::base.block';
 
     public function render()
     {

@@ -1,17 +1,17 @@
 <?php
 
-namespace Wsmallnews\Cms\Livewire\Post\Components;
+namespace Wsmallnews\Cms\Livewire\Components\Post;
 
-use Wsmallnews\Cms\Livewire\Common\Components\BaseComponent;
+use Wsmallnews\Cms\Livewire\Components\Base;
 use Wsmallnews\Cms\Models\Post;
 
-class IndexPosts extends BaseComponent
+class IndexPosts extends Base
 {
     public int $limit = 10;
 
-    public string $wrapperView = 'base.empty-block';
+    public string $wrapperView = 'sn-support::base.empty-block';
 
-    public string $itemWrapperView = 'base.block';
+    public string $itemWrapperView = 'sn-support::base.block';
 
     public function render()
     {

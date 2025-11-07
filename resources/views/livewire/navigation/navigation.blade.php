@@ -1,53 +1,24 @@
 @php
-    $breadcrumbs = [];
+    // $breadcrumbs = [];
 
-    foreach ($parents as $parent) {
-        $breadcrumbs[$parent->url_info['url']] = $parent->name;
-    }
+    // foreach ($parents as $parent) {
+    //     $breadcrumbs[$parent->url_info['url']] = $parent->name;
+    // }
+
+    $scopeType = $this->getScopeType();
+    $scopeId = $this->getScopeId();
 @endphp
 
 @push('seo')
-    {!! seo()->for($navigation) !!}
+    {{-- {!! seo()->for($navigation) !!} --}}
 @endpush
 
 <div class="w-full flex flex-col grow gap-4">
-    <livewire:sn-components-navigation />
+    <livewire:sn-components-navigation :scope-type="$scopeType" :scope-id="$scopeId" />
 
     <div class="container mx-auto flex flex-col grow gap-4">
-        @if ($navigation->getFirstMediaUrl('banner'))
-            <div class="w-full relative">
-                <img src="{{ $navigation->getFirstMediaUrl('banner') }}" class="w-full">
-            </div>
-        @endif
-
-        <div class="w-full flex items-center gap-2 text-sm text-gray-500 text-left">
-            当前位置 :
-            <x-filament::breadcrumbs :breadcrumbs="$breadcrumbs" />
-        </div>
-
-        <div class="w-full flex flex-col md:flex-row items-start gap-4">
-            @if ($brothers->isNotEmpty())
-                <ul class="flex flex-col w-full md:w-72 shrink-0 bg-primary-500">
-                    @foreach ($brothers as $brother)
-                        <li class="flex">
-                            <a class="flex flex-grow px-4 py-4 font-bold text-white focus:underline"
-                                {{ \Filament\Support\generate_href_html($brother->url_info['url'], $brother->url_info['target'] ?? '_self') }}
-                                aria-current="page"
-                            >
-                                {{ $brother->name }}
-                            </a>
-                        </li>
-                    @endforeach
-                </ul>
-            @endif
-
-            <div class="w-full flex flex-col grow gap-4">
-                @foreach ($components as $component_name => $params)
-                    @livewire($component_name, $params, key($component_name . '-' . $loop->index))
-                @endforeach
-            </div>
-        </div>
+        <livewire:sn-components-navigation-container :scope-type="$scopeType" :scope-id="$scopeId" :slug="$slug" />
     </div>
 
-    <livewire:sn-components-footer />
+    <livewire:sn-components-footer :scope-type="$scopeType" :scope-id="$scopeId" />
 </div>

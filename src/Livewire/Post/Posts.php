@@ -3,9 +3,10 @@
 namespace Wsmallnews\Cms\Livewire\Post;
 
 use Livewire\Attributes\Url;
+use Wsmallnews\Cms\Livewire\Base;
 use Wsmallnews\Cms\Livewire\Common\BasePage;
 
-class Posts extends BasePage
+class Posts extends Base
 {
     #[Url]
     public int $category_id;

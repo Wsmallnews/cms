@@ -1,19 +1,15 @@
-@php
-    // 这里可以添加 PHP 代码
-@endphp
-
 {{-- @push('seo')
     {!! seo() !!}
 @endpush --}}
 
 <div class="w-full flex flex-col grow gap-4" x-data="index({})">
-    <livewire:sn-components-navigation />
+    <livewire:sn-components-navigation scope-type="{{ $this->getScopeType() }}" scope-id="{{ $this->getScopeId() }}" />
 
     <div class="container mx-auto flex flex-col grow gap-4">
         {{-- <livewire:sn-components-index-posts :limit="6" /> --}}
     </div>
 
-    <livewire:sn-components-footer />
+    <livewire:sn-components-footer scope-type="{{ $this->getScopeType() }}" scope-id="{{ $this->getScopeId() }}" />
 </div>
 
 @assets

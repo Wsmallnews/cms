@@ -16,6 +16,13 @@ class Utils
         return $name ? ($config[$name] ?? null) : $config;
     }
 
+
+    public static function getScopeable(): array
+    {
+        return self::getConfig('scopeable');
+    }
+
+
     public static function currentPanel(): ?Panel
     {
         return Filament::getCurrentOrDefaultPanel();

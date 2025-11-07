@@ -2,9 +2,9 @@
 
 namespace Wsmallnews\Cms\Livewire\Post;
 
-use Wsmallnews\Cms\Livewire\Common\BasePage;
+use Wsmallnews\Cms\Livewire\Base;
 
-class Post extends BasePage
+class Post extends Base
 {
     public int $id;
 

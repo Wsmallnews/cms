@@ -56,7 +56,7 @@ class Navigation extends SupportModel implements HasMedia
         }
 
         if ($navigation->type == NavigationTypeEnum::Page) {
-            $url = sn_route('navigation', $navigation->slug);
+            $url = sn_route('cms.navigation', $navigation->slug);
         }
 
         if ($navigation->type == NavigationTypeEnum::Url && isset($navigation->options['url'])) {
@@ -64,7 +64,7 @@ class Navigation extends SupportModel implements HasMedia
         }
 
         if ($navigation->type == NavigationTypeEnum::Content) {
-            $url = sn_route('navigation', $navigation->slug);
+            $url = sn_route('cms.navigation', $navigation->slug);
         }
 
         $navigation->setAttribute('url_info', [

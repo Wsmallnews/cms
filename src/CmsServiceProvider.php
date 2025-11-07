@@ -113,14 +113,17 @@ class CmsServiceProvider extends PackageServiceProvider
         Livewire::component('sn-fi-navigation', BaseNavigation::class);
 
         // 注册组件 (前端组件)
-        Livewire::component('sn-components-footer', \Wsmallnews\Cms\Livewire\Common\Components\Footer::class);
+        Livewire::component('sn-components-footer', \Wsmallnews\Cms\Livewire\Components\Footer::class);
         // 导航相关
-        Livewire::component('sn-components-navigation', \Wsmallnews\Cms\Livewire\Navigation\Components\Navigation::class);
-        Livewire::component('sn-components-navigation-content', \Wsmallnews\Cms\Livewire\Navigation\Components\Content::class);
+        Livewire::component('sn-components-navigation', \Wsmallnews\Cms\Livewire\Components\Navigation\Navigation::class);
+        Livewire::component('sn-components-navigation-breadcrumb', \Wsmallnews\Cms\Livewire\Components\Navigation\Breadcrumb::class);
+        Livewire::component('sn-components-navigation-brothers', \Wsmallnews\Cms\Livewire\Components\Navigation\Brothers::class);
+        Livewire::component('sn-components-navigation-container', \Wsmallnews\Cms\Livewire\Components\Navigation\NavigationContainer::class);
+        Livewire::component('sn-components-navigation-content', \Wsmallnews\Cms\Livewire\Components\Navigation\Content::class);
         // 内容相关
-        Livewire::component('sn-components-index-posts', \Wsmallnews\Cms\Livewire\Post\Components\IndexPosts::class);
-        Livewire::component('sn-components-posts', \Wsmallnews\Cms\Livewire\Post\Components\Posts::class);
-        Livewire::component('sn-components-post', \Wsmallnews\Cms\Livewire\Post\Components\Post::class);
+        Livewire::component('sn-components-index-posts', \Wsmallnews\Cms\Livewire\Components\Post\IndexPosts::class);
+        Livewire::component('sn-components-posts', \Wsmallnews\Cms\Livewire\Components\Post\Posts::class);
+        Livewire::component('sn-components-post', \Wsmallnews\Cms\Livewire\Components\Post\Post::class);
 
         // 注册导航内容
         ContentRegistryFacade::registers([
