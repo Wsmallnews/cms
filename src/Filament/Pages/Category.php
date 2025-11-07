@@ -5,7 +5,6 @@ namespace Wsmallnews\Cms\Filament\Pages;
 use BezhanSalleh\PluginEssentials\Concerns;
 use Wsmallnews\Category\Filament\Pages\Category\Base as BaseCategoryPage;
 use Wsmallnews\Cms\CmsPlugin;
-use Wsmallnews\Cms\Filament\Resources\Posts\PostResource;
 use Wsmallnews\Cms\Support\Utils;
 use Wsmallnews\Support\Concerns\Resource\HasCustomProperties;
 

@@ -35,7 +35,7 @@ class Posts extends Base
 
     public function render()
     {
-        // @sn todo 
+        // @sn todo
         // $categoryIds = Arr::wrap($this->category_ids);
         $categoryIds = [];
 

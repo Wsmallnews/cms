@@ -35,7 +35,7 @@ class Footer extends Base
 
         return view('sn-cms::livewire.components.footer', [
             'navigations' => $navigations,
-            'general' => app(GeneralSettings::class)
+            'general' => app(GeneralSettings::class),
         ]);
     }
 }

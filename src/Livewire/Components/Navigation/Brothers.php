@@ -23,7 +23,7 @@ class Brothers extends Base
         }
 
         return view('sn-cms::livewire.components.navigation.breadcrumb', [
-            'brothers' => $brothers
+            'brothers' => $brothers,
         ]);
     }
 }

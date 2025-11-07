@@ -7,7 +7,6 @@ use Kalnoy\Nestedset\QueryBuilder;
 use Wsmallnews\Cms\Enums\NavigationType as NavigationTypeEnum;
 use Wsmallnews\Cms\Facades\ContentRegistry;
 use Wsmallnews\Cms\Livewire\Components\Base;
-use Wsmallnews\Cms\Livewire\Components\Navigation\Content;
 use Wsmallnews\Cms\Models\Navigation as NavigationModel;
 use Wsmallnews\Cms\Models\NavigationType as NavigationTypeModel;
 
@@ -25,7 +24,6 @@ class NavigationContainer extends Base
             $query->where('id', $this->navigationTypeId);
         })->firstOrFail();
     }
-
 
     public function render()
     {
@@ -57,7 +55,6 @@ class NavigationContainer extends Base
         ]);
     }
 
-
     /**
      * 先这样解决， queryBuilder 不支持调用 Nestedset 的 scoped 方法
      */
@@ -71,11 +68,6 @@ class NavigationContainer extends Base
 
         return NavigationModel::scoped($scoped)->normal();
     }
-
-
-
-
-
 
     public function renderbak()
     {

@@ -7,7 +7,7 @@ use Livewire\Component;
 use Wsmallnews\Cms\Support\Utils;
 
 #[Layout('sn-cms::components.layouts.app')]
-class Base extends Component 
+class Base extends Component
 {
     public function getScopeType(): ?string
     {
@@ -19,7 +19,7 @@ class Base extends Component
         return Utils::getScopeable()['scope_id'] ?? null;
     }
 
-    public function getScopeable(): array 
+    public function getScopeable(): array
     {
         return Utils::getScopeable();
     }
