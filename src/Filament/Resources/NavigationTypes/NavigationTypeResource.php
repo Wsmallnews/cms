@@ -7,6 +7,7 @@ use Wsmallnews\Cms\CmsPlugin;
 use Wsmallnews\Cms\Filament\Resources\NavigationTypes\Pages\CreateNavigationType;
 use Wsmallnews\Cms\Filament\Resources\NavigationTypes\Pages\EditNavigationType;
 use Wsmallnews\Cms\Filament\Resources\NavigationTypes\Pages\ListNavigationTypes;
+use Wsmallnews\Cms\Support\Utils;
 use Wsmallnews\Support\Concerns\Resource\HasCustomProperties;
 
 final class NavigationTypeResource extends BaseResource
@@ -29,12 +30,12 @@ final class NavigationTypeResource extends BaseResource
 
     public static function getScopeType(): string
     {
-        return self::getCustomProperty('scopeType') ?? parent::getScopeType();
+        return Utils::getScopeable()['scope_type'] ?? parent::getScopeType();
     }
 
     public static function getScopeId(): int
     {
-        return self::getCustomProperty('scopeId') ?? parent::getScopeId();
+        return Utils::getScopeable()['scope_id'] ?? parent::getScopeId();
     }
 
     public static function getProperties(): array

@@ -142,7 +142,7 @@ class CmsServiceProvider extends PackageServiceProvider
                         ->treeKey('postCategories'),
                 ],
                 'components' => [
-                    \Wsmallnews\Cms\Livewire\Post\Components\Posts::class,
+                    \Wsmallnews\Cms\Livewire\Components\Post\Posts::class,
                 ],
             ],
             [
@@ -158,7 +158,7 @@ class CmsServiceProvider extends PackageServiceProvider
                         ->required(),
                 ],
                 'components' => [
-                    \Wsmallnews\Cms\Livewire\Post\Components\Post::class,
+                    \Wsmallnews\Cms\Livewire\Components\Post\Post::class,
                 ],
             ],
         ]);

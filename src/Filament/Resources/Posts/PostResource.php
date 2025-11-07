@@ -7,6 +7,7 @@ use Wsmallnews\Cms\CmsPlugin;
 use Wsmallnews\Cms\Filament\Resources\Posts\Pages\CreatePost;
 use Wsmallnews\Cms\Filament\Resources\Posts\Pages\EditPost;
 use Wsmallnews\Cms\Filament\Resources\Posts\Pages\ListPosts;
+use Wsmallnews\Cms\Support\Utils;
 use Wsmallnews\Support\Concerns\Resource\HasCustomProperties;
 
 final class PostResource extends BaseResource
@@ -29,12 +30,12 @@ final class PostResource extends BaseResource
 
     public static function getScopeType(): string
     {
-        return self::getCustomProperty('scopeType') ?? parent::getScopeType();
+        return Utils::getScopeable()['scope_type'] ?? parent::getScopeType();
     }
 
     public static function getScopeId(): int
     {
-        return self::getCustomProperty('scopeId') ?? parent::getScopeId();
+        return Utils::getScopeable()['scope_id'] ?? parent::getScopeId();
     }
 
     public static function getEssentialsPlugin(): ?CmsPlugin

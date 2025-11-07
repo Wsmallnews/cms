@@ -99,11 +99,6 @@ class CmsPlugin implements Plugin
                     'scopeToTenant' => true,
                     'tenantRelationshipName' => null,
                     'tenantOwnershipRelationshipName' => null,
-
-                    'customProperties' => [
-                        'scopeType' => 'cms',
-                        'scopeId' => 0,
-                    ],
                 ],
                 ManageNavigationPage::class => [
                     // hasLabels
@@ -128,11 +123,6 @@ class CmsPlugin implements Plugin
 
                     // belongsToParent
                     'parentResource' => null,
-
-                    'customProperties' => [
-                        'scopeType' => 'cms',
-                        'scopeId' => 0,
-                    ],
                 ],
                 NavigationPage::class => [
                     // hasLabels
@@ -157,11 +147,6 @@ class CmsPlugin implements Plugin
 
                     // belongsToParent
                     'parentResource' => null,
-
-                    'customProperties' => [
-                        'scopeType' => 'cms',
-                        'scopeId' => 0,
-                    ],
                 ],
                 PostResource::class => [
                     // hasLabels
@@ -194,12 +179,6 @@ class CmsPlugin implements Plugin
                     'scopeToTenant' => true,
                     'tenantRelationshipName' => null,
                     'tenantOwnershipRelationshipName' => null,
-
-                    // HasCustomProperties
-                    'customProperties' => [
-                        'scopeType' => 'cms',
-                        'scopeId' => 0,
-                    ],
                 ],
                 CategoryPage::class => [
                     // hasLabels
@@ -229,8 +208,6 @@ class CmsPlugin implements Plugin
 
                     // HasCustomProperties
                     'customProperties' => [
-                        'scopeType' => 'cms',
-                        'scopeId' => 0,
                         'level' => 2,
                     ],
                 ],

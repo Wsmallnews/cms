@@ -5,6 +5,7 @@ namespace Wsmallnews\Cms\Filament\Pages;
 use BezhanSalleh\PluginEssentials\Concerns;
 use Wsmallnews\Cms\CmsPlugin;
 use Wsmallnews\Cms\Filament\Pages\Navigation\Base as BaseNavigationPage;
+use Wsmallnews\Cms\Support\Utils;
 use Wsmallnews\Support\Concerns\Resource\HasCustomProperties;
 
 final class Navigation extends BaseNavigationPage
@@ -18,12 +19,12 @@ final class Navigation extends BaseNavigationPage
 
     public static function getScopeType(): string
     {
-        return self::getCustomProperty('scopeType') ?? parent::getScopeType();
+        return Utils::getScopeable()['scope_type'] ?? parent::getScopeType();
     }
 
     public static function getScopeId(): int
     {
-        return self::getCustomProperty('scopeId') ?? parent::getScopeId();
+        return Utils::getScopeable()['scope_id'] ?? parent::getScopeId();
     }
 
     public function getLevel(): ?int

@@ -6,6 +6,7 @@ use BezhanSalleh\PluginEssentials\Concerns;
 use Wsmallnews\Category\Filament\Pages\Category\Base as BaseCategoryPage;
 use Wsmallnews\Cms\CmsPlugin;
 use Wsmallnews\Cms\Filament\Resources\Posts\PostResource;
+use Wsmallnews\Cms\Support\Utils;
 use Wsmallnews\Support\Concerns\Resource\HasCustomProperties;
 
 class Category extends BaseCategoryPage
@@ -19,12 +20,12 @@ class Category extends BaseCategoryPage
 
     public static function getScopeType(): string
     {
-        return PostResource::getCustomProperty('scopeType') ?? parent::getScopeType();
+        return Utils::getScopeable()['scope_type'] ?? parent::getScopeType();
     }
 
     public static function getScopeId(): int
     {
-        return PostResource::getCustomProperty('scopeId') ?? parent::getScopeId();
+        return Utils::getScopeable()['scope_id'] ?? parent::getScopeId();
     }
 
     public function getLevel(): ?int
