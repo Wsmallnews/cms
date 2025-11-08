@@ -45,8 +45,6 @@ class NavigationContainer extends Base
         ]);
     }
 
-    
-
     public function renderbak()
     {
         $navigation = $this->getModel()->normal()->where('slug', $this->slug)->firstOrFail();

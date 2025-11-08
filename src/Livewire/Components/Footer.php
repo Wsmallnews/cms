@@ -4,7 +4,6 @@ namespace Wsmallnews\Cms\Livewire\Components;
 
 use Wsmallnews\Cms\Livewire\Concerns\Navigationable;
 use Wsmallnews\Cms\Models\Navigation as NavigationModel;
-use Wsmallnews\Cms\Models\NavigationType as NavigationTypeModel;
 use Wsmallnews\Cms\Settings\GeneralSettings;
 
 class Footer extends Base

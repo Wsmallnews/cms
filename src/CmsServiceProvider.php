@@ -20,7 +20,6 @@ use Wsmallnews\Category\Models\Category as CategoryModel;
 use Wsmallnews\Cms\Commands\CmsCommand;
 use Wsmallnews\Cms\Facades\ContentRegistry as ContentRegistryFacade;
 use Wsmallnews\Cms\Filament\Pages\Navigation\Components\BaseNavigation;
-use Wsmallnews\Cms\Filament\Resources\Posts\PostResource;
 use Wsmallnews\Cms\Models\Content as ContentModel;
 use Wsmallnews\Cms\Models\Navigation as NavigationModel;
 use Wsmallnews\Cms\Models\NavigationType as NavigationTypeModel;
@@ -148,7 +147,7 @@ class CmsServiceProvider extends PackageServiceProvider
                 'components' => [
                     \Wsmallnews\Cms\Livewire\Components\Post\Posts::class => [
                         'scopeType' => Utils::getScopeType(),
-                        'scopeId' => Utils::getScopeId()
+                        'scopeId' => Utils::getScopeId(),
                     ],
                 ],
             ],
@@ -167,7 +166,7 @@ class CmsServiceProvider extends PackageServiceProvider
                 'components' => [
                     \Wsmallnews\Cms\Livewire\Components\Post\Post::class => [
                         'scopeType' => Utils::getScopeType(),
-                        'scopeId' => Utils::getScopeId()
+                        'scopeId' => Utils::getScopeId(),
                     ],
                 ],
             ],

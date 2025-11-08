@@ -19,15 +19,14 @@ class Utils
 
     /**
      * 获取 scopeinfo 参数
-     * 
-     * @return array
+     *
      * @throws CmsException
      */
     public static function getScopeable(): array
     {
         $scopeable = self::getConfig('scopeable');
-        if (!isset($scopeable['scope_type']) || blank($scopeable['scope_type'])
-             || !isset($scopeable['scope_id']) || blank($scopeable['scope_id'])
+        if (! isset($scopeable['scope_type']) || blank($scopeable['scope_type'])
+             || ! isset($scopeable['scope_id']) || blank($scopeable['scope_id'])
         ) {
             throw new CmsException('scopeable配置错误, 请检查 sn-cms.php 配置文件');
         }
@@ -37,8 +36,7 @@ class Utils
 
     /**
      * 获取 scopeType 参数
-     * 
-     * @return string
+     *
      * @throws CmsException
      */
     public static function getScopeType(): string
@@ -48,8 +46,7 @@ class Utils
 
     /**
      * 获取 scopeId 参数
-     * 
-     * @return 
+     *
      * @throws CmsException
      */
     public static function getScopeId(): int

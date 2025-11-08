@@ -28,7 +28,6 @@ class Post extends SupportModel implements HasMedia
         'status' => PostStatus::class,
     ];
 
-
     /**
      * post 分类多对多查询
      */

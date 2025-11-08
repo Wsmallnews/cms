@@ -23,7 +23,6 @@ trait Navigationable
         $this->navigationTypeId = $this->navigationType->id;
     }
 
-
     public function getScoped()
     {
         $scoped = [
@@ -34,7 +33,6 @@ trait Navigationable
 
         return $scoped;
     }
-
 
     /**
      * queryBuilder 不支持调用 Nestedset 的 scoped 方法

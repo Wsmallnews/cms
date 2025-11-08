@@ -12,8 +12,8 @@ use Wsmallnews\Support\Livewire\Concerns\CanPagination;
 
 class Posts extends Base
 {
-    use Categoryable;
     use CanPagination;
+    use Categoryable;
     use WithoutUrlPagination;
 
     public int | array | null $categoryIds = [];
@@ -36,7 +36,7 @@ class Posts extends Base
 
     public function render()
     {
-        $allCategories = $this->getCategoryIds($this->categoryIds); 
+        $allCategories = $this->getCategoryIds($this->categoryIds);
 
         // 查询图文
         // $query = PostModel::query()->scopeTenant()->normal()->with(['media'])->when($allCategories->isNotEmpty(), function ($query) use ($allCategories) {
@@ -54,8 +54,8 @@ class Posts extends Base
 
     /**
      * 获取指定分类的所有下级分类的 id
-     * 
-     * @param int|array|null $categoryIds
+     *
+     * @param  int|array|null  $categoryIds
      * @return Collection
      */
     protected function getCategoryIds($categoryIds)
