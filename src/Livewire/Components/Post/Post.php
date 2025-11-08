@@ -14,7 +14,7 @@ class Post extends Base
 
     public function render()
     {
-        $post = PostModel::query()->scopeTenant()->normal()->with(['media', 'content'])->findOrFail($this->id);
+        $post = PostModel::snScope(...$this->getScopeable())->normal()->with(['media', 'content'])->findOrFail($this->id);
 
         Model::withoutTimestamps(fn () => $post->increment('views'));        // 增加浏览量,不更新 updated_at
 

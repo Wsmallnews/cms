@@ -15,7 +15,7 @@ class IndexPosts extends Base
 
     public function render()
     {
-        $posts = Post::query()->normal()->limit($this->limit)->get();
+        $posts = Post::snScope(...$this->getScopeable())->normal()->limit($this->limit)->get();
 
         return view('sn-cms::livewire.components.index-posts', [
             'posts' => $posts,

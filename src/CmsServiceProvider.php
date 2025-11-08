@@ -25,6 +25,7 @@ use Wsmallnews\Cms\Models\Content as ContentModel;
 use Wsmallnews\Cms\Models\Navigation as NavigationModel;
 use Wsmallnews\Cms\Models\NavigationType as NavigationTypeModel;
 use Wsmallnews\Cms\Models\Post as PostModel;
+use Wsmallnews\Cms\Support\Utils;
 
 class CmsServiceProvider extends PackageServiceProvider
 {
@@ -134,7 +135,7 @@ class CmsServiceProvider extends PackageServiceProvider
                     // 多选分类
                     SelectTree::make('category_ids')->label('选择分类')
                         ->query(query: function () {
-                            return CategoryModel::scopeable(PostResource::getScopeType(), PostResource::getScopeId());
+                            return CategoryModel::scopeable(Utils::getScopeType(), Utils::getScopeId());
                         }, titleAttribute: 'name', parentAttribute: 'parent_id')
                         ->searchable()
                         ->multiple()
@@ -145,7 +146,10 @@ class CmsServiceProvider extends PackageServiceProvider
                         ->treeKey('postCategories'),
                 ],
                 'components' => [
-                    \Wsmallnews\Cms\Livewire\Components\Post\Posts::class,
+                    \Wsmallnews\Cms\Livewire\Components\Post\Posts::class => [
+                        'scopeType' => Utils::getScopeType(),
+                        'scopeId' => Utils::getScopeId()
+                    ],
                 ],
             ],
             [
@@ -153,15 +157,18 @@ class CmsServiceProvider extends PackageServiceProvider
                 'label' => '图文详情',
                 'forms' => fn ($fields) => [
                     Select::make('id')->label('选择图文')
-                        ->options(PostModel::normal()->scopeable(PostResource::getScopeType(), PostResource::getScopeId())->limit(30)->pluck('title', 'id'))
-                        ->getSearchResultsUsing(fn (string $search): array => PostModel::normal()->scopeable(PostResource::getScopeType(), PostResource::getScopeId())->where('title', 'like', "%{$search}%")->limit(30)->pluck('title', 'id')->toArray())
+                        ->options(PostModel::normal()->scopeable(Utils::getScopeType(), Utils::getScopeId())->limit(30)->pluck('title', 'id'))
+                        ->getSearchResultsUsing(fn (string $search): array => PostModel::normal()->scopeable(Utils::getScopeType(), Utils::getScopeId())->where('title', 'like', "%{$search}%")->limit(30)->pluck('title', 'id')->toArray())
                         ->placeholder('请选择图文详情')
                         ->searchable()
                         ->preload()
                         ->required(),
                 ],
                 'components' => [
-                    \Wsmallnews\Cms\Livewire\Components\Post\Post::class,
+                    \Wsmallnews\Cms\Livewire\Components\Post\Post::class => [
+                        'scopeType' => Utils::getScopeType(),
+                        'scopeId' => Utils::getScopeId()
+                    ],
                 ],
             ],
         ]);

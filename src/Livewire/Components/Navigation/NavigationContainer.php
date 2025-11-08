@@ -3,31 +3,21 @@
 namespace Wsmallnews\Cms\Livewire\Components\Navigation;
 
 use Illuminate\Support\Arr;
-use Kalnoy\Nestedset\QueryBuilder;
 use Wsmallnews\Cms\Enums\NavigationType as NavigationTypeEnum;
 use Wsmallnews\Cms\Facades\ContentRegistry;
 use Wsmallnews\Cms\Livewire\Components\Base;
+use Wsmallnews\Cms\Livewire\Concerns\Navigationable;
 use Wsmallnews\Cms\Models\Navigation as NavigationModel;
-use Wsmallnews\Cms\Models\NavigationType as NavigationTypeModel;
 
 class NavigationContainer extends Base
 {
+    use Navigationable;
+
     public string $slug;
-
-    public ?int $navigationTypeId = null;
-
-    public ?NavigationTypeModel $navigationType = null;
-
-    public function mount()
-    {
-        $this->navigationType = NavigationTypeModel::scopeable(...$this->getScopeable())->when($this->navigationTypeId, function ($query) {
-            $query->where('id', $this->navigationTypeId);
-        })->firstOrFail();
-    }
 
     public function render()
     {
-        $navigation = $this->getQuery()->where('slug', $this->slug)->firstOrFail();
+        $navigation = $this->getScopedQuery()->normal()->where('slug', $this->slug)->firstOrFail();
 
         if ($navigation->type == NavigationTypeEnum::Content) {
             // 根据当前导航的内容类型，获取导航的设置
@@ -55,19 +45,7 @@ class NavigationContainer extends Base
         ]);
     }
 
-    /**
-     * 先这样解决， queryBuilder 不支持调用 Nestedset 的 scoped 方法
-     */
-    protected function getQuery(): string | QueryBuilder
-    {
-        $scoped = [
-            ...$this->getScopeable(),
-            'type_id' => $this->navigationType->id,
-        ];
-        has_tenancy() && $scoped['team_id'] = current_tenant()?->id;
-
-        return NavigationModel::scoped($scoped)->normal();
-    }
+    
 
     public function renderbak()
     {
