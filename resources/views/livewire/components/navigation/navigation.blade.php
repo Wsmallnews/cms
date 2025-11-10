@@ -6,15 +6,10 @@
     <div class="container mx-auto relative px-4 sm:px-0">
         <div class="flex justify-between h-16">
             <div class="flex gap-4">
-                {{-- <div class="shrink-0 flex items-center">
-                    <a href="{{ sn_route('index') }}" wire:navigate>
-                        <x-filament-panels::logo class="" />
-                    </a>
-                </div> --}}
-                <ul class="hidden md:-my-px md:flex">
+                <ul class="hidden md:flex">
                     @foreach ($navigations as $navigation)
                         @if ($navigation->children->count() > 0)
-                            <li class="min-w-32 flex items-center relative w-fit hover:bg-primary-600"
+                            <li class="min-w-32 flex items-center relative w-fit hover:bg-primary-600 transition-colors duration-300 ease-in-out"
                                 x-data="{ isOpen: false, openedWithKeyboard: false, leaveTimeout: null }"
                                 x-on:mouseleave.prevent="leaveTimeout = setTimeout(() => { isOpen = false }, 50)"
                                 x-on:mouseenter="leaveTimeout ? clearTimeout(leaveTimeout) : true"
@@ -31,9 +26,7 @@
                                     aria-haspopup="true"
                                 >
                                     {{ $navigation->name }}
-                                    <svg class="absolute right-2 size-4 transform transition-transform duration-300 rotate-0 group-hover:rotate-180" aria-hidden="true" fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/>
-                                    </svg>
+                                    <x-filament::icon icon="heroicon-m-chevron-down" class="absolute size-6 right-2 font-bold transform transition-transform duration-300 rotate-0 group-hover:rotate-180" aria-hidden="true" />
                                 </a>
 
                                 <div class="w-full absolute top-16 flex flex-col overflow-hidden bg-primary-500 z-10"
@@ -56,7 +49,7 @@
                                 </div>
                             </li>
                         @else
-                            <li class="min-w-32 flex items-center hover:bg-primary-600">
+                            <li class="min-w-32 flex items-center hover:bg-primary-600 transition-colors duration-300 ease-in-out">
                                 <a class="flex w-full h-full justify-center items-center font-bold text-white underline-offset-2 focus:outline-hidden focus:underline"
                                     {{ \Filament\Support\generate_href_html($navigation->url_info['url'], $navigation->url_info['target'] ?? false) }}
                                 >
@@ -102,12 +95,8 @@
             aria-label="mobile menu"
             aria-controls="mobileMenu"
         >
-            <svg x-cloak x-show="!mobileMenuIsOpen" xmlns="http://www.w3.org/2000/svg" fill="none" aria-hidden="true" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-6">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-            </svg>
-            <svg x-cloak x-show="mobileMenuIsOpen" xmlns="http://www.w3.org/2000/svg" fill="none" aria-hidden="true" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-6">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-            </svg>
+            <x-filament::icon icon="heroicon-m-bars-3" class="size-6" x-cloak x-show="!mobileMenuIsOpen" aria-hidden="true" />
+            <x-filament::icon icon="heroicon-m-x-mark" class="size-6" x-cloak x-show="mobileMenuIsOpen" aria-hidden="true" />
         </button>
 
         <!-- Mobile Menu -->
@@ -129,11 +118,7 @@
                                 @click="isExpanded = ! isExpanded"
                                 :aria-expanded="isExpanded ? 'true' : 'false'">
                                 {{ $navigation->name }}
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2"
-                                    stroke="currentColor" class="size-5 shrink-0 transition" aria-hidden="true"
-                                    :class="isExpanded  ?  'rotate-180'  :  ''">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-                                </svg>
+                                <x-filament::icon icon="heroicon-m-chevron-down" class="size-6 transform transition-transform duration-300" ::class="isExpanded  ?  'rotate-180'  :  ''" aria-hidden="true" />
                             </button>
                             <div class="flex flex-col px-2 border-t border-primary-400 divide-y divide-primary-400"
                                 id="accordionItem{{$navigation->id}}"

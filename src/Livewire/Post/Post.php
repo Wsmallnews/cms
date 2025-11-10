@@ -10,6 +10,13 @@ class Post extends Base
 
     public function render()
     {
-        return view('sn-cms::livewire.post');
+        $breadcrumbs = [
+            ['label' => '首页', 'url' => sn_route('cms.index')],
+            ['label' => '资讯详情', 'url' => sn_route('cms.posts.show', $this->id)],
+        ];
+
+        return view('sn-cms::livewire.post.post', [
+            'breadcrumbs' => $breadcrumbs,
+        ]);
     }
 }

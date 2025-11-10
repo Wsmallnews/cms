@@ -3,10 +3,6 @@
     $scopeId = $this->getScopeId();
 @endphp
 
-@push('seo')
-    {{-- {!! seo()->for($navigation) !!} --}}
-@endpush
-
 <div class="w-full flex flex-col grow gap-4">
     <livewire:sn-components-navigation :scope-type="$scopeType" :scope-id="$scopeId" />
 

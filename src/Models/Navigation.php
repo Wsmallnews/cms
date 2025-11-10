@@ -50,7 +50,7 @@ class Navigation extends SupportModel implements HasMedia
             $hasQueries = $navigation->options['_url_params']['has_queries'] ?? false;
 
             $params = $hasRoutes ? array_merge($params, $navigation->options['_url_params']['routes'] ?? []) : [];
-            $params = $hasQueries ? array_merge($params, $navigation->options['_url_params']['queries'] ?? []) : [];
+            $params = $hasQueries ? array_merge($params, $navigation->options['_url_params']['queries'] ?? []) : $params;
 
             $url = sn_route($navigation->options['route'], $params);
         }
