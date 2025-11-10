@@ -7,7 +7,6 @@ use Wsmallnews\Cms\Enums\NavigationType as NavigationTypeEnum;
 use Wsmallnews\Cms\Facades\ContentRegistry;
 use Wsmallnews\Cms\Livewire\Components\Base;
 use Wsmallnews\Cms\Livewire\Concerns\Navigationable;
-use Wsmallnews\Cms\Models\Navigation as NavigationModel;
 
 class NavigationContainer extends Base
 {
