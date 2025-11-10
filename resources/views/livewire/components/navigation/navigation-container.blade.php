@@ -1,11 +1,3 @@
-@php
-    // $breadcrumbs = [];
-
-    // foreach ($parents as $parent) {
-    //     $breadcrumbs[$parent->url_info['url']] = $parent->name;
-    // }
-@endphp
-
 @push('seo')
     {{-- {!! seo()->for($navigation) !!} --}}
 @endpush
@@ -18,7 +10,7 @@
         </div>
     @endif --}}
 
-    {{-- <livewire:sn-components-navigation-breadcrumb :navigation="$navigation" /> --}}
+    <livewire:sn-components-navigation-breadcrumb :navigation="$navigation" />
 
     <div class="w-full flex flex-col md:flex-row items-start gap-4">
         @if ($navigation->parent_id)

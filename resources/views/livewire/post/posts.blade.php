@@ -3,13 +3,11 @@
 @endpush
 
 <div class="w-full flex flex-col grow gap-4">
-    <livewire:sn-components-navigation />
+    <livewire:sn-components-navigation scope-type="{{ $this->getScopeType() }}" scope-id="{{ $this->getScopeId() }}" />
 
     <div class="container mx-auto flex flex-col grow gap-4">
-        <div class="flex flex-col md:flex-row items-start gap-4">
-            <livewire:sn-components-posts :category_ids="$category_id" />
-        </div>
+        <livewire:sn-components-posts scope-type="{{ $this->getScopeType() }}" scope-id="{{ $this->getScopeId() }}" :category_ids="$category_id" />
     </div>
 
-    <livewire:sn-components-footer />
+    <livewire:sn-components-footer scope-type="{{ $this->getScopeType() }}" scope-id="{{ $this->getScopeId() }}" />
 </div>

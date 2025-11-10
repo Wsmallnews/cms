@@ -9,7 +9,7 @@ class Brothers extends Base
 {
     public NavigationModel $navigation;
 
-    public string $wrapperView = 'sn-support::base.block';
+    public string $wrapperView = 'sn-support::base.empty-block';
 
     public function render()
     {
@@ -22,7 +22,7 @@ class Brothers extends Base
                 });
         }
 
-        return view('sn-cms::livewire.components.navigation.breadcrumb', [
+        return view('sn-cms::livewire.components.navigation.brothers', [
             'brothers' => $brothers,
         ]);
     }

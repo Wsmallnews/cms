@@ -17,6 +17,6 @@ class Posts extends Base
 
     public function render()
     {
-        return view('sn-cms::livewire.posts', []);
+        return view('sn-cms::livewire.post.posts', []);
     }
 }

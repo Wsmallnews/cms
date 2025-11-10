@@ -14,11 +14,12 @@ class Post extends Base
 
     public function render()
     {
-        $post = PostModel::snScope(...$this->getScopeable())->normal()->with(['media', 'content'])->findOrFail($this->id);
+        // $post = PostModel::snScope(...$this->getScopeable())->normal()->with(['media', 'content'])->findOrFail($this->id);
+        $post = PostModel::snScope(...$this->getScopeable())->normal()->with(['content'])->findOrFail($this->id);
 
         Model::withoutTimestamps(fn () => $post->increment('views'));        // 增加浏览量,不更新 updated_at
 
-        return view('sn-cms::livewire.components.post', [
+        return view('sn-cms::livewire.components.post.post', [
             'post' => $post,
         ]);
     }

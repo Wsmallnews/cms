@@ -1,10 +1,4 @@
 @php
-    // $breadcrumbs = [];
-
-    // foreach ($parents as $parent) {
-    //     $breadcrumbs[$parent->url_info['url']] = $parent->name;
-    // }
-
     $scopeType = $this->getScopeType();
     $scopeId = $this->getScopeId();
 @endphp
