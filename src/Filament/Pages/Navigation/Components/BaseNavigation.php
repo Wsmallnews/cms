@@ -73,9 +73,9 @@ class BaseNavigation extends NestedsetPage
         if ($icon_type == 'icon') {
             $icon = $item->options['icon'] ?? ($item->options['active_icon'] ?? '');
             $icon && $recordLabel .= generate_icon_html($icon, size: IconSize::Large)->toHtml();
-        } else if ($icon_type == 'image') {
+        } elseif ($icon_type == 'image') {
             $image = $item->options['icon_src'] ?? ($item->options['active_icon_src'] ?? '');
-            $image && $recordLabel .= "<img src=\"" . files_url($image) . "\" class=\"size-6\" />";
+            $image && $recordLabel .= '<img src="' . files_url($image) . '" class="size-6" />';
         }
 
         $recordLabel .= parent::getRecordLabel($item) . '</span>';
