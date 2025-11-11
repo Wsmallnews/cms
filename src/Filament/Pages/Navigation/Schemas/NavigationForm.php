@@ -36,16 +36,19 @@ class NavigationForm
                     'image' => '图片图标',
                 ])
                 ->default('none')
+                ->live()
                 ->inline(),
             Schemas\Components\FieldSet::make('icons')
                 ->label('icon 图标')
                 ->schema([
-                    IconPicker::make('options.icon')
-                        ->label('图标')
-                        ->placeholder('请选择图标'),
-                    IconPicker::make('options.active_icon')
-                        ->label('活动图标')
-                        ->placeholder('请选择活动图标'),
+                    IconPicker::make('options.icon')->label('图标')
+                        ->placeholder('请选择图标')
+                        ->sets(['heroicons'])
+                        ->iconsSearchResults(),
+                    IconPicker::make('options.active_icon')->label('活动图标')
+                        ->placeholder('请选择活动图标')
+                        ->sets(['heroicons'])
+                        ->iconsSearchResults(),
                 ])
                 // ->visibleJs(<<<'JS'
                 //     $get('options.icon_type') == 'icon'
@@ -60,7 +63,7 @@ class NavigationForm
                     Forms\Components\FileUpload::make('options.icon_src')
                         ->label('图标')
                         ->image()
-                        // ->directory(Product::getImageDirectory())
+                        ->directory('filaments/cms/navigation-icons/' . date('Ymd'))
                         ->openable()
                         ->downloadable()
                         ->uploadingMessage('图标上传中...')
@@ -68,7 +71,7 @@ class NavigationForm
                     Forms\Components\FileUpload::make('options.active_icon_src')
                         ->label('活动图标')
                         ->image()
-                        // ->directory(Product::getImageDirectory())
+                        ->directory('filaments/cms/navigation-icons/' . date('Ymd'))
                         ->openable()
                         ->downloadable()
                         ->uploadingMessage('活动图标上传中...')
@@ -108,20 +111,20 @@ class NavigationForm
                     // 只有内容 和 页面 需要设置标识
                     return in_array($get('type'), [NavigationTypeEnum::Page, NavigationTypeEnum::Content]);
                 }),
-            // Forms\Components\SpatieMediaLibraryFileUpload::make('banner')->label('导航Banner')
-            //     ->collection('banner')
-            //     ->image()
-            //     ->openable()
-            //     ->downloadable()
-            //     ->uploadingMessage('Banner 上传中...')
-            //     ->imagePreviewHeight('200')
-            //     // ->visibleJs(<<<'JS'
-            //     //     ['page', 'content'].includes($get('type'))
-            //     // JS),
-            //     ->visible(function (Get $get) {
-            //         // 只有内容 和 页面 需要设置 Banner
-            //         return in_array($get('type'), [NavigationTypeEnum::Page, NavigationTypeEnum::Content]);
-            //     }),
+            Forms\Components\SpatieMediaLibraryFileUpload::make('navigation_banner')->label('导航Banner')
+                ->collection('navigation_banner')
+                ->image()
+                ->openable()
+                ->downloadable()
+                ->uploadingMessage('Banner 上传中...')
+                ->imagePreviewHeight('200')
+                // ->visibleJs(<<<'JS'
+                //     ['page', 'content'].includes($get('type'))
+                // JS),
+                ->visible(function (Get $get) {
+                    // 只有内容 和 页面 需要设置 Banner
+                    return in_array($get('type'), [NavigationTypeEnum::Page, NavigationTypeEnum::Content]);
+                }),
             Forms\Components\Select::make('options.target')
                 ->label('跳转类型')
                 ->options([

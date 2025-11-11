@@ -58,27 +58,26 @@ class PostForm
                             ->placeholder('请输入描述'),
                     ])->columns(1),
                     Schemas\Components\Section::make('内容')->schema([
-                        // Forms\Components\SpatieMediaLibraryFileUpload::make('image')->label('主图')
-                        //     ->collection('main')
-                        //     ->required()
-                        //     ->openable()
-                        //     ->image()
-                        //     ->downloadable()
-                        //     ->uploadingMessage('主图上传中...')
-                        //     ->imagePreviewHeight('200'),
-                        // SpatieMediaLibraryFileUpload::make('images')->label('轮播图')
-                        //     ->collection('gallery')
-                        //     ->image()
-                        //     ->required()
-                        //     ->multiple()
-                        //     ->openable()
-                        //     ->downloadable()
-                        //     ->reorderable()
-                        //     ->appendFiles()
-                        //     ->minFiles(1)
-                        //     ->maxFiles(20)
-                        //     ->uploadingMessage('轮播图片上传中...')
-                        //     ->imagePreviewHeight('200'),
+                        Forms\Components\SpatieMediaLibraryFileUpload::make('post_image')->label('主图')
+                            ->collection('post_image')
+                            ->required()
+                            ->image()
+                            ->openable()
+                            ->downloadable()
+                            ->uploadingMessage('主图上传中...')
+                            ->imagePreviewHeight('200'),
+                        Forms\Components\SpatieMediaLibraryFileUpload::make('post_images')->label('轮播图')
+                            ->collection('post_images')
+                            ->image()
+                            ->multiple()
+                            ->openable()
+                            ->downloadable()
+                            ->reorderable()
+                            ->appendFiles()
+                            ->minFiles(1)
+                            ->maxFiles(20)
+                            ->uploadingMessage('轮播图片上传中...')
+                            ->imagePreviewHeight('200'),
                         Schemas\Components\Group::make()
                             ->relationship('content')
                             ->schema([

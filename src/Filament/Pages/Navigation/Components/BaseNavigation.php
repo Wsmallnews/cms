@@ -3,13 +3,18 @@
 namespace Wsmallnews\Cms\Filament\Pages\Navigation\Components;
 
 use BackedEnum;
+use Filament\Support\Enums\IconSize;
 use Filament\Support\Icons\Heroicon;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\HtmlString;
 use UnitEnum;
 use Wsmallnews\Cms\Filament\Pages\Navigation\Schemas\NavigationForm;
 use Wsmallnews\Cms\Filament\Pages\Navigation\Schemas\NavigationInfolist;
 use Wsmallnews\Cms\Models\Navigation as NavigationModel;
 use Wsmallnews\Cms\Models\NavigationType as NavigationTypeModel;
 use Wsmallnews\FilamentNestedset\Pages\NestedsetPage;
+
+use function Filament\Support\generate_icon_html;
 
 class BaseNavigation extends NestedsetPage
 {
@@ -59,6 +64,23 @@ class BaseNavigation extends NestedsetPage
     public function infolistSchema(): array
     {
         return NavigationInfolist::infolist();
+    }
+
+    public function getRecordLabel(Model $item): HtmlString | string
+    {
+        $recordLabel = '<span class="flex items-center gap-2">';
+        $icon_type = $item->options['icon_type'] ?? 'none';
+        if ($icon_type == 'icon') {
+            $icon = $item->options['icon'] ?? ($item->options['active_icon'] ?? '');
+            $icon && $recordLabel .= generate_icon_html($icon, size: IconSize::Large)->toHtml();
+        } else if ($icon_type == 'image') {
+            $image = $item->options['icon_src'] ?? ($item->options['active_icon_src'] ?? '');
+            $image && $recordLabel .= "<img src=\"" . files_url($image) . "\" class=\"size-6\" />";
+        }
+
+        $recordLabel .= parent::getRecordLabel($item) . '</span>';
+
+        return new HtmlString($recordLabel);
     }
 
     public function getLevel(): ?int
