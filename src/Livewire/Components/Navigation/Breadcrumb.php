@@ -36,7 +36,7 @@ class Breadcrumb extends Base
         foreach ($parents as $parent) {
             $breadcrumbs[] = [
                 'url' => $parent->url_info['url'],
-                'label' => $parent->name,
+                'label' => $parent->name_label,
             ];
         }
 

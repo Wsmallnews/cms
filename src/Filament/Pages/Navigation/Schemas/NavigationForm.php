@@ -63,6 +63,7 @@ class NavigationForm
                     Forms\Components\FileUpload::make('options.icon_src')
                         ->label('图标')
                         ->image()
+                        ->visibility('public')
                         ->directory('filaments/cms/navigation-icons/' . date('Ymd'))
                         ->openable()
                         ->downloadable()
@@ -71,11 +72,14 @@ class NavigationForm
                     Forms\Components\FileUpload::make('options.active_icon_src')
                         ->label('活动图标')
                         ->image()
+                        ->visibility('public')
                         ->directory('filaments/cms/navigation-icons/' . date('Ymd'))
                         ->openable()
                         ->downloadable()
                         ->uploadingMessage('活动图标上传中...')
                         ->imagePreviewHeight('100'),
+                    Schemas\Components\Text::make('请上传正方形图片，推荐大小为 60x60 像素，非正方形图片将被自动裁剪')
+                        ->columnSpanFull(),
                 ])
                 // ->visibleJs(<<<'JS'
                 //     $get('options.icon_type') == 'image'
@@ -114,6 +118,7 @@ class NavigationForm
             Forms\Components\SpatieMediaLibraryFileUpload::make('navigation_banner')->label('导航Banner')
                 ->collection('navigation_banner')
                 ->image()
+                ->visibility('public')
                 ->openable()
                 ->downloadable()
                 ->uploadingMessage('Banner 上传中...')

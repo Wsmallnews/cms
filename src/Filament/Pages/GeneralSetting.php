@@ -53,6 +53,7 @@ class GeneralSetting extends SettingsPage
                         ->directory('settings/general')
                         ->openable()
                         ->image()
+                        ->visibility('public')
                         ->downloadable()
                         ->uploadingMessage('微信二维码上传中...')
                         ->imagePreviewHeight('100'),
@@ -60,6 +61,7 @@ class GeneralSetting extends SettingsPage
                         ->directory('settings/general')
                         ->openable()
                         ->image()
+                        ->visibility('public')
                         ->downloadable()
                         ->uploadingMessage('公众号二维码上传中...')
                         ->imagePreviewHeight('100'),
