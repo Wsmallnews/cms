@@ -16,7 +16,7 @@
                                 x-on:keydown.esc.prevent="isOpen = false, openedWithKeyboard = false"
                                 x-on:click.outside="isOpen = false, openedWithKeyboard = false"
                             >
-                                <a class="flex w-full h-full justify-center items-center relative font-bold text-white underline-offset-2 focus:outline-hidden focus:underline group"
+                                <a class="flex w-full h-full justify-center items-center relative px-2 font-bold text-white gap-2 underline-offset-2 focus:outline-hidden focus:underline group"
                                     href="javascript:;"
                                     x-on:mouseover="isOpen = true"
                                     x-on:keydown.space.prevent="openedWithKeyboard = true"
@@ -25,8 +25,8 @@
                                     x-bind:aria-expanded="isOpen || openedWithKeyboard"
                                     aria-haspopup="true"
                                 >
-                                    {{ $navigation->name }}
-                                    <x-filament::icon icon="heroicon-m-chevron-down" class="absolute size-6 right-2 font-bold transform transition-transform duration-300 rotate-0 group-hover:rotate-180" aria-hidden="true" />
+                                    {{ $navigation->name_label }}
+                                    <x-filament::icon icon="heroicon-m-chevron-down" class="size-6 font-bold transform transition-transform duration-300 rotate-0 group-hover:rotate-180" aria-hidden="true" />
                                 </a>
 
                                 <div class="w-full absolute top-16 flex flex-col overflow-hidden bg-primary-500 z-10"
@@ -43,7 +43,7 @@
                                             {{ \Filament\Support\generate_href_html($child->url_info['url'], $child->url_info['target'] ?? false) }}
                                             role="menuitem"
                                         >
-                                            {{ $child->name }}
+                                            {{ $child->name_label }}
                                         </a>
                                     @endforeach
                                 </div>
@@ -53,7 +53,7 @@
                                 <a class="flex w-full h-full justify-center items-center font-bold text-white underline-offset-2 focus:outline-hidden focus:underline"
                                     {{ \Filament\Support\generate_href_html($navigation->url_info['url'], $navigation->url_info['target'] ?? false) }}
                                 >
-                                    {{ $navigation->name }}
+                                    {{ $navigation->name_label }}
                                 </a>
                             </li>
                         @endif
@@ -117,7 +117,7 @@
                                 aria-controls="accordionItem{{$navigation->id}}"
                                 @click="isExpanded = ! isExpanded"
                                 :aria-expanded="isExpanded ? 'true' : 'false'">
-                                {{ $navigation->name }}
+                                {{ $navigation->name_label }}
                                 <x-filament::icon icon="heroicon-m-chevron-down" class="size-6 transform transition-transform duration-300" ::class="isExpanded  ?  'rotate-180'  :  ''" aria-hidden="true" />
                             </button>
                             <div class="flex flex-col px-2 border-t border-primary-400 divide-y divide-primary-400"
@@ -132,7 +132,7 @@
                                         {{ \Filament\Support\generate_href_html($child->url_info['url'], $child->url_info['target'] ?? false) }}
                                         role="menuitem"
                                     >
-                                        {{ $child->name }}
+                                        {{ $child->name_label }}
                                     </a>
                                 @endforeach
                             </div>
@@ -144,7 +144,7 @@
                             {{ \Filament\Support\generate_href_html($navigation->url_info['url'], $navigation->url_info['target'] ?? false) }}
                             aria-current="page"
                         >
-                            {{ $navigation->name }}
+                            {{ $navigation->name_label }}
                         </a>
                     </li>
                 @endif

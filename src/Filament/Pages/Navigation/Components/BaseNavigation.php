@@ -3,7 +3,6 @@
 namespace Wsmallnews\Cms\Filament\Pages\Navigation\Components;
 
 use BackedEnum;
-use Filament\Support\Enums\IconSize;
 use Filament\Support\Icons\Heroicon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\HtmlString;
@@ -66,21 +65,9 @@ class BaseNavigation extends NestedsetPage
         return NavigationInfolist::infolist();
     }
 
-    public function getRecordLabel(Model $item): HtmlString | string
+    public function getRecordLabel(Model $navigation): HtmlString | string
     {
-        $recordLabel = '<span class="flex items-center gap-2">';
-        $icon_type = $item->options['icon_type'] ?? 'none';
-        if ($icon_type == 'icon') {
-            $icon = $item->options['icon'] ?? ($item->options['active_icon'] ?? '');
-            $icon && $recordLabel .= generate_icon_html($icon, size: IconSize::Large)->toHtml();
-        } elseif ($icon_type == 'image') {
-            $image = $item->options['icon_src'] ?? ($item->options['active_icon_src'] ?? '');
-            $image && $recordLabel .= '<img src="' . files_url($image) . '" class="size-6" />';
-        }
-
-        $recordLabel .= parent::getRecordLabel($item) . '</span>';
-
-        return new HtmlString($recordLabel);
+        return $navigation->name_label;
     }
 
     public function getLevel(): ?int

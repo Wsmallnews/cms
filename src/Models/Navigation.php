@@ -2,8 +2,11 @@
 
 namespace Wsmallnews\Cms\Models;
 
+use Filament\Support\Enums\IconSize;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
+use Illuminate\Support\HtmlString;
 use Kalnoy\Nestedset\NodeTrait;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
@@ -11,6 +14,8 @@ use Wsmallnews\Cms\Enums\NavigationStatus as NavigationStatusEnum;
 use Wsmallnews\Cms\Enums\NavigationType as NavigationTypeEnum;
 use Wsmallnews\Cms\Support\Utils;
 use Wsmallnews\Support\Models\SupportModel;
+
+use function Filament\Support\generate_icon_html;
 
 class Navigation extends SupportModel implements HasMedia
 {
@@ -74,6 +79,28 @@ class Navigation extends SupportModel implements HasMedia
 
         return $navigation;
     }
+
+    protected function nameLabel(): Attribute
+    {
+        return Attribute::make(
+            get: function (mixed $value, array $attributes) {
+                $recordLabel = '<span class="flex items-center gap-2">';
+                $icon_type = $this->options['icon_type'] ?? 'none';
+                if ($icon_type == 'icon') {
+                    $icon = $this->options['icon'] ?? ($this->options['active_icon'] ?? '');
+                    $icon && $recordLabel .= generate_icon_html($icon, size: IconSize::Large)->toHtml();
+                } elseif ($icon_type == 'image') {
+                    $image = $this->options['icon_src'] ?? ($this->options['active_icon_src'] ?? '');
+                    $image && $recordLabel .= '<img src="' . files_url($image) . '" class="size-6" />';
+                }
+
+                $recordLabel .= $attributes['name'] . '</span>';
+
+                return new HtmlString($recordLabel);
+            },
+        );
+    }
+
 
     public function scopeNormal($query)
     {

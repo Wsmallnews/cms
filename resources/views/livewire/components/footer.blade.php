@@ -11,7 +11,7 @@
                                 {{ \Filament\Support\generate_href_html($navigation->url_info['url'], $navigation->url_info['target'] ?? false) }}
                             @endif
                         >
-                            {{ $navigation->name }}
+                            {{ $navigation->name_label }}
                         </a>
                         <div class="bg-primary-600 w-9 h-0.75"></div>
                         @if ($navigation->children->count() > 0)
@@ -19,7 +19,7 @@
                                 @foreach ($navigation->children as $child)
                                     <a class="text-gray-600 text-base leading-5 items-center hover:text-primary-600"
                                         {{ \Filament\Support\generate_href_html($child->url_info['url'], $child->url_info['target'] ?? false) }}>
-                                        {{ $child->name }}
+                                        {{ $child->name_label }}
                                     </a>
                                 @endforeach
                             </div>
