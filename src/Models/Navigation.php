@@ -101,7 +101,6 @@ class Navigation extends SupportModel implements HasMedia
         );
     }
 
-
     public function scopeNormal($query)
     {
         return $query->where('status', NavigationStatusEnum::Normal);

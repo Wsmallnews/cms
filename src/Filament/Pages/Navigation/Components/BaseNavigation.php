@@ -13,8 +13,6 @@ use Wsmallnews\Cms\Models\Navigation as NavigationModel;
 use Wsmallnews\Cms\Models\NavigationType as NavigationTypeModel;
 use Wsmallnews\FilamentNestedset\Pages\NestedsetPage;
 
-use function Filament\Support\generate_icon_html;
-
 class BaseNavigation extends NestedsetPage
 {
     // 所属类型
