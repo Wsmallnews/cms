@@ -9,8 +9,8 @@ use Illuminate\Support\HtmlString;
 use UnitEnum;
 use Wsmallnews\Cms\Filament\Pages\Navigation\Schemas\NavigationForm;
 use Wsmallnews\Cms\Filament\Pages\Navigation\Schemas\NavigationInfolist;
-use Wsmallnews\Cms\Models\Navigation as NavigationModel;
 use Wsmallnews\Cms\Models\NavigationType as NavigationTypeModel;
+use Wsmallnews\Cms\Support\Utils;
 use Wsmallnews\FilamentNestedset\Pages\NestedsetPage;
 
 class BaseNavigation extends NestedsetPage
@@ -21,8 +21,6 @@ class BaseNavigation extends NestedsetPage
     public ?array $properties = [];
 
     protected static ?string $emptyLabel = '导航数据为空';
-
-    protected static ?string $model = NavigationModel::class;
 
     protected static ?string $modelLabel = '导航管理';
 
@@ -43,6 +41,11 @@ class BaseNavigation extends NestedsetPage
     protected static string $recordTitleAttribute = 'name';
 
     protected static ?int $navigationSort = 1;
+
+    public static function getModel()
+    {
+        return Utils::getNavigationModel();
+    }
 
     public function createSchema($arguments): array
     {

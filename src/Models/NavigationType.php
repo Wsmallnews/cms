@@ -32,7 +32,7 @@ class NavigationType extends SupportModel
 
     public function navigations(): HasMany
     {
-        return $this->hasMany(Navigation::class, 'type_id');
+        return $this->hasMany(Utils::getNavigationModel(), 'type_id');
     }
 
     public function team(): BelongsTo

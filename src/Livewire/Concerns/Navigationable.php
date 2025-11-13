@@ -4,8 +4,8 @@ namespace Wsmallnews\Cms\Livewire\Concerns;
 
 use Kalnoy\Nestedset\QueryBuilder;
 use Livewire\Attributes\Locked;
-use Wsmallnews\Cms\Models\Navigation as NavigationModel;
 use Wsmallnews\Cms\Models\NavigationType as NavigationTypeModel;
+use Wsmallnews\Cms\Support\Utils;
 
 trait Navigationable
 {
@@ -16,7 +16,7 @@ trait Navigationable
 
     public function mountNavigationable()
     {
-        $this->navigationType = NavigationTypeModel::scopeable(...$this->getScopeable())->when($this->navigationTypeId, function ($query) {
+        $this->navigationType = Utils::getNavigationTypeModel()::scopeable(...$this->getScopeable())->when($this->navigationTypeId, function ($query) {
             $query->where('id', $this->navigationTypeId);
         })->firstOrFail();
 
@@ -39,6 +39,6 @@ trait Navigationable
      */
     protected function getScopedQuery(): string | QueryBuilder
     {
-        return NavigationModel::scoped($this->getScoped());
+        return Utils::getNavigationModel()::scoped($this->getScoped());
     }
 }

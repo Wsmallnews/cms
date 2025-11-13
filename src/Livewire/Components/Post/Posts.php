@@ -7,7 +7,7 @@ use Illuminate\Support\Collection;
 use Livewire\WithoutUrlPagination;
 use Wsmallnews\Category\Livewire\Concerns\Categoryable;
 use Wsmallnews\Cms\Livewire\Components\Base;
-use Wsmallnews\Cms\Models\Post as PostModel;
+use Wsmallnews\Cms\Support\Utils;
 use Wsmallnews\Support\Livewire\Concerns\CanPagination;
 
 class Posts extends Base
@@ -39,8 +39,7 @@ class Posts extends Base
         $allCategories = $this->getCategoryIds($this->categoryIds);
 
         // 查询图文
-        // $query = PostModel::query()->scopeTenant()->normal()->with(['media'])->when($allCategories->isNotEmpty(), function ($query) use ($allCategories) {
-        $query = PostModel::snScope(...$this->getScopeable())->normal()->when($allCategories->isNotEmpty(), function ($query) use ($allCategories) {
+        $query = Utils::getPostModel()::snScope(...$this->getScopeable())->normal()->with(['media'])->when($allCategories->isNotEmpty(), function ($query) use ($allCategories) {
             $query->whereCategoryIn($allCategories);
         })->orderBy('order_column', 'desc');
 

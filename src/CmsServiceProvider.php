@@ -80,10 +80,10 @@ class CmsServiceProvider extends PackageServiceProvider
     {
         // / 注册模型别名
         Relation::enforceMorphMap([
-            'sn_content' => ContentModel::class,
-            'sn_navigation' => NavigationModel::class,
-            'sn_navigation_type' => NavigationTypeModel::class,
-            'sn_post' => PostModel::class,
+            'sn_content' => Utils::getContentModel(),
+            'sn_navigation' => Utils::getNavigationModel(),
+            'sn_navigation_type' => Utils::getNavigationTypeModel(),
+            'sn_post' => Utils::getPostModel(),
         ]);
 
         // Asset Registration

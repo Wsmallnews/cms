@@ -3,7 +3,7 @@
 namespace Wsmallnews\Cms\Livewire\Components\Post;
 
 use Wsmallnews\Cms\Livewire\Components\Base;
-use Wsmallnews\Cms\Models\Post;
+use Wsmallnews\Cms\Support\Utils;
 
 class IndexPosts extends Base
 {
@@ -15,7 +15,7 @@ class IndexPosts extends Base
 
     public function render()
     {
-        $posts = Post::snScope(...$this->getScopeable())->normal()->limit($this->limit)->get();
+        $posts = Utils::getPostModel()::snScope(...$this->getScopeable())->normal()->limit($this->limit)->get();
 
         return view('sn-cms::livewire.components.index-posts', [
             'posts' => $posts,

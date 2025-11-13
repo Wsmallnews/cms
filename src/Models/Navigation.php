@@ -148,7 +148,7 @@ class Navigation extends SupportModel implements HasMedia
 
     public function content(): MorphOne
     {
-        return $this->morphOne(Content::class, 'contentable');
+        return $this->morphOne(Utils::getContentModel(), 'contentable');
     }
 
     public function team(): BelongsTo

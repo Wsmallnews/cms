@@ -4,7 +4,7 @@ namespace Wsmallnews\Cms\Livewire\Components\Post;
 
 use Illuminate\Database\Eloquent\Model;
 use Wsmallnews\Cms\Livewire\Components\Base;
-use Wsmallnews\Cms\Models\Post as PostModel;
+use Wsmallnews\Cms\Support\Utils;
 
 class Post extends Base
 {
@@ -14,8 +14,7 @@ class Post extends Base
 
     public function render()
     {
-        // $post = PostModel::snScope(...$this->getScopeable())->normal()->with(['media', 'content'])->findOrFail($this->id);
-        $post = PostModel::snScope(...$this->getScopeable())->normal()->with(['content'])->findOrFail($this->id);
+        $post = Utils::getPostModel()::snScope(...$this->getScopeable())->normal()->with(['media', 'content'])->findOrFail($this->id);
 
         Model::withoutTimestamps(fn () => $post->increment('views'));        // 增加浏览量,不更新 updated_at
 

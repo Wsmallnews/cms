@@ -12,6 +12,7 @@ use Filament\Support\Icons\Heroicon;
 use UnitEnum;
 use Wsmallnews\Cms\Filament\Resources\NavigationTypes\Schemas\NavigationTypeForm;
 use Wsmallnews\Cms\Models\NavigationType as NavigationTypeModel;
+use Wsmallnews\Cms\Support\Utils;
 use Wsmallnews\Support\Filament\Pages\Concerns\Scopeable;
 
 abstract class ManageBase extends Page
@@ -76,7 +77,7 @@ abstract class ManageBase extends Page
         $data = $this->form->getState();
 
         if (! $this->record) {
-            $this->record = new NavigationTypeModel;
+            $this->record = new (Utils::getNavigationTypeModel());
             $this->record->scope_type = static::getScopeType();
             $this->record->scope_id = static::getScopeId();
         }
@@ -96,7 +97,7 @@ abstract class ManageBase extends Page
 
     public function getRecord(): ?NavigationTypeModel
     {
-        return NavigationTypeModel::query()
+        return Utils::getNavigationTypeModel()::query()
             ->scopeable(static::getScopeType(), static::getScopeId())
             ->first();
     }

@@ -12,14 +12,12 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 use UnitEnum;
 use Wsmallnews\Cms\Filament\Resources\Posts\Schemas\PostForm;
 use Wsmallnews\Cms\Filament\Resources\Posts\Tables\PostsTable;
-use Wsmallnews\Cms\Models\Post;
+use Wsmallnews\Cms\Support\Utils;
 use Wsmallnews\Support\Filament\Resources\Concerns\Scopeable;
 
 abstract class BaseResource extends Resource
 {
     use Scopeable;
-
-    protected static ?string $model = Post::class;
 
     protected static string | BackedEnum | null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
@@ -38,6 +36,11 @@ abstract class BaseResource extends Resource
     protected static ?string $pluralModelLabel = '图文';
 
     protected static ?int $navigationSort = 2;
+
+    public static function getModel(): string
+    {
+        return Utils::getPostModel();
+    }
 
     public static function form(Schema $schema): Schema
     {

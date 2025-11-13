@@ -6,6 +6,7 @@ use Illuminate\Support\Str;
 use Wsmallnews\Cms\Enums\NavigationTypeStatus;
 use Wsmallnews\Cms\Filament\Pages\Navigation\Components\BaseNavigation;
 use Wsmallnews\Cms\Models\NavigationType as NavigationTypeModel;
+use Wsmallnews\Cms\Support\Utils;
 use Wsmallnews\Support\Filament\Pages\Concerns\Scopeable;
 
 abstract class Base extends BaseNavigation
@@ -27,7 +28,7 @@ abstract class Base extends BaseNavigation
 
     public function getNavigationType(): ?NavigationTypeModel
     {
-        $navigationType = NavigationTypeModel::query()
+        $navigationType = Utils::getNavigationTypeModel()::query()
             ->firstOrCreate(
                 static::getScopeInfo(),
                 [
