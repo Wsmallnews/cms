@@ -57,9 +57,6 @@ class Utils
 
     /**
      * 获取模型
-     *
-     * @param string $name
-     * @return string
      */
     public static function getModel(string $name): string
     {
@@ -71,6 +68,7 @@ class Utils
 
         return $model;
     }
+
     /**
      * 获取内容模型
      *
@@ -80,6 +78,7 @@ class Utils
     {
         return self::getModel('content');
     }
+
     /**
      * 获取内容模型
      *
@@ -89,6 +88,7 @@ class Utils
     {
         return self::getModel('navigation');
     }
+
     /**
      * 获取导航类型模型
      *
@@ -98,6 +98,7 @@ class Utils
     {
         return self::getModel('navigation_type');
     }
+
     /**
      * 获取文章模型
      *
@@ -107,8 +108,6 @@ class Utils
     {
         return self::getModel('post');
     }
-
-
 
     public static function currentPanel(): ?Panel
     {

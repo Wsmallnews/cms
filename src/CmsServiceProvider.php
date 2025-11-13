@@ -20,9 +20,6 @@ use Wsmallnews\Category\Models\Category as CategoryModel;
 use Wsmallnews\Cms\Commands\CmsCommand;
 use Wsmallnews\Cms\Facades\ContentRegistry as ContentRegistryFacade;
 use Wsmallnews\Cms\Filament\Pages\Navigation\Components\BaseNavigation;
-use Wsmallnews\Cms\Models\Content as ContentModel;
-use Wsmallnews\Cms\Models\Navigation as NavigationModel;
-use Wsmallnews\Cms\Models\NavigationType as NavigationTypeModel;
 use Wsmallnews\Cms\Models\Post as PostModel;
 use Wsmallnews\Cms\Support\Utils;
 
