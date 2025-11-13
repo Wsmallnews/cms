@@ -16,10 +16,7 @@ class Brothers extends Base
         $brothers = collect([]);
         if ($this->navigation->parent_id) {
             $brothers = $this->navigation
-                ->getSiblingsAndSelf()
-                ->map(function (NavigationModel $navigation) {
-                    return $navigation->resolveNavigation($navigation);
-                });
+                ->getSiblingsAndSelf();
         }
 
         return view('sn-cms::livewire.components.navigation.brothers', [

@@ -4,11 +4,11 @@
 
 
 <div class="w-full flex flex-col grow gap-4">
-    {{-- @if ($navigation->getFirstMediaUrl('banner'))
+    @if ($navigation->getFirstMediaUrl('navigation_banner'))
         <div class="w-full relative">
-            <img src="{{ $navigation->getFirstMediaUrl('banner') }}" class="w-full">
+            <img src="{{ $navigation->getFirstMediaUrl('navigation_banner') }}" class="w-full">
         </div>
-    @endif --}}
+    @endif
 
     <livewire:sn-components-navigation-breadcrumb :navigation="$navigation" />
 

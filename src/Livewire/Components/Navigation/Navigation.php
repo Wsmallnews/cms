@@ -4,7 +4,6 @@ namespace Wsmallnews\Cms\Livewire\Components\Navigation;
 
 use Wsmallnews\Cms\Livewire\Components\Base;
 use Wsmallnews\Cms\Livewire\Concerns\Navigationable;
-use Wsmallnews\Cms\Models\Navigation as NavigationModel;
 
 class Navigation extends Base
 {
@@ -12,10 +11,8 @@ class Navigation extends Base
 
     public function getNavigations()
     {
-        return $this->getScopedQuery()->normal()->defaultOrder()->get()
-            ->map(function (NavigationModel $navigation) {
-                return $navigation->resolveNavigation($navigation);
-            })->toTree();
+        return $this->getScopedQuery()->normal()->defaultOrder()
+            ->get()->toTree();
     }
 
     public function render()

@@ -18,9 +18,7 @@ class Footer extends Base
                     ->orWhereNull('options->footer_show');
             })
             ->defaultOrder()->get()
-            ->map(function (NavigationModel $navigation) {
-                return $navigation->resolveNavigation($navigation);
-            })->toTree();
+            ->toTree();
 
         return view('sn-cms::livewire.components.footer', [
             'navigations' => $navigations,

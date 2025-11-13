@@ -1,3 +1,10 @@
+@php
+    $images = [];
+    foreach ($post->getMedia('post_images') as $media) {
+        $images[] = $media->getUrl();
+    }
+@endphp
+
 <x-dynamic-component :component="$wrapperView" class="w-full">
     <div class="w-full flex flex-col gap-4">
         <div class="text-3xl font-bold">
@@ -11,6 +18,8 @@
         <div class="text-gray-500 bg-gray-100 p-2 rounded-md">
             {{ $post->description }}
         </div>
+
+        {{-- <x-sn-support::swiper :images="$images" /> --}}
 
         <div class="">
             {!! $post->content?->content !!}

@@ -4,7 +4,7 @@
             @foreach ($brothers as $brother)
                 <li @class([
                     'flex hover:bg-primary-600',
-                    'bg-primary-600' => $brother->id == $navigation->id,
+                    'bg-primary-600' => $brother->is_active,
                 ])>
                     <a class="flex grow px-4 py-4 font-bold text-white focus:underline"
                         {{ \Filament\Support\generate_href_html($brother->url_info['url'], $brother->url_info['target'] ?? '_self') }}

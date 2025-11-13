@@ -20,8 +20,6 @@ class Breadcrumb extends Base
         // 处理上级导航的 url_info
         $prevNavigation = null;
         $parents = $parents->reverse()->map(function (NavigationModel $navigation) use (&$prevNavigation) {
-            $navigation = $navigation->resolveNavigation($navigation);
-
             // 如果上级没有 url，则使用下级的 url
             $urlInfo = $navigation->url_info; // 先获取数组
             $urlInfo['url'] = $navigation->url_info['url'] ?? ($prevNavigation?->url_info['url'] ?? ''); // 修改副本

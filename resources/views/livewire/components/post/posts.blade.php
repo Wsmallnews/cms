@@ -3,11 +3,11 @@
         <div class="w-full flex flex-col gap-4">
             @foreach ($posts as $post)
                 <x-dynamic-component :component="$itemWrapperView" tag="a" href="{{ sn_route('cms.posts.show', $post->id) }}"  class="flex flex-row gap-4 overflow-hidden group">
-                    {{-- @if ($post->getFirstMediaUrl('main'))
-                    <div class="w-44 h-44 flex-shrink-0 rounded-md overflow-hidden">
-                        <img class="w-full h-full object-cover transition duration-300 group-hover:scale-105" src="{{ $post->getFirstMediaUrl('main') }}" />
-                    </div>
-                    @endif --}}
+                    @if ($post->getFirstMediaUrl('post_image'))
+                        <div class="w-44 h-44 shrink-0 rounded-md overflow-hidden">
+                            <img class="w-full h-full object-cover transition duration-300 group-hover:scale-105" src="{{ $post->getFirstMediaUrl('post_image') }}" />
+                        </div>
+                    @endif
 
                     <div class="flex flex-col grow py-4 pr-4 gap-4">
                         <div class="text-xl font-bold line-clamp-1 transition duration-300 group-hover:text-primary-500">

@@ -9,7 +9,10 @@
                 <ul class="hidden md:flex">
                     @foreach ($navigations as $navigation)
                         @if ($navigation->children->count() > 0)
-                            <li class="min-w-32 flex items-center relative w-fit hover:bg-primary-600 transition-colors duration-300 ease-in-out"
+                            <li @class([
+                                    'min-w-32 flex items-center relative w-fit hover:bg-primary-600 transition-colors duration-300 ease-in-out',
+                                    'bg-primary-600' => $navigation->is_active || $navigation->children->contains('is_active', true),
+                                ])
                                 x-data="{ isOpen: false, openedWithKeyboard: false, leaveTimeout: null }"
                                 x-on:mouseleave.prevent="leaveTimeout = setTimeout(() => { isOpen = false }, 50)"
                                 x-on:mouseenter="leaveTimeout ? clearTimeout(leaveTimeout) : true"
@@ -39,7 +42,10 @@
                                     role="menu"
                                 >
                                     @foreach ($navigation->children as $child)
-                                        <a class="h-12 flex items-center justify-center font-bold text-white hover:bg-primary-600 focus-visible:bg-primary-600 focus-visible:outline-hidden"
+                                        <a @class([
+                                            'h-12 flex items-center justify-center font-bold text-white hover:bg-primary-600 focus-visible:bg-primary-600 focus-visible:outline-hidden',
+                                            'bg-primary-600' => $child->is_active,
+                                        ])
                                             {{ \Filament\Support\generate_href_html($child->url_info['url'], $child->url_info['target'] ?? false) }}
                                             role="menuitem"
                                         >
@@ -49,7 +55,10 @@
                                 </div>
                             </li>
                         @else
-                            <li class="min-w-32 flex items-center hover:bg-primary-600 transition-colors duration-300 ease-in-out">
+                            <li @class([
+                                'min-w-32 flex items-center hover:bg-primary-600 transition-colors duration-300 ease-in-out',
+                                'bg-primary-600' => $navigation->is_active,
+                            ])>
                                 <a class="flex w-full h-full justify-center items-center font-bold text-white underline-offset-2 focus:outline-hidden focus:underline"
                                     {{ \Filament\Support\generate_href_html($navigation->url_info['url'], $navigation->url_info['target'] ?? false) }}
                                 >
@@ -111,14 +120,20 @@
             @foreach ($navigations as $navigation)
                 @if ($navigation->children->count() > 0)
                     <li>
-                        <div x-data="{ isExpanded: false }">
+                        @php
+                            $currentIsActive = $navigation->is_active || $navigation->children->contains('is_active', true);
+                        @endphp
+                        <div x-data="{ isExpanded: {{ $currentIsActive ? true : false }} }">
                             <button id="controlsAccordionItem{{$navigation->id}}" type="button"
-                                class="flex w-full items-center justify-between gap-4 p-4 font-bold text-white underline-offset-2 focus-visible:underline focus-visible:outline-none"
+                                @class([
+                                    'flex w-full items-center justify-between gap-4 p-4 font-bold text-white underline-offset-2 focus-visible:underline focus-visible:outline-none',
+                                    'bg-primary-600' => $currentIsActive,
+                                ])
                                 aria-controls="accordionItem{{$navigation->id}}"
                                 @click="isExpanded = ! isExpanded"
                                 :aria-expanded="isExpanded ? 'true' : 'false'">
                                 {{ $navigation->name_label }}
-                                <x-filament::icon icon="heroicon-m-chevron-down" class="size-6 transform transition-transform duration-300" ::class="isExpanded  ?  'rotate-180'  :  ''" aria-hidden="true" />
+                                <x-filament::icon icon="heroicon-m-chevron-down" class="size-6 transform transition-transform duration-300" ::class="isExpanded ? 'rotate-180' : ''" aria-hidden="true" />
                             </button>
                             <div class="flex flex-col px-2 border-t border-primary-400 divide-y divide-primary-400"
                                 id="accordionItem{{$navigation->id}}"
@@ -128,7 +143,10 @@
                                 aria-labelledby="controlsAccordionItemOne{{$navigation->id}}"
                             >
                                 @foreach ($navigation->children as $child)
-                                    <a class="flex w-full h-full px-4 py-4 font-bold text-white"
+                                    <a @class([
+                                            'flex w-full h-full px-4 py-4 font-bold text-white',
+                                            'bg-primary-600' => $child->is_active,
+                                        ])
                                         {{ \Filament\Support\generate_href_html($child->url_info['url'], $child->url_info['target'] ?? false) }}
                                         role="menuitem"
                                     >
@@ -140,7 +158,10 @@
                     </li>
                 @else
                     <li class="flex">
-                        <a class="flex grow px-4 py-4 font-bold text-white focus:underline"
+                        <a @class([
+                                'flex grow px-4 py-4 font-bold text-white focus:underline',
+                                'bg-primary-600' => $navigation->is_active,
+                            ])
                             {{ \Filament\Support\generate_href_html($navigation->url_info['url'], $navigation->url_info['target'] ?? false) }}
                             aria-current="page"
                         >

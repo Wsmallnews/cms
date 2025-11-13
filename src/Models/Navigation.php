@@ -45,39 +45,54 @@ class Navigation extends SupportModel implements HasMedia
         return 'slug';
     }
 
-    public function resolveNavigation($navigation)
+    protected function urlInfo(): Attribute
     {
-        $url = null;
+        return Attribute::make(
+            get: function (mixed $value, array $attributes) {
+                $options = $this->options;
+                $url = null;
 
-        if ($navigation->type == NavigationTypeEnum::Route && isset($navigation->options['route'])) {
-            $params = [];       // 路由参数与 query 合并为一个数组，route 方法会自动区分路由参数，其他的参数 跟在地址栏后面
-            $hasRoutes = $navigation->options['_url_params']['has_routes'] ?? false;
-            $hasQueries = $navigation->options['_url_params']['has_queries'] ?? false;
+                if ($this->type == NavigationTypeEnum::Route && isset($options['route'])) {
+                    $params = [];       // 路由参数与 query 合并为一个数组，route 方法会自动区分路由参数，其他的参数 跟在地址栏后面
+                    $hasRoutes = $options['_url_params']['has_routes'] ?? false;
+                    $hasQueries = $options['_url_params']['has_queries'] ?? false;
 
-            $params = $hasRoutes ? array_merge($params, $navigation->options['_url_params']['routes'] ?? []) : [];
-            $params = $hasQueries ? array_merge($params, $navigation->options['_url_params']['queries'] ?? []) : $params;
+                    $params = $hasRoutes ? array_merge($params, $options['_url_params']['routes'] ?? []) : [];
+                    $params = $hasQueries ? array_merge($params, $options['_url_params']['queries'] ?? []) : $params;
 
-            $url = sn_route($navigation->options['route'], $params);
-        }
+                    $url = sn_route($options['route'], $params);
+                }
 
-        if ($navigation->type == NavigationTypeEnum::Page) {
-            $url = sn_route('cms.navigation', $navigation->slug);
-        }
+                if ($this->type == NavigationTypeEnum::Page) {
+                    $url = sn_route('cms.navigation', $attributes['slug']);
+                }
 
-        if ($navigation->type == NavigationTypeEnum::Url && isset($navigation->options['url'])) {
-            $url = $navigation->options['url'];
-        }
+                if ($this->type == NavigationTypeEnum::Url && isset($options['url'])) {
+                    $url = $options['url'];
+                }
 
-        if ($navigation->type == NavigationTypeEnum::Content) {
-            $url = sn_route('cms.navigation', $navigation->slug);
-        }
+                if ($this->type == NavigationTypeEnum::Content) {
+                    $url = sn_route('cms.navigation', $attributes['slug']);
+                }
 
-        $navigation->setAttribute('url_info', [
-            'url' => $url,
-            'target' => isset($navigation->options['target']) && $navigation->options['target'] == '_blank' ? true : false,
-        ]);
+                return [
+                    'url' => $url,
+                    'target' => isset($options['target']) && $options['target'] == '_blank' ? true : false,
+                ];
+            }
+        );
+    }
 
-        return $navigation;
+    protected function isActive(): Attribute
+    {
+        return Attribute::make(
+            get: function (mixed $value, array $attributes) {
+                $urlInfo = $this->url_info;
+                $fullUrl = request()->fullUrl();
+
+                return $urlInfo['url'] == $fullUrl;
+            }
+        );
     }
 
     protected function nameLabel(): Attribute
