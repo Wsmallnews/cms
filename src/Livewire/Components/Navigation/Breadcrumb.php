@@ -9,7 +9,7 @@ class Breadcrumb extends Base
 {
     public NavigationModel $navigation;
 
-    public string $wrapperView = 'sn-support::base.empty-block';
+    public string $wrapperView = 'sn-cms::base.empty-block';
 
     public function render()
     {

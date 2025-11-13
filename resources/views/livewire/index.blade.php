@@ -2,10 +2,10 @@
     {!! seo() !!}
 @endpush --}}
 
-<div class="w-full flex flex-col grow gap-4" x-data="index({})">
+<div class="w-full flex flex-col grow" x-data="index({})">
     <livewire:sn-components-navigation scope-type="{{ $this->getScopeType() }}" scope-id="{{ $this->getScopeId() }}" />
 
-    <div class="container mx-auto flex flex-col grow gap-4">
+    <div class="w-full flex flex-col grow gap-4">
         {{-- <livewire:sn-components-index-posts :limit="6" /> --}}
     </div>
 

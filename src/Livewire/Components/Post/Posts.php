@@ -20,9 +20,9 @@ class Posts extends Base
 
     public Collection $posts;
 
-    public string $wrapperView = 'sn-support::base.empty-block';
+    public string $wrapperView = 'sn-cms::base.empty-block';
 
-    public string $itemWrapperView = 'sn-support::base.block';
+    public string $itemWrapperView = 'sn-cms::base.block';
 
     public function mount()
     {

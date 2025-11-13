@@ -9,7 +9,7 @@ class Content extends Base
 {
     public ?ContentModel $content = null;
 
-    public string $wrapperView = 'sn-support::base.block';
+    public string $wrapperView = 'sn-cms::base.block';
 
     public function render()
     {

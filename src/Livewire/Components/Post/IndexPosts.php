@@ -9,9 +9,9 @@ class IndexPosts extends Base
 {
     public int $limit = 10;
 
-    public string $wrapperView = 'sn-support::base.empty-block';
+    public string $wrapperView = 'sn-cms::base.empty-block';
 
-    public string $itemWrapperView = 'sn-support::base.block';
+    public string $itemWrapperView = 'sn-cms::base.block';
 
     public function render()
     {

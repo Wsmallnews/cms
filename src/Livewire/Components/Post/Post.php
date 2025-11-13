@@ -10,7 +10,7 @@ class Post extends Base
 {
     public int $id;
 
-    public string $wrapperView = 'sn-support::base.block';
+    public string $wrapperView = 'sn-cms::base.block';
 
     public function render()
     {

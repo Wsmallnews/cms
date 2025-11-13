@@ -83,6 +83,11 @@ class Navigation extends SupportModel implements HasMedia
         );
     }
 
+    /**
+     * 当前是否是激活状态
+     *
+     * @return Attribute
+     */
     protected function isActive(): Attribute
     {
         return Attribute::make(
@@ -95,17 +100,32 @@ class Navigation extends SupportModel implements HasMedia
         );
     }
 
+    /**
+     * 导航名称（包含 icon）
+     *
+     * @return Attribute
+     */
     protected function nameLabel(): Attribute
     {
         return Attribute::make(
             get: function (mixed $value, array $attributes) {
+                // 当前的导航活动，（或者已经加载过子导航的页面，子导航中是否有活动，未加载则直接 false）
+                $isActive = $this->is_active || ($this->relationLoaded('children') ? $this->children->contains('is_active', true) : false);
                 $recordLabel = '<span class="flex items-center gap-2">';
                 $icon_type = $this->options['icon_type'] ?? 'none';
                 if ($icon_type == 'icon') {
-                    $icon = $this->options['icon'] ?? ($this->options['active_icon'] ?? '');
+                    if ($isActive) {
+                        $icon = $this->options['active_icon'] ?? ($this->options['icon'] ?? '');        // 优先取 活动图标
+                    } else {
+                        $icon = $this->options['icon'] ?? ($this->options['active_icon'] ?? '');        // 优先取非活动图标
+                    }
                     $icon && $recordLabel .= generate_icon_html($icon, size: IconSize::Large)->toHtml();
                 } elseif ($icon_type == 'image') {
-                    $image = $this->options['icon_src'] ?? ($this->options['active_icon_src'] ?? '');
+                    if ($isActive) {
+                        $image = $this->options['active_icon_src'] ?? ($this->options['icon_src'] ?? '');    // 优先取 活动图标
+                    } else {
+                        $image = $this->options['icon_src'] ?? ($this->options['active_icon_src'] ?? '');   // 优先取非活动图标
+                    }
                     $image && $recordLabel .= '<img src="' . files_url($image) . '" class="size-6" />';
                 }
 

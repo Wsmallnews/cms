@@ -3,10 +3,10 @@
     $scopeId = $this->getScopeId();
 @endphp
 
-<div class="w-full flex flex-col grow gap-4">
+<div class="w-full flex flex-col grow">
     <livewire:sn-components-navigation :scope-type="$scopeType" :scope-id="$scopeId" />
 
-    <div class="container mx-auto flex flex-col grow gap-4">
+    <div class="w-full grow">
         <livewire:sn-components-navigation-container :scope-type="$scopeType" :scope-id="$scopeId" :slug="$slug" />
     </div>
 
