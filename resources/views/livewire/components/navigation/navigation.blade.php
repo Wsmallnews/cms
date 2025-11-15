@@ -10,8 +10,8 @@
                     @foreach ($navigations as $navigation)
                         @if ($navigation->children->count() > 0)
                             <li @class([
-                                    'min-w-32 flex items-center relative w-fit hover:bg-primary-600 transition-colors duration-300 ease-in-out',
-                                    'bg-primary-600' => $navigation->is_active || $navigation->children->contains('is_active', true),
+                                    'min-w-32 flex items-center relative w-fit group hover:bg-primary-600 transition-colors duration-300 ease-in-out',
+                                    'bg-primary-600' => $navigation->has_active,
                                 ])
                                 x-data="{ isOpen: false, openedWithKeyboard: false, leaveTimeout: null }"
                                 x-on:mouseleave.prevent="leaveTimeout = setTimeout(() => { isOpen = false }, 50)"
@@ -19,7 +19,7 @@
                                 x-on:keydown.esc.prevent="isOpen = false, openedWithKeyboard = false"
                                 x-on:click.outside="isOpen = false, openedWithKeyboard = false"
                             >
-                                <a class="flex w-full h-full justify-center items-center relative px-2 font-bold text-white gap-2 underline-offset-2 focus:outline-hidden focus:underline group"
+                                <a class="flex w-full h-full justify-center items-center relative px-2 font-bold text-white gap-2 underline-offset-2 focus:outline-hidden focus:underline"
                                     href="javascript:;"
                                     x-on:mouseover="isOpen = true"
                                     x-on:keydown.space.prevent="openedWithKeyboard = true"
@@ -43,8 +43,8 @@
                                 >
                                     @foreach ($navigation->children as $child)
                                         <a @class([
-                                            'h-12 flex items-center justify-center font-bold text-white hover:bg-primary-600 focus-visible:bg-primary-600 focus-visible:outline-hidden',
-                                            'bg-primary-600' => $child->is_active,
+                                            'h-12 flex items-center justify-center font-bold text-white hover:bg-primary-600 focus-visible:bg-primary-600 focus-visible:outline-hidden transition-colors duration-300 ease-in-out',
+                                            'bg-primary-600' => $child->has_active,
                                         ])
                                             {{ \Filament\Support\generate_href_html($child->url_info['url'], $child->url_info['target'] ?? false) }}
                                             role="menuitem"
@@ -57,10 +57,11 @@
                         @else
                             <li @class([
                                 'min-w-32 flex items-center hover:bg-primary-600 transition-colors duration-300 ease-in-out',
-                                'bg-primary-600' => $navigation->is_active,
+                                'bg-primary-600' => $navigation->has_active,
                             ])>
                                 <a class="flex w-full h-full justify-center items-center font-bold text-white underline-offset-2 focus:outline-hidden focus:underline"
                                     {{ \Filament\Support\generate_href_html($navigation->url_info['url'], $navigation->url_info['target'] ?? false) }}
+                                    role="menuitem"
                                 >
                                     {{ $navigation->name_label }}
                                 </a>
@@ -120,14 +121,11 @@
             @foreach ($navigations as $navigation)
                 @if ($navigation->children->count() > 0)
                     <li>
-                        @php
-                            $currentIsActive = $navigation->is_active || $navigation->children->contains('is_active', true);
-                        @endphp
-                        <div x-data="{ isExpanded: {{ $currentIsActive ? true : false }} }">
+                        <div x-data="{ isExpanded: {{ $navigation->has_active ? 'true' : 'false' }} }">
                             <button id="controlsAccordionItem{{$navigation->id}}" type="button"
                                 @class([
                                     'flex w-full items-center justify-between gap-4 p-4 font-bold text-white underline-offset-2 focus-visible:underline focus-visible:outline-none',
-                                    'bg-primary-600' => $currentIsActive,
+                                    'bg-primary-600' => $navigation->has_active,
                                 ])
                                 aria-controls="accordionItem{{$navigation->id}}"
                                 @click="isExpanded = ! isExpanded"
@@ -135,7 +133,7 @@
                                 {{ $navigation->name_label }}
                                 <x-filament::icon icon="heroicon-m-chevron-down" class="size-6 transform transition-transform duration-300" ::class="isExpanded ? 'rotate-180' : ''" aria-hidden="true" />
                             </button>
-                            <div class="flex flex-col px-2 border-t border-primary-400 divide-y divide-primary-400"
+                            <div class="flex flex-col border-t border-primary-400 divide-y divide-primary-400"
                                 id="accordionItem{{$navigation->id}}"
                                 x-cloak x-show="isExpanded"
                                 x-collapse
@@ -144,13 +142,13 @@
                             >
                                 @foreach ($navigation->children as $child)
                                     <a @class([
-                                            'flex w-full h-full px-4 py-4 font-bold text-white',
-                                            'bg-primary-600' => $child->is_active,
+                                            'flex w-full h-full p-4 font-bold text-white',
+                                            'bg-primary-600' => $child->has_active,
                                         ])
                                         {{ \Filament\Support\generate_href_html($child->url_info['url'], $child->url_info['target'] ?? false) }}
                                         role="menuitem"
                                     >
-                                        {{ $child->name_label }}
+                                        &nbsp;&nbsp;&nbsp;&nbsp;{{ $child->name_label }}
                                     </a>
                                 @endforeach
                             </div>
@@ -159,10 +157,11 @@
                 @else
                     <li class="flex">
                         <a @class([
-                                'flex grow px-4 py-4 font-bold text-white focus:underline',
-                                'bg-primary-600' => $navigation->is_active,
+                                'flex grow p-4 font-bold text-white focus:underline',
+                                'bg-primary-600' => $navigation->has_active,
                             ])
                             {{ \Filament\Support\generate_href_html($navigation->url_info['url'], $navigation->url_info['target'] ?? false) }}
+                            role="menuitem"
                             aria-current="page"
                         >
                             {{ $navigation->name_label }}

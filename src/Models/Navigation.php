@@ -108,6 +108,39 @@ class Navigation extends SupportModel implements HasMedia
         );
     }
 
+
+    /**
+     * 当前导航以及子导航中是否存在 激活状态
+     *
+     * @return Attribute
+     */
+    protected function hasActive(): Attribute
+    {
+        return Attribute::make(
+            get: function (mixed $value, array $attributes) {
+                if ($this->is_active) {
+                    return true;
+                }
+
+                // 收集当前 model 所有已经加载的 children (只收集两层 children数据))
+                $allChildren = collect([]);
+                if ($this->relationLoaded('children')) {
+                    $allChildren = $this->children->flatMap(function ($child) {
+                        if ($child->relationLoaded('children')) {
+                            // 将当前元素和它的 children 数组合并成一个新数组
+                            return collect([$child])->merge($child->children);
+                        } else {
+                            return collect([$child]);
+                        }
+                    });
+                }
+
+                return $allChildren->contains('is_active', true);
+            }
+        );
+    }
+
+
     /**
      * 导航名称（包含 icon）
      */
@@ -115,19 +148,19 @@ class Navigation extends SupportModel implements HasMedia
     {
         return Attribute::make(
             get: function (mixed $value, array $attributes) {
-                // 当前的导航活动，（或者已经加载过子导航的页面，子导航中是否有活动，未加载则直接 false）
-                $isActive = $this->is_active || ($this->relationLoaded('children') ? $this->children->contains('is_active', true) : false);
+                // 当前的导航是否活动，或者子导航中是否存在活动状态
+                $hasActive = $this->has_active;
                 $recordLabel = '<span class="flex items-center gap-2">';
                 $icon_type = $this->options['icon_type'] ?? 'none';
                 if ($icon_type == 'icon') {
-                    if ($isActive) {
+                    if ($hasActive) {
                         $icon = $this->options['active_icon'] ?? ($this->options['icon'] ?? '');        // 优先取 活动图标
                     } else {
                         $icon = $this->options['icon'] ?? ($this->options['active_icon'] ?? '');        // 优先取非活动图标
                     }
                     $icon && $recordLabel .= generate_icon_html($icon, size: IconSize::Large)->toHtml();
                 } elseif ($icon_type == 'image') {
-                    if ($isActive) {
+                    if ($hasActive) {
                         $image = $this->options['active_icon_src'] ?? ($this->options['icon_src'] ?? '');    // 优先取 活动图标
                     } else {
                         $image = $this->options['icon_src'] ?? ($this->options['active_icon_src'] ?? '');   // 优先取非活动图标

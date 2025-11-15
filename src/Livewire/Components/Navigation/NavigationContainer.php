@@ -16,7 +16,7 @@ class NavigationContainer extends Base
 
     public function render()
     {
-        $navigation = $this->getScopedQuery()->normal()->where('slug', $this->slug)->firstOrFail();
+        $navigation = $this->getScopedQuery()->normal()->withDepth()->where('slug', $this->slug)->firstOrFail();
 
         if ($navigation->type == NavigationTypeEnum::Content) {
             // 根据当前导航的内容类型，获取导航的设置

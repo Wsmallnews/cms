@@ -15,7 +15,7 @@ class Breadcrumb extends Base
     public function render()
     {
         // 获取当前导航的所有上级导航，包括自己
-        $parents = $this->navigation->ancestors;
+        $parents = $this->navigation->ancestors()->normal()->get();
         $parents = $parents->push($this->navigation);       // 追加自己
 
         // 处理上级导航的 url_info

@@ -10,7 +10,7 @@
         <livewire:sn-components-navigation-breadcrumb :navigation="$navigation" />
     
         <div class="w-full flex flex-col md:flex-row items-start gap-4">
-            @if ($navigation->parent_id)
+            @if ($navigation->depth > 0)
                 {{-- 必须是顶级导航下的子导航才可以显示同级导航列表 --}}
                 <livewire:sn-components-navigation-brothers :navigation="$navigation" />
             @endif

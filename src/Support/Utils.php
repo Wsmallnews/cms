@@ -135,11 +135,11 @@ class Utils
      * cms 内部路由处理
      *
      * @param string $name
-     * @param array $parameters
+     * @param mixed $parameters
      * @param boolean $absolute
      * @return string
      */
-    public static function route(string $name, array $parameters = [], bool $absolute = true): string
+    public static function route($name, $parameters = [], $absolute = true): string
     {
         $name = self::getConfig('routes.name', '') . $name;
 
