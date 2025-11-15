@@ -15,7 +15,7 @@ class Utils
     {
         $config = config('sn-cms');
 
-        return $name ? ($config[$name] ?? null) : $config;
+        return $name ? (data_get($config, $name) ?? null) : $config;
     }
 
     /**
@@ -107,26 +107,23 @@ class Utils
     {
         return self::getModel('post');
     }
-
-
-
-    public static function currentPanel(): ?Panel
-    {
-        return Filament::getCurrentOrDefaultPanel();
-    }
-
-    // public static function getModel($name)
-    // {
-    //     return self::getConfig('models')[$name] ?? \Wsmallnews\Cms\Models\Content::class;
-    // }
-
-    public static function isTenancyEnabled(): bool
-    {
-        return self::currentPanel()?->hasTenancy() ?? false;
-    }
-
+    /**
+     * 获取 租户模型
+     *
+     * @return string|null
+     */
     public static function getTenantModel(): ?string
     {
-        return self::isTenancyEnabled() ? self::currentPanel()?->getTenantModel() : null;
+        return self::getConfig('tenant_model') ?? null;
+    }
+
+    /**
+     * 是否启用了租户
+     *
+     * @return boolean
+     */
+    public static function isTenancyEnabled(): bool
+    {
+        return self::getTenantModel() !== null;
     }
 }

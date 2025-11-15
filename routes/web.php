@@ -4,16 +4,22 @@ use Illuminate\Support\Facades\Route;
 use Wsmallnews\Cms\Livewire\Index;
 use Wsmallnews\Cms\Livewire\Navigation\Navigation;
 use Wsmallnews\Cms\Livewire\Post\Post;
-// use App\Http\Middleware\IdentifyTenant;
+use Wsmallnews\Cms\Http\Middleware\IdentifyTenant;
 use Wsmallnews\Cms\Livewire\Post\Posts;
+use Wsmallnews\Cms\Support\Utils;
 
-Route::prefix('cms')
-    ->name('cms.')
+$middlewares = Utils::getConfig('routes.middleware') ?? [];
+Utils::isTenancyEnabled() && array_unshift($middlewares, IdentifyTenant::class);
+
+Route::domain(Utils::getConfig('routes.domain'))
+    ->middleware($middlewares)
+    ->prefix(Utils::getConfig('routes.prefix'))
+    ->name(Utils::getConfig('routes.name'))
     ->group(function () {
-        Route::get('/', Index::class)->name('index');
-        Route::get('/navigation/{slug}', Navigation::class)->name('navigation');
-        Route::get('/posts', Posts::class)->name('posts');
-        Route::get('/posts/{id}', Post::class)->name('posts.show');
+        Route::get(Utils::getConfig('routes.uri.index'), Index::class)->name('index');
+        Route::get(Utils::getConfig('routes.uri.navigation'), Navigation::class)->name('navigation');
+        Route::get(Utils::getConfig('routes.uri.posts'), Posts::class)->name('posts');
+        Route::get(Utils::getConfig('routes.uri.posts_show'), Post::class)->name('posts.show');
     });
 
 // Route::prefix("tenant/{tenant:slug}")
