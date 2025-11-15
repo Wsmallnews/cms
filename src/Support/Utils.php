@@ -57,7 +57,7 @@ class Utils
 
     /**
      * 获取模型
-     *
+     * 
      * @param string $name
      * @return string
      */
@@ -71,6 +71,7 @@ class Utils
 
         return $model;
     }
+
     /**
      * 获取内容模型
      *
@@ -80,6 +81,7 @@ class Utils
     {
         return self::getModel('content');
     }
+
     /**
      * 获取内容模型
      *
@@ -89,6 +91,7 @@ class Utils
     {
         return self::getModel('navigation');
     }
+
     /**
      * 获取导航类型模型
      *
@@ -98,6 +101,7 @@ class Utils
     {
         return self::getModel('navigation_type');
     }
+
     /**
      * 获取文章模型
      *
@@ -127,8 +131,15 @@ class Utils
         return self::getTenantModel() !== null;
     }
 
-
-    public static function route($name, $parameters = [], $absolute = true)
+    /**
+     * cms 内部路由处理
+     *
+     * @param string $name
+     * @param array $parameters
+     * @param boolean $absolute
+     * @return string
+     */
+    public static function route(string $name, array $parameters = [], bool $absolute = true): string
     {
         $name = self::getConfig('routes.name', '') . $name;
 

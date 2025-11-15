@@ -89,7 +89,7 @@ class Navigation extends SupportModel implements HasMedia
 
     /**
      * 当前是否是激活状态
-     *
+     * 
      * @return Attribute
      */
     protected function isActive(): Attribute
@@ -110,8 +110,6 @@ class Navigation extends SupportModel implements HasMedia
 
     /**
      * 导航名称（包含 icon）
-     *
-     * @return Attribute
      */
     protected function nameLabel(): Attribute
     {

@@ -9,7 +9,6 @@ return [
         'scope_id' => 0,
     ],
 
-
     'models' => [
         'content' => Models\Content::class,
         'navigation' => Models\Navigation::class,
