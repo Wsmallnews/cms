@@ -3,6 +3,7 @@
 namespace Wsmallnews\Cms\Models;
 
 use Filament\Support\Enums\IconSize;
+use Filament\Facades\Filament;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
@@ -60,11 +61,13 @@ class Navigation extends SupportModel implements HasMedia
                     $params = $hasRoutes ? array_merge($params, $options['_url_params']['routes'] ?? []) : [];
                     $params = $hasQueries ? array_merge($params, $options['_url_params']['queries'] ?? []) : $params;
 
+                    // 这里的 route 必须是完整 name
                     $url = sn_route($options['route'], $params);
                 }
 
                 if ($this->type == NavigationTypeEnum::Page) {
-                    $url = sn_route('cms.navigation', $attributes['slug']);
+                    // cms 导航页面，使用 Utils 路由方法拼接 cms 路由前缀
+                    $url = Utils::route('navigation', $attributes['slug']);
                 }
 
                 if ($this->type == NavigationTypeEnum::Url && isset($options['url'])) {
@@ -72,7 +75,8 @@ class Navigation extends SupportModel implements HasMedia
                 }
 
                 if ($this->type == NavigationTypeEnum::Content) {
-                    $url = sn_route('cms.navigation', $attributes['slug']);
+                    // cms 内容页面，使用 Utils 路由方法拼接 cms 路由前缀
+                    $url = Utils::route('navigation', $attributes['slug']);
                 }
 
                 return [
@@ -92,6 +96,10 @@ class Navigation extends SupportModel implements HasMedia
     {
         return Attribute::make(
             get: function (mixed $value, array $attributes) {
+                $panel = Filament::getCurrentPanel();
+                if ($panel) {       // 在 panel 面板中时不校验活动状态
+                    return false;
+                }
                 $urlInfo = $this->url_info;
                 $fullUrl = request()->fullUrl();
 

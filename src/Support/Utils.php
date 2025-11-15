@@ -11,11 +11,11 @@ use Wsmallnews\Cms\Models;
 
 class Utils
 {
-    public static function getConfig($name = null)
+    public static function getConfig($name = null, $default = null)
     {
         $config = config('sn-cms');
 
-        return $name ? (data_get($config, $name) ?? null) : $config;
+        return $name ? (data_get($config, $name) ?? $default) : $config;
     }
 
     /**
@@ -125,5 +125,13 @@ class Utils
     public static function isTenancyEnabled(): bool
     {
         return self::getTenantModel() !== null;
+    }
+
+
+    public static function route($name, $parameters = [], $absolute = true)
+    {
+        $name = self::getConfig('routes.name', '') . $name;
+
+        return sn_route($name, $parameters, $absolute);
     }
 }

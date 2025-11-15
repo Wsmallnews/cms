@@ -4,6 +4,7 @@ namespace Wsmallnews\Cms\Livewire\Components\Navigation;
 
 use Wsmallnews\Cms\Livewire\Components\Base;
 use Wsmallnews\Cms\Models\Navigation as NavigationModel;
+use Wsmallnews\Cms\Support\Utils;
 
 class Breadcrumb extends Base
 {
@@ -31,6 +32,12 @@ class Breadcrumb extends Base
                 'label' => $navigation->name_label,
             ];
         })->reverse();
+
+        // 添加首页
+        $breadcrumbs->prepend([
+            'url' => Utils::route('index'),
+            'label' => '首页',
+        ]);
 
         return view('sn-cms::livewire.components.navigation.breadcrumb', [
             'breadcrumbs' => $breadcrumbs,

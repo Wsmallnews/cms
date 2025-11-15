@@ -4,6 +4,7 @@ namespace Wsmallnews\Cms\Livewire\Post;
 
 use Livewire\Attributes\Url;
 use Wsmallnews\Cms\Livewire\Base;
+use Wsmallnews\Cms\Support\Utils;
 
 class Posts extends Base
 {
@@ -18,8 +19,8 @@ class Posts extends Base
     public function render()
     {
         $breadcrumbs = [
-            ['label' => '首页', 'url' => sn_route('cms.index')],
-            ['label' => '资讯列表', 'url' => sn_route('cms.posts')],
+            ['label' => '首页', 'url' => Utils::route('index')],
+            ['label' => '资讯列表', 'url' => Utils::route('posts')],
         ];
 
         return view('sn-cms::livewire.post.posts', [

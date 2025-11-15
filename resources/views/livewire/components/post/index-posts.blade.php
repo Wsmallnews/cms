@@ -5,7 +5,7 @@
                 @foreach($posts as $post)
                     @if ($loop->index < ($limit / 2))
                         <div class="swiper-slide relative">
-                            <img src="{{ $post->getFirstMediaUrl('main', 'thumb') }}" class="w-full h-full object-cover" @click="toJump('{{ sn_route('posts.show', $post->id) }}')" />
+                            <img src="{{ $post->getFirstMediaUrl('main', 'thumb') }}" class="w-full h-full object-cover" @click="toJump('{{ \Wsmallnews\Cms\Support\Utils::route('posts.show', $post->id) }}')" />
                             <div class="absolute right-0 bottom-0 left-0 z-10 leading-[62px] text-[18px] text-[#FFFFFF] pl-[24px] line-clamp-1 pr-[90px] text-left" style="background: rgba(0,0,0,0.5)">{{ $post->title }}</div>
                         </div>
                     @endif
@@ -19,7 +19,7 @@
         <div class="h-96 flex flex-col flex-1 gap-4">
             @foreach($posts as $post)
                 @if ($loop->index >= ($limit / 2))
-                    <x-dynamic-component :component="$itemWrapperView" tag="a" href="{{ sn_route('posts.show', $post->id) }}" class="flex items-center">
+                    <x-dynamic-component :component="$itemWrapperView" tag="a" href="{{ \Wsmallnews\Cms\Support\Utils::route('posts.show', $post->id) }}" class="flex items-center">
                         <div class="w-[176px] h-[100px]">
                             <img src="{{ $post->getFirstMediaUrl('main', 'thumb') }}" class="w-full h-full object-cover" />
                         </div>

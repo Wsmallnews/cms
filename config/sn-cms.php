@@ -51,7 +51,7 @@ return [
         /**
          * Default name prefix for the cms routes.
          */
-        'name' => 'cms.',
+        'name' => 'sn-cms.',
         /**
          * default uri for the cms routes
          */

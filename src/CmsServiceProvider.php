@@ -36,6 +36,9 @@ class CmsServiceProvider extends PackageServiceProvider
     {
         $package->name(static::$name)
             ->hasCommands($this->getCommands())
+            ->hasConfigFile()
+            ->hasTranslations()
+            ->hasViews(static::$viewNamespace)
             ->hasInstallCommand(function (InstallCommand $command) {
                 $command
                     ->publishConfigFile()
@@ -44,27 +47,13 @@ class CmsServiceProvider extends PackageServiceProvider
                     ->askToStarRepoOnGitHub('wsmallnews/cms');
             });
 
-        $configFileName = $package->shortName();
-
-        if (file_exists($package->basePath("/../config/{$configFileName}.php"))) {
-            $package->hasConfigFile();
-        }
-
-        if (file_exists($package->basePath('/../routes'))) {
+        if (Utils::getConfig('routes.enabled') !== false) {     // 只要不等于 false 就注册路由
             $package->hasRoutes($this->getRoutes());
         }
 
         if (file_exists($package->basePath('/../database/migrations'))) {
             $package->hasMigrations($this->getMigrations());
             $package->runsMigrations();
-        }
-
-        if (file_exists($package->basePath('/../resources/lang'))) {
-            $package->hasTranslations();
-        }
-
-        if (file_exists($package->basePath('/../resources/views'))) {
-            $package->hasViews(static::$viewNamespace);
         }
     }
 
