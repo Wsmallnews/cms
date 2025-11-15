@@ -106,11 +106,8 @@ class Navigation extends SupportModel implements HasMedia
         );
     }
 
-
     /**
      * 当前导航以及子导航中是否存在 激活状态
-     *
-     * @return Attribute
      */
     protected function hasActive(): Attribute
     {
@@ -137,7 +134,6 @@ class Navigation extends SupportModel implements HasMedia
             }
         );
     }
-
 
     /**
      * 导航名称（包含 icon）

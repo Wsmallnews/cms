@@ -20,10 +20,10 @@ class Brothers extends Base
             // 查找当前导航的所有上级中，层级为 1 的上级
             $parents = $this->navigation->ancestors()->normal()->withDepth()->get();
             $this->brotherNavigation = $parents->firstWhere('depth', 1);
-        } else if ($this->navigation->depth == 1) {
+        } elseif ($this->navigation->depth == 1) {
             $this->brotherNavigation = $this->navigation;
         }
-        
+
         $brothers = collect([]);
         if ($this->brotherNavigation) {
             $brothers = $this->navigation->newScopedQuery()->normal()

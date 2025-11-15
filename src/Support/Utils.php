@@ -126,10 +126,9 @@ class Utils
     /**
      * cms 内部路由处理
      *
-     * @param string $name
-     * @param mixed $parameters
-     * @param boolean $absolute
-     * @return string
+     * @param  string  $name
+     * @param  mixed  $parameters
+     * @param  bool  $absolute
      */
     public static function route($name, $parameters = [], $absolute = true): string
     {
