@@ -10,7 +10,6 @@ use Wsmallnews\Cms\Support\Utils;
 
 class IdentifyTenant
 {
-
     public function handle(Request $request, Closure $next): Response
     {
         if (! Utils::isTenancyEnabled()) {
@@ -20,7 +19,7 @@ class IdentifyTenant
         if (! $request->route()->hasParameter('tenant')) {
             return $next($request);
         }
-        
+
         $tenantId = $request->route()->parameter('tenant');
         $tenant = $this->getTenant($tenantId);
 
@@ -30,11 +29,10 @@ class IdentifyTenant
         return $next($request);
     }
 
-
     /**
      * 通过 id 获取租户
      *
-     * @param int $tenantId
+     * @param  int  $tenantId
      * @return void
      */
     protected function getTenant($tenantId)

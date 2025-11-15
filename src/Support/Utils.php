@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Wsmallnews\Cms\Support;
 
-use Filament\Facades\Filament;
-use Filament\Panel;
 use Wsmallnews\Cms\Exceptions\CmsException;
 use Wsmallnews\Cms\Models;
 
@@ -57,9 +55,6 @@ class Utils
 
     /**
      * 获取模型
-     * 
-     * @param string $name
-     * @return string
      */
     public static function getModel(string $name): string
     {
@@ -111,10 +106,9 @@ class Utils
     {
         return self::getModel('post');
     }
+
     /**
      * 获取 租户模型
-     *
-     * @return string|null
      */
     public static function getTenantModel(): ?string
     {
@@ -123,8 +117,6 @@ class Utils
 
     /**
      * 是否启用了租户
-     *
-     * @return boolean
      */
     public static function isTenancyEnabled(): bool
     {

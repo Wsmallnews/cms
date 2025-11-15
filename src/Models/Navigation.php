@@ -2,8 +2,8 @@
 
 namespace Wsmallnews\Cms\Models;
 
-use Filament\Support\Enums\IconSize;
 use Filament\Facades\Filament;
+use Filament\Support\Enums\IconSize;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
@@ -89,8 +89,6 @@ class Navigation extends SupportModel implements HasMedia
 
     /**
      * 当前是否是激活状态
-     * 
-     * @return Attribute
      */
     protected function isActive(): Attribute
     {

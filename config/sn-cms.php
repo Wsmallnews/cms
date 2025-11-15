@@ -21,7 +21,7 @@ return [
     | Multi-Tenancy
     |--------------------------------------------------------------------------
     |
-    | Firstly, the panel where the current plugin is located should support multi tenancy before you can set this option. 
+    | Firstly, the panel where the current plugin is located should support multi tenancy before you can set this option.
     | Secondly, The tenant model should be set as a panel model.
     |
     */
@@ -33,7 +33,7 @@ return [
          */
         'enabled' => true,
         /**
-         * The domain where the cms routes should be registered. 
+         * The domain where the cms routes should be registered.
          * If you differentiate tenants by domain, you should set it like this: {tenant:slug}.example.com
          */
         'domain' => null,
@@ -43,7 +43,7 @@ return [
          */
         'middleware' => ['web'],
         /**
-         * Default path for the blog homepage. 
+         * Default path for the blog homepage.
          * If you differentiate tenants by url, you should set it like this: cms/{tenant: slug}
          */
         'prefix' => 'cms',
@@ -59,7 +59,7 @@ return [
             'navigation' => 'navigation/{slug}',
             'posts' => 'posts',
             'posts_show' => 'posts/{id}',
-        ]
+        ],
     ],
 
     // 'enums' => [
