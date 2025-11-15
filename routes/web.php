@@ -1,10 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Wsmallnews\Cms\Http\Middleware\IdentifyTenant;
 use Wsmallnews\Cms\Livewire\Index;
 use Wsmallnews\Cms\Livewire\Navigation\Navigation;
 use Wsmallnews\Cms\Livewire\Post\Post;
-use Wsmallnews\Cms\Http\Middleware\IdentifyTenant;
 use Wsmallnews\Cms\Livewire\Post\Posts;
 use Wsmallnews\Cms\Support\Utils;
 
