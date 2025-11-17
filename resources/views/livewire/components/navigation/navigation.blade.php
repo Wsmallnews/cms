@@ -6,11 +6,11 @@
     <div class="container mx-auto relative px-4 sm:px-0">
         <div class="flex justify-between h-16">
             <div class="flex gap-4">
-                <ul class="hidden md:flex">
+                <ul class="hidden md:flex" role="menu">
                     @foreach ($navigations as $navigation)
                         @if ($navigation->children->count() > 0)
                             <li @class([
-                                    'min-w-32 flex items-center relative w-fit group hover:bg-primary-600 transition-colors duration-300 ease-in-out',
+                                    'min-w-32 flex items-center relative w-fit group/child hover:bg-primary-600 transition-colors duration-300 ease-in-out',
                                     'bg-primary-600' => $navigation->has_active,
                                 ])
                                 x-data="{ isOpen: false, openedWithKeyboard: false, leaveTimeout: null }"
@@ -18,6 +18,7 @@
                                 x-on:mouseenter="leaveTimeout ? clearTimeout(leaveTimeout) : true"
                                 x-on:keydown.esc.prevent="isOpen = false, openedWithKeyboard = false"
                                 x-on:click.outside="isOpen = false, openedWithKeyboard = false"
+                                role="menuitem"
                             >
                                 <a class="flex w-full h-full justify-center items-center relative px-2 font-bold text-white gap-2 underline-offset-2 focus:outline-hidden focus:underline"
                                     href="javascript:;"
@@ -29,10 +30,10 @@
                                     aria-haspopup="true"
                                 >
                                     {{ $navigation->name_label }}
-                                    <x-filament::icon icon="heroicon-m-chevron-down" class="size-6 font-bold transform transition-transform duration-300 rotate-0 group-hover:rotate-180" aria-hidden="true" />
+                                    <x-filament::icon icon="heroicon-m-chevron-down" class="size-6 font-bold transform transition-transform duration-300 rotate-0 group-hover/child:rotate-180" aria-hidden="true" />
                                 </a>
 
-                                <div class="w-full absolute top-16 flex flex-col overflow-hidden bg-primary-500 z-10"
+                                <ul class="w-full absolute top-16 flex flex-col bg-primary-500 z-10"
                                     x-cloak x-show="isOpen || openedWithKeyboard"
                                     x-transition
                                     x-trap="openedWithKeyboard"
@@ -42,26 +43,88 @@
                                     role="menu"
                                 >
                                     @foreach ($navigation->children as $child)
-                                        <a @class([
-                                            'h-12 flex items-center justify-center font-bold text-white hover:bg-primary-600 focus-visible:bg-primary-600 focus-visible:outline-hidden transition-colors duration-300 ease-in-out',
-                                            'bg-primary-600' => $child->has_active,
-                                        ])
-                                            {{ \Filament\Support\generate_href_html($child->url_info['url'], $child->url_info['target'] ?? false) }}
-                                            role="menuitem"
-                                        >
-                                            {{ $child->name_label }}
-                                        </a>
+                                        @if ($child->children->count() > 0)
+                                            <li @class([
+                                                    'w-full group/grandchild hover:bg-primary-600 focus-visible:bg-primary-600 focus-visible:outline-hidden transition-colors duration-300 ease-in-out',
+                                                    'bg-primary-600' => $child->has_active,
+                                                ])
+                                                x-data="{ isChildOpen: false, openedChildWithKeyboard: false, childLeaveTimeout: null }"
+                                                x-on:mouseleave.prevent="childLeaveTimeout = setTimeout(() => { isOpen = false }, 50)"
+                                                x-on:mouseenter="childLeaveTimeout ? clearTimeout(childLeaveTimeout) : true"
+                                                x-on:keydown.esc.prevent="isChildOpen = false, openedChildWithKeyboard = false"
+                                                x-on:click.outside="isChildOpen = false, openedChildWithKeyboard = false"
+                                                role="menuitem"
+                                            >
+                                                <a @class([
+                                                        'h-14 flex items-center justify-center font-bold text-white',
+                                                    ])
+                                                    href="javascript:;"
+                                                    x-on:mouseover="isChildOpen = true"
+                                                    x-on:keydown.space.prevent="openedChildWithKeyboard = true"
+                                                    x-on:keydown.enter.prevent="openedChildWithKeyboard = true"
+                                                    x-on:keydown.down.prevent="openedChildWithKeyboard = true"
+                                                    x-bind:aria-expanded="isChildOpen || openedChildWithKeyboard"
+                                                    aria-haspopup="true"
+                                                >
+                                                    {{ $child->name_label }}
+                                                    <x-filament::icon icon="heroicon-m-chevron-down" class="size-6 font-bold transform transition-transform duration-300 rotate-0 group-hover/grandchild:-rotate-90" aria-hidden="true" />
+                                                </a>
+
+                                                <ul class="w-full absolute top-0 left-full flex flex-col overflow-hidden bg-primary-500 z-11"
+                                                    x-cloak x-show="isChildOpen || openedChildWithKeyboard"
+                                                    x-transition
+                                                    x-trap="openedChildWithKeyboard"
+                                                    x-on:click.outside="isChildOpen = false, openedChildWithKeyboard = false"
+                                                    x-on:keydown.down.prevent="$focus.wrap().next()"
+                                                    x-on:keydown.up.prevent="$focus.wrap().previous()"
+                                                    role="menu"
+                                                >
+                                                    @foreach ($child->children as $grandChild)
+                                                        <li @class([
+                                                                'w-full hover:bg-primary-600 focus-visible:bg-primary-600 focus-visible:outline-hidden transition-colors duration-300 ease-in-out',
+                                                                'bg-primary-600' => $grandChild->has_active,
+                                                            ])
+                                                            role="menuitem"
+                                                        >
+                                                            <a @class([
+                                                                    'w-full h-14 flex items-center justify-center font-bold text-white',
+                                                                ])
+                                                                {{ \Filament\Support\generate_href_html($grandChild->url_info['url'], $grandChild->url_info['target'] ?? false) }}
+                                                            >
+                                                                {{ $grandChild->name_label }}
+                                                            </a>
+                                                        </li>
+                                                    @endforeach
+                                                </ul>
+                                            </li>
+                                        @else
+                                            <li @class([
+                                                    'w-full hover:bg-primary-600 focus-visible:bg-primary-600 focus-visible:outline-hidden transition-colors duration-300 ease-in-out',
+                                                    'bg-primary-600' => $child->has_active,
+                                                ])
+                                                role="menuitem"
+                                            >
+                                                <a @class([
+                                                    'w-full h-14 flex items-center justify-center font-bold text-white '
+                                                ])
+                                                    {{ \Filament\Support\generate_href_html($child->url_info['url'], $child->url_info['target'] ?? false) }}
+                                                >
+                                                    {{ $child->name_label }}
+                                                </a>
+                                            </li>
+                                        @endif
                                     @endforeach
-                                </div>
+                                </ul>
                             </li>
                         @else
                             <li @class([
-                                'min-w-32 flex items-center hover:bg-primary-600 transition-colors duration-300 ease-in-out',
-                                'bg-primary-600' => $navigation->has_active,
-                            ])>
+                                    'min-w-32 flex items-center hover:bg-primary-600 transition-colors duration-300 ease-in-out',
+                                    'bg-primary-600' => $navigation->has_active,
+                                ])
+                                role="menuitem"
+                            >
                                 <a class="flex w-full h-full justify-center items-center font-bold text-white underline-offset-2 focus:outline-hidden focus:underline"
                                     {{ \Filament\Support\generate_href_html($navigation->url_info['url'], $navigation->url_info['target'] ?? false) }}
-                                    role="menuitem"
                                 >
                                     {{ $navigation->name_label }}
                                 </a>
