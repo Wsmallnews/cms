@@ -138,26 +138,29 @@
         x-transition:leave="transition motion-reduce:transition-none ease-out duration-300"
         x-transition:leave-start="translate-y-0" x-transition:leave-end="-translate-y-full"
         id="mobileMenu"
+        role="menu"
     >
         @foreach ($navigations as $navigation)
             @php
                 $hasChild = $navigation->children->count() > 0;
             @endphp
             <li @class([
-                    'w-full h-14 flex flex-col items-center justify-between gap-4',
-                    'bg-primary-600' => $navigation->has_active,
+                    'w-full flex flex-col items-center justify-between',
                 ])
                 @if ($hasChild)
                     x-data="{ isExpanded: {{ $navigation->has_active ? 'true' : 'false' }} }"
                     aria-controls="accordionItem{{$navigation->id}}"
-                    @click="isExpanded = ! isExpanded"
                     :aria-expanded="isExpanded ? 'true' : 'false'"
                     aria-haspopup="true"
                 @endif
                 role="menuitem"
             >
-                <a class="flex w-full h-full justify-between items-center px-2 font-bold text-white gap-2"
+                <a @class([
+                        'flex w-full h-14 justify-between items-center px-2 font-bold text-white gap-2',
+                        'bg-primary-600' => $navigation->has_active,
+                    ])
                     @if ($hasChild)
+                        @click="isExpanded = ! isExpanded"
                         href="javascript:;"
                     @else
                         {{ \Filament\Support\generate_href_html($child->url_info['url'], $child->url_info['target'] ?? false) }}
@@ -170,50 +173,75 @@
                 </a>
 
                 @if ($hasChild) 
-                    <div>
-                        <ul class="flex flex-col divide-y divide-primary-400 inset-x-0 top-0 z-10 rounded-b-md bg-primary-500 pb-6 pt-20 md:hidden"
-                            x-cloak x-show="mobileMenuIsOpen"
-                            x-transition:enter="transition motion-reduce:transition-none ease-out duration-300"
-                            x-transition:enter-start="-translate-y-full" x-transition:enter-end="translate-y-0"
-                            x-transition:leave="transition motion-reduce:transition-none ease-out duration-300"
-                            x-transition:leave-start="translate-y-0" x-transition:leave-end="-translate-y-full"
-                            id="mobileMenu"
-                        >
-                            @foreach ($navigation->children as $child)
-                                @php
-                                    $hasGrandChild = $child->children->count() > 0;
-                                @endphp
-                                <li @class([
-                                        'w-full h-14 flex items-center justify-between gap-4',
+                    <ul class="w-full flex flex-col border-t border-primary-400 divide-y divide-primary-400"
+                        id="accordionItem{{$navigation->id}}"
+                        x-cloak x-show="isExpanded"
+                        aria-labelledby="controlsAccordionItemOne{{$navigation->id}}"
+                        x-collapse
+                        role="menu"
+                    >
+                        @foreach ($navigation->children as $child)
+                            @php
+                                $hasGrandChild = $child->children->count() > 0;
+                            @endphp
+                            <li @class([
+                                    'w-full flex flex-col items-center justify-between',
+                                ])
+                                @if ($hasGrandChild)
+                                    x-data="{ isExpanded: {{ $child->has_active ? 'true' : 'false' }} }"
+                                    aria-controls="accordionChildItem{{$child->id}}"
+                                    :aria-expanded="isExpanded ? 'true' : 'false'"
+                                    aria-haspopup="true"
+                                @endif
+                                role="menuitem"
+                            >
+                                <a @class([
+                                        'flex w-full h-14 justify-between items-center pl-8 pr-2 font-bold text-white gap-2',
                                         'bg-primary-600' => $child->has_active,
                                     ])
                                     @if ($hasGrandChild)
-                                        x-data="{ isExpanded: {{ $child->has_active ? 'true' : 'false' }} }"
-                                        aria-controls="accordionItem{{$child->id}}"
-                                        @click="isExpanded = ! isExpanded"
-                                        :aria-expanded="isExpanded ? 'true' : 'false'"
-                                        aria-haspopup="true"
+                                        @click.stop="isExpanded = ! isExpanded"
+                                        href="javascript:;"
+                                    @else
+                                        {{ \Filament\Support\generate_href_html($child->url_info['url'], $child->url_info['target'] ?? false) }}
                                     @endif
-                                    role="menuitem"
                                 >
-                                    <a class="flex w-full h-full justify-between items-center px-2 font-bold text-white gap-2"
-                                        @if ($hasGrandChild)
-                                            href="javascript:;"
-                                        @else
-                                            {{ \Filament\Support\generate_href_html($child->url_info['url'], $child->url_info['target'] ?? false) }}
-                                        @endif
-                                    >
-                                        {{ $child->name_label }}
-                                        @if ($hasGrandChild)
-                                            <x-filament::icon icon="heroicon-m-chevron-down" class="size-6 font-bold transform transition-transform duration-300" ::class="isExpanded ? 'rotate-180' : ''" aria-hidden="true" />
-                                        @endif
-                                    </a>
-                                </li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif 
+                                    {{ $child->name_label }}
+                                    @if ($hasGrandChild)
+                                        <x-filament::icon icon="heroicon-m-chevron-down" class="size-6 font-bold transform transition-transform duration-300" ::class="isExpanded ? 'rotate-180' : ''" aria-hidden="true" />
+                                    @endif
+                                </a>
 
+                                @if ($hasGrandChild) 
+                                    <ul class="w-full flex flex-col border-t border-primary-400 divide-y divide-primary-400"
+                                        id="accordionChildItem{{$child->id}}"
+                                        x-cloak x-show="isExpanded"
+                                        aria-labelledby="controlsAccordionItemTwo{{$child->id}}"
+                                        x-collapse
+                                        role="menu"
+                                    >
+                                        @foreach ($child->children as $grandChild)
+                                            <li @class([
+                                                    'w-full flex flex-col items-center justify-between',
+                                                ])
+                                                role="menuitem"
+                                            >
+                                                <a @class([
+                                                        'flex w-full h-14 justify-between items-center pl-16 pr-2 font-bold text-white gap-2',
+                                                        'bg-primary-600' => $grandChild->has_active,
+                                                    ])
+                                                    {{ \Filament\Support\generate_href_html($grandChild->url_info['url'], $grandChild->url_info['target'] ?? false) }}
+                                                >
+                                                    {{ $grandChild->name_label }}
+                                                </a>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                @endif 
+                            </li>
+                        @endforeach
+                    </ul>
+                @endif 
             </li>
         @endforeach
     </ul>
