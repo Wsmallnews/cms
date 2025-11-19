@@ -125,13 +125,12 @@ class Utils
 
     /**
      * 获取主题配置信息
-     *
-     * @return array
      */
     public static function getThemes(): array
     {
         return self::getConfig('themes');
     }
+
     /**
      * 获取当前主题
      */
@@ -139,6 +138,7 @@ class Utils
     {
         return self::getConfig('themes.theme', 'default');
     }
+
     /**
      * 获取当前布局
      */
@@ -146,6 +146,7 @@ class Utils
     {
         return self::getConfig('themes.layout', 'sn-cms::components.layouts.app');
     }
+
     /**
      * 获取指定容器
      */

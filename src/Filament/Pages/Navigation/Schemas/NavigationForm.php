@@ -199,7 +199,7 @@ class NavigationForm
                                 ->fileAttachmentsDirectory('contents/' . date('Ymd'))
                                 ->required(),
                         ])
-                        ->columnSpanFull()
+                        ->columnSpanFull(),
                 ])
                 ->columns(2)
                 // ->visibleJs(<<<'JS'

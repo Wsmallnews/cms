@@ -2,10 +2,9 @@
 
 namespace Wsmallnews\Cms\Livewire;
 
-use Livewire\Attributes\Layout;
 use Livewire\Component;
-use Wsmallnews\Cms\Support\Utils;
 use Wsmallnews\Cms\Livewire\Concerns\HasView;
+use Wsmallnews\Cms\Support\Utils;
 
 class Base extends Component
 {

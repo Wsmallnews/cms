@@ -62,9 +62,6 @@ return [
         ],
     ],
 
-
-    
-    
     'themes' => [
         'layout' => 'sn-cms::components.layouts.app',
 
@@ -73,7 +70,7 @@ return [
         'containers' => [
             'block-container' => 'sn-cms::base.block-container',
             'item-container' => 'sn-cms::base.item-container',
-        ]
+        ],
     ],
 
     // 'enums' => [

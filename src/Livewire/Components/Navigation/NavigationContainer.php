@@ -31,7 +31,7 @@ class NavigationContainer extends Base
                 // 如果未开启自定义视图，则移除自定义视图参数
                 $hasCustomView = $extras['hasCustomView'] ?? false;
                 unset($extras['hasCustomView']);
-                if (!$hasCustomView) {
+                if (! $hasCustomView) {
                     unset($extras['view']);
                 }
 
