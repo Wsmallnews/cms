@@ -1,4 +1,10 @@
-<x-dynamic-component :component="$this->getBlockContainerWrapperView()" class="w-full">
+<x-dynamic-component :component="$this->getBlockContainerWrapperView()" class="w-full flex flex-col gap-4">
+    <div class="flex flex-wrap gap-4">
+        @foreach ($categories as $category)
+            <x-filament::badge class="text-sm bg-primary-500 text-white">{{ $category->name_label }}</x-filament::badge>
+        @endforeach
+    </div>
+
     <x-sn-support::paginators.container :page-type="$pageType" :page-info="$pageInfo" :paginator-link="$paginatorLink" :page-name="$pageName">
         <div class="w-full flex flex-col gap-4">
             @foreach ($posts as $post)
