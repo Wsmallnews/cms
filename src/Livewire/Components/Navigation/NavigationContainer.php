@@ -28,13 +28,35 @@ class NavigationContainer extends Base
             $components = Arr::mapWithKeys($components, function ($component, $key) use ($navigation) {
                 $extras = $navigation->options['_extras'] ?? [];          // 额外表单参数，和固定参数合并
 
+                // 如果未开启自定义视图，则移除自定义视图参数
+                $hasCustomView = $extras['hasCustomView'] ?? false;
+                unset($extras['hasCustomView']);
+                if (!$hasCustomView) {
+                    unset($extras['view']);
+                }
+
                 return is_scalar($component) ? [$component => $extras] : [$key => array_merge($component, $extras)];
             });
         } elseif ($navigation->type == NavigationTypeEnum::Page) {
+            $contentData = [
+                'content' => $navigation->content,
+            ];
+
+            // 自定义视图参数
+            $hasCustomView = $navigation->options['_content_views']['hasCustomView'] ?? false;
+            $blockContainerWrapperView = $navigation->options['_content_views']['view'] ?? null;
+            if ($hasCustomView) {
+                $contentData['view'] = $blockContainerWrapperView;
+            }
+
+            // block 容器参数
+            $hasDefaultBlockContainerWrapper = $navigation->options['_content_block_container']['hasDefaultBlockContainerWrapper'] ?? false;
+            $blockContainerWrapperView = $navigation->options['_content_block_container']['blockContainerWrapperView'] ?? null;
+            $contentData['hasDefaultBlockContainerWrapper'] = $hasDefaultBlockContainerWrapper;
+            $contentData['blockContainerWrapperView'] = $blockContainerWrapperView;
+
             $components = [
-                Content::class => [         // 内容组件
-                    'content' => $navigation->content,
-                ],
+                Content::class => $contentData,
             ];
         }
 

@@ -3,7 +3,11 @@
 namespace Wsmallnews\Cms;
 
 use CodeWithDennis\FilamentSelectTree\SelectTree;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Toggle;
+use Filament\Schemas\Components\Fieldset;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Support\Assets\AlpineComponent;
 use Filament\Support\Assets\Asset;
 use Filament\Support\Assets\Css;
@@ -117,8 +121,63 @@ class CmsServiceProvider extends PackageServiceProvider
                 'type' => 'posts',
                 'label' => '图文列表',
                 'forms' => fn ($fields) => [
+                    FieldSet::make('view')
+                        ->label('自定义视图')
+                        ->schema([
+                            Toggle::make('hasCustomView')
+                                ->label('自定义视图')
+                                ->default(false)
+                                ->helperText('开启自定义视图, 将会使用自定义视图')
+                                ->required()
+                                ->live()
+                                ->inline(false),
+                            TextInput::make('view')->label('自定义视图')
+                                ->placeholder('请输入自定义视图地址')
+                                ->required()
+                                ->visible(function (Get $get) {
+                                    // 只有内容 和 页面 需要设置标识
+                                    return $get('hasCustomView');
+                                }),
+                        ])->columns(1),
+                    FieldSet::make('blockContainer')
+                        ->label('块容器包装器')
+                        ->schema([
+                            Toggle::make('hasDefaultBlockContainerWrapper')
+                                ->label('容器包装器')
+                                ->default(false)
+                                ->helperText('开启容器包装器, 将会在组件外包一层包装器')
+                                ->required()
+                                ->live()
+                                ->inline(false),
+                            TextInput::make('blockContainerWrapperView')->label('自定义包装器')
+                                ->placeholder('不填写将使用默认包装器')
+                                ->helperText('如果不填写将使用默认包装器')
+                                ->visible(function (Get $get) {
+                                    // 只有内容 和 页面 需要设置标识
+                                    return $get('hasDefaultBlockContainerWrapper');
+                                }),
+                        ])->columns(1),
+                    FieldSet::make('itemContainer')
+                        ->label('项容器包装器')
+                        ->schema([
+                            Toggle::make('hasDefaultItemContainerWrapper')
+                                ->label('容器包装器')
+                                ->default(false)
+                                ->helperText('开启容器包装器, 将会在组件列表项外包一层包装器')
+                                ->required()
+                                ->live()
+                                ->inline(false),
+                            TextInput::make('itemContainerWrapperView')->label('自定义包装器')
+                                ->placeholder('不填写将使用默认包装器')
+                                ->helperText('如果不填写将使用默认包装器')
+                                ->visible(function (Get $get) {
+                                    // 只有内容 和 页面 需要设置标识
+                                    return $get('hasDefaultItemContainerWrapper');
+                                }),
+                        ])->columns(1),
+
                     // 多选分类
-                    SelectTree::make('category_ids')->label('选择分类')
+                    SelectTree::make('categoryIds')->label('选择分类')
                         ->query(query: function () {
                             return CategoryModel::scopeable(Utils::getScopeType(), Utils::getScopeId());
                         }, titleAttribute: 'name', parentAttribute: 'parent_id')
@@ -141,6 +200,42 @@ class CmsServiceProvider extends PackageServiceProvider
                 'type' => 'post-detail',
                 'label' => '图文详情',
                 'forms' => fn ($fields) => [
+                    FieldSet::make('view')
+                        ->label('自定义视图')
+                        ->schema([
+                            Toggle::make('hasCustomView')
+                                ->label('自定义视图')
+                                ->default(false)
+                                ->helperText('开启自定义视图, 将会使用自定义视图')
+                                ->required()
+                                ->live()
+                                ->inline(false),
+                            TextInput::make('view')->label('自定义视图')
+                                ->placeholder('请输入自定义视图地址')
+                                ->required()
+                                ->visible(function (Get $get) {
+                                    // 只有内容 和 页面 需要设置标识
+                                    return $get('hasCustomView');
+                                }),
+                        ])->columns(1),
+                    FieldSet::make('blockContainer')
+                        ->label('块容器包装器')
+                        ->schema([
+                            Toggle::make('hasDefaultBlockContainerWrapper')
+                                ->label('容器包装器')
+                                ->default(false)
+                                ->helperText('开启容器包装器, 将会在组件外包一层包装器')
+                                ->required()
+                                ->live()
+                                ->inline(false),
+                            TextInput::make('blockContainerWrapperView')->label('自定义包装器')
+                                ->placeholder('不填写将使用默认包装器')
+                                ->helperText('如果不填写将使用默认包装器')
+                                ->visible(function (Get $get) {
+                                    // 只有内容 和 页面 需要设置标识
+                                    return $get('hasDefaultBlockContainerWrapper');
+                                }),
+                        ])->columns(1),
                     Select::make('id')->label('选择图文')
                         ->options(PostModel::normal()->scopeable(Utils::getScopeType(), Utils::getScopeId())->limit(30)->pluck('title', 'id'))
                         ->getSearchResultsUsing(fn (string $search): array => PostModel::normal()->scopeable(Utils::getScopeType(), Utils::getScopeId())->where('title', 'like', "%{$search}%")->limit(30)->pluck('title', 'id')->toArray())

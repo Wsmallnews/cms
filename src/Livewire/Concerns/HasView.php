@@ -11,7 +11,7 @@ trait HasView
 
     public function getView($name): string
     {
-        if (isset($this->view)) {
+        if (isset($this->view) && !blank($this->view)) {
             return $this->view;
         }
 

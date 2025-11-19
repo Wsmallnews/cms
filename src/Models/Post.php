@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Collection;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Tags\HasTags;
@@ -30,12 +31,12 @@ class Post extends SupportModel implements HasMedia
     /**
      * post 分类多对多查询
      */
-    // public function scopeWhereCategoryIn($query, array | Collection $categoryIds)
-    // {
-    //     return $query->whereHas('categories', function ($query) use ($categoryIds) {
-    //         $query->whereIn('id', $categoryIds);
-    //     });
-    // }
+    public function scopeWhereCategoryIn($query, array | Collection $categoryIds)
+    {
+        return $query->whereHas('categories', function ($query) use ($categoryIds) {
+            $query->whereIn('id', $categoryIds);
+        });
+    }
 
     public function scopeNormal($query)
     {

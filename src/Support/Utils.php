@@ -124,6 +124,37 @@ class Utils
     }
 
     /**
+     * 获取主题配置信息
+     *
+     * @return array
+     */
+    public static function getThemes(): array
+    {
+        return self::getConfig('themes');
+    }
+    /**
+     * 获取当前主题
+     */
+    public static function getTheme(): string
+    {
+        return self::getConfig('themes.theme', 'default');
+    }
+    /**
+     * 获取当前布局
+     */
+    public static function getLayout(): string
+    {
+        return self::getConfig('themes.layout', 'sn-cms::components.layouts.app');
+    }
+    /**
+     * 获取指定容器
+     */
+    public static function getThemeContainer($name): string
+    {
+        return self::getConfig("themes.containers.{$name}", null);
+    }
+
+    /**
      * cms 内部路由处理
      *
      * @param  string  $name

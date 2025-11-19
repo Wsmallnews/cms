@@ -154,13 +154,54 @@ class NavigationForm
                     return $get('type') != NavigationTypeEnum::Child;
                 }),
             Schemas\Components\Group::make()
-                ->relationship('content')
                 ->schema([
-                    Forms\Components\RichEditor::make('content')
-                        ->label('页面内容详情')
-                        ->fileAttachmentsDirectory('contents/' . date('Ymd'))
-                        ->required(),
+                    Schemas\Components\FieldSet::make('contentView')
+                        ->label('自定义视图')
+                        ->schema([
+                            Forms\Components\Toggle::make('options._content_views.hasCustomView')
+                                ->label('自定义视图')
+                                ->default(false)
+                                ->helperText('开启自定义视图, 将会使用自定义视图')
+                                ->required()
+                                ->live()
+                                ->inline(false),
+                            Forms\Components\TextInput::make('options._content_views.view')->label('自定义视图')
+                                ->placeholder('请输入自定义视图地址')
+                                ->required()
+                                ->visible(function (Get $get) {
+                                    // 只有内容 和 页面 需要设置标识
+                                    return $get('options._content_views.hasCustomView');
+                                }),
+                        ])->columns(1),
+                    Schemas\Components\FieldSet::make('contentBlockContainer')
+                        ->label('容器包装器')
+                        ->schema([
+                            Forms\Components\Toggle::make('options._content_block_container.hasDefaultBlockContainerWrapper')
+                                ->label('容器包装器')
+                                ->default(false)
+                                ->helperText('开启容器包装器, 将会在组件外包一层包装器')
+                                ->required()
+                                ->live()
+                                ->inline(false),
+                            Forms\Components\TextInput::make('options._content_block_container.blockContainerWrapperView')->label('自定义包装器')
+                                ->placeholder('不填写将使用默认包装器')
+                                ->helperText('如果不填写将使用默认包装器')
+                                ->visible(function (Get $get) {
+                                    // 只有内容 和 页面 需要设置标识
+                                    return $get('options._content_block_container.hasDefaultBlockContainerWrapper');
+                                }),
+                        ])->columns(1),
+                    Schemas\Components\Group::make()
+                        ->relationship('content')
+                        ->schema([
+                            Forms\Components\RichEditor::make('content')
+                                ->label('页面内容详情')
+                                ->fileAttachmentsDirectory('contents/' . date('Ymd'))
+                                ->required(),
+                        ])
+                        ->columnSpanFull()
                 ])
+                ->columns(2)
                 // ->visibleJs(<<<'JS'
                 //     ['page'].includes($get('type'))
                 // JS),

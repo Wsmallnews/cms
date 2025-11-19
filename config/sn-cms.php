@@ -62,6 +62,20 @@ return [
         ],
     ],
 
+
+    
+    
+    'themes' => [
+        'layout' => 'sn-cms::components.layouts.app',
+
+        'theme' => 'tradition',
+
+        'containers' => [
+            'block-container' => 'sn-cms::base.block-container',
+            'item-container' => 'sn-cms::base.item-container',
+        ]
+    ],
+
     // 'enums' => [
     //     'navigation_status' => Enums\NavigationStatus::class,
     //     'navigation_type_status' => Enums\NavigationTypeStatus::class,
