@@ -10,8 +10,6 @@ class Breadcrumb extends Base
 {
     public NavigationModel $navigation;
 
-    public string $wrapperView = 'sn-cms::base.empty-block';
-
     public function render()
     {
         // 获取当前导航的所有上级导航，包括自己
@@ -39,7 +37,7 @@ class Breadcrumb extends Base
             'label' => '首页',
         ]);
 
-        return view('sn-cms::livewire.components.navigation.breadcrumb', [
+        return view($this->getView('components.navigation.breadcrumb'), [
             'breadcrumbs' => $breadcrumbs,
         ]);
     }

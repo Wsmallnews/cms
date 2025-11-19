@@ -7,6 +7,7 @@ use Illuminate\Support\Collection;
 use Livewire\WithoutUrlPagination;
 use Wsmallnews\Category\Livewire\Concerns\Categoryable;
 use Wsmallnews\Cms\Livewire\Components\Base;
+use Wsmallnews\Cms\Livewire\Concerns\HasItemContainerWrapper;
 use Wsmallnews\Cms\Support\Utils;
 use Wsmallnews\Support\Livewire\Concerns\CanPagination;
 
@@ -14,15 +15,12 @@ class Posts extends Base
 {
     use CanPagination;
     use Categoryable;
+    use HasItemContainerWrapper;
     use WithoutUrlPagination;
 
     public int | array | null $categoryIds = [];
 
     public Collection $posts;
-
-    public string $wrapperView = 'sn-cms::base.empty-block';
-
-    public string $itemWrapperView = 'sn-cms::base.block';
 
     public function mount()
     {
@@ -46,7 +44,7 @@ class Posts extends Base
         // 分页
         $this->posts = $this->withPagination($query);
 
-        return view('sn-cms::livewire.components.post.posts', [
+        return view($this->getView('components.post.posts'), [
             'paginatorLink' => $this->links,
         ]);
     }

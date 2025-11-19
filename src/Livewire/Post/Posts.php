@@ -9,11 +9,11 @@ use Wsmallnews\Cms\Support\Utils;
 class Posts extends Base
 {
     #[Url]
-    public int $category_id;
+    public int $categoryId;
 
     public function mount()
     {
-        $this->category_id = request()->get('category_id', 0);
+        $this->categoryId = request()->get('category_id', 0);
     }
 
     public function render()
@@ -23,8 +23,8 @@ class Posts extends Base
             ['label' => '资讯列表', 'url' => Utils::route('posts')],
         ];
 
-        return view('sn-cms::livewire.post.posts', [
+        return view($this->getView('post.posts'), [
             'breadcrumbs' => $breadcrumbs,
-        ]);
+        ])->layout(Utils::getLayout());
     }
 }

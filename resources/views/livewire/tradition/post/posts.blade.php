@@ -14,7 +14,7 @@
             </div>
         @endif
 
-        <livewire:sn-components-posts :scope-type="$scopeType" :scope-id="$scopeId" :category_ids="$category_id" />
+        <livewire:sn-components-posts :scope-type="$scopeType" :scope-id="$scopeId" :category-ids="$categoryId" item-container-wrapper-view="sn-cms::base.item-container" />
     </div>
 
     <livewire:sn-components-footer :scope-type="$scopeType" :scope-id="$scopeId" />

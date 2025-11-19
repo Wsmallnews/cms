@@ -5,10 +5,12 @@ namespace Wsmallnews\Cms\Livewire;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Wsmallnews\Cms\Support\Utils;
+use Wsmallnews\Cms\Livewire\Concerns\HasView;
 
-#[Layout('sn-cms::components.layouts.app')]
 class Base extends Component
 {
+    use HasView;
+
     public function getScopeType(): ?string
     {
         return Utils::getScopeable()['scope_type'] ?? null;

@@ -17,6 +17,6 @@ class Navigation extends Base
 
     public function render()
     {
-        return view('sn-cms::livewire.components.navigation.navigation');
+        return view($this->getView('components.navigation.navigation'));
     }
 }

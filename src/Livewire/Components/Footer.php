@@ -19,7 +19,7 @@ class Footer extends Base
             ->defaultOrder()->get()
             ->toTree();
 
-        return view('sn-cms::livewire.components.footer', [
+        return view($this->getView('components.footer'), [
             'navigations' => $navigations,
             'general' => app(GeneralSettings::class),
         ]);

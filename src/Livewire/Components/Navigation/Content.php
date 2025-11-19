@@ -9,10 +9,8 @@ class Content extends Base
 {
     public ?ContentModel $content = null;
 
-    public string $wrapperView = 'sn-cms::base.block';
-
     public function render()
     {
-        return view('sn-cms::livewire.components.navigation.content');
+        return view($this->getView('components.navigation.content'));
     }
 }

@@ -38,7 +38,7 @@ class NavigationContainer extends Base
             ];
         }
 
-        return view('sn-cms::livewire.components.navigation.navigation-container', [
+        return view($this->getView('components.navigation.navigation-container'), [
             'navigation' => $navigation,
             'components' => $components ?? [],
         ]);

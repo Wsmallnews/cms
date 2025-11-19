@@ -5,7 +5,7 @@
     }
 @endphp
 
-<x-dynamic-component :component="$wrapperView" class="w-full">
+<x-dynamic-component :component="$this->getBlockContainerWrapperView()" class="w-full">
     <div class="w-full flex flex-col gap-4">
         <div class="text-3xl font-bold">
             {{ $post->title }}

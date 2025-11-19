@@ -3,6 +3,7 @@
 namespace Wsmallnews\Cms\Livewire\Navigation;
 
 use Wsmallnews\Cms\Livewire\Base;
+use Wsmallnews\Cms\Support\Utils;
 
 class Navigation extends Base
 {
@@ -10,6 +11,7 @@ class Navigation extends Base
 
     public function render()
     {
-        return view('sn-cms::livewire.navigation.navigation');
+        return view($this->getView('navigation.navigation'))
+            ->layout(Utils::getLayout());
     }
 }

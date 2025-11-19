@@ -16,8 +16,8 @@ class Post extends Base
             ['label' => '资讯详情', 'url' => Utils::route('posts.show', $this->id)],
         ];
 
-        return view('sn-cms::livewire.post.post', [
+        return view($this->getView('post.post'), [
             'breadcrumbs' => $breadcrumbs,
-        ]);
+        ])->layout(Utils::getLayout());
     }
 }

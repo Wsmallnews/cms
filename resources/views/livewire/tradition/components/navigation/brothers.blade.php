@@ -1,4 +1,4 @@
-<x-dynamic-component :component="$wrapperView" 
+<x-dynamic-component :component="$this->getBlockContainerWrapperView()" 
     @class([
         'w-full md:w-72 shrink-0',
         'hidden' => $brothers->isEmpty(),

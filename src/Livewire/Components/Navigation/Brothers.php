@@ -9,8 +9,6 @@ class Brothers extends Base
 {
     public NavigationModel $navigation;
 
-    public string $wrapperView = 'sn-cms::base.empty-block';
-
     public ?NavigationModel $brotherNavigation = null;
 
     public function render()
@@ -34,7 +32,7 @@ class Brothers extends Base
                 ->get();
         }
 
-        return view('sn-cms::livewire.components.navigation.brothers', [
+        return view($this->getView('components.navigation.brothers'), [
             'brothers' => $brothers,
         ]);
     }

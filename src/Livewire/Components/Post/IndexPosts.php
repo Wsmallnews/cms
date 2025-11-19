@@ -17,7 +17,7 @@ class IndexPosts extends Base
     {
         $posts = Utils::getPostModel()::snScope(...$this->getScopeable())->normal()->limit($this->limit)->get();
 
-        return view('sn-cms::livewire.components.index-posts', [
+        return view($this->getView('components.index-posts'), [
             'posts' => $posts,
         ]);
     }

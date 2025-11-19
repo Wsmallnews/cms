@@ -1,8 +1,8 @@
-<x-dynamic-component :component="$wrapperView" class="w-full">
+<x-dynamic-component :component="$this->getBlockContainerWrapperView()" class="w-full">
     <x-sn-support::paginators.container :page-type="$pageType" :page-info="$pageInfo" :paginator-link="$paginatorLink" :page-name="$pageName">
         <div class="w-full flex flex-col gap-4">
             @foreach ($posts as $post)
-                <x-dynamic-component :component="$itemWrapperView" tag="a" href="{{ \Wsmallnews\Cms\Support\Utils::route('posts.show', $post->id) }}"  class="flex flex-row gap-4 overflow-hidden group">
+                <x-dynamic-component :component="$this->getItemContainerWrapperView()" tag="a" href="{{ \Wsmallnews\Cms\Support\Utils::route('posts.show', $post->id) }}"  class="flex flex-row gap-4 overflow-hidden group">
                     @if ($post->getFirstMediaUrl('post_image'))
                         <div class="w-44 h-44 shrink-0 rounded-md overflow-hidden">
                             <img class="w-full h-full object-cover transition duration-300 group-hover:scale-105" src="{{ $post->getFirstMediaUrl('post_image') }}" />
