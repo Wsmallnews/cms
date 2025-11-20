@@ -23,7 +23,7 @@
                     role="menuitem"
                 >
                     <a @class([
-                            'flex w-full h-14 justify-between items-center px-2 font-bold text-white gap-2',
+                            'flex w-full h-14 justify-between items-center px-4 font-bold text-white gap-2',
                             'bg-primary-600' => $brother->has_active,
                         ])
                         @if ($hasChild)
@@ -54,7 +54,7 @@
                                     role="menuitem"
                                 >
                                     <a @class([
-                                            'flex w-full h-14 justify-between items-center pl-8 pr-2 font-bold text-white gap-2',
+                                            'flex w-full h-14 justify-between items-center pl-8 pr-4 font-bold text-white gap-2',
                                             'bg-primary-600' => $child->has_active,
                                         ])
 

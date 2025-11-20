@@ -2,6 +2,7 @@
 
 namespace Wsmallnews\Cms\Livewire\Concerns;
 
+use Illuminate\Support\Str;
 use Wsmallnews\Cms\Support\Utils;
 
 trait HasView
@@ -15,7 +16,9 @@ trait HasView
         }
 
         $theme = Utils::getTheme();
+        $hasViewSpace = Str::contains($theme, 'livewire.');
+        $theme = $hasViewSpace ? $theme : "sn-cms::livewire.{$theme}.";
 
-        return "sn-cms::livewire.{$theme}.{$name}";
+        return $theme . $name;
     }
 }

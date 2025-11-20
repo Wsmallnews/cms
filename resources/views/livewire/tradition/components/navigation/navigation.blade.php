@@ -22,7 +22,7 @@
                     @endif
                     role="menuitem"
                 >
-                    <a class="flex w-full h-full justify-center items-center px-2 font-bold text-white gap-2 underline-offset-2 focus:outline-hidden focus:underline"
+                    <a class="flex w-full h-full justify-center items-center px-4 font-bold text-white gap-2 underline-offset-2 focus:outline-hidden focus:underline"
                         @if ($hasChild)
                             href="javascript:;"
                             x-on:keydown.space.prevent="openedWithKeyboard = true"
@@ -64,7 +64,7 @@
                                         @endif
                                         role="menuitem"
                                     >
-                                        <a class="flex w-full h-full justify-between items-center px-2 font-bold text-white gap-2 underline-offset-2 focus:outline-hidden focus:underline"
+                                        <a class="flex w-full h-full justify-between items-center px-4 font-bold text-white gap-2 underline-offset-2 focus:outline-hidden focus:underline"
                                             @if ($hasGrandChild)
                                                 href="javascript:;"
                                                 x-on:keydown.space.prevent="openedWithKeyboard = true"
@@ -96,7 +96,7 @@
                                                             ])
                                                             role="menuitem"
                                                         >
-                                                            <a class="flex w-full h-full justify-between items-center px-2 font-bold text-white gap-2 underline-offset-2 focus:outline-hidden focus:underline"
+                                                            <a class="flex w-full h-full justify-between items-center px-4 font-bold text-white gap-2 underline-offset-2 focus:outline-hidden focus:underline"
                                                                 
                                                                 {{ \Filament\Support\generate_href_html($grandChild->url_info['url'], $grandChild->url_info['target'] ?? false) }}
                                                             >
@@ -156,7 +156,7 @@
                 role="menuitem"
             >
                 <a @class([
-                        'flex w-full h-14 justify-between items-center px-2 font-bold text-white gap-2',
+                        'flex w-full h-14 justify-between items-center px-4 font-bold text-white gap-2',
                         'bg-primary-600' => $navigation->has_active,
                     ])
                     @if ($hasChild)
@@ -196,7 +196,7 @@
                                 role="menuitem"
                             >
                                 <a @class([
-                                        'flex w-full h-14 justify-between items-center pl-8 pr-2 font-bold text-white gap-2',
+                                        'flex w-full h-14 justify-between items-center pl-8 pr-4 font-bold text-white gap-2',
                                         'bg-primary-600' => $child->has_active,
                                     ])
                                     @if ($hasGrandChild)
@@ -227,7 +227,7 @@
                                                 role="menuitem"
                                             >
                                                 <a @class([
-                                                        'flex w-full h-14 justify-between items-center pl-16 pr-2 font-bold text-white gap-2',
+                                                        'flex w-full h-14 justify-between items-center pl-16 pr-4 font-bold text-white gap-2',
                                                         'bg-primary-600' => $grandChild->has_active,
                                                     ])
                                                     {{ \Filament\Support\generate_href_html($grandChild->url_info['url'], $grandChild->url_info['target'] ?? false) }}
