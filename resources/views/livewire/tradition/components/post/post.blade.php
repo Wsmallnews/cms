@@ -19,7 +19,7 @@
             {{ $post->description }}
         </div>
 
-        <x-sn-support::swiper :images="$images" :is-square="true" :has-thumb="true" thumb-position="bottom" class="w-full shrink-0" />
+        <x-sn-support::swiper class="w-full" :images="$images" />
 
         <div class="">
             {!! $post->content?->content !!}
