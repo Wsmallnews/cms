@@ -6,6 +6,7 @@ use Filament\Forms;
 use Filament\Schemas;
 use Filament\Schemas\Components\Utilities\Get;
 use Guava\IconPicker\Forms\Components\IconPicker;
+use Livewire\Component;
 use Wsmallnews\Cms\Enums\NavigationStatus;
 use Wsmallnews\Cms\Enums\NavigationType as NavigationTypeEnum;
 use Wsmallnews\Cms\Facades\ContentRegistry;
@@ -125,6 +126,9 @@ class NavigationForm
                 }),
             Forms\Components\SpatieMediaLibraryFileUpload::make('navigation_banner')->label('导航Banner')
                 ->collection('navigation_banner')
+                ->customProperties(function (Component $livewire) {
+                    return $livewire->getScopeable();
+                })
                 ->image()
                 ->visibility('public')
                 ->openable()

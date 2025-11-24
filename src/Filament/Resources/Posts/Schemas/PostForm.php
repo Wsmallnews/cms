@@ -6,6 +6,7 @@ use CodeWithDennis\FilamentSelectTree\SelectTree;
 use Filament\Forms;
 use Filament\Schemas;
 use Filament\Schemas\Schema;
+use Livewire\Component;
 use Wsmallnews\Cms\Enums\PostStatus;
 use Wsmallnews\Cms\Filament\Resources\Posts\PostResource;
 
@@ -60,6 +61,9 @@ class PostForm
                     Schemas\Components\Section::make('内容')->schema([
                         Forms\Components\SpatieMediaLibraryFileUpload::make('post_image')->label('主图')
                             ->collection('post_image')
+                            ->customProperties(function (Component $livewire) {
+                                return $livewire->getScopeable();;
+                            })
                             ->required()
                             ->image()
                             ->visibility('public')
@@ -69,6 +73,9 @@ class PostForm
                             ->imagePreviewHeight('200'),
                         Forms\Components\SpatieMediaLibraryFileUpload::make('post_images')->label('轮播图')
                             ->collection('post_images')
+                            ->customProperties(function (Component $livewire) {
+                            return $livewire->getScopeable();
+                            })
                             ->image()
                             ->visibility('public')
                             ->multiple()
