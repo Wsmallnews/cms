@@ -127,7 +127,10 @@ class NavigationForm
             Forms\Components\SpatieMediaLibraryFileUpload::make('navigation_banner')->label('导航Banner')
                 ->collection('navigation_banner')
                 ->customProperties(function (Component $livewire) {
-                    return $livewire->getScopeable();
+                    return [
+                        ...$livewire->getScopeable(),
+                        'team_id' => general_current_tenant()?->id,
+                    ];
                 })
                 ->image()
                 ->visibility('public')

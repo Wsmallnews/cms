@@ -62,7 +62,10 @@ class PostForm
                         Forms\Components\SpatieMediaLibraryFileUpload::make('post_image')->label('主图')
                             ->collection('post_image')
                             ->customProperties(function (Component $livewire) {
-                                return $livewire->getScopeable();
+                                return [
+                                    ...$livewire::getResource()::getScopeable(),
+                                    'team_id' => general_current_tenant()?->id,
+                                ];
                             })
                             ->required()
                             ->image()
@@ -74,7 +77,10 @@ class PostForm
                         Forms\Components\SpatieMediaLibraryFileUpload::make('post_images')->label('轮播图')
                             ->collection('post_images')
                             ->customProperties(function (Component $livewire) {
-                                return $livewire->getScopeable();
+                                return [
+                                    ...$livewire::getResource()::getScopeable(),
+                                    'team_id' => general_current_tenant()?->id,
+                                ];
                             })
                             ->image()
                             ->visibility('public')
