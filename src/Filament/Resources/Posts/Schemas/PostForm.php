@@ -8,7 +8,6 @@ use Filament\Schemas;
 use Filament\Schemas\Schema;
 use Livewire\Component;
 use Wsmallnews\Cms\Enums\PostStatus;
-use Wsmallnews\Cms\Filament\Resources\Posts\PostResource;
 
 class PostForm
 {

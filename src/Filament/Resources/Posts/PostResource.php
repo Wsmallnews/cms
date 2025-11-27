@@ -41,8 +41,6 @@ final class PostResource extends BaseResource
 
     /**
      * Post 是最终 resource，所以 post 就是要用 cms 中的tagResource ，所以这里直接写死 TagResource
-     *
-     * @return string
      */
     public static function getTagType(): string
     {
