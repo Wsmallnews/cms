@@ -40,10 +40,10 @@ class PostForm
 
                         // 多选分类
                         SelectTree::make('categories')->label('选择分类')
-                            ->relationship(relationship: 'categories', titleAttribute: 'name', parentAttribute: 'parent_id', modifyQueryUsing: function ($query) {
-                                return $query->scopeable(PostResource::getScopeType(), PostResource::getScopeId());
-                            }, modifyChildQueryUsing: function ($query) {
-                                return $query->scopeable(PostResource::getScopeType(), PostResource::getScopeId());
+                            ->relationship(relationship: 'categories', titleAttribute: 'name', parentAttribute: 'parent_id', modifyQueryUsing: function ($query, Component $livewire) {
+                                return $query->scopeable($livewire::getScopeType(), $livewire::getScopeId());
+                            }, modifyChildQueryUsing: function ($query, Component $livewire) {
+                                return $query->scopeable($livewire::getScopeType(), $livewire::getScopeId());
                             })
                             ->searchable()
                             ->enableBranchNode()
@@ -63,7 +63,7 @@ class PostForm
                             ->collection('post_image')
                             ->customProperties(function (Component $livewire) {
                                 return [
-                                    ...$livewire::getResource()::getScopeable(),
+                                    ...$livewire::getScopeable(),
                                     'team_id' => general_current_tenant()?->id,
                                 ];
                             })
@@ -78,7 +78,7 @@ class PostForm
                             ->collection('post_images')
                             ->customProperties(function (Component $livewire) {
                                 return [
-                                    ...$livewire::getResource()::getScopeable(),
+                                    ...$livewire::getScopeable(),
                                     'team_id' => general_current_tenant()?->id,
                                 ];
                             })
@@ -103,7 +103,9 @@ class PostForm
                     ])->columns(1),
                 ])->columns(1),
                 Schemas\Components\Section::make('状态')->schema([
-                    // Forms\Components\SpatieTagsInput::make('tags')->label('标签')->type('post_tags'),
+                    // Forms\Components\SpatieTagsInput::make('tags')->label('标签')->type(function (Component $livewire) {
+                    //     return $livewire::getResource()::getTagType();
+                    // }),
                     Forms\Components\TextInput::make('order_column')->label('排序')->integer()
                         ->placeholder('正序排列')
                         ->rules(['integer', 'min:0']),

@@ -29,6 +29,16 @@ class Post extends SupportModel implements HasMedia
     ];
 
     /**
+     * 获取 tag model
+     *
+     * @return string
+     */
+    public static function getTagClassName(): string
+    {
+        return Utils::getTagModel();
+    }
+
+    /**
      * post 分类多对多查询
      */
     public function scopeCategoryIds($query, array | Collection $categoryIds)

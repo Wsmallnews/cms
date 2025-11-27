@@ -1,17 +1,17 @@
 <?php
 
-namespace Wsmallnews\Cms\Filament\Resources\Posts;
+namespace Wsmallnews\Cms\Filament\Resources\Tags;
 
 use BezhanSalleh\PluginEssentials\Concerns;
 use Wsmallnews\Cms\CmsPlugin;
-use Wsmallnews\Cms\Filament\Resources\Posts\Pages\CreatePost;
-use Wsmallnews\Cms\Filament\Resources\Posts\Pages\EditPost;
-use Wsmallnews\Cms\Filament\Resources\Posts\Pages\ListPosts;
-use Wsmallnews\Cms\Filament\Resources\Tags\TagResource;
+use Wsmallnews\Cms\Filament\Resources\Tags\Pages\CreateTag;
+use Wsmallnews\Cms\Filament\Resources\Tags\Pages\EditTag;
+use Wsmallnews\Cms\Filament\Resources\Tags\Pages\ListTags;
 use Wsmallnews\Cms\Support\Utils;
 use Wsmallnews\Support\Concerns\Resource\HasCustomProperties;
+use Wsmallnews\Support\Filament\Resources\Tags\BaseResource as BaseTagResource;
 
-final class PostResource extends BaseResource
+final class TagResource extends BaseTagResource
 {
     use Concerns\Resource\BelongsToParent;
     use Concerns\Resource\BelongsToTenant;
@@ -20,12 +20,17 @@ final class PostResource extends BaseResource
     use Concerns\Resource\HasNavigation;
     use HasCustomProperties;
 
+    public static function getModel(): string
+    {
+        return Utils::getTagModel();
+    }
+
     public static function getPages(): array
     {
         return [
-            'index' => ListPosts::route('/'),
-            'create' => CreatePost::route('/create'),
-            'edit' => EditPost::route('/{record}/edit'),
+            'index' => ListTags::route('/'),
+            'create' => CreateTag::route('/create'),
+            'edit' => EditTag::route('/{record}/edit'),
         ];
     }
 
@@ -39,14 +44,9 @@ final class PostResource extends BaseResource
         return Utils::getScopeable()['scope_id'] ?? parent::getScopeId();
     }
 
-    /**
-     * Post 是最终 resource，所以 post 就是要用 cms 中的tagResource ，所以这里直接写死 TagResource
-     *
-     * @return string
-     */
     public static function getTagType(): string
     {
-        return TagResource::getTagType();
+        return self::getCustomProperty('tag_type') ?? parent::getTagType();
     }
 
     public static function getEssentialsPlugin(): ?CmsPlugin

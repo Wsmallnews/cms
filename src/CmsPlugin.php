@@ -13,6 +13,7 @@ use Wsmallnews\Cms\Filament\Pages\ManageNavigation as ManageNavigationPage;
 use Wsmallnews\Cms\Filament\Pages\Navigation as NavigationPage;
 use Wsmallnews\Cms\Filament\Resources\NavigationTypes\NavigationTypeResource;
 use Wsmallnews\Cms\Filament\Resources\Posts\PostResource;
+use Wsmallnews\Cms\Filament\Resources\Tags\TagResource;
 use Wsmallnews\Support\Concerns\Plugin\HasCustomProperties;
 
 class CmsPlugin implements Plugin
@@ -36,6 +37,7 @@ class CmsPlugin implements Plugin
     {
         $panel->resources([
             PostResource::class,
+            TagResource::class,
         ])->pages([
             NavigationPage::class,
             CategoryPage::class,
@@ -179,6 +181,43 @@ class CmsPlugin implements Plugin
                     'scopeToTenant' => true,
                     'tenantRelationshipName' => null,
                     'tenantOwnershipRelationshipName' => null,
+                ],
+                TagResource::class => [
+                    // hasLabels
+                    'modelLabel' => '标签',
+                    'pluralModelLabel' => '标签',
+                    'recordTitleAttribute' => 'name',
+                    // 'titleCaseModelLabel' => true,
+
+                    // hasNavigation
+                    'navigationLabel' => '标签管理',
+                    'navigationIcon' => Heroicon::OutlinedHashtag,
+                    'activeNavigationIcon' => 'heroicon-s-tag',
+                    'navigationGroup' => 'Cms管理',
+                    'navigationSort' => 3,
+                    'navigationBadge' => null,
+                    'navigationBadgeColor' => null,
+                    'navigationParentItem' => '图文管理',
+                    'registerNavigation' => true,
+
+                    // hasGlobalSearch
+                    'globallySearchable' => false,
+                    'globalSearchResultsLimit' => 50,
+                    'forceGlobalSearchCaseInsensitive' => null,
+                    'splitGlobalSearchTerms' => false,
+
+                    // belongsToParent
+                    'parentResource' => null,
+
+                    // BelongsToTenant
+                    'scopeToTenant' => true,
+                    'tenantRelationshipName' => null,
+                    'tenantOwnershipRelationshipName' => null,
+
+                    // HasCustomProperties
+                    'customProperties' => [
+                        'tag_type' => 'post_tag',
+                    ],
                 ],
                 CategoryPage::class => [
                     // hasLabels

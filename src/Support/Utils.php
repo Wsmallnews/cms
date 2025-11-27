@@ -6,6 +6,7 @@ namespace Wsmallnews\Cms\Support;
 
 use Wsmallnews\Cms\Exceptions\CmsException;
 use Wsmallnews\Cms\Models;
+use Wsmallnews\Support\Models\Tag as SupportTagModel;
 
 class Utils
 {
@@ -56,11 +57,11 @@ class Utils
     /**
      * 获取模型
      */
-    public static function getModel(string $name): string
+    public static function getModel(string $name, bool $shouldException = true): ?string
     {
-        $model = self::getConfig('models')[$name];
+        $model = self::getConfig('models')[$name] ?? null;
 
-        if (blank($model)) {
+        if (blank($model) && $shouldException) {
             throw new CmsException("模型 {$name} 不存在");
         }
 
@@ -105,6 +106,16 @@ class Utils
     public static function getPostModel(): string
     {
         return self::getModel('post');
+    }
+
+    /**
+     * 获取文章模型
+     *
+     * @return Models\Post
+     */
+    public static function getTagModel(): string
+    {
+        return self::getModel('tag', false) ?? SupportTagModel::class;
     }
 
     /**

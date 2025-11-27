@@ -4,9 +4,12 @@ namespace Wsmallnews\Cms\Filament\Resources\NavigationTypes\Pages;
 
 use Filament\Resources\Pages\CreateRecord;
 use Wsmallnews\Cms\Filament\Resources\NavigationTypes\NavigationTypeResource;
+use Wsmallnews\Support\Filament\Resources\Concerns\Pages\Scopeable;
 
 class CreateNavigationType extends CreateRecord
 {
+    use Scopeable;
+
     protected static string $resource = NavigationTypeResource::class;
 
     /**
@@ -18,7 +21,7 @@ class CreateNavigationType extends CreateRecord
     protected function mutateFormDataBeforeCreate(array $data): array
     {
         // 合并 scopeinfo 参数
-        $data = array_merge($data, static::getResource()::getScopeable());
+        $data = array_merge($data, static::getScopeable());
 
         return parent::mutateFormDataBeforeCreate($data);
     }

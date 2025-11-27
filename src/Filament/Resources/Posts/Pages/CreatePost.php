@@ -4,9 +4,12 @@ namespace Wsmallnews\Cms\Filament\Resources\Posts\Pages;
 
 use Filament\Resources\Pages\CreateRecord;
 use Wsmallnews\Cms\Filament\Resources\Posts\PostResource;
+use Wsmallnews\Support\Filament\Resources\Concerns\Pages\Scopeable;
 
 class CreatePost extends CreateRecord
 {
+    use Scopeable;
+
     protected static string $resource = PostResource::class;
 
     /**
@@ -18,7 +21,7 @@ class CreatePost extends CreateRecord
     protected function mutateFormDataBeforeCreate(array $data): array
     {
         // 合并 scopeinfo 参数
-        $data = array_merge($data, static::getResource()::getScopeable());
+        $data = array_merge($data, static::getScopeable());
 
         return parent::mutateFormDataBeforeCreate($data);
     }

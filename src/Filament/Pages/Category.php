@@ -17,6 +17,8 @@ class Category extends BaseCategoryPage
     use Concerns\Resource\HasNavigation;
     use HasCustomProperties;
 
+    protected static ?string $slug = 'post-categories';
+
     public static function getScopeType(): string
     {
         return Utils::getScopeable()['scope_type'] ?? parent::getScopeType();

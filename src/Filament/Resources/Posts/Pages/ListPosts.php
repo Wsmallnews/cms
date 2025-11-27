@@ -5,9 +5,12 @@ namespace Wsmallnews\Cms\Filament\Resources\Posts\Pages;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 use Wsmallnews\Cms\Filament\Resources\Posts\PostResource;
+use Wsmallnews\Support\Filament\Resources\Concerns\Pages\Scopeable;
 
 class ListPosts extends ListRecords
 {
+    use Scopeable;
+
     public int $category_id = 0;
 
     protected static string $resource = PostResource::class;
