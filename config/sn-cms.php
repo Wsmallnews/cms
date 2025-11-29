@@ -4,11 +4,18 @@ use Wsmallnews\Cms\Enums;
 use Wsmallnews\Cms\Models;
 
 return [
+    /**
+     * Default scopeable
+     */
     'scopeable' => [
         'scope_type' => 'sn-cms',
         'scope_id' => 0,
     ],
 
+
+    /**
+     * Custom models
+     */
     'models' => [
         'content' => Models\Content::class,
         'navigation' => Models\Navigation::class,

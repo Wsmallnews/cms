@@ -19,9 +19,12 @@ return new class extends Migration
             $table->string('scope_type', 60)->nullable()->comment('范围类型');
             $table->unsignedBigInteger('scope_id')->default(0)->comment('范围');
 
+            $table->morphs('publisher');
             $table->string('title')->nullable()->comment('标题');
+            $table->string('slug')->nullable()->comment('路径');
             $table->string('description')->nullable()->comment('描述');
             $table->unsignedBigInteger('views')->default(0)->comment('浏览量');
+            $table->timestamp('published_at')->nullable()->comment('发布时间');
 
             $table->json('options')->nullable()->comment('选项');
             $table->string('status')->nullable()->comment('状态');
