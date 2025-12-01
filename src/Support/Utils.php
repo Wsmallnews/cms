@@ -118,21 +118,18 @@ class Utils
         return self::getModel('tag', false) ?? SupportTagModel::class;
     }
 
-    /**
-     * 获取 租户模型
-     */
-    public static function getTenantModel(): ?string
-    {
-        return self::getConfig('tenant_model') ?? null;
-    }
 
     /**
-     * 是否启用了租户
+     * 获取文件目录
+     * 
+     * @param string|null $type 目录类型
+     * @return string
      */
-    public static function isTenancyEnabled(): bool
+    public static function getFileDirectory($type = null)
     {
-        return self::getTenantModel() !== null;
+        return self::getConfig('file_directory', 'sn/cms/') . ($type ? $type . '/' : '') . date('Ymd');
     }
+
 
     /**
      * 获取主题配置信息

@@ -11,6 +11,8 @@ use Wsmallnews\Cms\Enums\NavigationStatus;
 use Wsmallnews\Cms\Enums\NavigationType as NavigationTypeEnum;
 use Wsmallnews\Cms\Facades\ContentRegistry;
 use Wsmallnews\Cms\Models\Navigation as NavigationModel;
+use Wsmallnews\Cms\Support\Utils;
+use Wsmallnews\Support\Support\Utils as SupportUtils;
 
 class NavigationForm
 {
@@ -64,8 +66,9 @@ class NavigationForm
                     Forms\Components\FileUpload::make('options.icon_src')
                         ->label('图标')
                         ->image()
+                        ->disk(SupportUtils::getFilesystemDisk())
+                        ->directory(Utils::getFileDirectory('icons'))
                         ->visibility('public')
-                        ->directory('filaments/cms/navigation-icons/' . date('Ymd'))
                         ->imageResizeMode('cover')
                         ->imageCropAspectRatio('1:1')
                         ->imageResizeTargetHeight('200')
@@ -77,8 +80,9 @@ class NavigationForm
                     Forms\Components\FileUpload::make('options.active_icon_src')
                         ->label('活动图标')
                         ->image()
+                        ->disk(SupportUtils::getFilesystemDisk())
+                        ->directory(Utils::getFileDirectory('icons'))
                         ->visibility('public')
-                        ->directory('filaments/cms/navigation-icons/' . date('Ymd'))
                         ->imageResizeMode('cover')
                         ->imageCropAspectRatio('1:1')
                         ->imageResizeTargetHeight('200')
@@ -87,8 +91,9 @@ class NavigationForm
                         ->downloadable()
                         ->uploadingMessage('活动图标上传中...')
                         ->imagePreviewHeight('100'),
-                    Schemas\Components\Text::make('请上传正方形图片，推荐大小为 60x60 像素，非正方形图片将被自动缩放裁剪')
+                    Schemas\Components\Text::make('请上传正方形图片，推荐大小为 200x200 像素，非正方形图片将被自动缩放裁剪')
                         ->columnSpanFull(),
+
                 ])
                 // ->visibleJs(<<<'JS'
                 //     $get('options.icon_type') == 'image'
@@ -124,16 +129,18 @@ class NavigationForm
                     // 只有内容 和 页面 需要设置标识
                     return in_array($get('type'), [NavigationTypeEnum::Page, NavigationTypeEnum::Content]);
                 }),
-            Forms\Components\SpatieMediaLibraryFileUpload::make('navigation_banner')->label('导航Banner')
+            Forms\Components\SpatieMediaLibraryFileUpload::make('navigation_banner')
+                ->label('导航Banner')
                 ->collection('navigation_banner')
+                ->image()
+                ->disk(SupportUtils::getFilesystemDisk())
+                ->visibility('public')
                 ->customProperties(function (Component $livewire) {
                     return [
                         ...$livewire->getScopeable(),
                         'team_id' => general_current_tenant()?->id,
                     ];
                 })
-                ->image()
-                ->visibility('public')
                 ->openable()
                 ->downloadable()
                 ->uploadingMessage('Banner 上传中...')

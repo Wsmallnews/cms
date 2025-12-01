@@ -8,6 +8,7 @@ use Filament\Schemas;
 use Filament\Schemas\Schema;
 use Livewire\Component;
 use Wsmallnews\Cms\Enums\PostStatus;
+use Wsmallnews\Support\Support\Utils as SupportUtils;
 
 class PostForm
 {
@@ -58,37 +59,39 @@ class PostForm
                             ->placeholder('请输入描述'),
                     ])->columns(1),
                     Schemas\Components\Section::make('内容')->schema([
-                        Forms\Components\SpatieMediaLibraryFileUpload::make('post_image')->label('主图')
+                        Forms\Components\SpatieMediaLibraryFileUpload::make('post_image')
+                            ->label('主图')->required()
                             ->collection('post_image')
+                            ->image()
+                            ->disk(SupportUtils::getFilesystemDisk())
+                            ->visibility('public')
                             ->customProperties(function (Component $livewire) {
                                 return [
                                     ...$livewire::getScopeable(),
                                     'team_id' => general_current_tenant()?->id,
                                 ];
                             })
-                            ->required()
-                            ->image()
-                            ->visibility('public')
                             ->openable()
                             ->downloadable()
                             ->uploadingMessage('主图上传中...')
                             ->imagePreviewHeight('200'),
-                        Forms\Components\SpatieMediaLibraryFileUpload::make('post_images')->label('轮播图')
+                        Forms\Components\SpatieMediaLibraryFileUpload::make('post_images')
+                            ->label('轮播图')
                             ->collection('post_images')
+                            ->image()
+                            ->disk(SupportUtils::getFilesystemDisk())
+                            ->visibility('public')
                             ->customProperties(function (Component $livewire) {
                                 return [
                                     ...$livewire::getScopeable(),
                                     'team_id' => general_current_tenant()?->id,
                                 ];
                             })
-                            ->image()
-                            ->visibility('public')
                             ->multiple()
                             ->openable()
                             ->downloadable()
                             ->reorderable()
                             ->appendFiles()
-                            ->minFiles(1)
                             ->maxFiles(20)
                             ->uploadingMessage('轮播图片上传中...')
                             ->imagePreviewHeight('200'),

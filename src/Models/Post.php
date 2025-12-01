@@ -11,9 +11,11 @@ use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Tags\HasTags;
 use Wsmallnews\Category\Models\Category;
+use Wsmallnews\Category\Support\Utils as CategoryUtils;
 use Wsmallnews\Cms\Enums\PostStatus;
 use Wsmallnews\Cms\Support\Utils;
 use Wsmallnews\Support\Models\SupportModel;
+use Wsmallnews\Support\Support\Utils as SupportUtils;
 
 class Post extends SupportModel implements HasMedia
 {
@@ -63,11 +65,11 @@ class Post extends SupportModel implements HasMedia
 
     public function categories(): BelongsToMany
     {
-        return $this->belongsToMany(Category::class, 'sn_category_post');
+        return $this->belongsToMany(CategoryUtils::getCategoryModel(), 'sn_category_post');
     }
 
     public function team(): BelongsTo
     {
-        return $this->belongsTo(Utils::getTenantModel());
+        return $this->belongsTo(SupportUtils::getTenantModel());
     }
 }

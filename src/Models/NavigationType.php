@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Wsmallnews\Cms\Enums\NavigationTypeStatus;
 use Wsmallnews\Cms\Support\Utils;
 use Wsmallnews\Support\Models\SupportModel;
+use Wsmallnews\Support\Support\Utils as SupportUtils;
 
 class NavigationType extends SupportModel
 {
@@ -37,6 +38,6 @@ class NavigationType extends SupportModel
 
     public function team(): BelongsTo
     {
-        return $this->belongsTo(Utils::getTenantModel());
+        return $this->belongsTo(SupportUtils::getTenantModel());
     }
 }

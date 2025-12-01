@@ -15,6 +15,7 @@ use Wsmallnews\Cms\Enums\NavigationStatus as NavigationStatusEnum;
 use Wsmallnews\Cms\Enums\NavigationType as NavigationTypeEnum;
 use Wsmallnews\Cms\Support\Utils;
 use Wsmallnews\Support\Models\SupportModel;
+use Wsmallnews\Support\Support\Utils as SupportUtils;
 
 use function Filament\Support\generate_icon_html;
 
@@ -34,7 +35,7 @@ class Navigation extends SupportModel implements HasMedia
     public function getScopeAttributes(): array
     {
         $scopes = ['scope_type', 'scope_id', 'type_id'];
-        if (Utils::isTenancyEnabled()) {        // 多租户 时，自动增加 租户相关参数
+        if (SupportUtils::isTenancyEnabled()) {        // 多租户 时，自动增加 租户相关参数
             $scopes[] = 'team_id';
         }
 
@@ -186,6 +187,6 @@ class Navigation extends SupportModel implements HasMedia
 
     public function team(): BelongsTo
     {
-        return $this->belongsTo(Utils::getTenantModel());
+        return $this->belongsTo(SupportUtils::getTenantModel());
     }
 }

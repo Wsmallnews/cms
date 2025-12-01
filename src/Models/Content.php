@@ -4,8 +4,8 @@ namespace Wsmallnews\Cms\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
-use Wsmallnews\Cms\Support\Utils;
 use Wsmallnews\Support\Models\SupportModel;
+use Wsmallnews\Support\Support\Utils as SupportUtils;
 
 class Content extends SupportModel
 {
@@ -20,6 +20,6 @@ class Content extends SupportModel
 
     public function team(): BelongsTo
     {
-        return $this->belongsTo(Utils::getTenantModel());
+        return $this->belongsTo(SupportUtils::getTenantModel());
     }
 }

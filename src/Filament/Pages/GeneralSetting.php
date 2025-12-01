@@ -9,7 +9,9 @@ use Filament\Schemas;
 use Filament\Schemas\Schema;
 use Wsmallnews\Cms\CmsPlugin;
 use Wsmallnews\Cms\Settings\GeneralSettings;
+use Wsmallnews\Cms\Support\Utils;
 use Wsmallnews\Support\Concerns\Resource\HasCustomProperties;
+use Wsmallnews\Support\Support\Utils as SupportUtils;
 
 class GeneralSetting extends SettingsPage
 {
@@ -50,18 +52,20 @@ class GeneralSetting extends SettingsPage
                 ])->columns(2),
                 Schemas\Components\Section::make('二维码上传')->schema([
                     Forms\Components\FileUpload::make('wechat_qrcode')->label('微信二维码')
-                        ->directory('settings/general')
-                        ->openable()
                         ->image()
+                        ->disk(SupportUtils::getFilesystemDisk())
+                        ->directory(Utils::getFileDirectory('settings'))
                         ->visibility('public')
+                        ->openable()
                         ->downloadable()
                         ->uploadingMessage('微信二维码上传中...')
                         ->imagePreviewHeight('100'),
                     Forms\Components\FileUpload::make('wechat_official_qrcode')->label('公众号二维码')
-                        ->directory('settings/general')
-                        ->openable()
                         ->image()
+                        ->disk(SupportUtils::getFilesystemDisk())
+                        ->directory(Utils::getFileDirectory('settings'))
                         ->visibility('public')
+                        ->openable()
                         ->downloadable()
                         ->uploadingMessage('公众号二维码上传中...')
                         ->imagePreviewHeight('100'),

@@ -7,9 +7,10 @@ use Wsmallnews\Cms\Livewire\Navigation\Navigation;
 use Wsmallnews\Cms\Livewire\Post\Post;
 use Wsmallnews\Cms\Livewire\Post\Posts;
 use Wsmallnews\Cms\Support\Utils;
+use Wsmallnews\Support\Support\Utils as SupportUtils;
 
 $middlewares = Utils::getConfig('routes.middleware') ?? [];
-Utils::isTenancyEnabled() && array_unshift($middlewares, IdentifyTenant::class);
+SupportUtils::isTenancyEnabled() && array_unshift($middlewares, IdentifyTenant::class);
 
 Route::domain(Utils::getConfig('routes.domain'))
     ->middleware($middlewares)

@@ -23,16 +23,11 @@ return [
         'post' => Models\Post::class,
     ],
 
-    /*
-    |--------------------------------------------------------------------------
-    | Multi-Tenancy
-    |--------------------------------------------------------------------------
-    |
-    | Firstly, the panel where the current plugin is located should support multi tenancy before you can set this option.
-    | Secondly, The tenant model should be set as a panel model.
-    |
-    */
-    'tenant_model' => null,
+    /**
+     * 文件基础目录，会自动拼接当前年月日 (仅用于 filament 默认上传组件 (Forms\Components\FileUpload))
+     */
+    'file_directory' => 'sn/cms/',
+
 
     'routes' => [
         /**
