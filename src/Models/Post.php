@@ -10,7 +10,6 @@ use Illuminate\Support\Collection;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Tags\HasTags;
-use Wsmallnews\Category\Models\Category;
 use Wsmallnews\Category\Support\Utils as CategoryUtils;
 use Wsmallnews\Cms\Enums\PostStatus;
 use Wsmallnews\Cms\Support\Utils;
