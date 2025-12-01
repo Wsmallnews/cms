@@ -12,7 +12,6 @@ return [
         'scope_id' => 0,
     ],
 
-
     /**
      * Custom models
      */
