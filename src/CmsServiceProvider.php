@@ -128,16 +128,14 @@ class CmsServiceProvider extends PackageServiceProvider
                                 ->label('自定义视图')
                                 ->default(false)
                                 ->helperText('开启自定义视图, 将会使用自定义视图')
-                                ->required()
-                                ->live()
                                 ->inline(false),
                             TextInput::make('view')->label('自定义视图')
                                 ->placeholder('请输入自定义视图地址')
-                                ->required()
-                                ->visible(function (Get $get) {
-                                    // 只有内容 和 页面 需要设置标识
-                                    return $get('hasCustomView');
-                                }),
+                                ->required(fn(Get $get) => (bool) $get('hasCustomView'))
+                                ->markAsRequired()
+                                ->visibleJs(<<<'JS'
+                                    $get('hasCustomView')
+                                JS),
                         ])->columns(1),
                     FieldSet::make('blockContainer')
                         ->label('块容器包装器')
@@ -146,16 +144,13 @@ class CmsServiceProvider extends PackageServiceProvider
                                 ->label('容器包装器')
                                 ->default(false)
                                 ->helperText('开启容器包装器, 将会在组件外包一层包装器')
-                                ->required()
-                                ->live()
                                 ->inline(false),
                             TextInput::make('blockContainerWrapperView')->label('自定义包装器')
                                 ->placeholder('不填写将使用默认包装器')
                                 ->helperText('如果不填写将使用默认包装器')
-                                ->visible(function (Get $get) {
-                                    // 只有内容 和 页面 需要设置标识
-                                    return $get('hasDefaultBlockContainerWrapper');
-                                }),
+                                ->visibleJs(<<<'JS'
+                                    $get('hasDefaultBlockContainerWrapper')
+                                JS),
                         ])->columns(1),
                     FieldSet::make('itemContainer')
                         ->label('项容器包装器')
@@ -164,16 +159,13 @@ class CmsServiceProvider extends PackageServiceProvider
                                 ->label('容器包装器')
                                 ->default(false)
                                 ->helperText('开启容器包装器, 将会在组件列表项外包一层包装器')
-                                ->required()
-                                ->live()
                                 ->inline(false),
                             TextInput::make('itemContainerWrapperView')->label('自定义包装器')
                                 ->placeholder('不填写将使用默认包装器')
                                 ->helperText('如果不填写将使用默认包装器')
-                                ->visible(function (Get $get) {
-                                    // 只有内容 和 页面 需要设置标识
-                                    return $get('hasDefaultItemContainerWrapper');
-                                }),
+                                ->visibleJs(<<<'JS'
+                                    $get('hasDefaultItemContainerWrapper')
+                                JS),
                         ])->columns(1),
 
                     // 多选分类
@@ -207,16 +199,14 @@ class CmsServiceProvider extends PackageServiceProvider
                                 ->label('自定义视图')
                                 ->default(false)
                                 ->helperText('开启自定义视图, 将会使用自定义视图')
-                                ->required()
-                                ->live()
                                 ->inline(false),
                             TextInput::make('view')->label('自定义视图')
                                 ->placeholder('请输入自定义视图地址')
-                                ->required()
-                                ->visible(function (Get $get) {
-                                    // 只有内容 和 页面 需要设置标识
-                                    return $get('hasCustomView');
-                                }),
+                                ->required(fn(Get $get) => (bool) $get('hasCustomView'))
+                                ->markAsRequired()
+                                ->visibleJs(<<<'JS'
+                                    $get('hasCustomView')
+                                JS),
                         ])->columns(1),
                     FieldSet::make('blockContainer')
                         ->label('块容器包装器')
@@ -225,16 +215,13 @@ class CmsServiceProvider extends PackageServiceProvider
                                 ->label('容器包装器')
                                 ->default(false)
                                 ->helperText('开启容器包装器, 将会在组件外包一层包装器')
-                                ->required()
-                                ->live()
                                 ->inline(false),
                             TextInput::make('blockContainerWrapperView')->label('自定义包装器')
                                 ->placeholder('不填写将使用默认包装器')
                                 ->helperText('如果不填写将使用默认包装器')
-                                ->visible(function (Get $get) {
-                                    // 只有内容 和 页面 需要设置标识
-                                    return $get('hasDefaultBlockContainerWrapper');
-                                }),
+                                ->visibleJs(<<<'JS'
+                                    $get('hasDefaultBlockContainerWrapper')
+                                JS),
                         ])->columns(1),
                     Select::make('id')->label('选择图文')
                         ->options(PostModel::normal()->scopeable(Utils::getScopeType(), Utils::getScopeId())->limit(30)->pluck('title', 'id'))

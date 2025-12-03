@@ -24,7 +24,6 @@ class NavigationForm
                 ->label('导航类型')
                 ->options(NavigationTypeEnum::class)
                 ->default(NavigationTypeEnum::Route)
-                ->live()
                 ->required(),
             Forms\Components\TextInput::make('name')->label('导航名称')
                 ->placeholder('请输入导航名称')
@@ -39,7 +38,6 @@ class NavigationForm
                     'image' => '图片图标',
                 ])
                 ->default('none')
-                ->live()
                 ->inline(),
             Schemas\Components\FieldSet::make('icons')
                 ->label('icon 图标')
@@ -53,13 +51,9 @@ class NavigationForm
                         ->sets(['heroicons'])
                         ->iconsSearchResults(),
                 ])
-                // ->visibleJs(<<<'JS'
-                //     $get('options.icon_type') == 'icon'
-                // JS),
-                ->visible(function (Get $get) {
-                    // 只有内容 和 页面 需要设置标识
-                    return $get('options.icon_type') == 'icon';
-                }),
+                ->visibleJs(<<<'JS'
+                    $get('options.icon_type') == 'icon'
+                JS),
             Schemas\Components\FieldSet::make('image_icons')
                 ->label('图片图标')
                 ->schema([
@@ -95,40 +89,29 @@ class NavigationForm
                         ->columnSpanFull(),
 
                 ])
-                // ->visibleJs(<<<'JS'
-                //     $get('options.icon_type') == 'image'
-                // JS),
-                ->visible(function (Get $get) {
-                    // 只有内容 和 页面 需要设置标识
-                    return $get('options.icon_type') == 'image';
-                }),
-
+                ->visibleJs(<<<'JS'
+                    $get('options.icon_type') == 'image'
+                JS),
             Forms\Components\Toggle::make('options.footer_show')
                 ->label('底部显示')
                 ->default(false)
                 ->helperText('如果开启底部显示，则在页面底部显示该导航')
-                ->required()
                 ->inline(false)
-                // ->visibleJs(<<<'JS'
-                //     ['child'].includes($get('type'))
-                // JS),
-                ->visible(function (Get $get) {
-                    // 只有内容 和 页面 需要设置标识
-                    return in_array($get('type'), [NavigationTypeEnum::Child]);
-                }),
+                ->visibleJs(<<<'JS'
+                    // 只有子菜单 可以设置底部显示
+                    ['child'].includes($get('type'))
+                JS),
             Forms\Components\TextInput::make('slug')
                 ->label('导航标识')
                 // @sn todo 导航标识唯一性需要附加条件
                 ->unique(ignorable: fn (?NavigationModel $record): ?NavigationModel => $record)
-                ->required()
+                ->required(fn(Get $get) => in_array($get('type'), [NavigationTypeEnum::Page, NavigationTypeEnum::Content]))
+                ->markAsRequired()
                 ->maxLength(255)
-                // ->visibleJs(<<<'JS'
-                //     ['page', 'content'].includes($get('type'))
-                // JS),
-                ->visible(function (Get $get) {
+                ->visibleJs(<<<'JS'
                     // 只有内容 和 页面 需要设置标识
-                    return in_array($get('type'), [NavigationTypeEnum::Page, NavigationTypeEnum::Content]);
-                }),
+                    ['page', 'content'].includes($get('type'))
+                JS),
             Forms\Components\SpatieMediaLibraryFileUpload::make('navigation_banner')
                 ->label('导航Banner')
                 ->collection('navigation_banner')
@@ -145,13 +128,9 @@ class NavigationForm
                 ->downloadable()
                 ->uploadingMessage('Banner 上传中...')
                 ->imagePreviewHeight('200')
-                // ->visibleJs(<<<'JS'
-                //     ['page', 'content'].includes($get('type'))
-                // JS),
-                ->visible(function (Get $get) {
-                    // 只有内容 和 页面 需要设置 Banner
-                    return in_array($get('type'), [NavigationTypeEnum::Page, NavigationTypeEnum::Content]);
-                }),
+                ->visibleJs(<<<'JS'
+                    ['page', 'content'].includes($get('type'))
+                JS),
             Forms\Components\Select::make('options.target')
                 ->label('跳转类型')
                 ->options([
@@ -159,14 +138,9 @@ class NavigationForm
                     '_blank' => '新窗口',
                 ])
                 ->default('_self')
-                ->required()
-                // ->visibleJs(<<<'JS'
-                //     !['child'].includes($get('type'))
-                // JS),
-                ->visible(function (Get $get) {
-                    // 没有子导航了，就显示跳转类型
-                    return $get('type') != NavigationTypeEnum::Child;
-                }),
+                ->visibleJs(<<<'JS'
+                    !['child'].includes($get('type'))
+                JS),
             Schemas\Components\Group::make()
                 ->schema([
                     Schemas\Components\FieldSet::make('contentView')
@@ -176,16 +150,14 @@ class NavigationForm
                                 ->label('自定义视图')
                                 ->default(false)
                                 ->helperText('开启自定义视图, 将会使用自定义视图')
-                                ->required()
-                                ->live()
                                 ->inline(false),
                             Forms\Components\TextInput::make('options._content_views.view')->label('自定义视图')
                                 ->placeholder('请输入自定义视图地址')
-                                ->required()
-                                ->visible(function (Get $get) {
-                                    // 只有内容 和 页面 需要设置标识
-                                    return $get('options._content_views.hasCustomView');
-                                }),
+                                ->required(fn(Get $get) => (bool) $get('options._content_views.hasCustomView'))
+                                ->markAsRequired()
+                                ->visibleJs(<<<'JS'
+                                    $get('options._content_views.hasCustomView')
+                                JS),
                         ])->columns(1),
                     Schemas\Components\FieldSet::make('contentBlockContainer')
                         ->label('容器包装器')
@@ -194,16 +166,13 @@ class NavigationForm
                                 ->label('容器包装器')
                                 ->default(false)
                                 ->helperText('开启容器包装器, 将会在组件外包一层包装器')
-                                ->required()
-                                ->live()
                                 ->inline(false),
                             Forms\Components\TextInput::make('options._content_block_container.blockContainerWrapperView')->label('自定义包装器')
                                 ->placeholder('不填写将使用默认包装器')
                                 ->helperText('如果不填写将使用默认包装器')
-                                ->visible(function (Get $get) {
-                                    // 只有内容 和 页面 需要设置标识
-                                    return $get('options._content_block_container.hasDefaultBlockContainerWrapper');
-                                }),
+                                ->visibleJs(<<<'JS'
+                                    $get('options._content_block_container.hasDefaultBlockContainerWrapper')
+                                JS),
                         ])->columns(1),
                     Schemas\Components\Group::make()
                         ->relationship('content')
@@ -216,35 +185,25 @@ class NavigationForm
                         ->columnSpanFull(),
                 ])
                 ->columns(2)
-                // ->visibleJs(<<<'JS'
-                //     ['page'].includes($get('type'))
-                // JS),
-                ->visible(function (Get $get) {
-                    // 没有子导航了，就显示跳转类型
-                    return $get('type') == NavigationTypeEnum::Page;
-                }),
+                ->visibleJs(<<<'JS'
+                    ['page'].includes($get('type'))
+                JS),
             Forms\Components\TextInput::make('options.url')
                 ->label('跳转链接')
                 ->placeholder('请输入跳转链接')
-                ->required()
-                // ->visibleJs(<<<'JS'
-                //     ['url'].includes($get('type'))
-                // JS),
-                ->visible(function (Get $get) {
-                    // Url 类型显示 跳转链接
-                    return $get('type') == NavigationTypeEnum::Url;
-                }),
+                ->required(fn(Get $get) => in_array($get('type'), [NavigationTypeEnum::Url]))
+                ->markAsRequired()
+                ->visibleJs(<<<'JS'
+                    ['url'].includes($get('type'))
+                JS),
             Forms\Components\TextInput::make('options.route')
                 ->label('路由名称')
                 ->placeholder('请输入路由名称')
-                ->required()
-                // ->visibleJs(<<<'JS'
-                //     ['route'].includes($get('type'))
-                // JS),
-                ->visible(function (Get $get) {
-                    // 跳转路由,填写路由名称
-                    return $get('type') == NavigationTypeEnum::Route;
-                }),
+                ->required(fn(Get $get) => in_array($get('type'), [NavigationTypeEnum::Route]))
+                ->markAsRequired()
+                ->visibleJs(<<<'JS'
+                    ['route'].includes($get('type'))
+                JS),
             Schemas\Components\Fieldset::make('url_params')
                 ->label('请求参数')
                 ->schema([
@@ -253,18 +212,16 @@ class NavigationForm
                             Forms\Components\Toggle::make('has_routes')
                                 ->label('路由参数')
                                 ->default(false)
-                                ->live()
-                                ->helperText('如果有路由参数，则开启当前选项')
-                                ->required(),
+                                ->helperText('如果有路由参数，则开启当前选项'),
                             Forms\Components\KeyValue::make('routes')
                                 ->label('路由参数')
                                 ->helperText('路由参数, 没有则不设置')
                                 ->reorderable()
-                                ->required()
-                                // ->visibleJs(<<<'JS'
-                                //     $get('has_routes')
-                                // JS),
-                                ->visible(fn (Get $get): bool => $get('has_routes')),
+                                ->required(fn(Get $get) => (bool) $get('has_routes'))
+                                ->markAsRequired()
+                                ->visibleJs(<<<'JS'
+                                    $get('has_routes')
+                                JS),
                         ])
                         ->columns(1)
                         ->columnSpan(1),
@@ -273,44 +230,35 @@ class NavigationForm
                             Forms\Components\Toggle::make('has_queries')
                                 ->label('查询参数')
                                 ->default(false)
-                                ->live()
-                                ->helperText('如果有查询参数，则开启当前选项')
-                                ->required(),
+                                ->helperText('如果有查询参数，则开启当前选项'),
                             Forms\Components\KeyValue::make('queries')
                                 ->label('查询参数')
                                 ->helperText('查询参数, 拼接在地址栏后面, 没有则不设置')
                                 ->reorderable()
-                                ->required()
-                                // ->visibleJs(<<<'JS'
-                                //     $get('has_queries')
-                                // JS),
-                                ->visible(fn (Get $get): bool => $get('has_queries')),
+                                ->required(fn(Get $get) => (bool) $get('has_queries'))
+                                ->markAsRequired()
+                                ->visibleJs(<<<'JS'
+                                    $get('has_queries')
+                                JS),
                         ])
                         ->columns(1)
                         ->columnSpan(1),
                 ])
                 ->columns(2)
                 ->statePath('options._url_params')
-                // ->visibleJs(<<<'JS'
-                //     ['route'].includes($get('type'))
-                // JS),
-                ->visible(function (Get $get) {
-                    // 内容类型的导航，选了内容类型，并且内容类型有 form 表单
-                    return $get('type') == NavigationTypeEnum::Route;
-                }),
-
+                ->visibleJs(<<<'JS'
+                    ['route'].includes($get('type'))
+                JS),
             Forms\Components\Select::make('options.type')
                 ->label('内容类型')
                 ->placeholder('请选择内容类型')
                 ->options(ContentRegistry::getOptions())
                 ->live()
-                ->required()
-                // ->visibleJs(<<<'JS'
-                //     ['content'].includes($get('type'))
-                // JS)
-                ->visible(function (Get $get) {
-                    return $get('type') == NavigationTypeEnum::Content;
-                })
+                ->required(fn(Get $get) => in_array($get('type'), [NavigationTypeEnum::Content]))
+                ->markAsRequired()
+                ->visibleJs(<<<'JS'
+                    ['content'].includes($get('type'))
+                JS)
                 ->afterStateUpdated(
                     fn (Forms\Components\Select $component, $state) => $state && $component
                         ->getContainer()

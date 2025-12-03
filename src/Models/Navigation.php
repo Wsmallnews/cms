@@ -118,17 +118,10 @@ class Navigation extends SupportModel implements HasMedia
                     return true;
                 }
 
-                // 收集当前 model 所有已经加载的 children (只收集两层 children数据))
+                // 收集当前 model 所有已经加载的 children
                 $allChildren = collect([]);
                 if ($this->relationLoaded('children')) {
-                    $allChildren = $this->children->flatMap(function ($child) {
-                        if ($child->relationLoaded('children')) {
-                            // 将当前元素和它的 children 数组合并成一个新数组
-                            return collect([$child])->merge($child->children);
-                        } else {
-                            return collect([$child]);
-                        }
-                    });
+                    $allChildren = tree_to_flatten($this->children);
                 }
 
                 return $allChildren->contains('is_active', true);
