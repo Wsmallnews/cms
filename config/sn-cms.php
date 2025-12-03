@@ -27,7 +27,6 @@ return [
      */
     'file_directory' => 'sn/cms/',
 
-
     'routes' => [
         /**
          * Whether to enable the cms routes.
