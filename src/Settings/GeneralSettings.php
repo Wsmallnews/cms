@@ -3,6 +3,7 @@
 namespace Wsmallnews\Cms\Settings;
 
 use Spatie\LaravelSettings\Settings;
+use Wsmallnews\Support\Support\Utils as SupportUtils;
 
 class GeneralSettings extends Settings
 {
@@ -36,8 +37,8 @@ class GeneralSettings extends Settings
         return 'database';
     }
 
-    // public static function cacheKey(): string
-    // {
-    //     return static::class . '_team_' . general_current_tenant()?->id;
-    // }
+    public static function cacheKey(): string
+    {
+        return static::class . (SupportUtils::isTenancyEnabled() ? '_tenant_' . general_current_tenant()?->id : '');
+    }
 }

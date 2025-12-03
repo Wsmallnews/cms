@@ -44,7 +44,7 @@ return [
         'middleware' => ['web'],
         /**
          * Default path for the blog homepage.
-         * If you differentiate tenants by url, you should set it like this: cms/{tenant: slug}
+         * If you differentiate tenants by url, you should set it like this: cms/{tenant:slug}
          */
         'prefix' => 'cms',
         /**

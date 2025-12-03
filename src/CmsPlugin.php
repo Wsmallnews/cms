@@ -37,11 +37,11 @@ class CmsPlugin implements Plugin
     {
         $panel->resources([
             PostResource::class,
-            TagResource::class,
+            // TagResource::class,
         ])->pages([
             NavigationPage::class,
             CategoryPage::class,
-            GeneralSettingPage::class,
+            // GeneralSettingPage::class,
         ]);
     }
 
