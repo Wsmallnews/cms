@@ -180,7 +180,7 @@ class NavigationForm
                             Forms\Components\RichEditor::make('content')
                                 ->label('页面内容详情')
                                 ->fileAttachmentsDirectory('contents/' . date('Ymd'))
-                                ->required(fn(Get $get) => in_array($get('../type'), [NavigationTypeEnum::Page]))
+                                ->required(fn (Get $get) => in_array($get('../type'), [NavigationTypeEnum::Page]))
                                 ->markAsRequired(),
                         ])
                         ->columnSpanFull(),
