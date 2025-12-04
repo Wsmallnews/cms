@@ -2,7 +2,6 @@
 
 namespace Wsmallnews\Cms\Filament\Resources\Posts\Pages;
 
-use Filament\Actions\Action;
 use Filament\Facades\Filament;
 use Filament\Resources\Pages\CreateRecord;
 use Wsmallnews\Cms\Filament\Resources\Posts\PostResource;
@@ -31,7 +30,7 @@ class CreatePost extends CreateRecord
             'publisher_type' => $admin->getMorphClass(),
             'publisher_id' => $admin->id,
         ]);
-        
+
         return parent::mutateFormDataBeforeCreate($data);
     }
 }
