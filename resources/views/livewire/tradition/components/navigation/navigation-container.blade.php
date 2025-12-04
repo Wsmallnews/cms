@@ -7,12 +7,12 @@
     </div>
 
     <div class="container mx-auto flex flex-col grow gap-4">
-        <livewire:sn-components-navigation-breadcrumb :navigation="$navigation" />
+        <livewire:sn-cms-components-navigation-breadcrumb :navigation="$navigation" />
     
         <div class="w-full flex flex-col md:flex-row items-start gap-4">
             @if ($navigation->depth > 0)
                 {{-- 必须是顶级导航下的子导航才可以显示同级导航列表 --}}
-                <livewire:sn-components-navigation-brothers :navigation="$navigation" />
+                <livewire:sn-cms-components-navigation-brothers :navigation="$navigation" />
             @endif
     
             <div class="w-full flex flex-col grow gap-4">

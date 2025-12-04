@@ -2,6 +2,7 @@
 
 namespace Wsmallnews\Cms\Filament\Pages\Navigation;
 
+use Filament\Facades\Filament;
 use Illuminate\Support\Str;
 use Wsmallnews\Cms\Enums\NavigationTypeStatus;
 use Wsmallnews\Cms\Filament\Pages\Navigation\Components\BaseNavigation;
@@ -28,9 +29,14 @@ abstract class Base extends BaseNavigation
 
     public function getNavigationType(): ?NavigationTypeModel
     {
+        $attributes = static::getScopeable();
+        if (static::isScopedToTenant() && ($tenant = Filament::getTenant())) {
+            $attributes['team_id'] = $tenant->id;
+        }
+
         $navigationType = Utils::getNavigationTypeModel()::query()
             ->firstOrCreate(
-                static::getScopeable(),
+                $attributes,
                 [
                     'name' => Str::title(static::getScopeType()),
                     'level' => static::getLevel(),

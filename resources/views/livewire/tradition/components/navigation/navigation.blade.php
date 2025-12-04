@@ -163,7 +163,7 @@
                         @click="isExpanded = ! isExpanded"
                         href="javascript:;"
                     @else
-                        {{ \Filament\Support\generate_href_html($child->url_info['url'], $child->url_info['target'] ?? false) }}
+                        {{ \Filament\Support\generate_href_html($navigation->url_info['url'], $navigation->url_info['target'] ?? false) }}
                     @endif
                 >
                     {{ $navigation->name_label }}

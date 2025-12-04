@@ -13,6 +13,8 @@ enum PostStatus: string implements HasColor, HasIcon, HasLabel
 {
     use EnumHelper;
 
+    case Draft = 'draft';
+
     case Normal = 'normal';
 
     case Hidden = 'hidden';
@@ -20,6 +22,7 @@ enum PostStatus: string implements HasColor, HasIcon, HasLabel
     public function getLabel(): ?string
     {
         return match ($this) {
+            self::Draft => '草稿',
             self::Normal => '正常',
             self::Hidden => '隐藏',
         };
@@ -28,6 +31,7 @@ enum PostStatus: string implements HasColor, HasIcon, HasLabel
     public function getColor(): string | array | null
     {
         return match ($this) {
+            self::Draft => 'info',
             self::Normal => 'success',
             self::Hidden => 'gray',
         };
@@ -36,6 +40,7 @@ enum PostStatus: string implements HasColor, HasIcon, HasLabel
     public function getIcon(): string | BackedEnum | null
     {
         return match ($this) {
+            self::Draft => Heroicon::OutlinedClipboardDocumentList,
             self::Normal => Heroicon::OutlinedEye,
             self::Hidden => Heroicon::OutlinedEyeSlash,
         };

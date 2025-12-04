@@ -5,6 +5,7 @@ namespace Wsmallnews\Cms\Models;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
 use Spatie\MediaLibrary\HasMedia;
@@ -57,14 +58,19 @@ class Post extends SupportModel implements HasMedia
         return $query->where('status', PostStatus::Hidden);
     }
 
+    public function categories(): BelongsToMany
+    {
+        return $this->belongsToMany(CategoryUtils::getCategoryModel(), 'sn_category_post');
+    }
+
     public function content(): MorphOne
     {
         return $this->morphOne(Utils::getContentModel(), 'contentable');
     }
 
-    public function categories(): BelongsToMany
+    public function publisher(): MorphTo
     {
-        return $this->belongsToMany(CategoryUtils::getCategoryModel(), 'sn_category_post');
+        return $this->morphTo();
     }
 
     public function team(): BelongsTo

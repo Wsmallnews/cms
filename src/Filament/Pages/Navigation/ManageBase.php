@@ -4,6 +4,7 @@ namespace Wsmallnews\Cms\Filament\Pages\Navigation;
 
 use BackedEnum;
 use Filament\Actions;
+use Filament\Facades\Filament;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Filament\Schemas;
@@ -78,6 +79,9 @@ abstract class ManageBase extends Page
 
         if (! $this->record) {
             $this->record = new (Utils::getNavigationTypeModel());
+            if (static::isScopedToTenant() && ($tenant = Filament::getTenant())) {
+                $this->record->team_id = $tenant->id;
+            }
             $this->record->scope_type = static::getScopeType();
             $this->record->scope_id = static::getScopeId();
         }

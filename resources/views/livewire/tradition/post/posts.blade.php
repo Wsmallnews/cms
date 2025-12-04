@@ -4,7 +4,7 @@
 @endphp
 
 <div class="w-full flex flex-col grow gap-4">
-    <livewire:sn-components-navigation :scope-type="$scopeType" :scope-id="$scopeId" />
+    <livewire:sn-cms-components-navigation :scope-type="$scopeType" :scope-id="$scopeId" />
 
     <div class="container mx-auto flex flex-col grow gap-4">
         @if($breadcrumbs)
@@ -14,8 +14,8 @@
             </div>
         @endif
 
-        <livewire:sn-components-posts :scope-type="$scopeType" :scope-id="$scopeId" :category-ids="$categoryId" item-container-wrapper-view="sn-cms::base.item-container" />
+        <livewire:sn-cms-components-posts :scope-type="$scopeType" :scope-id="$scopeId" :category-ids="$categoryId" item-container-wrapper-view="sn-cms::base.item-container" />
     </div>
 
-    <livewire:sn-components-footer :scope-type="$scopeType" :scope-id="$scopeId" />
+    <livewire:sn-cms-components-footer :scope-type="$scopeType" :scope-id="$scopeId" />
 </div>
