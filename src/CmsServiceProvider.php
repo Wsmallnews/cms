@@ -131,7 +131,7 @@ class CmsServiceProvider extends PackageServiceProvider
                                 ->inline(false),
                             TextInput::make('view')->label('自定义视图')
                                 ->placeholder('请输入自定义视图地址')
-                                ->required(fn(Get $get) => (bool) $get('hasCustomView'))
+                                ->required(fn (Get $get) => (bool) $get('hasCustomView'))
                                 ->markAsRequired()
                                 ->visibleJs(<<<'JS'
                                     $get('hasCustomView')
@@ -202,7 +202,7 @@ class CmsServiceProvider extends PackageServiceProvider
                                 ->inline(false),
                             TextInput::make('view')->label('自定义视图')
                                 ->placeholder('请输入自定义视图地址')
-                                ->required(fn(Get $get) => (bool) $get('hasCustomView'))
+                                ->required(fn (Get $get) => (bool) $get('hasCustomView'))
                                 ->markAsRequired()
                                 ->visibleJs(<<<'JS'
                                     $get('hasCustomView')

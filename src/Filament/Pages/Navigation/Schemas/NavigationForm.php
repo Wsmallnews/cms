@@ -105,7 +105,7 @@ class NavigationForm
                 ->label('导航标识')
                 // @sn todo 导航标识唯一性需要附加条件
                 ->unique(ignorable: fn (?NavigationModel $record): ?NavigationModel => $record)
-                ->required(fn(Get $get) => in_array($get('type'), [NavigationTypeEnum::Page, NavigationTypeEnum::Content]))
+                ->required(fn (Get $get) => in_array($get('type'), [NavigationTypeEnum::Page, NavigationTypeEnum::Content]))
                 ->markAsRequired()
                 ->maxLength(255)
                 ->visibleJs(<<<'JS'
@@ -153,7 +153,7 @@ class NavigationForm
                                 ->inline(false),
                             Forms\Components\TextInput::make('options._content_views.view')->label('自定义视图')
                                 ->placeholder('请输入自定义视图地址')
-                                ->required(fn(Get $get) => (bool) $get('options._content_views.hasCustomView'))
+                                ->required(fn (Get $get) => (bool) $get('options._content_views.hasCustomView'))
                                 ->markAsRequired()
                                 ->visibleJs(<<<'JS'
                                     $get('options._content_views.hasCustomView')
@@ -180,7 +180,8 @@ class NavigationForm
                             Forms\Components\RichEditor::make('content')
                                 ->label('页面内容详情')
                                 ->fileAttachmentsDirectory('contents/' . date('Ymd'))
-                                ->required(),
+                                ->required(fn (Get $get) => in_array($get('../type'), [NavigationTypeEnum::Page]))
+                                ->markAsRequired(),
                         ])
                         ->columnSpanFull(),
                 ])
@@ -191,7 +192,7 @@ class NavigationForm
             Forms\Components\TextInput::make('options.url')
                 ->label('跳转链接')
                 ->placeholder('请输入跳转链接')
-                ->required(fn(Get $get) => in_array($get('type'), [NavigationTypeEnum::Url]))
+                ->required(fn (Get $get) => in_array($get('type'), [NavigationTypeEnum::Url]))
                 ->markAsRequired()
                 ->visibleJs(<<<'JS'
                     ['url'].includes($get('type'))
@@ -199,7 +200,7 @@ class NavigationForm
             Forms\Components\TextInput::make('options.route')
                 ->label('路由名称')
                 ->placeholder('请输入路由名称')
-                ->required(fn(Get $get) => in_array($get('type'), [NavigationTypeEnum::Route]))
+                ->required(fn (Get $get) => in_array($get('type'), [NavigationTypeEnum::Route]))
                 ->markAsRequired()
                 ->visibleJs(<<<'JS'
                     ['route'].includes($get('type'))
@@ -217,7 +218,7 @@ class NavigationForm
                                 ->label('路由参数')
                                 ->helperText('路由参数, 没有则不设置')
                                 ->reorderable()
-                                ->required(fn(Get $get) => (bool) $get('has_routes'))
+                                ->required(fn (Get $get) => (bool) $get('has_routes'))
                                 ->markAsRequired()
                                 ->visibleJs(<<<'JS'
                                     $get('has_routes')
@@ -235,7 +236,7 @@ class NavigationForm
                                 ->label('查询参数')
                                 ->helperText('查询参数, 拼接在地址栏后面, 没有则不设置')
                                 ->reorderable()
-                                ->required(fn(Get $get) => (bool) $get('has_queries'))
+                                ->required(fn (Get $get) => (bool) $get('has_queries'))
                                 ->markAsRequired()
                                 ->visibleJs(<<<'JS'
                                     $get('has_queries')
@@ -254,7 +255,7 @@ class NavigationForm
                 ->placeholder('请选择内容类型')
                 ->options(ContentRegistry::getOptions())
                 ->live()
-                ->required(fn(Get $get) => in_array($get('type'), [NavigationTypeEnum::Content]))
+                ->required(fn (Get $get) => in_array($get('type'), [NavigationTypeEnum::Content]))
                 ->markAsRequired()
                 ->visibleJs(<<<'JS'
                     ['content'].includes($get('type'))
@@ -284,8 +285,7 @@ class NavigationForm
                 ->label('导航状态')
                 ->inline()
                 ->options(NavigationStatus::class)
-                ->default(NavigationStatus::Normal)
-                ->required(),
+                ->default(NavigationStatus::Normal),
         ];
     }
 }

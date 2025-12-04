@@ -6,19 +6,19 @@ use Closure;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Wsmallnews\Cms\Support\Utils;
+use Wsmallnews\Support\Support\Utils as SupportUtils;
 
 class IdentifyTenant
 {
     public function handle(Request $request, Closure $next): Response
     {
-        if (! Utils::isTenancyEnabled()) {
+        if (! SupportUtils::isTenancyEnabled()) {
             return $next($request);
         }
 
-        if (! $request->route()->hasParameter('tenant')) {
-            return $next($request);
-        }
+        // if (! $request->route()->hasParameter('tenant')) {
+        //     return $next($request);
+        // }
 
         $tenantId = $request->route()->parameter('tenant');
         $tenant = $this->getTenant($tenantId);
@@ -37,7 +37,7 @@ class IdentifyTenant
      */
     protected function getTenant($tenantId)
     {
-        $tenantModel = Utils::getTenantModel();
+        $tenantModel = SupportUtils::getTenantModel();
 
         $record = app($tenantModel)
             ->resolveRouteBinding($tenantId, 'slug');
