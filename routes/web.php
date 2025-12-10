@@ -1,12 +1,12 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Wsmallnews\Cms\Http\Middleware\IdentifyTenant;
 use Wsmallnews\Cms\Livewire\Index;
 use Wsmallnews\Cms\Livewire\Navigation\Navigation;
 use Wsmallnews\Cms\Livewire\Post\Post;
 use Wsmallnews\Cms\Livewire\Post\Posts;
 use Wsmallnews\Cms\Support\Utils;
+use Wsmallnews\Support\Http\Middleware\IdentifyTenant;
 use Wsmallnews\Support\Support\Utils as SupportUtils;
 
 $middlewares = Utils::getConfig('routes.middleware') ?? [];
