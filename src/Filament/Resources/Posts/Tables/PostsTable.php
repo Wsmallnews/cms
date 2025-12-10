@@ -39,10 +39,11 @@ class PostsTable
                 //     ->label('主图')
                 //     ->collection('main')
                 //     ->toggleable(),
-                // Tables\Columns\TextColumn::make('category.name')
-                //     ->label('分类')
-                //     ->searchable()
-                //     ->toggleable(),
+                Tables\Columns\TextColumn::make('categories.name')
+                    ->label('分类')
+                    ->searchable()
+                    ->toggleable()
+                    ->badge(),
                 // Tables\Columns\SpatieTagsColumn::make('tags')
                 //     ->label('标签')
                 //     ->type('post_tags')
