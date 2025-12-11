@@ -121,7 +121,7 @@ class NavigationForm
                 ->customProperties(function (Component $livewire) {
                     return [
                         ...$livewire->getScopeable(),
-                        'team_id' => general_current_tenant()?->id,
+                        'team_id' => current_tenant()?->id,
                     ];
                 })
                 ->openable()

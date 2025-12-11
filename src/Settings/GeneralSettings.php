@@ -39,6 +39,6 @@ class GeneralSettings extends Settings
 
     public static function cacheKey(): string
     {
-        return static::class . (SupportUtils::isTenancyEnabled() ? '_tenant_' . general_current_tenant()?->id : '');
+        return static::class . (SupportUtils::isTenancyEnabled() ? '_tenant_' . current_tenant()?->id : '');
     }
 }
