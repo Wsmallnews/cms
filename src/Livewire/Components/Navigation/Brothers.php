@@ -30,11 +30,8 @@ class Brothers extends Nestedset
     }
 
     #[On('sn-filament-nestedset-leaf-click')]
-    public function clickNavigation($navigationId)
-    {
-        
-    }
-    
+    public function clickNavigation($navigationId) {}
+
     public function getRecordLabel(Model $record): HtmlString | string
     {
         return $record->name_label;
@@ -59,13 +56,13 @@ class Brothers extends Nestedset
             $brothers = $brothers->map(function ($brother) {
                 $children = $brother->descendants->toTree();
                 $brother->setRelation('children', $children);
+
                 return $brother;
             });
         }
 
         return $brothers;
     }
-
 
     // public function render()
     // {
