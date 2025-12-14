@@ -20,8 +20,9 @@ class Navigation extends Nestedset
     public function getRecordUrl(Model $record): string | HtmlString | null
     {
         // 没有子导航时，才返回 url
-        if (!$record->children->count()) {
+        if (! $record->children->count()) {
             $urlInfo = $record->url_info;
+
             return generate_href_html($urlInfo['url'], $urlInfo['target']);
         }
 

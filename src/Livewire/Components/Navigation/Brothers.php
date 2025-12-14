@@ -4,7 +4,6 @@ namespace Wsmallnews\Cms\Livewire\Components\Navigation;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\HtmlString;
-use Livewire\Attributes\On;
 use Wsmallnews\Cms\Livewire\Concerns\HasThemeView;
 use Wsmallnews\Cms\Models\Navigation as NavigationModel;
 use Wsmallnews\FilamentNestedset\Livewire\Components\Nestedset;
@@ -36,8 +35,9 @@ class Brothers extends Nestedset
     public function getRecordUrl(Model $record): string | HtmlString | null
     {
         // 没有子导航时，才返回 url
-        if (!$record->children->count()) {
+        if (! $record->children->count()) {
             $urlInfo = $record->url_info;
+
             return generate_href_html($urlInfo['url'], $urlInfo['target']);
         }
 

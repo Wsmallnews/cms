@@ -24,7 +24,6 @@ trait HasThemeView
         return $theme . $name;
     }
 
-
     public function getBladeThemeView($name): string
     {
         if (isset($this->bladeThemeView) && ! blank($this->bladeThemeView)) {
@@ -35,6 +34,7 @@ trait HasThemeView
         $hasViewSpace = Str::contains($theme, 'livewire.');
 
         $theme = $hasViewSpace ? Str::replaceFirst('livewire.', '', $theme) : "sn-cms::{$theme}.";
+
         return $theme . $name;
     }
 }
