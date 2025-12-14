@@ -16,7 +16,7 @@ class Post extends Base
 
         Model::withoutTimestamps(fn () => $post->increment('views'));        // 增加浏览量,不更新 updated_at
 
-        return view($this->getView('components.post.post'), [
+        return view($this->getThemeView('components.post.post'), [
             'post' => $post,
         ]);
     }

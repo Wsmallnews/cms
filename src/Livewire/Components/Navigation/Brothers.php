@@ -5,12 +5,16 @@ namespace Wsmallnews\Cms\Livewire\Components\Navigation;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\HtmlString;
 use Livewire\Attributes\On;
+use Wsmallnews\Cms\Livewire\Concerns\HasThemeView;
 use Wsmallnews\Cms\Models\Navigation as NavigationModel;
 use Wsmallnews\FilamentNestedset\Livewire\Components\Nestedset;
 use Wsmallnews\Support\Livewire\Concerns\Scopeable;
 
+use function Filament\Support\generate_href_html;
+
 class Brothers extends Nestedset
 {
+    use HasThemeView;
     use Scopeable;
 
     public NavigationModel $navigation;
@@ -29,8 +33,16 @@ class Brothers extends Nestedset
         }
     }
 
-    #[On('sn-filament-nestedset-leaf-click')]
-    public function clickNavigation($navigationId) {}
+    public function getRecordUrl(Model $record): string | HtmlString | null
+    {
+        // 没有子导航时，才返回 url
+        if (!$record->children->count()) {
+            $urlInfo = $record->url_info;
+            return generate_href_html($urlInfo['url'], $urlInfo['target']);
+        }
+
+        return null;
+    }
 
     public function getRecordLabel(Model $record): HtmlString | string
     {
@@ -64,8 +76,13 @@ class Brothers extends Nestedset
         return $brothers;
     }
 
-    // public function render()
-    // {
-    //     return view($this->getView('components.navigation.brothers'));
-    // }
+    public function getRecordView(): string
+    {
+        return $this->getBladeThemeView('components.navigation.navigation-record');
+    }
+
+    public function render()
+    {
+        return view($this->getThemeView('components.navigation.brothers'));
+    }
 }

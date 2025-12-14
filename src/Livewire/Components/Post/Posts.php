@@ -49,7 +49,7 @@ class Posts extends Base
         // 分页
         $this->posts = $this->withPagination($query);
 
-        return view($this->getView('components.post.posts'), [
+        return view($this->getThemeView('components.post.posts'), [
             'categories' => $categories,
             'paginatorLink' => $this->links,
         ]);

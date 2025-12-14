@@ -60,7 +60,7 @@ class NavigationContainer extends Base
             ];
         }
 
-        return view($this->getView('components.navigation.navigation-container'), [
+        return view($this->getThemeView('components.navigation.navigation-container'), [
             'navigation' => $navigation,
             'components' => $components ?? [],
         ]);

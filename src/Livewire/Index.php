@@ -10,7 +10,7 @@ class Index extends Base
     #[Title('首页')]
     public function render()
     {
-        return view($this->getView('index'), [
+        return view($this->getThemeView('index'), [
         ])->layout(Utils::getLayout());
     }
 }

@@ -16,7 +16,7 @@ class Post extends Base
             ['label' => '资讯详情', 'url' => Utils::route('posts.show', $this->id)],
         ];
 
-        return view($this->getView('post.post'), [
+        return view($this->getThemeView('post.post'), [
             'breadcrumbs' => $breadcrumbs,
         ])->layout(Utils::getLayout());
     }

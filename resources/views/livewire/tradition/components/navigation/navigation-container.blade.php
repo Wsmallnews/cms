@@ -12,7 +12,9 @@
         <div class="w-full flex flex-col md:flex-row items-start gap-4">
             @if ($navigation->depth > 0)
                 {{-- 必须是顶级导航下的子导航才可以显示同级导航列表 --}}
-                <livewire:sn-cms-components-navigation-brothers :navigation="$navigation" />
+                <div class="w-full md:w-72 shrink-0">
+                    <livewire:sn-cms-components-navigation-brothers :navigation="$navigation" />
+                </div>
             @endif
     
             <div class="w-full flex flex-col grow gap-4">

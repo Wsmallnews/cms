@@ -3,12 +3,12 @@
 namespace Wsmallnews\Cms\Livewire;
 
 use Livewire\Component;
-use Wsmallnews\Cms\Livewire\Concerns\HasView;
+use Wsmallnews\Cms\Livewire\Concerns\HasThemeView;
 use Wsmallnews\Cms\Support\Utils;
 
 class Base extends Component
 {
-    use HasView;
+    use HasThemeView;
 
     public function getScopeType(): ?string
     {

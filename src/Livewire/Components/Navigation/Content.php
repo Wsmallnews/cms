@@ -11,6 +11,6 @@ class Content extends Base
 
     public function render()
     {
-        return view($this->getView('components.navigation.content'));
+        return view($this->getThemeView('components.navigation.content'));
     }
 }

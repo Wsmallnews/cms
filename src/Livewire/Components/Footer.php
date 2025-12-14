@@ -19,7 +19,7 @@ class Footer extends Base
             ->defaultOrder()->get()
             ->toTree();
 
-        return view($this->getView('components.footer'), [
+        return view($this->getThemeView('components.footer'), [
             'navigations' => $navigations,
             'general' => app(GeneralSettings::class),
         ]);

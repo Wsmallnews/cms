@@ -37,7 +37,7 @@ class Breadcrumb extends Base
             'label' => '首页',
         ]);
 
-        return view($this->getView('components.navigation.breadcrumb'), [
+        return view($this->getThemeView('components.navigation.breadcrumb'), [
             'breadcrumbs' => $breadcrumbs,
         ]);
     }

@@ -17,7 +17,7 @@ class IndexPosts extends Base
     {
         $posts = Utils::getPostModel()::snScope(...$this->getScopeable())->normal()->limit($this->limit)->get();
 
-        return view($this->getView('components.index-posts'), [
+        return view($this->getThemeView('components.index-posts'), [
             'posts' => $posts,
         ]);
     }

@@ -11,7 +11,7 @@ class Navigation extends Base
 
     public function render()
     {
-        return view($this->getView('navigation.navigation'))
+        return view($this->getThemeView('navigation.navigation'))
             ->layout(Utils::getLayout());
     }
 }
