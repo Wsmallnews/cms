@@ -121,7 +121,7 @@ class CmsServiceProvider extends PackageServiceProvider
                 'type' => 'posts',
                 'label' => '图文列表',
                 'forms' => fn ($fields) => [
-                    FieldSet::make('view')
+                    Fieldset::make('view')
                         ->label('自定义视图')
                         ->schema([
                             Toggle::make('hasCustomView')
@@ -137,7 +137,7 @@ class CmsServiceProvider extends PackageServiceProvider
                                     $get('hasCustomView')
                                 JS),
                         ])->columns(1),
-                    FieldSet::make('blockContainer')
+                    Fieldset::make('blockContainer')
                         ->label('块容器包装器')
                         ->schema([
                             Toggle::make('hasDefaultBlockContainerWrapper')
@@ -152,7 +152,7 @@ class CmsServiceProvider extends PackageServiceProvider
                                     $get('hasDefaultBlockContainerWrapper')
                                 JS),
                         ])->columns(1),
-                    FieldSet::make('itemContainer')
+                    Fieldset::make('itemContainer')
                         ->label('项容器包装器')
                         ->schema([
                             Toggle::make('hasDefaultItemContainerWrapper')
@@ -192,7 +192,7 @@ class CmsServiceProvider extends PackageServiceProvider
                 'type' => 'post-detail',
                 'label' => '图文详情',
                 'forms' => fn ($fields) => [
-                    FieldSet::make('view')
+                    Fieldset::make('view')
                         ->label('自定义视图')
                         ->schema([
                             Toggle::make('hasCustomView')
@@ -208,7 +208,7 @@ class CmsServiceProvider extends PackageServiceProvider
                                     $get('hasCustomView')
                                 JS),
                         ])->columns(1),
-                    FieldSet::make('blockContainer')
+                    Fieldset::make('blockContainer')
                         ->label('块容器包装器')
                         ->schema([
                             Toggle::make('hasDefaultBlockContainerWrapper')

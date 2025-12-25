@@ -39,7 +39,7 @@ class NavigationForm
                 ])
                 ->default('none')
                 ->inline(),
-            Schemas\Components\FieldSet::make('icons')
+            Schemas\Components\Fieldset::make('icons')
                 ->label('icon 图标')
                 ->schema([
                     IconPicker::make('options.icon')->label('图标')
@@ -54,7 +54,7 @@ class NavigationForm
                 ->visibleJs(<<<'JS'
                     $get('options.icon_type') == 'icon'
                 JS),
-            Schemas\Components\FieldSet::make('image_icons')
+            Schemas\Components\Fieldset::make('image_icons')
                 ->label('图片图标')
                 ->schema([
                     Forms\Components\FileUpload::make('options.icon_src')
@@ -143,7 +143,7 @@ class NavigationForm
                 JS),
             Schemas\Components\Group::make()
                 ->schema([
-                    Schemas\Components\FieldSet::make('contentView')
+                    Schemas\Components\Fieldset::make('contentView')
                         ->label('自定义视图')
                         ->schema([
                             Forms\Components\Toggle::make('options._content_views.hasCustomView')
@@ -159,7 +159,7 @@ class NavigationForm
                                     $get('options._content_views.hasCustomView')
                                 JS),
                         ])->columns(1),
-                    Schemas\Components\FieldSet::make('contentBlockContainer')
+                    Schemas\Components\Fieldset::make('contentBlockContainer')
                         ->label('容器包装器')
                         ->schema([
                             Forms\Components\Toggle::make('options._content_block_container.hasDefaultBlockContainerWrapper')
