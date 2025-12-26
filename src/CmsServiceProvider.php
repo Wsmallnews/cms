@@ -121,7 +121,7 @@ class CmsServiceProvider extends PackageServiceProvider
             [
                 'type' => 'posts',
                 'label' => '图文列表',
-                'forms' => fn ($fields) => [  
+                'forms' => fn ($fields) => [
                     // 多选分类
                     Group::make()
                         ->schema([
@@ -157,7 +157,7 @@ class CmsServiceProvider extends PackageServiceProvider
                                         ->inline(false),
                                     TextInput::make('view')->label('自定义视图')
                                         ->placeholder('请输入自定义视图地址')
-                                        ->required(fn(Get $get) => (bool) $get('hasCustomView'))
+                                        ->required(fn (Get $get) => (bool) $get('hasCustomView'))
                                         ->markAsRequired()
                                         ->visibleJs(<<<'JS'
                                             $get('hasCustomView')
@@ -215,7 +215,7 @@ class CmsServiceProvider extends PackageServiceProvider
                         ->schema([
                             Select::make('id')->label('选择图文')
                                 ->options(PostModel::normal()->scopeable(Utils::getScopeType(), Utils::getScopeId())->limit(30)->pluck('title', 'id'))
-                                ->getSearchResultsUsing(fn(string $search): array => PostModel::normal()->scopeable(Utils::getScopeType(), Utils::getScopeId())->where('title', 'like', "%{$search}%")->limit(30)->pluck('title', 'id')->toArray())
+                                ->getSearchResultsUsing(fn (string $search): array => PostModel::normal()->scopeable(Utils::getScopeType(), Utils::getScopeId())->where('title', 'like', "%{$search}%")->limit(30)->pluck('title', 'id')->toArray())
                                 ->placeholder('请选择图文详情')
                                 ->searchable()
                                 ->preload()
