@@ -7,6 +7,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Fieldset;
+use Filament\Schemas\Components\Group;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Support\Assets\AlpineComponent;
 use Filament\Support\Assets\Asset;
@@ -121,65 +122,83 @@ class CmsServiceProvider extends PackageServiceProvider
                 'type' => 'posts',
                 'label' => '图文列表',
                 'forms' => fn ($fields) => [
-                    Fieldset::make('view')
-                        ->label('自定义视图')
-                        ->schema([
-                            Toggle::make('hasCustomView')
-                                ->label('自定义视图')
-                                ->default(false)
-                                ->helperText('开启自定义视图, 将会使用自定义视图')
-                                ->inline(false),
-                            TextInput::make('view')->label('自定义视图')
-                                ->placeholder('请输入自定义视图地址')
-                                ->required(fn (Get $get) => (bool) $get('hasCustomView'))
-                                ->markAsRequired()
-                                ->visibleJs(<<<'JS'
-                                    $get('hasCustomView')
-                                JS),
-                        ])->columns(1),
-                    Fieldset::make('blockContainer')
-                        ->label('块容器包装器')
-                        ->schema([
-                            Toggle::make('hasDefaultBlockContainerWrapper')
-                                ->label('容器包装器')
-                                ->default(false)
-                                ->helperText('开启容器包装器, 将会在组件外包一层包装器')
-                                ->inline(false),
-                            TextInput::make('blockContainerWrapperView')->label('自定义包装器')
-                                ->placeholder('不填写将使用默认包装器')
-                                ->helperText('如果不填写将使用默认包装器')
-                                ->visibleJs(<<<'JS'
-                                    $get('hasDefaultBlockContainerWrapper')
-                                JS),
-                        ])->columns(1),
-                    Fieldset::make('itemContainer')
-                        ->label('项容器包装器')
-                        ->schema([
-                            Toggle::make('hasDefaultItemContainerWrapper')
-                                ->label('容器包装器')
-                                ->default(false)
-                                ->helperText('开启容器包装器, 将会在组件列表项外包一层包装器')
-                                ->inline(false),
-                            TextInput::make('itemContainerWrapperView')->label('自定义包装器')
-                                ->placeholder('不填写将使用默认包装器')
-                                ->helperText('如果不填写将使用默认包装器')
-                                ->visibleJs(<<<'JS'
-                                    $get('hasDefaultItemContainerWrapper')
-                                JS),
-                        ])->columns(1),
-
                     // 多选分类
-                    SelectTree::make('categoryIds')->label('选择分类')
-                        ->query(query: function () {
-                            return CategoryModel::scopeable(Utils::getScopeType(), Utils::getScopeId());
-                        }, titleAttribute: 'name', parentAttribute: 'parent_id')
-                        ->searchable()
-                        ->multiple()
-                        ->enableBranchNode()
-                        ->withCount()
-                        ->placeholder(__('请选择图文分类'))
-                        ->emptyLabel(__('未搜索到分类'))
-                        ->treeKey('postCategories'),
+                    Group::make()
+                        ->schema([
+                            SelectTree::make('categoryIds')->label('选择分类')
+                                ->query(query: function () {
+                                    return CategoryModel::scopeable(Utils::getScopeType(), Utils::getScopeId());
+                                }, titleAttribute: 'name', parentAttribute: 'parent_id')
+                                ->searchable()
+                                ->multiple()
+                                ->enableBranchNode()
+                                ->withCount()
+                                ->placeholder(__('请选择图文分类'))
+                                ->emptyLabel(__('未搜索到分类'))
+                                ->treeKey('postCategories'),
+                        ])
+                        ->columns(2)
+                        ->columnSpanFull(),
+
+                    Toggle::make('needCustomStyle')
+                        ->label('自定义组件样式')
+                        ->default(false)
+                        ->helperText('开启自定义组件样式, 可以自定义视图，容器包装起等')
+                        ->inline(false),
+                    Group::make()
+                        ->schema([
+                            Fieldset::make('view')
+                                ->label('自定义视图')
+                                ->schema([
+                                    Toggle::make('hasCustomView')
+                                        ->label('自定义视图')
+                                        ->default(false)
+                                        ->helperText('开启自定义视图, 将会使用自定义视图')
+                                        ->inline(false),
+                                    TextInput::make('view')->label('自定义视图')
+                                        ->placeholder('请输入自定义视图地址')
+                                        ->required(fn (Get $get) => (bool) $get('hasCustomView'))
+                                        ->markAsRequired()
+                                        ->visibleJs(<<<'JS'
+                                            $get('hasCustomView')
+                                        JS),
+                                ])->columns(1),
+                            Fieldset::make('blockContainer')
+                                ->label('块容器包装器')
+                                ->schema([
+                                    Toggle::make('hasDefaultBlockContainerWrapper')
+                                        ->label('容器包装器')
+                                        ->default(false)
+                                        ->helperText('开启容器包装器, 将会在组件外包一层包装器')
+                                        ->inline(false),
+                                    TextInput::make('blockContainerWrapperView')->label('自定义包装器')
+                                        ->placeholder('不填写将使用默认包装器')
+                                        ->helperText('如果不填写将使用默认包装器')
+                                        ->visibleJs(<<<'JS'
+                                            $get('hasDefaultBlockContainerWrapper')
+                                        JS),
+                                ])->columns(1),
+                            Fieldset::make('itemContainer')
+                                ->label('项容器包装器')
+                                ->schema([
+                                    Toggle::make('hasDefaultItemContainerWrapper')
+                                        ->label('容器包装器')
+                                        ->default(true)
+                                        ->helperText('开启容器包装器, 将会在组件列表项外包一层包装器')
+                                        ->inline(false),
+                                    TextInput::make('itemContainerWrapperView')->label('自定义包装器')
+                                        ->placeholder('不填写将使用默认包装器')
+                                        ->helperText('如果不填写将使用默认包装器')
+                                        ->visibleJs(<<<'JS'
+                                            $get('hasDefaultItemContainerWrapper')
+                                        JS),
+                                ])->columns(1),
+                        ])
+                        ->columns(2)
+                        ->columnSpanFull()
+                        ->visibleJs(<<<'JS'
+                            $get('needCustomStyle')
+                        JS),
                 ],
                 'components' => [
                     \Wsmallnews\Cms\Livewire\Components\Post\Posts::class => [
@@ -192,44 +211,64 @@ class CmsServiceProvider extends PackageServiceProvider
                 'type' => 'post-detail',
                 'label' => '图文详情',
                 'forms' => fn ($fields) => [
-                    Fieldset::make('view')
-                        ->label('自定义视图')
+                    Group::make()
                         ->schema([
-                            Toggle::make('hasCustomView')
+                            Select::make('id')->label('选择图文')
+                                ->options(PostModel::normal()->scopeable(Utils::getScopeType(), Utils::getScopeId())->limit(30)->pluck('title', 'id'))
+                                ->getSearchResultsUsing(fn (string $search): array => PostModel::normal()->scopeable(Utils::getScopeType(), Utils::getScopeId())->where('title', 'like', "%{$search}%")->limit(30)->pluck('title', 'id')->toArray())
+                                ->placeholder('请选择图文详情')
+                                ->searchable()
+                                ->preload()
+                                ->required(),
+                        ])
+                        ->columns(2)
+                        ->columnSpanFull(),
+
+                    Toggle::make('needCustomStyle')
+                        ->label('自定义组件样式')
+                        ->default(false)
+                        ->helperText('开启自定义组件样式, 可以自定义视图，容器包装起等')
+                        ->inline(false),
+
+                    Group::make()
+                        ->schema([
+                            Fieldset::make('view')
                                 ->label('自定义视图')
-                                ->default(false)
-                                ->helperText('开启自定义视图, 将会使用自定义视图')
-                                ->inline(false),
-                            TextInput::make('view')->label('自定义视图')
-                                ->placeholder('请输入自定义视图地址')
-                                ->required(fn (Get $get) => (bool) $get('hasCustomView'))
-                                ->markAsRequired()
-                                ->visibleJs(<<<'JS'
-                                    $get('hasCustomView')
-                                JS),
-                        ])->columns(1),
-                    Fieldset::make('blockContainer')
-                        ->label('块容器包装器')
-                        ->schema([
-                            Toggle::make('hasDefaultBlockContainerWrapper')
-                                ->label('容器包装器')
-                                ->default(false)
-                                ->helperText('开启容器包装器, 将会在组件外包一层包装器')
-                                ->inline(false),
-                            TextInput::make('blockContainerWrapperView')->label('自定义包装器')
-                                ->placeholder('不填写将使用默认包装器')
-                                ->helperText('如果不填写将使用默认包装器')
-                                ->visibleJs(<<<'JS'
-                                    $get('hasDefaultBlockContainerWrapper')
-                                JS),
-                        ])->columns(1),
-                    Select::make('id')->label('选择图文')
-                        ->options(PostModel::normal()->scopeable(Utils::getScopeType(), Utils::getScopeId())->limit(30)->pluck('title', 'id'))
-                        ->getSearchResultsUsing(fn (string $search): array => PostModel::normal()->scopeable(Utils::getScopeType(), Utils::getScopeId())->where('title', 'like', "%{$search}%")->limit(30)->pluck('title', 'id')->toArray())
-                        ->placeholder('请选择图文详情')
-                        ->searchable()
-                        ->preload()
-                        ->required(),
+                                ->schema([
+                                    Toggle::make('hasCustomView')
+                                        ->label('自定义视图')
+                                        ->default(false)
+                                        ->helperText('开启自定义视图, 将会使用自定义视图')
+                                        ->inline(false),
+                                    TextInput::make('view')->label('自定义视图')
+                                        ->placeholder('请输入自定义视图地址')
+                                        ->required(fn (Get $get) => (bool) $get('hasCustomView'))
+                                        ->markAsRequired()
+                                        ->visibleJs(<<<'JS'
+                                            $get('hasCustomView')
+                                        JS),
+                                ])->columns(1),
+                            Fieldset::make('blockContainer')
+                                ->label('块容器包装器')
+                                ->schema([
+                                    Toggle::make('hasDefaultBlockContainerWrapper')
+                                        ->label('容器包装器')
+                                        ->default(false)
+                                        ->helperText('开启容器包装器, 将会在组件外包一层包装器')
+                                        ->inline(false),
+                                    TextInput::make('blockContainerWrapperView')->label('自定义包装器')
+                                        ->placeholder('不填写将使用默认包装器')
+                                        ->helperText('如果不填写将使用默认包装器')
+                                        ->visibleJs(<<<'JS'
+                                            $get('hasDefaultBlockContainerWrapper')
+                                        JS),
+                                ])->columns(1),
+                        ])
+                        ->columns(2)
+                        ->columnSpanFull()
+                        ->visibleJs(<<<'JS'
+                            $get('needCustomStyle')
+                        JS),
                 ],
                 'components' => [
                     \Wsmallnews\Cms\Livewire\Components\Post\Post::class => [

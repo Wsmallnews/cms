@@ -145,37 +145,6 @@ class NavigationForm
                 }),
             Schemas\Components\Group::make()
                 ->schema([
-                    Schemas\Components\Fieldset::make('contentView')
-                        ->label('自定义视图')
-                        ->schema([
-                            Forms\Components\Toggle::make('options._content_views.hasCustomView')
-                                ->label('自定义视图')
-                                ->default(false)
-                                ->helperText('开启自定义视图, 将会使用自定义视图')
-                                ->inline(false),
-                            Forms\Components\TextInput::make('options._content_views.view')->label('自定义视图')
-                                ->placeholder('请输入自定义视图地址')
-                                ->required(fn (Get $get) => (bool) $get('options._content_views.hasCustomView'))
-                                ->markAsRequired()
-                                ->visibleJs(<<<'JS'
-                                    $get('options._content_views.hasCustomView')
-                                JS),
-                        ])->columns(1),
-                    Schemas\Components\Fieldset::make('contentBlockContainer')
-                        ->label('容器包装器')
-                        ->schema([
-                            Forms\Components\Toggle::make('options._content_block_container.hasDefaultBlockContainerWrapper')
-                                ->label('容器包装器')
-                                ->default(false)
-                                ->helperText('开启容器包装器, 将会在组件外包一层包装器')
-                                ->inline(false),
-                            Forms\Components\TextInput::make('options._content_block_container.blockContainerWrapperView')->label('自定义包装器')
-                                ->placeholder('不填写将使用默认包装器')
-                                ->helperText('如果不填写将使用默认包装器')
-                                ->visibleJs(<<<'JS'
-                                    $get('options._content_block_container.hasDefaultBlockContainerWrapper')
-                                JS),
-                        ])->columns(1),
                     Schemas\Components\Group::make()
                         ->relationship('content')
                         ->schema([
@@ -185,6 +154,52 @@ class NavigationForm
                                 ->required(),
                         ])
                         ->columnSpanFull(),
+
+                    Forms\Components\Toggle::make('options._content_views.needCustomStyle')
+                        ->label('自定义组件样式')
+                        ->default(false)
+                        ->helperText('开启自定义组件样式, 可以自定义视图，容器包装起等')
+                        ->inline(false),
+
+                    Schemas\Components\Group::make()
+                        ->schema([
+                            Schemas\Components\Fieldset::make('contentView')
+                                ->label('自定义视图')
+                                ->schema([
+                                    Forms\Components\Toggle::make('options._content_views.hasCustomView')
+                                        ->label('自定义视图')
+                                        ->default(false)
+                                        ->helperText('开启自定义视图, 将会使用自定义视图')
+                                        ->inline(false),
+                                    Forms\Components\TextInput::make('options._content_views.view')->label('自定义视图')
+                                        ->placeholder('请输入自定义视图地址')
+                                        ->required(fn (Get $get) => (bool) $get('options._content_views.hasCustomView'))
+                                        ->markAsRequired()
+                                        ->visibleJs(<<<'JS'
+                                            $get('options._content_views.hasCustomView')
+                                        JS),
+                                ])->columns(1),
+                            Schemas\Components\Fieldset::make('contentBlockContainer')
+                                ->label('容器包装器')
+                                ->schema([
+                                    Forms\Components\Toggle::make('options._content_block_container.hasDefaultBlockContainerWrapper')
+                                        ->label('容器包装器')
+                                        ->default(true)
+                                        ->helperText('开启容器包装器, 将会在组件外包一层包装器')
+                                        ->inline(false),
+                                    Forms\Components\TextInput::make('options._content_block_container.blockContainerWrapperView')->label('自定义包装器')
+                                        ->placeholder('不填写将使用默认包装器')
+                                        ->helperText('如果不填写将使用默认包装器')
+                                        ->visibleJs(<<<'JS'
+                                            $get('options._content_block_container.hasDefaultBlockContainerWrapper')
+                                        JS),
+                                ])->columns(1),
+                        ])
+                        ->columns(2)
+                        ->columnSpanFull()
+                        ->visibleJs(<<<'JS'
+                            $get('options._content_views.needCustomStyle')
+                        JS),
                 ])
                 ->columns(2)
                 ->visible(function (Get $get) {
