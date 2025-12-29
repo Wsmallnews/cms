@@ -27,6 +27,7 @@ use Wsmallnews\Cms\Facades\ContentRegistry as ContentRegistryFacade;
 use Wsmallnews\Cms\Filament\Pages\Navigation\Components\BaseNavigation;
 use Wsmallnews\Cms\Models\Post as PostModel;
 use Wsmallnews\Cms\Support\Utils;
+use Wsmallnews\User\Facades\AuthsConfig as UserAuthsConfig;
 
 class CmsServiceProvider extends PackageServiceProvider
 {
@@ -115,6 +116,18 @@ class CmsServiceProvider extends PackageServiceProvider
         Livewire::component('sn-cms-components-index-posts', \Wsmallnews\Cms\Livewire\Components\Post\IndexPosts::class);
         Livewire::component('sn-cms-components-posts', \Wsmallnews\Cms\Livewire\Components\Post\Posts::class);
         Livewire::component('sn-cms-components-post', \Wsmallnews\Cms\Livewire\Components\Post\Post::class);
+
+        // 注册用户认证信息
+        UserAuthsConfig::config('sn-cms', function () {
+            return [
+                'guard' => Utils::getConfig('guard', 'web'),
+                'urls' => [
+                    'index' => Utils::route('index'),
+                    'login' => Utils::route('login'),
+                    'register' => Utils::route('register'),
+                ]
+            ];
+        });
 
         // 注册导航内容
         ContentRegistryFacade::registers([

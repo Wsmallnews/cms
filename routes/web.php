@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use RalphJSmit\Livewire\Urls\Middleware\LivewireUrlsMiddleware;
 use Wsmallnews\Cms\Livewire\Auth\Login;
 use Wsmallnews\Cms\Livewire\Auth\Register;
 use Wsmallnews\Cms\Livewire\Index;
@@ -13,6 +14,9 @@ use Wsmallnews\Support\Support\Utils as SupportUtils;
 
 $middlewares = Utils::getConfig('routes.middleware') ?? [];
 SupportUtils::isTenancyEnabled() && array_unshift($middlewares, IdentifyTenant::class);
+
+// 记录路由历史
+$middlewares[] = LivewireUrlsMiddleware::class;
 
 Route::domain(Utils::getConfig('routes.domain'))
     ->middleware($middlewares)

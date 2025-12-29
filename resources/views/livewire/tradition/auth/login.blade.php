@@ -3,7 +3,7 @@
 
     <div class="container mx-auto flex flex-col grow gap-4">
         <div class="w-full mx-auto md:w-96 p-4">
-            <livewire:sn-user-components-auth-login />
+            <livewire:sn-user-components-auth-login module="sn-cms" />
         </div>
     </div>
 
