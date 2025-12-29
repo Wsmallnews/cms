@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Wsmallnews\Cms\Livewire\Auth\Login;
+use Wsmallnews\Cms\Livewire\Auth\Register;
 use Wsmallnews\Cms\Livewire\Index;
 use Wsmallnews\Cms\Livewire\Navigation\Navigation;
 use Wsmallnews\Cms\Livewire\Post\Post;
@@ -17,6 +19,10 @@ Route::domain(Utils::getConfig('routes.domain'))
     ->prefix(Utils::getConfig('routes.prefix'))
     ->name(Utils::getConfig('routes.name'))
     ->group(function () {
+        // 登录
+        Route::get(Utils::getConfig('routes.uri.login'), Login::class)->name('login');
+        Route::get(Utils::getConfig('routes.uri.register'), Register::class)->name('register');
+
         Route::get(Utils::getConfig('routes.uri.index'), Index::class)->name('index');
         Route::get(Utils::getConfig('routes.uri.navigation'), Navigation::class)->name('navigation');
         Route::get(Utils::getConfig('routes.uri.posts'), Posts::class)->name('posts');

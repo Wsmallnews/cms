@@ -59,6 +59,9 @@ return [
             'navigation' => 'navigation/{slug}',
             'posts' => 'posts',
             'posts_show' => 'posts/{id}',
+
+            'login' => 'login',
+            'register' => 'register',
         ],
     ],
 
