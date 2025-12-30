@@ -68,6 +68,7 @@ return [
             'login' => 'login',
             'register' => 'register',
             'user-index' => 'user',
+            'forgot-password' => 'forgot-password',
         ],
     ],
 

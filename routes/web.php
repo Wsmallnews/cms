@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use RalphJSmit\Livewire\Urls\Middleware\LivewireUrlsMiddleware;
+use Wsmallnews\Cms\Livewire\Auth\ForgotPassword;
 use Wsmallnews\Cms\Livewire\Auth\Login;
 use Wsmallnews\Cms\Livewire\Auth\Register;
 use Wsmallnews\Cms\Livewire\Index;
@@ -27,6 +28,7 @@ Route::domain(Utils::getConfig('routes.domain'))
         Route::get(Utils::getConfig('routes.uri.login'), Login::class)->name('login');
         Route::get(Utils::getConfig('routes.uri.register'), Register::class)->name('register');
         Route::get(Utils::getConfig('routes.uri.user-index'), Index::class)->name('user.index');
+        Route::get(Utils::getConfig('routes.uri.forgot-password'), ForgotPassword::class)->name('forgot.password');
 
         Route::get(Utils::getConfig('routes.uri.index'), Index::class)->name('index');
         Route::get(Utils::getConfig('routes.uri.navigation'), Navigation::class)->name('navigation');
