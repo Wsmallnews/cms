@@ -26,11 +26,12 @@ Route::domain(Utils::getConfig('routes.domain'))
         // 登录
         Route::get(Utils::getConfig('routes.uri.login'), Login::class)->name('login');
         Route::get(Utils::getConfig('routes.uri.register'), Register::class)->name('register');
+        Route::get(Utils::getConfig('routes.uri.user-index'), Index::class)->name('user.index');
 
         Route::get(Utils::getConfig('routes.uri.index'), Index::class)->name('index');
         Route::get(Utils::getConfig('routes.uri.navigation'), Navigation::class)->name('navigation');
         Route::get(Utils::getConfig('routes.uri.posts'), Posts::class)->name('posts');
-        Route::get(Utils::getConfig('routes.uri.posts_show'), Post::class)->name('posts.show');
+        Route::get(Utils::getConfig('routes.uri.posts-show'), Post::class)->name('posts.show');
     });
 
 // Route::prefix("tenant/{tenant:slug}")
