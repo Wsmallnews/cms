@@ -127,6 +127,7 @@ class CmsServiceProvider extends PackageServiceProvider
                     'register' => Utils::route('register'),
                     'user-index' => Utils::route('user.index'),
                     'forgot-password' => Utils::route('forgot.password'),
+                    'reset-password' => fn ($params) => Utils::route('reset.password', $params),
                 ],
             ];
         });

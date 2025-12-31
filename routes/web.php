@@ -5,6 +5,7 @@ use RalphJSmit\Livewire\Urls\Middleware\LivewireUrlsMiddleware;
 use Wsmallnews\Cms\Livewire\Auth\ForgotPassword;
 use Wsmallnews\Cms\Livewire\Auth\Login;
 use Wsmallnews\Cms\Livewire\Auth\Register;
+use Wsmallnews\Cms\Livewire\Auth\ResetPassword;
 use Wsmallnews\Cms\Livewire\Index;
 use Wsmallnews\Cms\Livewire\Navigation\Navigation;
 use Wsmallnews\Cms\Livewire\Post\Post;
@@ -29,6 +30,7 @@ Route::domain(Utils::getConfig('routes.domain'))
         Route::get(Utils::getConfig('routes.uri.register'), Register::class)->name('register');
         Route::get(Utils::getConfig('routes.uri.user-index'), Index::class)->name('user.index');
         Route::get(Utils::getConfig('routes.uri.forgot-password'), ForgotPassword::class)->name('forgot.password');
+        Route::get(Utils::getConfig('routes.uri.reset-password'), ResetPassword::class)->name('reset.password');
 
         Route::get(Utils::getConfig('routes.uri.index'), Index::class)->name('index');
         Route::get(Utils::getConfig('routes.uri.navigation'), Navigation::class)->name('navigation');

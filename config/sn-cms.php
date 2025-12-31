@@ -69,6 +69,7 @@ return [
             'register' => 'register',
             'user-index' => 'user',
             'forgot-password' => 'forgot-password',
+            'reset-password' => 'reset-password/{token}',
         ],
     ],
 
