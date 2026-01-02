@@ -8,10 +8,10 @@ use Wsmallnews\Cms\Livewire\Auth\Register;
 use Wsmallnews\Cms\Livewire\Auth\ResetPassword;
 use Wsmallnews\Cms\Livewire\Auth\VerifyEmail;
 use Wsmallnews\Cms\Livewire\Index;
-use Wsmallnews\Cms\Livewire\Profile;
 use Wsmallnews\Cms\Livewire\Navigation\Navigation;
 use Wsmallnews\Cms\Livewire\Post\Post;
 use Wsmallnews\Cms\Livewire\Post\Posts;
+use Wsmallnews\Cms\Livewire\Profile;
 use Wsmallnews\Cms\Support\Utils;
 use Wsmallnews\Support\Http\Middleware\IdentifyTenant;
 use Wsmallnews\Support\Support\Utils as SupportUtils;
@@ -41,7 +41,7 @@ Route::domain(Utils::getConfig('routes.domain'))
             Route::get(Utils::getConfig('routes.uri.posts-show'), Post::class)->name('posts.show');
         });
 
-        Route::middleware('auth:'. Utils::getConfig('guard'))->group(function () {
+        Route::middleware('auth:' . Utils::getConfig('guard'))->group(function () {
             // 验证邮箱
             Route::get(Utils::getConfig('routes.uri.verify-email'), VerifyEmail::class)->name('verify.email');
             Route::get(Utils::getConfig('routes.uri.verify-email-verification'), VerifyEmailController::class)
