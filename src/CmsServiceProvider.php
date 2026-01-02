@@ -121,7 +121,7 @@ class CmsServiceProvider extends PackageServiceProvider
         Livewire::component('sn-cms-components-post', \Wsmallnews\Cms\Livewire\Components\Post\Post::class);
 
         // 注册用户认证信息
-        UserAuthsConfig::config('sn-cms', function () {
+        UserAuthsConfig::config(app(\Wsmallnews\Cms\CmsPlugin::class)->getId(), function () {
             return [
                 'guard' => Utils::getConfig('guard', 'web'),
                 'urls' => [
@@ -139,7 +139,7 @@ class CmsServiceProvider extends PackageServiceProvider
                             $parameters['tenant'] = $tenant;        // 租户参数
                         }
 
-                        $parameters['module'] = 'sn-cms';              // 当前模块名
+                        $parameters['module'] = app(\Wsmallnews\Cms\CmsPlugin::class)->getId();             // 当前模块名
 
                         return URL::temporarySignedRoute(
                             Utils::getConfig('routes.name', '') . 'verify.email.verification',
