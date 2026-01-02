@@ -17,6 +17,9 @@ use Filament\Support\Facades\FilamentAsset;
 use Filament\Support\Facades\FilamentIcon;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\URL;
 use Livewire\Livewire;
 use Spatie\LaravelPackageTools\Commands\InstallCommand;
 use Spatie\LaravelPackageTools\Package;
@@ -125,9 +128,25 @@ class CmsServiceProvider extends PackageServiceProvider
                     'index' => Utils::route('index'),
                     'login' => Utils::route('login'),
                     'register' => Utils::route('register'),
-                    'user-index' => Utils::route('user.index'),
+                    'profile' => Utils::route('profile'),
                     'forgot-password' => Utils::route('forgot.password'),
                     'reset-password' => fn ($params) => Utils::route('reset.password', $params),
+                    'verify-email' => Utils::route('verify.email'),
+                    'verify-email-verification' => function ($parameters) {
+                        // @sn todo ，这里先直接填入 租户参数
+                        if (! isset($parameters['tenant'])) {        // 没有租户参数,则添加租户参数
+                            $tenant = current_tenant();
+                            $parameters['tenant'] = $tenant;        // 租户参数
+                        }
+
+                        $parameters['module'] = 'sn-cms';              // 当前模块名
+
+                        return URL::temporarySignedRoute(
+                            Utils::getConfig('routes.name', '') . 'verify.email.verification',
+                            Carbon::now()->addMinutes(Config::get('auth.verification.expire', 60)),
+                            $parameters
+                        );
+                    },
                 ],
             ];
         });
