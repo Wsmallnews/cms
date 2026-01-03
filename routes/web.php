@@ -28,17 +28,12 @@ Route::domain(Utils::getConfig('routes.domain'))
     ->prefix(Utils::getConfig('routes.prefix'))
     ->name(Utils::getConfig('routes.name'))
     ->group(function () {
-        // 无需登录
-        Route::middleware('guest')->group(function () {
+        // 不登录api
+        Route::middleware('guest:' . Utils::getConfig('guard'))->group(function () {
             Route::get(Utils::getConfig('routes.uri.login'), Login::class)->name('login');
             Route::get(Utils::getConfig('routes.uri.register'), Register::class)->name('register');
             Route::get(Utils::getConfig('routes.uri.forgot-password'), ForgotPassword::class)->name('forgot.password');
             Route::get(Utils::getConfig('routes.uri.reset-password'), ResetPassword::class)->name('reset.password');
-
-            Route::get(Utils::getConfig('routes.uri.index'), Index::class)->name('index');
-            Route::get(Utils::getConfig('routes.uri.navigation'), Navigation::class)->name('navigation');
-            Route::get(Utils::getConfig('routes.uri.posts'), Posts::class)->name('posts');
-            Route::get(Utils::getConfig('routes.uri.posts-show'), Post::class)->name('posts.show');
         });
 
         Route::middleware('auth:' . Utils::getConfig('guard'))->group(function () {
@@ -52,4 +47,9 @@ Route::domain(Utils::getConfig('routes.domain'))
             Route::get(Utils::getConfig('routes.uri.profile'), Profile::class)->name('profile');
         });
 
+        // 普通用户路由
+        Route::get(Utils::getConfig('routes.uri.index'), Index::class)->name('index');
+        Route::get(Utils::getConfig('routes.uri.navigation'), Navigation::class)->name('navigation');
+        Route::get(Utils::getConfig('routes.uri.posts'), Posts::class)->name('posts');
+        Route::get(Utils::getConfig('routes.uri.posts-show'), Post::class)->name('posts.show');
     });
