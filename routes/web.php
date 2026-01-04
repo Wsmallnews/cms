@@ -43,7 +43,7 @@ Route::domain(Utils::getConfig('routes.domain'))
             Route::get(Utils::getConfig('routes.uri.verify-email-verification'), VerifyEmailController::class)
                 ->middleware(['signed', 'throttle:6,1'])
                 ->name('verify.email.verification');
-                
+
             // 确认密码页，需要验证的页面，添加如下中间件：->middleware(['cms-password.confirm'])
             Route::get(Utils::getConfig('routes.uri.password-confirm'), ConfirmPassword::class)->name('password.confirm');
 
