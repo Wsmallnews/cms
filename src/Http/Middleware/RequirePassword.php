@@ -8,12 +8,10 @@ use Wsmallnews\Cms\Support\Utils;
 
 class RequirePassword extends BaseRequirePassword
 {
-
     /**
      * Handle an incoming request.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
      * @param  string|null  $redirectToRoute
      * @param  string|int|null  $passwordTimeoutSeconds
      * @return mixed

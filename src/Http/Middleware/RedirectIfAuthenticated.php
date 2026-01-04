@@ -8,7 +8,6 @@ use Wsmallnews\Cms\Support\Utils;
 
 class RedirectIfAuthenticated extends BaseRedirectIfAuthenticated
 {
-
     /**
      * Get the path the user should be redirected to when they are authenticated.
      */
