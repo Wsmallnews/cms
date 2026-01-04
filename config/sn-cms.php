@@ -77,6 +77,8 @@ return [
     ],
 
     'themes' => [
+        'dark-mode' => true,
+
         'layout' => 'sn-cms::components.layouts.app',
 
         'theme' => 'tradition',
