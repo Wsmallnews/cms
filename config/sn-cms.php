@@ -72,6 +72,7 @@ return [
             'reset-password' => 'reset-password/{token}',
             'verify-email' => 'verify-email',
             'verify-email-verification' => 'verify-email/{id}/{hash}',
+            'password-confirm' => 'password-confirm',
         ],
     ],
 

@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use RalphJSmit\Livewire\Urls\Middleware\LivewireUrlsMiddleware;
+use Wsmallnews\Cms\Livewire\Auth\ConfirmPassword;
 use Wsmallnews\Cms\Livewire\Auth\ForgotPassword;
 use Wsmallnews\Cms\Livewire\Auth\Login;
 use Wsmallnews\Cms\Livewire\Auth\Register;
@@ -29,19 +30,22 @@ Route::domain(Utils::getConfig('routes.domain'))
     ->name(Utils::getConfig('routes.name'))
     ->group(function () {
         // 不登录api
-        Route::middleware('guest:' . Utils::getConfig('guard'))->group(function () {
+        Route::middleware('cms-guest:' . Utils::getConfig('guard'))->group(function () {
             Route::get(Utils::getConfig('routes.uri.login'), Login::class)->name('login');
             Route::get(Utils::getConfig('routes.uri.register'), Register::class)->name('register');
             Route::get(Utils::getConfig('routes.uri.forgot-password'), ForgotPassword::class)->name('forgot.password');
             Route::get(Utils::getConfig('routes.uri.reset-password'), ResetPassword::class)->name('reset.password');
         });
 
-        Route::middleware('auth:' . Utils::getConfig('guard'))->group(function () {
+        Route::middleware('cms-auth:' . Utils::getConfig('guard'))->group(function () {
             // 验证邮箱
             Route::get(Utils::getConfig('routes.uri.verify-email'), VerifyEmail::class)->name('verify.email');
             Route::get(Utils::getConfig('routes.uri.verify-email-verification'), VerifyEmailController::class)
                 ->middleware(['signed', 'throttle:6,1'])
                 ->name('verify.email.verification');
+                
+            // 确认密码页，需要验证的页面，添加如下中间件：->middleware(['cms-password.confirm'])
+            Route::get(Utils::getConfig('routes.uri.password-confirm'), ConfirmPassword::class)->name('password.confirm');
 
             // 个人中心
             Route::get(Utils::getConfig('routes.uri.profile'), Profile::class)->name('profile');

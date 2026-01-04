@@ -28,6 +28,9 @@ use Wsmallnews\Category\Models\Category as CategoryModel;
 use Wsmallnews\Cms\Commands\CmsCommand;
 use Wsmallnews\Cms\Facades\ContentRegistry as ContentRegistryFacade;
 use Wsmallnews\Cms\Filament\Pages\Navigation\Components\BaseNavigation;
+use Wsmallnews\Cms\Http\Middleware\Authenticate;
+use Wsmallnews\Cms\Http\Middleware\RedirectIfAuthenticated;
+use Wsmallnews\Cms\Http\Middleware\RequirePassword;
 use Wsmallnews\Cms\Models\Post as PostModel;
 use Wsmallnews\Cms\Support\Utils;
 use Wsmallnews\User\Facades\AuthsConfig as UserAuthsConfig;
@@ -80,6 +83,11 @@ class CmsServiceProvider extends PackageServiceProvider
             'sn_navigation_type' => Utils::getNavigationTypeModel(),
             'sn_post' => Utils::getPostModel(),
         ]);
+
+        // 定义中间件别名
+        $this->app['router']->aliasMiddleware('cms-auth', Authenticate::class);
+        $this->app['router']->aliasMiddleware('cms-guest', RedirectIfAuthenticated::class);
+        $this->app['router']->aliasMiddleware('cms-password.confirm', RequirePassword::class);
 
         // Asset Registration
         FilamentAsset::register(
@@ -147,6 +155,7 @@ class CmsServiceProvider extends PackageServiceProvider
                             $parameters
                         );
                     },
+                    'password-confirm' => Utils::route('password.confirm'),
                 ],
             ];
         });
