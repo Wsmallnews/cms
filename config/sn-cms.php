@@ -28,6 +28,14 @@ return [
     'guard' => 'web',
 
     /**
+     * 2FA 配置
+     */
+    'two-factor' => [
+        'enabled' => true,
+        'confirm' => true,
+    ],
+
+    /**
      * 文件基础目录，会自动拼接当前年月日 (仅用于 filament 默认上传组件 (Forms\Components\FileUpload))
      */
     'file_directory' => 'sn/cms/',
@@ -73,6 +81,11 @@ return [
             'verify-email' => 'verify-email',
             'verify-email-verification' => 'verify-email/{id}/{hash}',
             'password-confirm' => 'password-confirm',
+
+            // 用户设置
+            'settings' => [
+                'two-factor' => 'settings/two-factor',
+            ]
         ],
     ],
 

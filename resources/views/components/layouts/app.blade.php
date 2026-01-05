@@ -21,7 +21,7 @@
     </head>
 
     <body class="antialiased bg-slate-50 flex flex-col h-dvh">
-        <div class="w-full shrink-0 flex h-32 overflow-hidden bg-[url({{ asset('image/banner.jpg') }})] bg-top-right bg-cover">
+        {{-- <div class="w-full shrink-0 flex h-32 overflow-hidden bg-[url({{ asset('image/banner.jpg') }})] bg-top-right bg-cover">
             <div class="container mx-auto flex items-center justify-between">
                 <img src="{{ asset('image/logo.png') }}" alt="logo" class="h-full object-contain">
 
@@ -30,7 +30,7 @@
                         use Wsmallnews\Cms\Support\Utils;
                     @endphp
                     @auth
-                        <livewire:sn-user-components-profile-user-menu :module="app(\Wsmallnews\Cms\CmsPlugin::class)->getId()" dark-mode="{{ Utils::getConfig('themes.dark-mode', false) }}" />
+                        <livewire:sn-user-components-user-user-menu :module="app(\Wsmallnews\Cms\CmsPlugin::class)->getId()" dark-mode="{{ Utils::getConfig('themes.dark-mode', false) }}" />
                     @else
                         <x-filament::button tag="a" href="{{ \Wsmallnews\Cms\Support\Utils::route('login') }}">
                             登录
@@ -41,7 +41,7 @@
                     @endauth
                 </div>
             </div>
-        </div>
+        </div> --}}
         {{ $slot }}
 
         @livewire('notifications')

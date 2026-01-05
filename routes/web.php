@@ -13,6 +13,7 @@ use Wsmallnews\Cms\Livewire\Navigation\Navigation;
 use Wsmallnews\Cms\Livewire\Post\Post;
 use Wsmallnews\Cms\Livewire\Post\Posts;
 use Wsmallnews\Cms\Livewire\Profile;
+use Wsmallnews\Cms\Livewire\Settings\TwoFactor;
 use Wsmallnews\Cms\Support\Utils;
 use Wsmallnews\Support\Http\Middleware\IdentifyTenant;
 use Wsmallnews\Support\Support\Utils as SupportUtils;
@@ -49,6 +50,11 @@ Route::domain(Utils::getConfig('routes.domain'))
 
             // 个人中心
             Route::get(Utils::getConfig('routes.uri.profile'), Profile::class)->name('profile');
+
+            // 双因素身份验证
+            Route::middleware('cms-password.confirm')->group(function () {
+                Route::get(Utils::getConfig('routes.uri.settings.two-factor'), TwoFactor::class)->name('settings.two-factor');
+            });
         });
 
         // 普通用户路由
