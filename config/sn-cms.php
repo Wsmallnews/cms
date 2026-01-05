@@ -85,7 +85,7 @@ return [
             // 用户设置
             'settings' => [
                 'two-factor' => 'settings/two-factor',
-            ]
+            ],
         ],
     ],
 
