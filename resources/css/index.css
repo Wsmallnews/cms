@@ -3,3 +3,6 @@
 @variant dark (&:where(.dark, .dark *));
 
 @source '../views/**/*';
+
+/* wsmallnews/support css */
+@import '../../../support/resources/css/index.css';
