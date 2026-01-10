@@ -21,27 +21,28 @@
     </head>
 
     <body class="antialiased bg-slate-50 flex flex-col h-dvh">
-        {{-- <div class="w-full shrink-0 flex h-32 overflow-hidden bg-[url({{ asset('image/banner.jpg') }})] bg-top-right bg-cover">
+        <div class="w-full shrink-0 flex h-32 overflow-hidden bg-[url({{ asset('image/banner.jpg') }})] bg-top-right bg-cover">
             <div class="container mx-auto flex items-center justify-between">
                 <img src="{{ asset('image/logo.png') }}" alt="logo" class="h-full object-contain">
 
                 <div class="flex gap-4">
                     @php
                         use Wsmallnews\Cms\Support\Utils;
+                        use Wsmallnews\Cms\CmsPlugin;
                     @endphp
                     @auth
-                        <livewire:sn-user-components-user-user-menu :module="app(\Wsmallnews\Cms\CmsPlugin::class)->getId()" dark-mode="{{ Utils::getConfig('themes.dark-mode', false) }}" />
+                        <livewire:sn-user-components-user-user-menu :module="app(CmsPlugin::class)->getId()" dark-mode="{{ Utils::getConfig('themes.dark-mode', false) }}" />
                     @else
-                        <x-filament::button tag="a" href="{{ \Wsmallnews\Cms\Support\Utils::route('login') }}">
+                        <x-filament::button tag="a" href="{{ Utils::route('login') }}">
                             登录
                         </x-filament::button>
-                        <x-filament::button color="gray" tag="a" href="{{ \Wsmallnews\Cms\Support\Utils::route('register') }}">
+                        <x-filament::button color="gray" tag="a" href="{{ Utils::route('register') }}">
                             注册
                         </x-filament::button>
                     @endauth
                 </div>
             </div>
-        </div> --}}
+        </div>
         {{ $slot }}
 
         @livewire('notifications')

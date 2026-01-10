@@ -8,6 +8,14 @@ use Wsmallnews\Cms\Support\Utils;
 
 class VerifyEmail extends Base
 {
+
+    public bool $register;
+
+    public function mount()
+    {
+        $this->register = (bool)request()->query('register', 0);
+    }
+
     #[Title('验证邮箱')]
     public function render()
     {

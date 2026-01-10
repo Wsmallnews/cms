@@ -29,11 +29,12 @@ use Wsmallnews\Cms\Commands\CmsCommand;
 use Wsmallnews\Cms\Facades\ContentRegistry as ContentRegistryFacade;
 use Wsmallnews\Cms\Filament\Pages\Navigation\Components\BaseNavigation;
 use Wsmallnews\Cms\Http\Middleware\Authenticate;
+use Wsmallnews\Cms\Http\Middleware\EnsureEmailIsVerified;
 use Wsmallnews\Cms\Http\Middleware\RedirectIfAuthenticated;
 use Wsmallnews\Cms\Http\Middleware\RequirePassword;
 use Wsmallnews\Cms\Models\Post as PostModel;
 use Wsmallnews\Cms\Support\Utils;
-use Wsmallnews\User\Facades\AuthsConfig as UserAuthsConfig;
+use Wsmallnews\User\Facades\UserConfig as UserConfigFacade;
 
 class CmsServiceProvider extends PackageServiceProvider
 {
@@ -88,6 +89,7 @@ class CmsServiceProvider extends PackageServiceProvider
         $this->app['router']->aliasMiddleware('cms-auth', Authenticate::class);
         $this->app['router']->aliasMiddleware('cms-guest', RedirectIfAuthenticated::class);
         $this->app['router']->aliasMiddleware('cms-password.confirm', RequirePassword::class);
+        $this->app['router']->aliasMiddleware('cms-email.verified', EnsureEmailIsVerified::class);
 
         // Asset Registration
         FilamentAsset::register(
@@ -129,7 +131,7 @@ class CmsServiceProvider extends PackageServiceProvider
         Livewire::component('sn-cms-components-post', \Wsmallnews\Cms\Livewire\Components\Post\Post::class);
 
         // 注册用户认证信息
-        UserAuthsConfig::config(app(\Wsmallnews\Cms\CmsPlugin::class)->getId(), function () {
+        UserConfigFacade::config(app(\Wsmallnews\Cms\CmsPlugin::class)->getId(), function () {
             return [
                 'guard' => Utils::getConfig('guard', 'web'),
                 'two-factor' => Utils::getConfig('two-factor', []),
