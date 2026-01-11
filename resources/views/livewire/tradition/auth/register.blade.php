@@ -1,5 +1,10 @@
+@php
+    $scopeType = $this->getScopeType();
+    $scopeId = $this->getScopeId();
+@endphp
+
 <div class="w-full flex flex-col grow gap-4">
-    {{-- <livewire:sn-cms-components-navigation :scope-type="$scopeType" :scope-id="$scopeId" /> --}}
+    <livewire:sn-cms-components-navigation :scope-type="$scopeType" :scope-id="$scopeId" />
 
     <div class="container mx-auto flex flex-col grow gap-4">
         <div class="w-full mx-auto md:w-96 p-4">
@@ -7,5 +12,5 @@
         </div>
     </div>
 
-    {{-- <livewire:sn-cms-components-footer :scope-type="$scopeType" :scope-id="$scopeId" /> --}}
+    <livewire:sn-cms-components-footer :scope-type="$scopeType" :scope-id="$scopeId" />
 </div>

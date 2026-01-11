@@ -52,7 +52,7 @@ Route::domain(Utils::getConfig('routes.domain'))
             Route::get(Utils::getConfig('routes.uri.profile'), Profile::class)->name('profile');
 
             // 双因素身份验证
-            Route::middleware(['cms-password.confirm', 'cms-email.verified'])->group(function () {
+            Route::middleware(['cms-email.verified', 'cms-password.confirm'])->group(function () {
                 Route::get(Utils::getConfig('routes.uri.settings.two-factor'), TwoFactor::class)->name('settings.two-factor');
             });
         });
