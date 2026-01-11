@@ -13,7 +13,6 @@ class EnsureEmailIsVerified extends BaseEnsureEmailIsVerified
      * Handle an incoming request.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
      * @param  string|null  $redirectToRoute
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse|null
      */
@@ -24,6 +23,7 @@ class EnsureEmailIsVerified extends BaseEnsureEmailIsVerified
             ! $request->user()->hasVerifiedEmail())) {
 
             session()->put('verify-previous-url', $request->fullUrl());
+
             return $request->expectsJson()
                 ? abort(403, 'Your email address is not verified.')
                 : redirect(Utils::route('verify.email'));
