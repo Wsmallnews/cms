@@ -4,7 +4,7 @@
 @endphp
 
 <div class="w-full flex flex-col grow gap-4">
-    {{-- <livewire:sn-cms-components-navigation :scope-type="$scopeType" :scope-id="$scopeId" /> --}}
+    <livewire:sn-cms-components-navigation :scope-type="$scopeType" :scope-id="$scopeId" />
 
     <div class="container mx-auto flex flex-col grow gap-4">
         {{-- @if($breadcrumbs)
@@ -19,7 +19,9 @@
                 <livewire:sn-cms-components-user-profile-menu />
             </div>
 
-            个人资料信息
+            <div class="w-full md:w-md">
+                <livewire:sn-user-components-settings-password :module="app(\Wsmallnews\Cms\CmsPlugin::class)->getId()" />
+            </div>
         </div>
     </div>
     {{-- <livewire:sn-cms-components-footer :scope-type="$scopeType" :scope-id="$scopeId" /> --}}

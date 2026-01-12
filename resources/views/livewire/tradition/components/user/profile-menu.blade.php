@@ -1,0 +1,1 @@
+<x-sn-support::sidebar :sidebar="$sidebar" />

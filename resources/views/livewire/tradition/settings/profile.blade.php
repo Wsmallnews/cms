@@ -19,7 +19,9 @@
                 <livewire:sn-cms-components-user-profile-menu />
             </div>
 
-            个人资料信息
+            <div class="w-full md:w-md">
+                <livewire:sn-user-components-settings-profile :module="app(\Wsmallnews\Cms\CmsPlugin::class)->getId()" />
+            </div>
         </div>
     </div>
     {{-- <livewire:sn-cms-components-footer :scope-type="$scopeType" :scope-id="$scopeId" /> --}}

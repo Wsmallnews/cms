@@ -92,6 +92,8 @@ return [
 
             // 用户设置
             'settings' => [
+                'profile' => 'settings/profile',
+                'password' => 'settings/password',
                 'two-factor' => 'settings/two-factor',
             ],
         ],

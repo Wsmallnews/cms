@@ -130,6 +130,9 @@ class CmsServiceProvider extends PackageServiceProvider
         Livewire::component('sn-cms-components-posts', \Wsmallnews\Cms\Livewire\Components\Post\Posts::class);
         Livewire::component('sn-cms-components-post', \Wsmallnews\Cms\Livewire\Components\Post\Post::class);
 
+        // 个人中心菜单
+        Livewire::component('sn-cms-components-user-profile-menu', \Wsmallnews\Cms\Livewire\Components\User\ProfileMenu::class);
+
         // 注册用户认证信息
         UserConfigFacade::config(app(\Wsmallnews\Cms\CmsPlugin::class)->getId(), function () {
             return [
