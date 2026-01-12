@@ -31,7 +31,15 @@ return [
      * 2FA 配置
      */
     'two-factor' => [
+        /**
+         * 是否启用双因素认证
+         */
         'enabled' => true,
+
+        /**
+         * 在启用双因素认证时，必须确认一次，否则启动失败
+         * two_factor_confirmed_at: 记录启用确认时间，如果为null, two_factor_secret， two_factor_recovery_codes 会被清空，用户双因素启用失败
+         */
         'confirm' => true,
     ],
 
