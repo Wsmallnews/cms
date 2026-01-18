@@ -10,6 +10,12 @@ class Profile extends Base
     #[Title('个人中心')]
     public function render()
     {
-        return view($this->getThemeView('profile'))->layout(Utils::getLayout());
+        $breadcrumbs = [
+            ['label' => '个人中心', 'url' => Utils::route('profile')],
+        ];
+
+        return view($this->getThemeView('profile'), [
+            'breadcrumbs' => $breadcrumbs,
+        ])->layout(Utils::getLayout());
     }
 }
