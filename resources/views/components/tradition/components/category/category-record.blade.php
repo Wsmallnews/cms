@@ -6,6 +6,7 @@
 @endphp
 
 <li
+    class="flex flex-col"
     @if ($hasChild)
         x-data="{ isExpanded: {{ $hasActive ? 'true' : 'false' }} }"
         aria-controls="accordionItem{{$record->id}}"
@@ -15,17 +16,21 @@
     role="menuitem"
 >
     <a @class([
-            'flex w-full h-14 justify-between items-center pr-4 font-bold gap-2',
-            'text-white pl-' . $currentLevel * 4 => $style === 'vivid',
-            'bg-primary-600' => ($style === 'vivid' && $hasActive),
-            'text-gray-800' => $style === 'simple',
-            'text-primary-600' => $style === 'simple' && $hasActive,
+            'flex w-full justify-between items-center px-2 gap-2 group',
+            'h-14 text-white hover:bg-primary-600 dark:hover:bg-primary-700 pl-' . $currentLevel * 4 => $style === 'vivid',
+            'bg-primary-600 dark:bg-primary-700' => ($style === 'vivid' && $hasActive),
+
+            'h-10 rounded-md hover:text-primary-500 dark:hover:text-primary-600 hover:bg-gray-200 dark:hover:bg-gray-800' => $style === 'simple',
+            'text-gray-700 dark:text-white' => $style === 'simple' && !$hasActive,
+            'text-primary-500 dark:text-primary-600' => $style === 'simple' && $hasActive,
         ])
         @if ($hasChild)
             @click="isExpanded = ! isExpanded"
-            href="javascript:;"
+            wire:click="$dispatch('sn-filament-nestedset-node-click', { recordId: {{ $record->id }}, hasChild: {{ $hasChild ? 1 : 0 }} })"
+            {{ $this->getRecordUrl($record) ?? 'href=javascript:;' }}
         @else
-            {{ \Filament\Support\generate_href_html('https://www.taobao.com') }}
+            wire:click="$dispatch('sn-filament-nestedset-leaf-click', { recordId: {{ $record->id }}, hasChild: {{ $hasChild ? 1 : 0 }} })"
+            {{ $this->getRecordUrl($record) ?? 'href=javascript:;' }}
         @endif
     >
         <div class="flex items-center gap-1">
@@ -46,7 +51,12 @@
                         @if (!$last)
                             <div class="absolute -bottom-1/2 top-1/2 w-px bg-gray-300 dark:bg-gray-600"></div>
                         @endif
-                        <div class="relative h-2 w-2 rounded-full bg-gray-400 dark:bg-gray-500"></div>
+                        <div @class([
+                            'relative h-2 w-2 rounded-full',
+                            'bg-gray-400 dark:bg-gray-500 group-hover:bg-primary-500' => !$hasActive,
+                            'bg-primary-500' => $hasActive,
+                        ])>
+                        </div>
                     </div>
                 @endif
             @endif
@@ -77,7 +87,7 @@
                         'w-full',
                     ]) 
                     :component="$this->getRecordView()" 
-                    key="categories-component-{{ $child->getKey() }}" 
+                    key="nestedset-record-component-{{ $child->getKey() }}" 
                     :record="$child" 
                     :first="$loop->first" 
                     :last="$loop->last" 

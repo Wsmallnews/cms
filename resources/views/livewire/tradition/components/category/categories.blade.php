@@ -1,8 +1,7 @@
 @php
     $nestedset = $this->getNestedset();
+    $style = 'vivid';
 @endphp
-
-{{-- 这里是分类视图，需要时候可以自定义此视图 --}}
 
 <ul
     @class([
@@ -17,7 +16,7 @@
                 'w-full',
             ]) 
             :component="$this->getRecordView()" 
-            key="categories-component-{{ $record->getKey() }}" 
+            key="nestedset-record-component-{{ $record->getKey() }}" 
             :record="$record" 
             :first="$loop->first" 
             :last="$loop->last" 
@@ -25,7 +24,9 @@
             :current-level="1" 
         />
     @empty
-        <li class="w-full px-3 py-2 text-center">
+        <li 
+            class="w-full px-3 py-2 text-center"
+        >
             {{ $this->getEmptyLabel() ?: __('sn-filament-nestedset::nestedset.tree.empty_label')}}
         </li>
     @endforelse
