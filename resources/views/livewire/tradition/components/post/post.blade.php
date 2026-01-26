@@ -19,7 +19,7 @@
             {{ $post->description }}
         </div>
 
-        <x-sn-support::swiper class="w-full" :images="$images" />
+        <x-sn-support::swiper class="w-full aspect-[16/9]" :images="$images" />
 
         <div class="">
             {!! $post->content?->content !!}
