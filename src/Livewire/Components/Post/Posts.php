@@ -44,7 +44,9 @@ class Posts extends Base
         $query = Utils::getPostModel()::snScope(...$this->getScopeable())->normal()->with(['media'])
             ->when($allCategories->isNotEmpty(), function ($query) use ($allCategories) {
                 $query->categoryIds($allCategories);
-            })->orderBy('order_column', 'desc');
+            })
+            ->orderBy('order_column', 'desc')
+            ->orderBy('id', 'desc');
 
         // 分页
         $this->posts = $this->withPagination($query);
