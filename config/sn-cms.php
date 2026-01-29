@@ -30,7 +30,7 @@ return [
     /**
      * 2FA 配置
      */
-    'two-factor' => [
+    'two_factor' => [
         /**
          * 是否启用双因素认证
          */
@@ -41,6 +41,11 @@ return [
          * two_factor_confirmed_at: 记录启用确认时间，如果为null, two_factor_secret， two_factor_recovery_codes 会被清空，用户双因素启用失败
          */
         'confirm' => true,
+
+        /**
+         * 验证窗口，单位：分钟
+         */
+        'window' => 1,
     ],
 
     /**

@@ -28,7 +28,7 @@ class ProfileMenu extends Base
             ],
         ];
 
-        if (Utils::getConfig('two-factor.enabled', false)) {
+        if (Utils::getConfig('two_factor.enabled', false)) {
             $sidebar[] = [
                 'label' => '双因素认证',
                 'url' => Utils::route('settings.two-factor'),

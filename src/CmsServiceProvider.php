@@ -137,7 +137,7 @@ class CmsServiceProvider extends PackageServiceProvider
         UserConfigFacade::config(app(\Wsmallnews\Cms\CmsPlugin::class)->getId(), function () {
             return [
                 'guard' => Utils::getConfig('guard', 'web'),
-                'two-factor' => Utils::getConfig('two-factor', []),
+                'two_factor' => Utils::getConfig('two_factor', []),
                 'urls' => [
                     'index' => Utils::route('index'),
                     'login' => Utils::route('login'),

@@ -57,7 +57,7 @@ Route::domain(Utils::getConfig('routes.domain'))
             Route::get(Utils::getConfig('routes.uri.settings.profile'), SettingsProfile::class)->name('settings.profile');
             Route::get(Utils::getConfig('routes.uri.settings.password'), SettingsPassword::class)->name('settings.password');
 
-            if (Utils::getConfig('two-factor.enabled', false)) {
+            if (Utils::getConfig('two_factor.enabled', false)) {
                 // 双因素身份验证
                 Route::middleware(['cms-email.verified', 'cms-password.confirm'])->group(function () {
                     Route::get(Utils::getConfig('routes.uri.settings.two-factor'), TwoFactor::class)->name('settings.two-factor');
