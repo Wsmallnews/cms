@@ -41,7 +41,7 @@ class CmsPlugin implements Plugin
         ])->pages([
             NavigationPage::class,
             CategoryPage::class,
-            // GeneralSettingPage::class,
+            GeneralSettingPage::class,
         ]);
     }
 
@@ -79,8 +79,8 @@ class CmsPlugin implements Plugin
 
                     // hasNavigation
                     'navigationLabel' => '导航类型',
-                    'navigationIcon' => Heroicon::Bars3BottomLeft,
-                    'activeNavigationIcon' => Heroicon::Bars3BottomLeft,
+                    'navigationIcon' => Heroicon::OutlinedBars3BottomRight,
+                    'activeNavigationIcon' => Heroicon::Bars3BottomRight,
                     'navigationGroup' => 'Cms管理',
                     'navigationSort' => 1,
                     'navigationBadge' => null,
@@ -108,7 +108,7 @@ class CmsPlugin implements Plugin
 
                     // hasNavigation
                     'navigationLabel' => '导航设置',
-                    'navigationIcon' => Heroicon::Bars3,
+                    'navigationIcon' => Heroicon::OutlinedBars3BottomLeft,
                     'activeNavigationIcon' => Heroicon::Bars3,
                     'navigationGroup' => 'Cms管理',
                     'navigationSort' => 1,
@@ -132,7 +132,7 @@ class CmsPlugin implements Plugin
 
                     // hasNavigation
                     'navigationLabel' => '导航',
-                    'navigationIcon' => Heroicon::Bars3,
+                    'navigationIcon' => Heroicon::OutlinedBars3BottomLeft,
                     'activeNavigationIcon' => Heroicon::Bars3,
                     'navigationGroup' => 'Cms管理',
                     'navigationSort' => 1,
@@ -159,8 +159,8 @@ class CmsPlugin implements Plugin
 
                     // hasNavigation
                     'navigationLabel' => '图文管理',
-                    'navigationIcon' => Heroicon::Bars3BottomLeft,
-                    'activeNavigationIcon' => Heroicon::Bars3BottomLeft,
+                    'navigationIcon' => Heroicon::OutlinedDocument,
+                    'activeNavigationIcon' => Heroicon::Document,
                     'navigationGroup' => 'Cms管理',
                     'navigationSort' => 2,
                     'navigationBadge' => null,
@@ -192,7 +192,7 @@ class CmsPlugin implements Plugin
                     // hasNavigation
                     'navigationLabel' => '标签管理',
                     'navigationIcon' => Heroicon::OutlinedHashtag,
-                    'activeNavigationIcon' => 'heroicon-s-tag',
+                    'activeNavigationIcon' => Heroicon::Hashtag,
                     'navigationGroup' => 'Cms管理',
                     'navigationSort' => 3,
                     'navigationBadge' => null,
@@ -227,8 +227,8 @@ class CmsPlugin implements Plugin
 
                     // hasNavigation
                     'navigationLabel' => '图文分类',
-                    'navigationIcon' => Heroicon::Bars3,
-                    'activeNavigationIcon' => Heroicon::Bars3,
+                    'navigationIcon' => Heroicon::OutlinedBars3BottomLeft,
+                    'activeNavigationIcon' => Heroicon::Bars3BottomLeft,
                     'navigationGroup' => 'Cms管理',
                     'navigationSort' => 1,
                     'navigationBadge' => null,

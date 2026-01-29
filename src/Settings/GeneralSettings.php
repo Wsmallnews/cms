@@ -34,7 +34,7 @@ class GeneralSettings extends Settings
 
     public static function repository(): ?string
     {
-        return 'database';
+        return SupportUtils::isTenancyEnabled() ? 'team_database' : 'database';
     }
 
     public static function cacheKey(): string
