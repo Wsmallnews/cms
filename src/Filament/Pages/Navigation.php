@@ -17,7 +17,6 @@ final class Navigation extends BaseNavigationPage
     use Concerns\Resource\HasNavigation;
     use HasCustomProperties;
 
-
     protected function schema(array $arguments): array
     {
         return self::getCustomFormArray($arguments) ?: parent::schema($arguments);
