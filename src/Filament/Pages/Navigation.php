@@ -17,6 +17,17 @@ final class Navigation extends BaseNavigationPage
     use Concerns\Resource\HasNavigation;
     use HasCustomProperties;
 
+
+    protected function schema(array $arguments): array
+    {
+        return self::getCustomFormArray($arguments) ?: parent::schema($arguments);
+    }
+
+    public function infolistSchema(): array
+    {
+        return self::getCustomInfolistArray() ?: parent::infolistSchema();
+    }
+
     public static function getScopeType(): string
     {
         return Utils::getScopeable()['scope_type'] ?? parent::getScopeType();

@@ -3,6 +3,8 @@
 namespace Wsmallnews\Cms\Filament\Resources\NavigationTypes;
 
 use BezhanSalleh\PluginEssentials\Concerns;
+use Filament\Schemas\Schema;
+use Filament\Tables\Table;
 use Wsmallnews\Cms\CmsPlugin;
 use Wsmallnews\Cms\Filament\Resources\NavigationTypes\Pages\CreateNavigationType;
 use Wsmallnews\Cms\Filament\Resources\NavigationTypes\Pages\EditNavigationType;
@@ -26,6 +28,16 @@ final class NavigationTypeResource extends BaseResource
             'create' => CreateNavigationType::route('/create'),
             'edit' => EditNavigationType::route('/{record}/edit'),
         ];
+    }
+
+    public static function form(Schema $schema): Schema
+    {
+        return self::getCustomForm($schema) ?: parent::form($schema);
+    }
+
+    public static function table(Table $table): Table
+    {
+        return self::getCustomTable($table) ?: parent::table($table);
     }
 
     public static function getScopeType(): string

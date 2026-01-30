@@ -3,6 +3,8 @@
 namespace Wsmallnews\Cms\Filament\Resources\Posts;
 
 use BezhanSalleh\PluginEssentials\Concerns;
+use Filament\Schemas\Schema;
+use Filament\Tables\Table;
 use Wsmallnews\Cms\CmsPlugin;
 use Wsmallnews\Cms\Filament\Resources\Posts\Pages\CreatePost;
 use Wsmallnews\Cms\Filament\Resources\Posts\Pages\EditPost;
@@ -27,6 +29,16 @@ final class PostResource extends BaseResource
             'create' => CreatePost::route('/create'),
             'edit' => EditPost::route('/{record}/edit'),
         ];
+    }
+
+    public static function form(Schema $schema): Schema
+    {
+        return self::getCustomForm($schema) ?: parent::form($schema);
+    }
+
+    public static function table(Table $table): Table
+    {
+        return self::getCustomTable($table) ?: parent::table($table);
     }
 
     public static function getScopeType(): string
