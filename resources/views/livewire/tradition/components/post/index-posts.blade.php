@@ -17,23 +17,23 @@
 @endphp
 
 <x-dynamic-component :component="$this->getBlockContainerWrapperView()" class="w-full flex flex-col lg:flex-row gap-2 lg:gap-4">
-    <x-sn-support::swiper class="w-full aspect-[16/9]" :slides="$slides" :has-thumb="false" />
+    <x-sn-support::swiper class="w-full aspect-[16/9] rounded-md overflow-hidden" :slides="$slides" :has-thumb="false" />
 
-    <div class="w-full h-112 lg:h-auto lg:aspect-[16/9] flex flex-col divide-dashed divide-y overflow-hidden gap-2">
+    <div class="w-full flex flex-col lg:grid lg:grid-rows-4 lg:aspect-[16/9] bg-white rounded-md shadow-sm border border-slate-100 overflow-hidden">
         @foreach($posts as $post)
             @if ($loop->index >= $listStartIndex)
                 <x-sn-cms::base.empty 
                     tag="a" 
                     href="{{ \Wsmallnews\Cms\Support\Utils::route('posts.show', $post->id) }}" 
-                    class="flex-1 flex w-full min-h-0 gap-2 hover:bg-primary-100"
+                    class="flex w-full h-28 lg:h-auto min-h-0 py-2 px-4 gap-2 hover:bg-primary-100/30 transition-colors duration-300 {{ $loop->index !== $posts->count() - 1 ? 'border-b border-slate-100' : '' }}"
                 >
                     @if ($post->getFirstMediaUrl('post_image'))
-                        <div class="h-full flex-shrink-0 rounded-md p-1">
+                        <div class="h-full flex-shrink-0 rounded-md">
                             <img class="w-full h-full object-cover transition duration-300 group-hover:scale-105" src="{{ $post->getFirstMediaUrl('post_image') }}" />
                         </div>
                     @endif
 
-                    <div class="flex-1 min-w-0 flex flex-col grow p-2 gap-1">
+                    <div class="min-w-0 flex flex-col grow gap-1">
                         <div class="text-base line-clamp-1 transition duration-300 group-hover:text-primary-500">
                             {{ $post->title }}
                         </div>
