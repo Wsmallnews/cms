@@ -12,6 +12,10 @@
         <livewire:sn-components-index-overview />
 
         <livewire:sn-components-index-personnels />
+
+        <livewire:sn-components-index-posts :scope-type="$scopeType" :scope-id="$scopeId" />
+
+        <livewire:sn-components-index-scientific-research :scope-type="$scopeType" :scope-id="$scopeId" />
     </div>
 
     <livewire:sn-cms-components-footer :scope-type="$scopeType" :scope-id="$scopeId" />

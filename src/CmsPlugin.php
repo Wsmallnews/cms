@@ -191,8 +191,8 @@ class CmsPlugin implements Plugin
 
                     // hasNavigation
                     'navigationLabel' => '标签管理',
-                    'navigationIcon' => Heroicon::OutlinedHashtag,
-                    'activeNavigationIcon' => Heroicon::Hashtag,
+                    'navigationIcon' => Heroicon::OutlinedTag,
+                    'activeNavigationIcon' => Heroicon::Tag,
                     'navigationGroup' => 'Cms管理',
                     'navigationSort' => 3,
                     'navigationBadge' => null,

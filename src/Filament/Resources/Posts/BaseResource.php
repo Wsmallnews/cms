@@ -19,9 +19,9 @@ abstract class BaseResource extends Resource
 {
     use Scopeable;
 
-    protected static string | BackedEnum | null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string | BackedEnum | null $navigationIcon = Heroicon::OutlinedDocument;
 
-    protected static string | BackedEnum | null $activeNavigationIcon = Heroicon::Bars3;
+    protected static string | BackedEnum | null $activeNavigationIcon = Heroicon::Document;
 
     protected static ?string $navigationLabel = '图文管理';
 
