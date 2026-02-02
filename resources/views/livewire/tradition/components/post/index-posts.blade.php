@@ -25,20 +25,20 @@
                 <x-sn-cms::base.empty 
                     tag="a" 
                     href="{{ \Wsmallnews\Cms\Support\Utils::route('posts.show', $post->id) }}" 
-                    class="flex w-full h-28 lg:h-auto min-h-0 py-2 px-4 gap-2 hover:bg-primary-100/30 transition-colors duration-300 {{ $loop->index !== $posts->count() - 1 ? 'border-b border-slate-100' : '' }}"
+                    class="flex w-full h-28 lg:h-auto min-h-0 gap-2 group hover:bg-primary-100/30 transition-colors duration-300 {{ $loop->index !== $posts->count() - 1 ? 'border-b border-slate-100' : '' }}"
                 >
                     @if ($post->getFirstMediaUrl('post_image'))
-                        <div class="h-full flex-shrink-0 rounded-md">
-                            <img class="w-full h-full object-cover transition duration-300 group-hover:scale-105" src="{{ $post->getFirstMediaUrl('post_image') }}" />
+                        <div class="h-full aspect-[4/3] flex-shrink-0 rounded-md">
+                            <img class="w-full h-full object-cover transition duration-300 group-hover:scale-110" src="{{ $post->getFirstMediaUrl('post_image') }}" />
                         </div>
                     @endif
 
-                    <div class="min-w-0 flex flex-col grow gap-1">
-                        <div class="text-base line-clamp-1 transition duration-300 group-hover:text-primary-500">
+                    <div class="min-w-0 flex flex-col grow py-2 px-4 gap-1">
+                        <div class="text-base text-slate-900 font-bold line-clamp-1 transition duration-300 group-hover:text-primary-500">
                             {{ $post->title }}
                         </div>
 
-                        <div class="lg:h-0 xl:h-auto text-sm grow text-gray-500 leading-5 line-clamp-2 xl:line-clamp-1 2xl:line-clamp-2">
+                        <div class="lg:h-0 xl:h-auto text-sm grow text-slate-500 leading-5 line-clamp-2 xl:line-clamp-1 2xl:line-clamp-2">
                             {{ $post->description }}
                         </div>
                         <div class="text-sm text-gray-500">
