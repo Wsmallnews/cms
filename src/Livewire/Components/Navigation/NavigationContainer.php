@@ -20,30 +20,30 @@ class NavigationContainer extends Base
 
         if ($navigation->type == NavigationTypeEnum::Content) {
             $scopeType = $this->getScopeType();
-            
+
             $components = [];
             $optionComponents = $navigation->options['components'] ?? [];
             foreach ($optionComponents as $optionComponent) {
 
                 // 根据当前导航的内容类型，获取导航的设置
                 $typeInfo = ContentRegistry::getType($scopeType, $optionComponent['type']);
-    
+
                 $currentComponents = $typeInfo['components'] ?? $typeInfo['component'];
                 $currentComponents = Arr::wrap($currentComponents);
-    
+
                 $currentComponents = Arr::mapWithKeys($currentComponents, function ($currentComponent, $key) use ($optionComponent) {
                     $extras = $optionComponent['extras'] ?? [];          // 额外表单参数，和固定参数合并
-    
+
                     // 如果未开启自定义视图，则移除自定义视图参数
                     $hasCustomView = $extras['hasCustomView'] ?? false;
                     unset($extras['hasCustomView']);
                     if (! $hasCustomView) {
                         unset($extras['view']);
                     }
-    
+
                     return is_scalar($currentComponent) ? [$currentComponent => $extras] : [$key => array_merge($currentComponent, $extras)];
                 });
-    
+
                 $components = array_merge($components, $currentComponents);
             }
         } elseif ($navigation->type == NavigationTypeEnum::Page) {

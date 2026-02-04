@@ -24,7 +24,7 @@ class NavigationForm
     {
         return [
             Forms\Components\Select::make('type')
-                ->helperText(fn(): ?HtmlString => new HtmlString('<span style="color: #F59E0B;">如果存在子导航，当前导航设置的 跳转链接/路由等将失效</span>'))
+                ->helperText(fn (): ?HtmlString => new HtmlString('<span style="color: #F59E0B;">如果存在子导航，当前导航设置的 跳转链接/路由等将失效</span>'))
                 ->label('导航类型')
                 ->options(NavigationTypeEnum::class)
                 ->default(NavigationTypeEnum::Route)
@@ -278,6 +278,7 @@ class NavigationForm
                 ->label('自定义内容')
                 ->schema(function () use ($arguments) {
                     $uuid = Str::uuid();
+
                     return [
                         Forms\Components\Select::make('type')
                             ->label('内容类型')
@@ -317,7 +318,7 @@ class NavigationForm
                             ->key('dynamicExtrasFields_' . $uuid),
                     ];
                 })
-                ->itemLabel(fn(array $state): ?string => $state['extras']['label'] ?? null)
+                ->itemLabel(fn (array $state): ?string => $state['extras']['label'] ?? null)
                 ->required()
                 ->minItems(1)
                 ->addActionLabel('添加分组')
@@ -329,7 +330,7 @@ class NavigationForm
                     return $get('type') == NavigationTypeEnum::Content;
                 })
                 ->statePath('options.components'),
-            
+
             Forms\Components\Radio::make('status')
                 ->label('导航状态')
                 ->inline()
