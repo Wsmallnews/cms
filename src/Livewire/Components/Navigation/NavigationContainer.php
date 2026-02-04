@@ -31,8 +31,12 @@ class NavigationContainer extends Base
                 $currentComponents = $typeInfo['components'] ?? $typeInfo['component'];
                 $currentComponents = Arr::wrap($currentComponents);
 
-                $currentComponents = Arr::mapWithKeys($currentComponents, function ($currentComponent, $key) use ($optionComponent) {
+                $currentComponents = Arr::map($currentComponents, function ($currentComponent, $key) use ($optionComponent) {
                     $extras = $optionComponent['extras'] ?? [];          // 额外表单参数，和固定参数合并
+                    $extras['componentInfo'] = [
+                        'type' => $optionComponent['type'],
+                        'label' => $optionComponent['label'],
+                    ];
 
                     // 如果未开启自定义视图，则移除自定义视图参数
                     $hasCustomView = $extras['hasCustomView'] ?? false;
@@ -41,10 +45,20 @@ class NavigationContainer extends Base
                         unset($extras['view']);
                     }
 
-                    return is_scalar($currentComponent) ? [$currentComponent => $extras] : [$key => array_merge($currentComponent, $extras)];
+                    if (is_scalar($currentComponent)) {
+                        return [
+                            'component_name' => $currentComponent,
+                            'extras' => $extras,
+                        ];
+                    }
+
+                    return [
+                        'component_name' => $key,
+                        'extras' => array_merge($currentComponent, $extras),
+                    ];
                 });
 
-                $components = array_merge($components, $currentComponents);
+                $components = array_merge($components, array_values($currentComponents));
             }
         } elseif ($navigation->type == NavigationTypeEnum::Page) {
             $contentData = [
@@ -65,7 +79,10 @@ class NavigationContainer extends Base
             $contentData['blockContainerWrapperView'] = $blockContainerWrapperView;
 
             $components = [
-                Content::class => $contentData,
+                [
+                    'component_name' => Content::class,
+                    'extras' => $contentData,
+                ]
             ];
         }
 

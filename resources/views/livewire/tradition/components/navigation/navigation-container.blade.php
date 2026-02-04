@@ -18,8 +18,8 @@
             @endif
     
             <div class="w-full flex flex-col grow gap-4">
-                @foreach ($components as $component_name => $params)
-                    @livewire($component_name, $params, key($component_name . '-' . $loop->index))
+                @foreach ($components as $component)
+                    @livewire($component['component_name'], $component['extras'], key($component['component_name'] . '-' . $loop->index))
                 @endforeach
             </div>
         </div>

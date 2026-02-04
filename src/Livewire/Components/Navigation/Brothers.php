@@ -3,7 +3,9 @@
 namespace Wsmallnews\Cms\Livewire\Components\Navigation;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 use Illuminate\Support\HtmlString;
+use Illuminate\View\View;
 use Wsmallnews\Cms\Livewire\Concerns\HasThemeView;
 use Wsmallnews\Cms\Models\Navigation as NavigationModel;
 use Wsmallnews\FilamentNestedset\Livewire\Components\Nestedset;
@@ -54,7 +56,7 @@ class Brothers extends Nestedset
         return $record->has_active;
     }
 
-    public function getNestedset()
+    public function getNestedset(): Collection
     {
         $brothers = collect([]);
         if ($this->brotherNavigation) {
@@ -81,7 +83,7 @@ class Brothers extends Nestedset
         return $this->getBladeThemeView('components.navigation.navigation-record');
     }
 
-    public function render()
+    public function render(): View
     {
         return view($this->getThemeView('components.navigation.brothers'));
     }

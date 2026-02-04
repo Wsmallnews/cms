@@ -3,7 +3,9 @@
 namespace Wsmallnews\Category\Livewire\Components;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 use Illuminate\Support\HtmlString;
+use Illuminate\View\View;
 use Wsmallnews\Cms\Livewire\Concerns\Navigationable;
 use Wsmallnews\FilamentNestedset\Livewire\Components\Nestedset;
 use Wsmallnews\Support\Livewire\Concerns\Scopeable;
@@ -23,13 +25,13 @@ class NavigationNestedset extends Nestedset
         return $record->has_active;
     }
 
-    public function getNestedset()
+    public function getNestedset(): Collection
     {
         return $this->getScopedQuery()->normal()->defaultOrder()
             ->get()->toTree();
     }
 
-    public function render()
+    public function render(): View
     {
         return view($this->view);
     }

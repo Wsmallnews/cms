@@ -288,7 +288,7 @@ class NavigationForm
                             ->required()
                             ->afterStateUpdated(function (Forms\Components\Select $component, $state, Set $set) use ($uuid, $arguments) {
                                 // 默认设置内容类型 label
-                                $set('extras.label', ContentRegistry::getTypesOptions($arguments['scope_type'])[$state] ?? '');
+                                $set('label', ContentRegistry::getTypesOptions($arguments['scope_type'])[$state] ?? '');
 
                                 // 填充组件特定字段
                                 return $state && $component
@@ -299,7 +299,7 @@ class NavigationForm
                             }),
 
                         // 显示 type 对应的 label
-                        Forms\Components\TextInput::make('extras.label')
+                        Forms\Components\TextInput::make('label')
                             ->label('内容名称')
                             ->live(onBlur: true)
                             ->placeholder('请输入内容名称'),
@@ -314,18 +314,20 @@ class NavigationForm
                                 // 选了内容类型，并且内容类型有 form 表单
                                 return filled($get('type')) && $hasForms;
                             })
+                            ->columns(2)
+                            ->columnSpanFull()
                             ->statePath('extras')
                             ->key('dynamicExtrasFields_' . $uuid),
                     ];
                 })
-                ->itemLabel(fn (array $state): ?string => $state['extras']['label'] ?? null)
+                ->itemLabel(fn (array $state): ?string => $state['label'] ?? null)
                 ->required()
                 ->minItems(1)
                 ->addActionLabel('添加分组')
                 ->collapsible()
                 ->cloneable()
                 ->addActionAlignment(Alignment::Start)
-                ->grid(['md' => 2, 'lg' => 3, 'xl' => 4])
+                ->columns(2)
                 ->visible(function (Get $get) {
                     return $get('type') == NavigationTypeEnum::Content;
                 })
