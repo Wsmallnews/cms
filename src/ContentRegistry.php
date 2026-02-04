@@ -7,90 +7,134 @@ use Illuminate\Support\Collection;
 
 class ContentRegistry
 {
-    protected ?Collection $types;
+    /**
+     * 存储所有范围内容类型信息的集合
+     * 
+     * @var Collection|null
+     */
+    protected ?Collection $scopes;
 
     public function __construct()
     {
-        $this->types = collect();
+        $this->scopes = collect();
     }
 
     /**
-     * 注册内容类型
-     *
-     * @param  array  $typeInfo  内容类型信息
+     * 注册范围类型
+     * 
+     * @param  string  $scopeType  范围类型
+     * @param  array   $typeInfo  内容类型信息数组
+     * 
+     * @return static
      */
-    public function register(array $typeInfo): static
+    public function register(string $scopeType, array $typeInfo): static
     {
+        $types = $this->getTypes($scopeType);
         $type = $typeInfo['type'];
-        $this->types->put($type, $typeInfo);
+
+        $this->scopes->put($scopeType, $types->put($type, $typeInfo));
 
         return $this;
     }
 
     /**
-     * 注册多个内容类型
+     * 注册多个范围类型
      *
-     * @param  array  $typeInfos  内容类型信息数组
+     * @param  string  $scopeType    范围类型
+     * @param  array   $typeInfos  内容类型信息数组，每个元素为一个内容类型信息数组
+     * 
+     * @return static
      */
-    public function registers(array $typeInfos): static
+    public function registers(string $scopeType, array $typeInfos): static
     {
         foreach ($typeInfos as $typeInfo) {
-            $this->register($typeInfo);
+            $this->register($scopeType, $typeInfo);
         }
 
         return $this;
     }
 
     /**
-     * 获取所有内容类型
-     */
-    public function getTypes(): Collection
-    {
-        return $this->types;
-    }
-
-    /**
-     * 获取指定内容类型
+     * 获取所有范围
      *
-     * @param  string  $type  内容类型
+     * @return Collection 所有范围
      */
-    public function getType(string $type): array
+    public function getScopes(): Collection
     {
-        return $this->types->firstWhere('type', $type);
+        return $this->scopes;
+    }
+
+
+    /**
+     * 获取指定范围的所有内容类型
+     *
+     * @param  string  $scopeType  范围类型
+     * 
+     * @return Collection 内容类型信息集合
+     */
+    public function getTypes(string $scopeType): Collection
+    {
+        return $this->scopes->get($scopeType, collect());
+    }
+
+
+
+    /**
+     * 获取指定范围的指定内容类型
+     *
+     * @param  string  $scopeType  范围类型
+     * @param  string  $type    内容类型标识
+     * 
+     * @return array|null 内容类型信息数组，如果不存在则返回 null
+     */
+    public function getType(string $scopeType, string $type): array|null
+    {
+        return $this->getTypes($scopeType)->firstWhere('type', $type);
+
     }
 
     /**
-     * 获取内容类型选项 select
+     * 获取指定范围的内容类型选项，用于下拉选择
+     *
+     * @param  string  $scopeType  范围类型
+     * 
+     * @return array 内容类型选项数组，键为类型标识，值为类型标签
      */
-    public function getOptions(): array
+    public function getTypesOptions(string $scopeType): array
     {
-        return $this->types->mapWithKeys(function ($typeInfo) {
+        return $this->getTypes($scopeType)->mapWithKeys(function ($typeInfo) {
             return [$typeInfo['type'] => $typeInfo['label']];
         })->toArray();
     }
 
     /**
-     * 检查内容类型是否有表单
+     * 检查指定范围的指定内容类型是否有表单配置
      *
-     * @param  string  $type  内容类型
-     * @param  array  $arguments  表单参数
+     * @param  string  $scopeType     范围类型
+     * @param  string  $type       内容类型标识
+     * @param  array   $arguments  表单参数，当表单配置为闭包时使用
+     * 
+     * @return bool 是否有表单配置
      */
-    public function hasForms(string $type, array $arguments = []): bool
+    public function hasTypeForms(string $scopeType, string $type, array $arguments = []): bool
     {
-        $forms = $this->getTypeForms($type, $arguments);
+        $forms = $this->getTypeForms($scopeType, $type, $arguments);
 
         return $forms && count($forms) > 0;
     }
 
     /**
-     * 获取内容类型表单
+     * 获取指定范围的指定内容类型的表单配置
      *
-     * @param  string  $type  内容类型
-     * @param  array  $arguments  表单参数
+     * @param  string  $scopeType     范围类型
+     * @param  string  $type       内容类型标识
+     * @param  array   $arguments  表单参数，当表单配置为闭包时使用
+     * 
+     * @return array 表单配置数组
      */
-    public function getTypeForms(string $type, array $arguments = []): array
+    public function getTypeForms(string $scopeType, string $type, array $arguments = []): array
     {
-        $typeInfo = $this->types->firstWhere('type', $type);
+        $typeInfo = $this->getType($scopeType, $type);
 
         $forms = $typeInfo['forms'] ?? [];
 

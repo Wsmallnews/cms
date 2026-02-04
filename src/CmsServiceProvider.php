@@ -167,7 +167,7 @@ class CmsServiceProvider extends PackageServiceProvider
         });
 
         // 注册导航内容
-        ContentRegistryFacade::registers([
+        ContentRegistryFacade::registers(Utils::getScopeType(), [
             [
                 'type' => 'posts',
                 'label' => '图文列表',

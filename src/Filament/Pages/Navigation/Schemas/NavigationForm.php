@@ -5,7 +5,11 @@ namespace Wsmallnews\Cms\Filament\Pages\Navigation\Schemas;
 use Filament\Forms;
 use Filament\Schemas;
 use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Support\Enums\Alignment;
 use Guava\IconPicker\Forms\Components\IconPicker;
+use Illuminate\Support\HtmlString;
+use Illuminate\Support\Str;
 use Livewire\Component;
 use Wsmallnews\Cms\Enums\NavigationStatus;
 use Wsmallnews\Cms\Enums\NavigationType as NavigationTypeEnum;
@@ -20,7 +24,7 @@ class NavigationForm
     {
         return [
             Forms\Components\Select::make('type')
-                // ->helperText('如果存在子导航，父导航设置的 跳转链接/路由等将失效')
+                ->helperText(fn(): ?HtmlString => new HtmlString('<span style="color: #F59E0B;">如果存在子导航，当前导航设置的 跳转链接/路由等将失效</span>'))
                 ->label('导航类型')
                 ->options(NavigationTypeEnum::class)
                 ->default(NavigationTypeEnum::Route)
@@ -270,36 +274,62 @@ class NavigationForm
                     // 内容类型的导航，选了内容类型，并且内容类型有 form 表单
                     return $get('type') == NavigationTypeEnum::Route;
                 }),
-            Forms\Components\Select::make('options.type')
-                ->label('内容类型')
-                ->placeholder('请选择内容类型')
-                ->options(ContentRegistry::getOptions())
-                ->live()
+            Forms\Components\Repeater::make('contentComponents')
+                ->label('自定义内容')
+                ->schema(function () use ($arguments) {
+                    $uuid = Str::uuid();
+                    return [
+                        Forms\Components\Select::make('type')
+                            ->label('内容类型')
+                            ->placeholder('请选择内容类型')
+                            ->options(ContentRegistry::getTypesOptions($arguments['scope_type']))
+                            ->live()
+                            ->required()
+                            ->afterStateUpdated(function (Forms\Components\Select $component, $state, Set $set) use ($uuid, $arguments) {
+                                // 默认设置内容类型 label
+                                $set('extras.label', ContentRegistry::getTypesOptions($arguments['scope_type'])[$state] ?? '');
+
+                                // 填充组件特定字段
+                                return $state && $component
+                                    ->getContainer()
+                                    ->getComponent('dynamicExtrasFields_' . $uuid)       // 当 dynamicExtrasFields visible = false, 也就是不可见时， 这里获取的是 null
+                                    ?->getChildSchema()
+                                    ->fill();
+                            }),
+
+                        // 显示 type 对应的 label
+                        Forms\Components\TextInput::make('extras.label')
+                            ->label('内容名称')
+                            ->live(onBlur: true)
+                            ->placeholder('请输入内容名称'),
+
+                        Schemas\Components\Fieldset::make('extras')
+                            ->label('选项')
+                            ->schema(function (Get $get) use ($arguments) {
+                                return filled($get('type')) ? ContentRegistry::getTypeForms($arguments['scope_type'], $get('type'), ['fields' => $get('../../../')]) : [];        // $get() 获取的为当前repeater 循环层级的数据，需要 ../../../ 获取所有变量
+                            })->visible(function (Get $get) use ($arguments) {
+                                $hasForms = filled($get('type')) ? ContentRegistry::hasTypeForms($arguments['scope_type'], $get('type'), ['fields' => $get('../../../')]) : false;    // $get() 获取的为当前repeater 循环层级的数据，需要 ../../../ 获取所有变量
+
+                                // 选了内容类型，并且内容类型有 form 表单
+                                return filled($get('type')) && $hasForms;
+                            })
+                            ->statePath('extras')
+                            ->key('dynamicExtrasFields_' . $uuid),
+                    ];
+                })
+                ->itemLabel(fn(array $state): ?string => $state['extras']['label'] ?? null)
                 ->required()
+                ->minItems(1)
+                ->addActionLabel('添加分组')
+                ->collapsible()
+                ->cloneable()
+                ->addActionAlignment(Alignment::Start)
+                ->grid(['md' => 2, 'lg' => 3, 'xl' => 4])
                 ->visible(function (Get $get) {
                     return $get('type') == NavigationTypeEnum::Content;
                 })
-                ->afterStateUpdated(
-                    fn (Forms\Components\Select $component, $state) => $state && $component
-                        ->getContainer()
-                        ->getComponent('dynamicExtrasFields')       // 当 dynamicExtrasFields visible = false, 也就是不可见时， 这里获取的是 null
-                        ?->getChildSchema()
-                        ->fill()
-                ),
-
-            Schemas\Components\Fieldset::make('extras')
-                ->label('选项')
-                ->schema(function (Get $get) {
-                    return filled($get('options.type')) ? ContentRegistry::getTypeForms($get('options.type'), ['fields' => $get()]) : [];
-                })->visible(function (Get $get) {
-                    $hasForms = filled($get('options.type')) ? ContentRegistry::hasForms($get('options.type'), ['fields' => $get()]) : false;
-
-                    // 内容类型的导航，选了内容类型，并且内容类型有 form 表单
-                    return ($get('type') == NavigationTypeEnum::Content) && filled($get('options.type')) && $hasForms;
-                })
-                ->statePath('options._extras')
-                ->key('dynamicExtrasFields'),
-
+                ->statePath('options.components'),
+            
             Forms\Components\Radio::make('status')
                 ->label('导航状态')
                 ->inline()
