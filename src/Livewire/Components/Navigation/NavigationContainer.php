@@ -82,7 +82,7 @@ class NavigationContainer extends Base
                 [
                     'component_name' => Content::class,
                     'extras' => $contentData,
-                ]
+                ],
             ];
         }
 

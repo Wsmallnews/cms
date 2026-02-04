@@ -260,7 +260,7 @@ class CmsServiceProvider extends PackageServiceProvider
             [
                 'type' => 'index-posts',
                 'label' => '图文轮播列表',
-                'forms' => fn($fields) => [],
+                'forms' => fn ($fields) => [],
                 'components' => [
                     \Wsmallnews\Cms\Livewire\Components\Post\IndexPosts::class => [
                         'scopeType' => Utils::getScopeType(),
