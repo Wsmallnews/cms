@@ -187,7 +187,7 @@ class CmsServiceProvider extends PackageServiceProvider
                                 ->emptyLabel(__('未搜索到分类'))
                                 ->treeKey('postCategories'),
                         ])
-                        ->columns(2)
+                        ->columns(['md' => 2])
                         ->columnSpanFull(),
 
                     Toggle::make('needCustomStyle')
@@ -244,7 +244,7 @@ class CmsServiceProvider extends PackageServiceProvider
                                         JS),
                                 ])->columns(1),
                         ])
-                        ->columns(2)
+                        ->columns(['md' => 2])
                         ->columnSpanFull()
                         ->visibleJs(<<<'JS'
                             $get('needCustomStyle')
@@ -282,7 +282,7 @@ class CmsServiceProvider extends PackageServiceProvider
                                 ->preload()
                                 ->required(),
                         ])
-                        ->columns(2)
+                        ->columns(['md' => 2])
                         ->columnSpanFull(),
 
                     Toggle::make('needCustomStyle')
@@ -325,7 +325,7 @@ class CmsServiceProvider extends PackageServiceProvider
                                         JS),
                                 ])->columns(1),
                         ])
-                        ->columns(2)
+                        ->columns(['md' => 2])
                         ->columnSpanFull()
                         ->visibleJs(<<<'JS'
                             $get('needCustomStyle')

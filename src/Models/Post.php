@@ -27,6 +27,7 @@ class Post extends SupportModel implements HasMedia
 
     protected $casts = [
         'options' => 'array',
+        'published_at' => 'datetime',
         'status' => PostStatus::class,
     ];
 

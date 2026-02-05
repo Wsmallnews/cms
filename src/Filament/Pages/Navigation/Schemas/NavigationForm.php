@@ -314,7 +314,7 @@ class NavigationForm
                                 // 选了内容类型，并且内容类型有 form 表单
                                 return filled($get('type')) && $hasForms;
                             })
-                            ->columns(2)
+                            ->columns(['md' => 2])
                             ->columnSpanFull()
                             ->statePath('extras')
                             ->key('dynamicExtrasFields_' . $uuid),
@@ -327,7 +327,7 @@ class NavigationForm
                 ->collapsible()
                 ->cloneable()
                 ->addActionAlignment(Alignment::Start)
-                ->columns(2)
+                ->columns(['md' => 2])
                 ->visible(function (Get $get) {
                     return $get('type') == NavigationTypeEnum::Content;
                 })
