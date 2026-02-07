@@ -1,8 +1,31 @@
-@import "tailwindcss";
+/* 系统级组件适配暗黑 */
+:root.dark {
+    color-scheme: dark;
+}
 
-@variant dark (&:where(.dark, .dark *));
+/* When scrolling to validation error, do not hide element behind the top bar */
+[data-field-wrapper] {
+    scroll-margin-top: 8rem;
+}
 
 @source '../views/**/*';
 
 /* wsmallnews/support css */
 @import '../../../support/resources/css/index.css';
+
+/* 支持 暗黑变体 (类似 hover:) */
+@variant dark (&:where(.dark, .dark *));
+
+/* 定义字体系统，有待研究 */
+@theme inline {
+    --font-mono:
+        var(--mono-font-family), ui-monospace, SFMono-Regular, Menlo, Monaco,
+        Consolas, 'Liberation Mono', 'Courier New', monospace;
+    --font-sans:
+        var(--font-family), ui-sans-serif, system-ui, sans-serif,
+        'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+        'Noto Color Emoji';
+    --font-serif:
+        var(--serif-font-family), ui-serif, Georgia, Cambria, 'Times New Roman',
+        Times, serif;
+}

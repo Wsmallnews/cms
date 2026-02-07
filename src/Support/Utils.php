@@ -138,6 +138,30 @@ class Utils
     }
 
     /**
+     * 获取主题模式
+     */
+    public static function getDefaultDarkMode(): string
+    {
+        return self::getConfig('themes.default-dark-mode', 'system');
+    }
+
+    /**
+     * 是否启用暗黑模式
+     */
+    public static function hasDarkMode(): bool
+    {
+        return self::getConfig('themes.dark-mode', false);
+    }
+
+    /**
+     * 是否强制暗黑主题
+     */
+    public static function hasDarkModeForced(): bool
+    {
+        return self::getConfig('themes.dark-mode-forced', false);
+    }
+    
+    /**
      * 获取当前主题
      */
     public static function getTheme(): string

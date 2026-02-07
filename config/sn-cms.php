@@ -105,7 +105,14 @@ return [
     ],
 
     'themes' => [
+        // 是否启用暗黑模式
         'dark-mode' => true,
+
+        // 默认主题模式
+        'default-dark-mode' => 'system',
+
+        // 强制暗黑主题
+        'dark-mode-forced' => false,
 
         'layout' => 'sn-cms::components.layouts.app',
 
