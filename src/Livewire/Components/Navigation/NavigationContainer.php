@@ -35,7 +35,7 @@ class NavigationContainer extends Base
                     $extras = $optionComponent['extras'] ?? [];          // 额外表单参数，和固定参数合并
                     $extras['componentInfo'] = [
                         'type' => $optionComponent['type'],
-                        'label' => $optionComponent['label'],
+                        'label' => $optionComponent['label'] ?? null,
                     ];
 
                     // 如果未开启自定义视图，则移除自定义视图参数
