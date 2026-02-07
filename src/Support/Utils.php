@@ -160,7 +160,7 @@ class Utils
     {
         return self::getConfig('themes.dark-mode-forced', false);
     }
-    
+
     /**
      * 获取当前主题
      */
