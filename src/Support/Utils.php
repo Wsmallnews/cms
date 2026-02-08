@@ -178,6 +178,14 @@ class Utils
     }
 
     /**
+     * 获取当前页面容器
+     */
+    public static function getPageContainer(): string
+    {
+        return self::getConfig('themes.page-container', 'sn-cms::page-container');
+    }
+
+    /**
      * 获取指定容器
      */
     public static function getThemeContainer($name): string

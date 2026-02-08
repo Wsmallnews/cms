@@ -13,9 +13,6 @@
 /* wsmallnews/support css */
 @import '../../../support/resources/css/index.css';
 
-/* 支持 暗黑变体 (类似 hover:) */
-@variant dark (&:where(.dark, .dark *));
-
 /* 定义字体系统，有待研究 */
 @theme inline {
     --font-mono:

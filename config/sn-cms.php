@@ -118,10 +118,8 @@ return [
 
         'theme' => 'tradition',
 
-        'containers' => [
-            'block-container' => 'sn-cms::base.block-container',
-            'item-container' => 'sn-cms::base.item-container',
-        ],
+        // 页面容器
+        'page-container' => 'sn-cms::page-container',
     ],
 
     // 'enums' => [

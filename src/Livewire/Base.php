@@ -24,4 +24,9 @@ class Base extends Component
     {
         return Utils::getScopeable();
     }
+
+    public function getPageContainer(): string
+    {
+        return Utils::getPageContainer();
+    }
 }

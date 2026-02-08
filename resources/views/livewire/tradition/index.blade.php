@@ -3,9 +3,7 @@
     $scopeId = $this->getScopeId();
 @endphp
 
-<div class="w-full flex flex-col grow">
-    <livewire:sn-cms-components-navigation :scope-type="$scopeType" :scope-id="$scopeId" />
-
+<x-dynamic-component :component="$this->getPageContainer()" :scope-type="$scopeType" :scope-id="$scopeId" class="w-full">
     <div class="container mx-auto flex flex-col grow gap-4 my-4">
         <livewire:sn-cms-components-index-posts :scope-type="$scopeType" :scope-id="$scopeId" :limit="6" />
 
@@ -17,6 +15,4 @@
 
         <livewire:sn-components-index-scientific-research :scope-type="$scopeType" :scope-id="$scopeId" />
     </div>
-
-    <livewire:sn-cms-components-footer :scope-type="$scopeType" :scope-id="$scopeId" />
-</div>
+</x-dynamic-component>
