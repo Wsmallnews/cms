@@ -1,4 +1,4 @@
-<div class="w-full bg-white pt-8">
+<div class="sn-bg w-full pt-8">
     <div class="container mx-auto flex flex-col gap-4">
         <div class="w-full flex gap-16">
             <div class="hidden md:flex md:w-2/3 gap-4 justify-between">

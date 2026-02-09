@@ -7,7 +7,6 @@ use Illuminate\Support\Collection;
 use Livewire\WithoutUrlPagination;
 use Wsmallnews\Category\Livewire\Concerns\Categoryable;
 use Wsmallnews\Cms\Livewire\Components\Base;
-use Wsmallnews\Cms\Livewire\Concerns\HasItemContainerWrapper;
 use Wsmallnews\Cms\Support\Utils;
 use Wsmallnews\Support\Livewire\Concerns\CanPagination;
 
@@ -15,7 +14,6 @@ class Posts extends Base
 {
     use CanPagination;
     use Categoryable;
-    use HasItemContainerWrapper;
     use WithoutUrlPagination;
 
     public int | array | null $categoryIds = [];

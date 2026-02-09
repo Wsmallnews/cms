@@ -13,7 +13,7 @@
         @endif
         
         <div class="w-full flex flex-col md:flex-row items-start gap-4">
-            <div class="sn-block w-full md:w-72">
+            <div class="w-full md:w-72">
                 <livewire:sn-cms-components-user-profile-menu />
             </div>
 

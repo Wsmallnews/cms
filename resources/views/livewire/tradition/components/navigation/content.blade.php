@@ -1,3 +1,3 @@
-<x-dynamic-component :component="$this->getBlockContainerWrapperView()" class="w-full">
+<div class="sn-block w-full p-4">
     {!! $content?->content !!}
-</x-dynamic-component>
+</div>

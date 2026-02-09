@@ -16,14 +16,13 @@
     })->toArray();
 @endphp
 
-<x-dynamic-component :component="$this->getBlockContainerWrapperView()" class="w-full flex flex-col lg:flex-row gap-2 lg:gap-4">
+<div class="w-full flex flex-col lg:flex-row gap-2 lg:gap-4">
     <x-sn-support::swiper class="w-full aspect-[16/9] rounded-md overflow-hidden" :slides="$slides" :has-thumb="false" />
 
-    <div class="w-full flex flex-col lg:grid lg:grid-rows-4 lg:aspect-[16/9] bg-white rounded-md shadow-sm border border-slate-100 overflow-hidden">
+    <div class="sn-block w-full flex flex-col lg:grid lg:grid-rows-4 lg:aspect-[16/9] overflow-hidden">
         @foreach($posts as $post)
             @if ($loop->index >= $listStartIndex)
-                <x-sn-cms::base.empty 
-                    tag="a" 
+                <x-sn-cms::container.block-link
                     href="{{ \Wsmallnews\Cms\Support\Utils::route('posts.show', $post->id) }}" 
                     class="flex w-full h-28 lg:h-auto min-h-0 gap-2 group hover:bg-primary-100/30 transition-colors duration-300 {{ $loop->index !== $posts->count() - 1 ? 'border-b border-slate-100' : '' }}"
                 >
@@ -45,8 +44,8 @@
                             {{ optional($post->updated_at)->format('Y-m-d') }}
                         </div>
                     </div>
-                </x-sn-cms::base.empty>
+                </x-sn-cms::container.block-link>
             @endif
         @endforeach
     </div>
-</x-dynamic-component>
+</div>

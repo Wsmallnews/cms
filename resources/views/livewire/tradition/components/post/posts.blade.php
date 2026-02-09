@@ -1,14 +1,16 @@
-<x-dynamic-component :component="$this->getBlockContainerWrapperView()" class="w-full flex flex-col gap-4">
-    <div class="flex flex-wrap gap-4">
-        @foreach ($categories as $category)
-            <x-filament::badge class="text-sm bg-primary-500 text-white">{{ $category->name_label }}</x-filament::badge>
-        @endforeach
-    </div>
+<div class="w-full flex flex-col gap-4">
+    @if ($categories->isNotEmpty())
+        <div class="flex flex-wrap gap-4">
+            @foreach ($categories as $category)
+                <x-filament::badge class="text-sm bg-primary-500 text-white">{{ $category->name_label }}</x-filament::badge>
+            @endforeach
+        </div>
+    @endif
 
     <x-sn-support::paginators.container :page-type="$pageType" :page-info="$pageInfo" :paginator-link="$paginatorLink" :page-name="$pageName">
         <div class="w-full flex flex-col gap-4">
             @foreach ($posts as $post)
-                <x-dynamic-component :component="$this->getItemContainerWrapperView()" tag="a" href="{{ \Wsmallnews\Cms\Support\Utils::route('posts.show', $post->id) }}"  class="flex flex-row gap-4 overflow-hidden group">
+                <x-sn-cms::container.block-link href="{{ \Wsmallnews\Cms\Support\Utils::route('posts.show', $post->id) }}" class="sn-block flex flex-row gap-4 p-4 overflow-hidden group">
                     @if ($post->getFirstMediaUrl('post_image'))
                         <div class="w-44 h-44 shrink-0 rounded-md overflow-hidden">
                             <img class="w-full h-full object-cover transition duration-300 group-hover:scale-110" src="{{ $post->getFirstMediaUrl('post_image') }}" />
@@ -27,8 +29,8 @@
                             {{ $post->updated_at->format('Y-m-d') }}
                         </div>
                     </div>
-                </x-dynamic-component>
+                </x-sn-cms::container.block-link>
             @endforeach
         </div>
     </x-sn-support::paginators.container>
-</x-dynamic-component>
+</div>
