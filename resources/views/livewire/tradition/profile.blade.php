@@ -13,11 +13,11 @@
         @endif
         
         <div class="w-full flex flex-col md:flex-row items-start gap-4">
-            <div class="w-full md:w-72" >
+            <div class="sn-block w-full md:w-72">
                 <livewire:sn-cms-components-user-profile-menu />
             </div>
 
-            <div class="w-full">
+            <div class="sn-block w-full px-4 py-8">
                 <livewire:sn-user-components-user-profile :module="app(\Wsmallnews\Cms\CmsPlugin::class)->getId()" />
             </div>
         </div>

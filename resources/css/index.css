@@ -26,3 +26,21 @@
         var(--serif-font-family), ui-serif, Georgia, Cambria, 'Times New Roman',
         Times, serif;
 }
+
+.sn-bg {
+    @apply bg-white dark:bg-slate-900;
+}
+
+.sn-contour {
+    @apply shadow-sm ring-1 ring-gray-950/5 dark:ring-white/10;
+}
+
+.sn-rounded {
+    @apply rounded-md;
+}
+
+.sn-block {
+    @apply bg-white dark:bg-slate-900;
+    @apply shadow-sm ring-1 ring-gray-950/5 dark:ring-white/10;
+    @apply rounded-md;
+}

@@ -63,7 +63,7 @@
         <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     </head>
 
-    <body class="antialiased bg-slate-300 dark:bg-slate-800">
+    <body class="antialiased bg-slate-50 dark:bg-slate-950">
         
         {{ $slot }}
 
