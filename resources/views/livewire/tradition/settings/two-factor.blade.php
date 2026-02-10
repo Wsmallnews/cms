@@ -17,7 +17,7 @@
                 <livewire:sn-cms-components-user-profile-menu />
             </div>
 
-            <div class="sn-block w-full px-4 py-8">
+            <div class="sn-container w-full px-4 py-8">
                 <div class="w-full md:w-md">
                     <livewire:sn-user-components-settings-two-factor :module="app(\Wsmallnews\Cms\CmsPlugin::class)->getId()" />
                 </div>

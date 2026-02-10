@@ -1,3 +1,6 @@
-<div class="sn-block w-full p-4">
+<div @class([
+    'sn-container p-4' => $contained,
+    'w-full'
+])>
     {!! $content?->content !!}
 </div>

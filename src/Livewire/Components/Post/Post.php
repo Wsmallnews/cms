@@ -4,10 +4,13 @@ namespace Wsmallnews\Cms\Livewire\Components\Post;
 
 use Illuminate\Database\Eloquent\Model;
 use Wsmallnews\Cms\Livewire\Components\Base;
+use Wsmallnews\Cms\Livewire\Concerns\CanBeContained;
 use Wsmallnews\Cms\Support\Utils;
 
 class Post extends Base
 {
+    use CanBeContained;
+
     public int $id;
 
     public function render()

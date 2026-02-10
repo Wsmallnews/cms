@@ -7,11 +7,13 @@ use Illuminate\Support\Collection;
 use Livewire\WithoutUrlPagination;
 use Wsmallnews\Category\Livewire\Concerns\Categoryable;
 use Wsmallnews\Cms\Livewire\Components\Base;
+use Wsmallnews\Cms\Livewire\Concerns\CanBeContained;
 use Wsmallnews\Cms\Support\Utils;
 use Wsmallnews\Support\Livewire\Concerns\CanPagination;
 
 class Posts extends Base
 {
+    use CanBeContained;
     use CanPagination;
     use Categoryable;
     use WithoutUrlPagination;

@@ -27,19 +27,29 @@
         Times, serif;
 }
 
+
+/* 区块背景色，支持暗黑 */
 .sn-bg {
     @apply bg-white dark:bg-slate-900;
 }
 
+/* 区块轮廓，四边都有 */
 .sn-contour {
     @apply shadow-sm ring-1 ring-gray-950/5 dark:ring-white/10;
 }
 
+/* 区块轮廓，需要外面指定那条边存在 */
+.sn-contour-only {
+    @apply shadow-sm ring-gray-950/5 dark:ring-white/10;
+}
+
+/* 区块圆角 */
 .sn-rounded {
     @apply rounded-md;
 }
 
-.sn-block {
+/* 区块样式 */
+.sn-container {
     @apply bg-white dark:bg-slate-900;
     @apply shadow-sm ring-1 ring-gray-950/5 dark:ring-white/10;
     @apply rounded-md;

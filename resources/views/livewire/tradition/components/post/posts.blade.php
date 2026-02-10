@@ -10,7 +10,13 @@
     <x-sn-support::paginators.container :page-type="$pageType" :page-info="$pageInfo" :paginator-link="$paginatorLink" :page-name="$pageName">
         <div class="w-full flex flex-col gap-4">
             @foreach ($posts as $post)
-                <x-sn-cms::container.block-link href="{{ \Wsmallnews\Cms\Support\Utils::route('posts.show', $post->id) }}" class="sn-block flex flex-row gap-4 p-4 overflow-hidden group">
+                <x-sn-cms::container.block-link 
+                    @class([
+                        'sn-container p-4' => $contained,
+                        'flex flex-row gap-4 overflow-hidden group'
+                    ])
+                    href="{{ \Wsmallnews\Cms\Support\Utils::route('posts.show', $post->id) }}"
+                >
                     @if ($post->getFirstMediaUrl('post_image'))
                         <div class="w-44 h-44 shrink-0 rounded-md overflow-hidden">
                             <img class="w-full h-full object-cover transition duration-300 group-hover:scale-110" src="{{ $post->getFirstMediaUrl('post_image') }}" />

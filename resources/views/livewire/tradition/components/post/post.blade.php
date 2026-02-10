@@ -5,7 +5,10 @@
     }
 @endphp
 
-<div class="sn-block w-full flex flex-col gap-4 px-4 py-8">
+<div @class([
+        'sn-container px-4 py-8' => $contained,
+        'w-full flex flex-col gap-4'
+])>
     <div class="text-3xl font-bold">
         {{ $post->title }}
     </div>
@@ -19,7 +22,7 @@
     </div>
 
     @if ($images)
-        <x-sn-support::swiper class="w-full aspect-[16/9]" :slides="$images" />
+        <x-sn-support::swiper class="w-full aspect-video" :slides="$images" />
     @endif
 
     <div class="">

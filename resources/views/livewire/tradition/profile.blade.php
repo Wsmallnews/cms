@@ -17,7 +17,7 @@
                 <livewire:sn-cms-components-user-profile-menu />
             </div>
 
-            <div class="sn-block w-full px-4 py-8">
+            <div class="sn-container w-full px-4 py-8">
                 <livewire:sn-user-components-user-profile :module="app(\Wsmallnews\Cms\CmsPlugin::class)->getId()" />
             </div>
         </div>
