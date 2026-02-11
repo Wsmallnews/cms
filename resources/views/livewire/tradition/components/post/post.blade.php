@@ -6,8 +6,8 @@
 @endphp
 
 <div @class([
-        'sn-container px-4 py-8' => $contained,
-        'w-full flex flex-col gap-4'
+    'sn-container px-4 py-8' => $contained,
+    'w-full flex flex-col gap-4'
 ])>
     <div class="text-3xl font-bold">
         {{ $post->title }}

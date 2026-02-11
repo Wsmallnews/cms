@@ -12,7 +12,7 @@
             @foreach ($posts as $post)
                 <x-sn-cms::container.block-link 
                     @class([
-                        'sn-container p-4' => $contained,
+                        'sn-container sn-hover sn-link p-4' => $contained,
                         'flex flex-row gap-4 overflow-hidden group'
                     ])
                     href="{{ \Wsmallnews\Cms\Support\Utils::route('posts.show', $post->id) }}"

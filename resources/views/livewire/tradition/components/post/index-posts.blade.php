@@ -18,19 +18,19 @@
 
 <div class="w-full flex flex-col lg:flex-row gap-2 lg:gap-4">
     <x-sn-support::swiper @class([
-        'sn-container rounded-md' => $contained,
+        'sn-container sn-hover rounded-md' => $contained,
         'w-full aspect-video overflow-hidden'
     ]) :slides="$slides" :has-thumb="false" />
 
     <div @class([
-        'sn-container rounded-md' => $contained,
+        'sn-container sn-hover rounded-md' => $contained,
         'w-full flex flex-col lg:grid lg:grid-rows-4 lg:aspect-video overflow-hidden'
     ])>
         @foreach($posts as $post)
             @if ($loop->index >= $listStartIndex)
                 <x-sn-cms::container.block-link
                     href="{{ \Wsmallnews\Cms\Support\Utils::route('posts.show', $post->id) }}" 
-                    class="flex w-full h-28 lg:h-auto min-h-0 gap-2 group hover:bg-primary-100/30 transition-colors duration-300 {{ $loop->index !== $posts->count() - 1 ? 'border-b border-slate-100' : '' }}"
+                    class="sn-link flex w-full h-28 lg:h-auto min-h-0 gap-2 group {{ $loop->index !== $posts->count() - 1 ? 'border-b border-slate-100' : '' }}"
                 >
                     @if ($post->getFirstMediaUrl('post_image'))
                         <div class="h-full aspect-4/3 shrink-0 rounded-md">

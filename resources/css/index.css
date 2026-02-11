@@ -38,9 +38,9 @@
     @apply shadow-sm ring-1 ring-gray-950/5 dark:ring-white/10;
 }
 
-/* 区块轮廓，需要外面指定那条边存在 */
+/* 区块轮廓，这里用的是 border ring 不支持设置单条边 需要外面指定那条边存在 */
 .sn-contour-only {
-    @apply shadow-sm ring-gray-950/5 dark:ring-white/10;
+    @apply shadow-sm border-gray-950/5 dark:border-white/10;
 }
 
 /* 区块圆角 */
@@ -52,5 +52,17 @@
 .sn-container {
     @apply bg-white dark:bg-slate-900;
     @apply shadow-sm ring-1 ring-gray-950/5 dark:ring-white/10;
-    @apply rounded-md;
+    @apply rounded-md transition-all duration-300;
+
+    &.sn-hover {    /** 当前 hover */
+        @apply hover:shadow-lg dark:hover:shadow-white/10;
+    }
+
+    &.sn-link {      /** 当前 link, 如果当前 容器就是 link ,则增加 hover 背景(posts 列表) */
+        @apply hover:bg-primary-100/30;
+    }
+
+    .sn-link {      /** 内部link，容器内部 链接 样式 (index-posts 列表) */
+        @apply hover:bg-primary-100/30;
+    }
 }
