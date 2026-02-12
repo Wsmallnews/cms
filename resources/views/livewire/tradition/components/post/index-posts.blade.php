@@ -24,13 +24,13 @@
 
     <div @class([
         'sn-container sn-hover rounded-md' => $contained,
-        'w-full flex flex-col lg:grid lg:grid-rows-4 lg:aspect-video overflow-hidden'
+        'w-full flex flex-col lg:grid lg:grid-rows-4 lg:aspect-video overflow-hidden sn-divide-y'
     ])>
         @foreach($posts as $post)
             @if ($loop->index >= $listStartIndex)
                 <x-sn-cms::container.block-link
                     href="{{ \Wsmallnews\Cms\Support\Utils::route('posts.show', $post->id) }}" 
-                    class="sn-link flex w-full h-28 lg:h-auto min-h-0 gap-2 group {{ $loop->index !== $posts->count() - 1 ? 'border-b border-slate-100' : '' }}"
+                    class="sn-link flex w-full h-28 lg:h-auto min-h-0 gap-2 group"
                 >
                     @if ($post->getFirstMediaUrl('post_image'))
                         <div class="h-full aspect-4/3 shrink-0 rounded-md">
@@ -39,14 +39,14 @@
                     @endif
 
                     <div class="min-w-0 flex flex-col grow py-2 px-4 gap-1">
-                        <div class="text-base text-slate-900 font-bold line-clamp-1 transition duration-300 group-hover:text-primary-500">
+                        <div class="sn-h4-text sn-hover line-clamp-1">
                             {{ $post->title }}
                         </div>
 
-                        <div class="lg:h-0 xl:h-auto text-sm grow text-slate-500 leading-5 line-clamp-2 xl:line-clamp-1 2xl:line-clamp-2">
+                        <div class="sn-descript-text lg:h-0 xl:h-auto grow line-clamp-2 xl:line-clamp-1 2xl:line-clamp-2">
                             {{ $post->description }}
                         </div>
-                        <div class="text-sm text-gray-500">
+                        <div class="sn-tip-text">
                             {{ optional($post->updated_at)->format('Y-m-d') }}
                         </div>
                     </div>
