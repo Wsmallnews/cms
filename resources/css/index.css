@@ -30,17 +30,25 @@
 
 /* 区块背景色，支持暗黑 */
 .sn-bg {
-    @apply bg-white dark:bg-slate-900;
+    @apply bg-white dark:bg-gray-900;
 }
 
 /* 区块轮廓，四边都有 */
 .sn-contour {
-    @apply shadow-sm ring-1 ring-gray-950/5 dark:ring-white/10;
+    @apply shadow-sm ring-1 ring-gray-200/80  dark:ring-gray-800/60;
+
+    &.sn-hover {    /** 当前 hover */
+        @apply hover:shadow-lg hover:ring-gray-200 dark:hover:ring-gray-700
+    }
 }
 
 /* 区块轮廓，这里用的是 border ring 不支持设置单条边 需要外面指定那条边存在 */
 .sn-contour-only {
-    @apply shadow-sm border-gray-950/5 dark:border-white/10;
+    @apply shadow-sm border-gray-200/80 dark:border-gray-800/60;
+
+    &.sn-hover {    /** 当前 hover */
+        @apply hover:shadow-lg hover:border-gray-200 dark:hover:border-gray-700
+    }
 }
 
 /* 区块圆角 */
@@ -48,14 +56,37 @@
     @apply rounded-md;
 }
 
+/** sn 文字 **/
+.sn-h1-text {
+    @apply text-gray-900 dark:text-gray-100 text-2xl md:text-3xl lg:text-4xl font-semibold;
+}
+.sn-h2-text {
+    @apply text-gray-800 dark:text-gray-200 text-xl md:text-2xl lg:text-3xl;
+}
+.sn-h3-text {
+    @apply text-gray-700 dark:text-gray-300 text-lg md:text-xl;
+}
+.sn-content-text {
+    @apply text-gray-600 dark:text-gray-300 text-base leading-relaxed;
+}
+.sn-descript-text {
+    @apply text-gray-500 dark:text-gray-400 text-sm;
+}
+/** sn 文字 **/
+
+
+
+
+
+
 /* 区块样式 */
 .sn-container {
-    @apply bg-white dark:bg-slate-900;
-    @apply shadow-sm ring-1 ring-gray-950/5 dark:ring-white/10;
+    @apply bg-white dark:bg-gray-900;
+    @apply shadow-sm ring-1 ring-gray-200/80  dark:ring-gray-800/60;
     @apply rounded-md transition-all duration-300;
 
     &.sn-hover {    /** 当前 hover */
-        @apply hover:shadow-lg dark:hover:shadow-white/10;
+        @apply hover:shadow-lg hover:ring-gray-200 dark:hover:ring-gray-700;
     }
 
     &.sn-link {      /** 当前 link, 如果当前 容器就是 link ,则增加 hover 背景(posts 列表) */
