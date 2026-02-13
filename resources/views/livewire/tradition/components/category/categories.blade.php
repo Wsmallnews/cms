@@ -6,7 +6,7 @@
 <ul
     @class([
         'w-full flex flex-col',
-        'bg-primary-500 divide-y divide-primary-400' => $style === 'vivid',
+        'sn-primary-bg divide-y divide-primary-400' => $style === 'vivid',
     ])
     role="menu"
 >

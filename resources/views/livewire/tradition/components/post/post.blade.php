@@ -9,15 +9,15 @@
     'sn-container px-4 py-8' => $contained,
     'w-full flex flex-col gap-4'
 ])>
-    <div class="text-3xl font-bold">
+    <div class="sn-h2-text">
         {{ $post->title }}
     </div>
 
-    <div class="text-sm text-gray-500">
+    <div class="sn-tip-text">
         {{ $post->created_at->format('Y-m-d') }}
     </div>
 
-    <div class="text-gray-500 bg-gray-100 p-2 rounded-md">
+    <div class="sn-descript-text sn-gray-bg p-2 rounded-md">
         {{ $post->description }}
     </div>
 
@@ -25,7 +25,7 @@
         <x-sn-support::swiper class="w-full aspect-video" :slides="$images" />
     @endif
 
-    <div class="">
+    <div class="sn-content-text">
         {!! $post->content?->content !!}
     </div>
 </div>

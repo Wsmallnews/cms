@@ -2,7 +2,7 @@
     @if ($categories->isNotEmpty())
         <div class="flex flex-wrap gap-4">
             @foreach ($categories as $category)
-                <x-filament::badge class="text-sm bg-primary-500 text-white">{{ $category->name_label }}</x-filament::badge>
+                <x-filament::badge class="sn-primary-bg text-sm text-white">{{ $category->name_label }}</x-filament::badge>
             @endforeach
         </div>
     @endif
@@ -24,14 +24,14 @@
                     @endif
 
                     <div class="flex flex-col grow py-4 pr-4 gap-4">
-                        <div class="text-xl font-bold line-clamp-1 transition duration-300 group-hover:text-primary-500">
+                        <div class="sn-h3-text sn-hover line-clamp-1 transition duration-300">
                             {{ $post->title }}
                         </div>
 
-                        <div class="grow max-h-14 text-gray-500 leading-7 line-clamp-2">
+                        <div class="sn-descript-text grow max-h-14 line-clamp-2">
                             {{ $post->description }}
                         </div>
-                        <div class="text-sm text-gray-500">
+                        <div class="sn-tip-text">
                             {{ $post->updated_at->format('Y-m-d') }}
                         </div>
                     </div>

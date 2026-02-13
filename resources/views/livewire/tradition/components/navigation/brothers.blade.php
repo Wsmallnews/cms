@@ -4,7 +4,7 @@
 
 <ul
     @class([
-        'w-full flex flex-col bg-primary-500 dark:bg-primary-600 divide-y divide-primary-400',
+        'sn-primary-bg w-full flex flex-col divide-y divide-primary-400',
     ])
     role="menu"
 >

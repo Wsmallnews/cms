@@ -37,6 +37,11 @@
     @apply bg-primary-500 dark:bg-primary-600;
 }
 
+/** 灰色背景 **/
+.sn-gray-bg {
+    @apply bg-gray-100 dark:bg-gray-800;
+}
+
 /* 区块轮廓，四边都有 */
 .sn-contour {
     @apply shadow-sm shadow-gray-800/20 dark:shadow-gray-800/80 ring-1 ring-gray-200/80 dark:ring-gray-800/60;
