@@ -16,13 +16,12 @@
     role="menuitem"
 >
     <a @class([
-            'flex w-full justify-between items-center px-2 gap-2 group',
-            'h-14 text-white hover:bg-primary-600 dark:hover:bg-primary-700 pl-' . $currentLevel * 4 => $style === 'vivid',
-            'bg-primary-600 dark:bg-primary-700' => ($style === 'vivid' && $hasActive),
+            'flex w-full justify-between items-center px-4 gap-2 font-semibold group',
+            'sn-primary-bg sn-hover h-14 text-white' => $style === 'vivid',
+            'sn-active' => ($style === 'vivid' && $hasActive),
 
-            'h-10 rounded-md hover:text-primary-500 dark:hover:text-primary-600 hover:bg-gray-200 dark:hover:bg-gray-800' => $style === 'simple',
-            'text-gray-700 dark:text-white' => $style === 'simple' && !$hasActive,
-            'text-primary-500 dark:text-primary-600' => $style === 'simple' && $hasActive,
+            'sn-content-text sn-gray-bg sn-hover h-10 rounded-md' => $style === 'simple',
+            'sn-active' => $style === 'simple' && $hasActive,
         ])
         @if ($hasChild)
             @click="isExpanded = ! isExpanded"
@@ -59,6 +58,13 @@
                         </div>
                     </div>
                 @endif
+            @else 
+                @if ($currentLevel > 1)
+                    @for ($i = 0; $i < ($currentLevel - 1); $i++)
+                        {{-- 填充 --}}
+                        <div class="w-4"></div>
+                    @endfor
+                @endif
             @endif
             {{ $this->getRecordLabel($record) }}
         </div>
@@ -74,6 +80,7 @@
         <ul @class([
             'w-full flex flex-col',
             'border-t border-primary-400 divide-y divide-primary-400' => $style === 'vivid',
+            'space-y-1 mt-1' => $style === 'simple',
         ])
             id="accordionItemCategory{{$record->id}}"
             x-cloak x-show="isExpanded"

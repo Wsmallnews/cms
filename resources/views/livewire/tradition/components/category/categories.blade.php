@@ -1,12 +1,13 @@
 @php
     $nestedset = $this->getNestedset();
-    $style = 'vivid';
+    $style = 'simple';
 @endphp
 
 <ul
     @class([
         'w-full flex flex-col',
         'sn-primary-bg divide-y divide-primary-400' => $style === 'vivid',
+        'space-y-1 mt-1' => $style === 'simple',
     ])
     role="menu"
 >

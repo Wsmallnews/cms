@@ -2,7 +2,7 @@
     $nestedset = $this->getNestedset();
 @endphp
 
-<nav class="w-full bg-primary-500" x-data="{ mobileMenuIsOpen: false }" @click.away="mobileMenuIsOpen = false">
+<nav class="sn-primary-bg w-full" x-data="{ mobileMenuIsOpen: false }" @click.away="mobileMenuIsOpen = false">
     <div class="container hidden md:flex h-16 mx-auto px-4 sm:px-0">
         <ul class="flex h-full" role="menu">
             @foreach ($nestedset as $navigation)
@@ -10,8 +10,8 @@
                     $hasChild = $navigation->children->count() > 0;
                 @endphp
                 <li @class([
-                        'min-w-32 flex items-center relative group/child hover:bg-primary-600 transition-colors duration-300 ease-in-out',
-                        'bg-primary-600' => $navigation->has_active,
+                        'sn-primary-bg sn-hover min-w-32 flex items-center relative group/child',
+                        'sn-active' => $navigation->has_active,
                     ])
                     @if ($hasChild)
                         x-data="{ isOpen: false, openedWithKeyboard: false, leaveTimeout: null }"
@@ -22,7 +22,7 @@
                     @endif
                     role="menuitem"
                 >
-                    <a class="flex w-full h-full justify-center items-center px-4 font-bold text-white gap-2 underline-offset-2 focus:outline-hidden focus:underline"
+                    <a class="flex w-full h-full justify-center items-center px-4 font-semibold text-white gap-2 underline-offset-2 focus:outline-hidden focus:underline"
                         @if ($hasChild)
                             href="javascript:;"
                             x-on:keydown.space.prevent="openedWithKeyboard = true"
@@ -36,12 +36,12 @@
                     >
                         {{ $navigation->name_label }}
                         @if ($hasChild)
-                            <x-filament::icon icon="heroicon-m-chevron-down" class="size-6 font-bold transform transition-transform duration-300 rotate-0 group-hover/child:rotate-180" aria-hidden="true" />
+                            <x-filament::icon icon="heroicon-m-chevron-down" class="size-6 font-semibold transform transition-transform duration-300 rotate-0 group-hover/child:rotate-180" aria-hidden="true" />
                         @endif
                     </a>
 
                     @if ($hasChild) 
-                        <div class="w-full absolute top-full left-0 bg-primary-500 z-10"
+                        <div class="sn-primary-bg w-full absolute top-full left-0 z-10"
                             x-cloak x-show="isOpen || openedWithKeyboard"
                             x-transition
                             x-trap="openedWithKeyboard"
@@ -52,8 +52,8 @@
                                         $hasGrandChild = $child->children->count() > 0;
                                     @endphp
                                     <li @class([
-                                            'w-full h-14 flex items-center relative group/grandchild hover:bg-primary-600 transition-colors duration-300 ease-in-out',
-                                            'bg-primary-600' => $child->has_active,
+                                            'sn-primary-bg sn-hover w-full h-14 flex items-center relative group/grandchild',
+                                            'sn-active' => $child->has_active,
                                         ])
                                         @if ($hasGrandChild)
                                             x-data="{ isOpen: false, openedWithKeyboard: false, leaveTimeout: null }"
@@ -64,7 +64,7 @@
                                         @endif
                                         role="menuitem"
                                     >
-                                        <a class="flex w-full h-full justify-between items-center px-4 font-bold text-white gap-2 underline-offset-2 focus:outline-hidden focus:underline"
+                                        <a class="flex w-full h-full justify-between items-center px-4 font-semibold text-white gap-2 underline-offset-2 focus:outline-hidden focus:underline"
                                             @if ($hasGrandChild)
                                                 href="javascript:;"
                                                 x-on:keydown.space.prevent="openedWithKeyboard = true"
@@ -78,12 +78,12 @@
                                         >
                                             {{ $child->name_label }}
                                             @if ($hasGrandChild)
-                                                <x-filament::icon icon="heroicon-m-chevron-down" class="size-6 font-bold transform transition-transform duration-300 rotate-0 group-hover/child:-rotate-90" aria-hidden="true" />
+                                                <x-filament::icon icon="heroicon-m-chevron-down" class="size-6 font-semibold transform transition-transform duration-300 rotate-0 group-hover/child:-rotate-90" aria-hidden="true" />
                                             @endif
                                         </a>
 
                                         @if ($hasGrandChild) 
-                                            <div class="w-full absolute top-0 left-full bg-primary-500"
+                                            <div class="sn-primary-bg w-full absolute top-0 left-full"
                                                 x-cloak x-show="isOpen || openedWithKeyboard"
                                                 x-transition
                                                 x-trap="openedWithKeyboard"
@@ -91,12 +91,12 @@
                                                 <ul class="flex flex-col" role="menu">
                                                     @foreach ($child->children as $grandChild)
                                                         <li @class([
-                                                                'w-full h-12 flex items-center hover:bg-primary-600 transition-colors duration-300 ease-in-out',
-                                                                'bg-primary-600' => $grandChild->has_active,
+                                                                'sn-primary-bg sn-hover w-full h-12 flex items-center',
+                                                                'sn-active' => $grandChild->has_active,
                                                             ])
                                                             role="menuitem"
                                                         >
-                                                            <a class="flex w-full h-full justify-between items-center px-4 font-bold text-white gap-2 underline-offset-2 focus:outline-hidden focus:underline"
+                                                            <a class="flex w-full h-full justify-between items-center px-4 font-semibold text-white gap-2 underline-offset-2 focus:outline-hidden focus:underline"
                                                                 
                                                                 {{ \Filament\Support\generate_href_html($grandChild->url_info['url'], $grandChild->url_info['target'] ?? false) }}
                                                             >
@@ -133,7 +133,7 @@
     <!-- Mobile Menu -->
     <ul
         @class([
-            'w-full flex flex-col fixed max-h-svh overflow-y-auto inset-x-0 top-0 z-10 rounded-b-md pb-6 pt-20 bg-primary-500 dark:bg-primary-600 divide-y divide-primary-400 md:hidden',
+            'sn-primary-bg w-full flex flex-col fixed max-h-svh overflow-y-auto inset-x-0 top-0 z-10 rounded-b-md pb-6 pt-20 divide-y divide-primary-400 md:hidden',
         ])
         x-cloak x-show="mobileMenuIsOpen"
         x-transition:enter="transition motion-reduce:transition-none ease-out duration-300"

@@ -16,9 +16,9 @@
     role="menuitem"
 >
     <a @class([
-            'flex w-full h-14 justify-between items-center px-4 gap-2 font-bold text-white group',
-            'hover:bg-primary-600 dark:hover:bg-primary-700' => !$hasActive,
-            'bg-primary-600 dark:bg-primary-700' => $hasActive,
+            'sn-primary-bg sn-hover',
+            'sn-active' => $hasActive,
+            'flex w-full h-14 justify-between items-center px-4 gap-2 font-semibold text-white group',
         ])
         @if ($hasChild)
             @click="isExpanded = ! isExpanded"
