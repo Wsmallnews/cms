@@ -31,8 +31,8 @@ use Wsmallnews\Cms\Http\Middleware\RedirectIfAuthenticated;
 use Wsmallnews\Cms\Http\Middleware\RequirePassword;
 use Wsmallnews\Cms\Models\Post as PostModel;
 use Wsmallnews\Cms\Support\Utils;
-use Wsmallnews\User\Facades\UserConfig as UserConfigFacade;
 use Wsmallnews\User\Facades\SidebarMenuRegistry as SidebarMenuRegistryFacade;
+use Wsmallnews\User\Facades\UserConfig as UserConfigFacade;
 
 class CmsServiceProvider extends PackageServiceProvider
 {
@@ -231,35 +231,35 @@ class CmsServiceProvider extends PackageServiceProvider
 
         // 注册用户侧边栏菜单
         SidebarMenuRegistryFacade::registers(app(CmsPlugin::class)->getId(), [
-            fn() => [
+            fn () => [
                 'key' => 'profile',
                 'label' => '个人中心',
                 'url' => Utils::route('profile'),
                 'icon' => Heroicon::OutlinedUser,
                 'active_icon' => Heroicon::User,
             ],
-            fn() => [
+            fn () => [
                 'key' => 'settings-profile',
                 'label' => '修改资料',
                 'url' => Utils::route('settings.profile'),
                 'icon' => Heroicon::OutlinedPencilSquare,
                 'active_icon' => Heroicon::PencilSquare,
             ],
-            fn() => [
+            fn () => [
                 'key' => 'settings-password',
                 'label' => '修改密码',
                 'url' => Utils::route('settings.password'),
                 'icon' => Heroicon::OutlinedLockClosed,
                 'active_icon' => Heroicon::LockClosed,
             ],
-            fn() => [
+            fn () => [
                 'key' => 'settings-two-factor',
                 'label' => '双因素认证',
-                'url' => fn() => Utils::route('settings.two-factor'),
+                'url' => fn () => Utils::route('settings.two-factor'),
                 'icon' => Heroicon::OutlinedKey,
                 'active_icon' => Heroicon::Key,
-                'hidden' => fn() => !Utils::getConfig('two_factor.enabled', false),
-            ]
+                'hidden' => fn () => ! Utils::getConfig('two_factor.enabled', false),
+            ],
         ]);
     }
 
