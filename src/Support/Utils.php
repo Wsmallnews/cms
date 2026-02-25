@@ -186,14 +186,6 @@ class Utils
     }
 
     /**
-     * 获取指定容器
-     */
-    public static function getThemeContainer($name): string
-    {
-        return self::getConfig("themes.containers.{$name}", null);
-    }
-
-    /**
      * cms 内部路由处理
      *
      * @param  string  $name
