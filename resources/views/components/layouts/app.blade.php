@@ -1,5 +1,14 @@
+@php
+    use Wsmallnews\Cms\Support\Utils;
+@endphp
+
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="ltr">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="ltr"
+    @class([
+        'sn',
+        'dark' => Utils::hasDarkModeForced(),
+    ])
+>
     <head>
         <meta charset="utf-8">
         <meta name="application-name" content="{{ config('app.name') }}" />
@@ -7,10 +16,6 @@
         <meta name="viewport" content="width=device-width, initial-scale=1" />
 
         @stack('seo')
-
-        @php
-            use Wsmallnews\Cms\Support\Utils;
-        @endphp
 
         <style>
             :root {
@@ -33,6 +38,7 @@
             <!-- 如果强制暗黑模式，则主题一直是暗色 -->
             <script>
                 localStorage.setItem('sn-support-frontend-theme', 'dark')
+                document.documentElement.classList.add('dark')
             </script>
         @else
             <!-- 如果开启了主题，并且未强制暗黑，则加载 storage 中的主题配置 或者 默认主题配置 -->
@@ -61,7 +67,7 @@
         @vite('resources/css/app.css')
     </head>
 
-    <body class="antialiased bg-gray-50 dark:bg-gray-950">
+    <body class="sn-body antialiased bg-gray-50 dark:bg-gray-950">
         
         {{ $slot }}
 
