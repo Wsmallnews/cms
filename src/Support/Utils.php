@@ -169,7 +169,7 @@ class Utils
      */
     public static function getDefaultDarkMode(): string
     {
-        return self::getConfig('themes.default-dark-mode', 'system');
+        return self::getConfig('themes.default_dark_mode', 'system');
     }
 
     /**
@@ -177,7 +177,7 @@ class Utils
      */
     public static function hasDarkMode(): bool
     {
-        return self::getConfig('themes.dark-mode', false);
+        return self::getConfig('themes.dark_mode', false);
     }
 
     /**
@@ -185,7 +185,7 @@ class Utils
      */
     public static function hasDarkModeForced(): bool
     {
-        return self::getConfig('themes.dark-mode-forced', false);
+        return self::getConfig('themes.dark_mode_forced', false);
     }
 
     /**
@@ -209,7 +209,7 @@ class Utils
      */
     public static function getPageContainer(): string
     {
-        return self::getConfig('themes.page-container', 'sn-cms::page-container');
+        return self::getConfig('themes.page_container', 'sn-cms::container.page');
     }
 
     /**
