@@ -12,12 +12,12 @@ class Base extends Component
 
     public function getScopeType(): ?string
     {
-        return Utils::getScopeable()['scope_type'] ?? null;
+        return Utils::getScopeType() ?? null;
     }
 
     public function getScopeId(): ?int
     {
-        return Utils::getScopeable()['scope_id'] ?? null;
+        return Utils::getScopeId() ?? null;
     }
 
     public function getScopeable(): array

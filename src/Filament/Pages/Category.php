@@ -21,12 +21,12 @@ class Category extends BaseCategoryPage
 
     public static function getScopeType(): string
     {
-        return Utils::getScopeable()['scope_type'] ?? parent::getScopeType();
+        return self::getCustomScopeType() ?? Utils::getScopeType();
     }
 
     public static function getScopeId(): int
     {
-        return Utils::getScopeable()['scope_id'] ?? parent::getScopeId();
+        return self::getCustomScopeId() ?? Utils::getScopeId();
     }
 
     public function getLevel(): ?int

@@ -6,11 +6,23 @@ namespace Wsmallnews\Cms\Support;
 
 use Wsmallnews\Cms\Exceptions\CmsException;
 use Wsmallnews\Cms\Models;
+use Wsmallnews\Support\Data\ScopeableContext;
 use Wsmallnews\Support\Models\Tag as SupportTagModel;
+use Wsmallnews\Support\Support\Utils as SupportUtils;
 
+/**
+ * Utility class for CMS package configuration and helpers.
+ */
 class Utils
 {
-    public static function getConfig($name = null, $default = null)
+    /**
+     * Get configuration value.
+     *
+     * @param  string|null  $name  Configuration key (dot notation)
+     * @param  mixed  $default  Default value if not found
+     * @return mixed
+     */
+    public static function getConfig(?string $name = null, mixed $default = null): mixed
     {
         $config = config('sn-cms');
 
@@ -18,44 +30,65 @@ class Utils
     }
 
     /**
-     * 获取 scopeinfo 参数
+     * Get scopeable configuration as ScopeableContext object.
+     *
+     * @return ScopeableContext
+     *
+     * @throws CmsException
+     */
+    public static function getScopeableContext(): ScopeableContext
+    {
+        try {
+            return SupportUtils::getScopeFromConfig('sn-cms.scopeable');
+        } catch (\Wsmallnews\Support\Exceptions\InvalidScopeException $e) {
+            throw new CmsException('Scopeable配置错误: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Get scopeable array (legacy method for backward compatibility).
+     *
+     * @return array{scope_type: string, scope_id: int}
      *
      * @throws CmsException
      */
     public static function getScopeable(): array
     {
-        $scopeable = self::getConfig('scopeable');
-        if (! isset($scopeable['scope_type']) || blank($scopeable['scope_type'])
-             || ! isset($scopeable['scope_id']) || blank($scopeable['scope_id'])
-        ) {
-            throw new CmsException('scopeable配置错误, 请检查 sn-cms.php 配置文件');
-        }
-
-        return $scopeable;
+        return self::getScopeableContext()->toArray();
     }
 
     /**
-     * 获取 scopeType 参数
+     * Get scope type.
+     *
+     * @return string
      *
      * @throws CmsException
      */
     public static function getScopeType(): string
     {
-        return self::getScopeable()['scope_type'];
+        return self::getScopeableContext()->scopeType;
     }
 
     /**
-     * 获取 scopeId 参数
+     * Get scope ID.
+     *
+     * @return int
      *
      * @throws CmsException
      */
     public static function getScopeId(): int
     {
-        return self::getScopeable()['scope_id'];
+        return self::getScopeableContext()->scopeId;
     }
 
     /**
-     * 获取模型
+     * Get model class by name.
+     *
+     * @param  string  $name  Model name (e.g., 'post', 'navigation')
+     * @param  bool  $shouldException  Whether to throw exception if not found
+     * @return string|null
+     *
+     * @throws CmsException
      */
     public static function getModel(string $name, bool $shouldException = true): ?string
     {
@@ -69,9 +102,9 @@ class Utils
     }
 
     /**
-     * 获取内容模型
+     * Get content model class.
      *
-     * @return Models\Content
+     * @return string  Models\Content
      */
     public static function getContentModel(): string
     {
@@ -79,9 +112,9 @@ class Utils
     }
 
     /**
-     * 获取内容模型
+     * Get navigation model class.
      *
-     * @return Models\Navigation
+     * @return string  Models\Navigation
      */
     public static function getNavigationModel(): string
     {
@@ -89,9 +122,9 @@ class Utils
     }
 
     /**
-     * 获取导航类型模型
+     * Get navigation type model class.
      *
-     * @return Models\NavigationType
+     * @return string  Models\NavigationType
      */
     public static function getNavigationTypeModel(): string
     {
@@ -99,9 +132,9 @@ class Utils
     }
 
     /**
-     * 获取文章模型
+     * Get post model class.
      *
-     * @return Models\Post
+     * @return string  Models\Post
      */
     public static function getPostModel(): string
     {
@@ -109,9 +142,9 @@ class Utils
     }
 
     /**
-     * 获取文章模型
+     * Get tag model class.
      *
-     * @return Models\Post
+     * @return string  Models\Post
      */
     public static function getTagModel(): string
     {
@@ -119,18 +152,20 @@ class Utils
     }
 
     /**
-     * 获取文件目录
+     * Get file directory path with optional type and date.
      *
-     * @param  string|null  $type  目录类型
+     * @param  string|null  $type  Directory type
      * @return string
      */
-    public static function getFileDirectory($type = null)
+    public static function getFileDirectory(?string $type = null): string
     {
         return self::getConfig('file_directory', 'sn/cms/') . ($type ? $type . '/' : '') . date('Ymd');
     }
 
     /**
-     * 获取主题配置信息
+     * Get theme configuration.
+     *
+     * @return array
      */
     public static function getThemes(): array
     {
@@ -138,7 +173,9 @@ class Utils
     }
 
     /**
-     * 获取主题模式
+     * Get default dark mode setting.
+     *
+     * @return string
      */
     public static function getDefaultDarkMode(): string
     {
@@ -146,7 +183,9 @@ class Utils
     }
 
     /**
-     * 是否启用暗黑模式
+     * Check if dark mode is enabled.
+     *
+     * @return bool
      */
     public static function hasDarkMode(): bool
     {
@@ -154,7 +193,9 @@ class Utils
     }
 
     /**
-     * 是否强制暗黑主题
+     * Check if dark mode is forced.
+     *
+     * @return bool
      */
     public static function hasDarkModeForced(): bool
     {
@@ -162,7 +203,9 @@ class Utils
     }
 
     /**
-     * 获取当前主题
+     * Get current theme name.
+     *
+     * @return string
      */
     public static function getTheme(): string
     {
@@ -170,7 +213,9 @@ class Utils
     }
 
     /**
-     * 获取当前布局
+     * Get layout view path.
+     *
+     * @return string
      */
     public static function getLayout(): string
     {
@@ -178,7 +223,9 @@ class Utils
     }
 
     /**
-     * 获取当前页面容器
+     * Get page container view path.
+     *
+     * @return string
      */
     public static function getPageContainer(): string
     {
@@ -186,13 +233,14 @@ class Utils
     }
 
     /**
-     * cms 内部路由处理
+     * Generate CMS route with configured prefix.
      *
-     * @param  string  $name
-     * @param  mixed  $parameters
-     * @param  bool  $absolute
+     * @param  string  $name  Route name
+     * @param  mixed  $parameters  Route parameters
+     * @param  bool  $absolute  Generate absolute URL
+     * @return string
      */
-    public static function route($name, $parameters = [], $absolute = true): string
+    public static function route(string $name, mixed $parameters = [], bool $absolute = true): string
     {
         $name = self::getConfig('routes.name', '') . $name;
 
