@@ -20,7 +20,6 @@ class Utils
      *
      * @param  string|null  $name  Configuration key (dot notation)
      * @param  mixed  $default  Default value if not found
-     * @return mixed
      */
     public static function getConfig(?string $name = null, mixed $default = null): mixed
     {
@@ -32,7 +31,6 @@ class Utils
     /**
      * Get scopeable configuration as ScopeableContext object.
      *
-     * @return ScopeableContext
      *
      * @throws CmsException
      */
@@ -60,7 +58,6 @@ class Utils
     /**
      * Get scope type.
      *
-     * @return string
      *
      * @throws CmsException
      */
@@ -72,7 +69,6 @@ class Utils
     /**
      * Get scope ID.
      *
-     * @return int
      *
      * @throws CmsException
      */
@@ -86,7 +82,6 @@ class Utils
      *
      * @param  string  $name  Model name (e.g., 'post', 'navigation')
      * @param  bool  $shouldException  Whether to throw exception if not found
-     * @return string|null
      *
      * @throws CmsException
      */
@@ -104,7 +99,7 @@ class Utils
     /**
      * Get content model class.
      *
-     * @return string  Models\Content
+     * @return string Models\Content
      */
     public static function getContentModel(): string
     {
@@ -114,7 +109,7 @@ class Utils
     /**
      * Get navigation model class.
      *
-     * @return string  Models\Navigation
+     * @return string Models\Navigation
      */
     public static function getNavigationModel(): string
     {
@@ -124,7 +119,7 @@ class Utils
     /**
      * Get navigation type model class.
      *
-     * @return string  Models\NavigationType
+     * @return string Models\NavigationType
      */
     public static function getNavigationTypeModel(): string
     {
@@ -134,7 +129,7 @@ class Utils
     /**
      * Get post model class.
      *
-     * @return string  Models\Post
+     * @return string Models\Post
      */
     public static function getPostModel(): string
     {
@@ -144,7 +139,7 @@ class Utils
     /**
      * Get tag model class.
      *
-     * @return string  Models\Post
+     * @return string Models\Post
      */
     public static function getTagModel(): string
     {
@@ -155,7 +150,6 @@ class Utils
      * Get file directory path with optional type and date.
      *
      * @param  string|null  $type  Directory type
-     * @return string
      */
     public static function getFileDirectory(?string $type = null): string
     {
@@ -164,8 +158,6 @@ class Utils
 
     /**
      * Get theme configuration.
-     *
-     * @return array
      */
     public static function getThemes(): array
     {
@@ -174,8 +166,6 @@ class Utils
 
     /**
      * Get default dark mode setting.
-     *
-     * @return string
      */
     public static function getDefaultDarkMode(): string
     {
@@ -184,8 +174,6 @@ class Utils
 
     /**
      * Check if dark mode is enabled.
-     *
-     * @return bool
      */
     public static function hasDarkMode(): bool
     {
@@ -194,8 +182,6 @@ class Utils
 
     /**
      * Check if dark mode is forced.
-     *
-     * @return bool
      */
     public static function hasDarkModeForced(): bool
     {
@@ -204,8 +190,6 @@ class Utils
 
     /**
      * Get current theme name.
-     *
-     * @return string
      */
     public static function getTheme(): string
     {
@@ -214,8 +198,6 @@ class Utils
 
     /**
      * Get layout view path.
-     *
-     * @return string
      */
     public static function getLayout(): string
     {
@@ -224,8 +206,6 @@ class Utils
 
     /**
      * Get page container view path.
-     *
-     * @return string
      */
     public static function getPageContainer(): string
     {
@@ -238,7 +218,6 @@ class Utils
      * @param  string  $name  Route name
      * @param  mixed  $parameters  Route parameters
      * @param  bool  $absolute  Generate absolute URL
-     * @return string
      */
     public static function route(string $name, mixed $parameters = [], bool $absolute = true): string
     {
