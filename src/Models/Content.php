@@ -13,7 +13,6 @@ class Content extends SupportModel
 
     protected $casts = [];
 
-
     /**
      * Boot the model and apply default scope attributes.
      */
@@ -28,7 +27,6 @@ class Content extends SupportModel
             }
         });
     }
-
 
     public function contentable(): MorphTo
     {

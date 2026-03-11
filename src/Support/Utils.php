@@ -7,6 +7,7 @@ namespace Wsmallnews\Cms\Support;
 use Wsmallnews\Cms\Exceptions\CmsException;
 use Wsmallnews\Cms\Models;
 use Wsmallnews\Support\Data\ScopeableContext;
+use Wsmallnews\Support\Exceptions\InvalidScopeException;
 use Wsmallnews\Support\Models\Tag as SupportTagModel;
 use Wsmallnews\Support\Support\Utils as SupportUtils;
 
@@ -38,7 +39,7 @@ class Utils
     {
         try {
             return SupportUtils::getScopeFromConfig('sn-cms.scopeable');
-        } catch (\Wsmallnews\Support\Exceptions\InvalidScopeException $e) {
+        } catch (InvalidScopeException $e) {
             throw new CmsException('Scopeable配置错误: ' . $e->getMessage());
         }
     }
