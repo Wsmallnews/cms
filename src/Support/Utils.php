@@ -98,16 +98,6 @@ class Utils
     }
 
     /**
-     * Get content model class.
-     *
-     * @return string Models\Content
-     */
-    public static function getContentModel(): string
-    {
-        return self::getModel('content');
-    }
-
-    /**
      * Get navigation model class.
      *
      * @return string Models\Navigation

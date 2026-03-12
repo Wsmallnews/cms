@@ -66,7 +66,7 @@ class Post extends SupportModel implements HasMedia
 
     public function content(): MorphOne
     {
-        return $this->morphOne(Utils::getContentModel(), 'contentable');
+        return $this->morphOne(SupportUtils::getContentModel(), 'contentable');
     }
 
     public function publisher(): MorphTo

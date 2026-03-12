@@ -86,7 +86,6 @@ class CmsServiceProvider extends PackageServiceProvider
     {
         // / 注册模型别名
         Relation::enforceMorphMap([
-            'sn_content' => Utils::getContentModel(),
             'sn_navigation' => Utils::getNavigationModel(),
             'sn_navigation_type' => Utils::getNavigationTypeModel(),
             'sn_post' => Utils::getPostModel(),
@@ -331,7 +330,6 @@ class CmsServiceProvider extends PackageServiceProvider
         return [
             '2025_11_01_183836_create_sn_navigation_types_table',
             '2025_11_01_211931_create_sn_navigations_table',
-            '2025_11_01_213119_create_sn_contents_table',
             '2025_11_04_111453_create_sn_posts_table',
         ];
     }
