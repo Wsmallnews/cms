@@ -49,9 +49,9 @@ class Post extends SupportModel implements HasMedia
         });
     }
 
-    public function scopeNormal($query)
+    public function scopePublished($query)
     {
-        return $query->where('status', PostStatus::Normal);
+        return $query->where('status', PostStatus::Published);
     }
 
     public function scopeHidden($query)

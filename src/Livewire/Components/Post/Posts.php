@@ -41,7 +41,7 @@ class Posts extends Base
         $allCategories = filled($categoryIds) ? $this->getCategoryIds($categories) : collect([]);
 
         // 查询图文
-        $query = Utils::getPostModel()::snScope(...$this->getScopeable())->normal()->with(['media'])
+        $query = Utils::getPostModel()::snScope(...$this->getScopeable())->published()->with(['media'])
             ->when($allCategories->isNotEmpty(), function ($query) use ($allCategories) {
                 $query->categoryIds($allCategories);
             })

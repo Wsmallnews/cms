@@ -27,6 +27,7 @@ return new class extends Migration
             $table->string('description')->nullable()->comment('描述');
             $table->unsignedBigInteger('views')->default(0)->comment('浏览量');
             $table->timestamp('published_at')->nullable()->comment('发布时间');
+            $table->timestamp('scheduled_at')->nullable()->comment('定时发布时间');
 
             $table->json('options')->nullable()->comment('选项');
             $table->string('status')->nullable()->comment('状态');
