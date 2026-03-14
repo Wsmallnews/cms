@@ -5,6 +5,7 @@ namespace Wsmallnews\Cms\Filament\Resources\Posts\Schemas;
 use CodeWithDennis\FilamentSelectTree\SelectTree;
 use Filament\Forms;
 use Filament\Schemas;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
 use Livewire\Component;
 use Wsmallnews\Cms\Enums\PostStatus;
@@ -111,11 +112,43 @@ class PostForm
                     Forms\Components\TextInput::make('order_column')->label('排序')->integer()
                         ->placeholder('正序排列')
                         ->rules(['integer', 'min:0']),
-                    Forms\Components\Radio::make('status')
+                    Forms\Components\ToggleButtons::make('status')
                         ->label('状态')
                         ->default(PostStatus::Published)
                         ->inline()
                         ->options(PostStatus::class),
+                    Schemas\Components\Group::make()
+                        ->schema([
+                            Forms\Components\Radio::make('scheduled_at_type')
+                                ->label('计划发布时间类型')
+                                ->default('scheduled_at')
+                                ->options([
+                                    'scheduled_at' => '计划发布时间',
+                                    'minutes_later' => '分钟后发布',
+                                ]),
+                            Forms\Components\DateTimePicker::make('scheduled_at')
+                                ->label('计划发布时间')
+                                ->placeholder('选择发布时间')
+                                ->displayFormat('Y-m-d H:i:s')
+                                ->native(false)
+                                ->required(fn(Get $get) => (bool) ($get('scheduled_at_type') === 'scheduled_at'))
+                                ->markAsRequired()
+                                ->visibleJs(<<<'JS'
+                                    $get('scheduled_at_type') == 'scheduled_at'
+                                JS),
+                            Forms\Components\TextInput::make('minutes_later')
+                                ->label('分钟后发布')
+                                ->placeholder('请输入分钟数')
+                                ->integer()
+                                ->minValue(0)
+                                ->required(fn(Get $get) => (bool) ($get('scheduled_at_type') === 'minutes_later'))
+                                ->markAsRequired()
+                                ->visibleJs(<<<'JS'
+                                    $get('scheduled_at_type') == 'minutes_later'
+                                JS),
+                        ])->visibleJs(<<<'JS'
+                            $get('status') == 'scheduled'
+                        JS)
                 ])->grow(false),
             ])
                 ->columnSpanFull()

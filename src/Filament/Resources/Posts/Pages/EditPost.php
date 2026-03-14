@@ -25,6 +25,20 @@ class EditPost extends EditRecord
         ];
     }
 
+
+    /**
+     * @param  array<string, mixed>  $data
+     * @return array<string, mixed>
+     */
+    protected function mutateFormDataBeforeFill(array $data): array
+    {
+        // 编辑时候，默认设置为 scheduled_at 类型
+        $data['scheduled_at_type'] = 'scheduled_at';
+
+        return $data;
+    }
+
+
     /**
      * Mutate the form data before creating a record.
      *
@@ -33,11 +47,23 @@ class EditPost extends EditRecord
      */
     protected function mutateFormDataBeforeSave(array $data): array
     {
-        if ($data['status'] === PostStatus::Published && ! filled($data['published_at'])) {
+        $record = $this->getRecord();
+
+        if ($data['status'] === PostStatus::Published && blank($record->published_at)) {
             $data['published_at'] = now();
         }
 
-        return parent::mutateFormDataBeforeCreate($data);
-    }
+        if ($data['status'] === PostStatus::Scheduled) {
+            if ($data['scheduled_at_type'] === 'minutes_later') {
+                $data['scheduled_at'] = now()->addMinutes($data['minutes_later']);
+            } else {
+                $data['scheduled_at'] = $data['scheduled_at'];
+            }
+        }
 
+        // 移除 scheduled_at_type 和 minutes_later 参数
+        unset($data['scheduled_at_type'], $data['minutes_later']);
+
+        return parent::mutateFormDataBeforeSave($data);
+    }
 }

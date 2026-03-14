@@ -15,15 +15,11 @@ enum PostStatus: string implements HasColor, HasIcon, HasLabel
 
     case Draft = 'draft';
 
-    case Pending = 'pending';
-
     case Published = 'published';
 
     case Hidden = 'hidden';
 
     case Scheduled = 'scheduled';
-
-    const Locked = 'locked';
 
     public function getLabel(): ?string
     {
@@ -39,9 +35,9 @@ enum PostStatus: string implements HasColor, HasIcon, HasLabel
     {
         return match ($this) {
             self::Draft => 'info',
-            self::Published => 'success',
+            self::Published => 'primary',
             self::Hidden => 'gray',
-            self::Scheduled => 'primary',
+            self::Scheduled => 'warning',
         };
     }
 
