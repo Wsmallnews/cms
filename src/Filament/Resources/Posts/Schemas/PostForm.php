@@ -6,8 +6,11 @@ use CodeWithDennis\FilamentSelectTree\SelectTree;
 use Filament\Forms;
 use Filament\Schemas;
 use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
+use Illuminate\Support\Str;
 use Livewire\Component;
+use Illuminate\Database\Eloquent\Builder;
 use Wsmallnews\Cms\Enums\PostStatus;
 use Wsmallnews\Support\Support\Utils as SupportUtils;
 
@@ -55,7 +58,18 @@ class PostForm
 
                         Forms\Components\TextInput::make('title')->label('标题')
                             ->placeholder('请输入内容标题')
-                            ->required(),
+                            ->required()
+                            ->live(onBlur: true)
+                            ->afterStateUpdated(function (Set $set, $state) {
+                                $set('slug', Str::slug(title: $state, language: app()->getLocale()));
+                            }),
+                        Forms\Components\TextInput::make('slug')
+                            ->label('Slug')
+                            ->scopedUnique(modifyQueryUsing: function (Builder $query, Component $livewire) {
+                                return $query->scopeable($livewire::getScopeType(), $livewire::getScopeId());
+                            })
+                            ->required()
+                            ->maxLength(255),
                         Forms\Components\Textarea::make('description')->label('描述')
                             ->placeholder('请输入描述'),
                     ])->columns(1),

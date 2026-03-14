@@ -8,6 +8,7 @@ use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Support\Enums\Alignment;
 use Guava\IconPicker\Forms\Components\IconPicker;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
 use Livewire\Component;
@@ -110,8 +111,9 @@ class NavigationForm
                 }),
             Forms\Components\TextInput::make('slug')
                 ->label('导航标识')
-                // @sn todo 导航标识唯一性需要附加条件
-                ->unique(ignorable: fn (?NavigationModel $record): ?NavigationModel => $record)
+                ->scopedUnique(modifyQueryUsing: function (Builder $query, Component $livewire) {
+                    return $query->scopeable($livewire::getScopeType(), $livewire::getScopeId());
+                })
                 ->required()
                 ->maxLength(255)
                 ->visible(function (Get $get) {
