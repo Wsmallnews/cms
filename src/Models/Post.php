@@ -34,7 +34,7 @@ class Post extends SupportModel implements HasMedia
 
     public function getRouteKeyName()
     {
-        return 'slug';
+        return Utils::getConfig('routes.route_key_name.post', 'slug');
     }
 
     /**

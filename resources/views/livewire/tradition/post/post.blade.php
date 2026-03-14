@@ -12,6 +12,6 @@
             </div>
         @endif
 
-        <livewire:sn-cms-components-post :scope-type="$scopeType" :scope-id="$scopeId" :id="$id" />
+        <livewire:sn-cms-components-post :scope-type="$scopeType" :scope-id="$scopeId" :slug="$slug" />
     </div>
 </x-dynamic-component>

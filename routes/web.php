@@ -67,7 +67,7 @@ Route::domain(Utils::getConfig('routes.domain'))
 
         // 普通用户路由
         Route::get(Utils::getConfig('routes.uri.index'), Index::class)->name('index');
-        Route::get(Utils::getConfig('routes.uri.navigation'), Navigation::class)->name('navigation');
+        Route::get(Utils::getConfig('routes.uri.navigation-show'), Navigation::class)->name('navigation.show');
         Route::get(Utils::getConfig('routes.uri.posts'), Posts::class)->name('posts');
         Route::get(Utils::getConfig('routes.uri.posts-show'), Post::class)->name('posts.show');
     });

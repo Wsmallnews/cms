@@ -37,6 +37,7 @@ return new class extends Migration
             $table->index('team_id');
             $table->index(['scope_type', 'scope_id']);
             $table->index('order_column');
+            $table->index('slug');
         });
 
         Schema::create('sn_category_post', function (Blueprint $table) {

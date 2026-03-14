@@ -77,13 +77,20 @@ return [
          */
         'name' => 'sn-cms.',
         /**
+         * Default route key name for the cms models.
+         */
+        'route_key_name' => [
+            'navigation' => 'slug',
+            'post' => 'slug',
+        ],
+        /**
          * default uri for the cms routes
          */
         'uri' => [
             'index' => '/',
-            'navigation' => 'navigation/{slug}',
+            'navigation-show' => 'navigation/{slug}',
             'posts' => 'posts',
-            'posts-show' => 'posts/{id}',
+            'posts-show' => 'posts/{slug}',
 
             'login' => 'login',
             'register' => 'register',

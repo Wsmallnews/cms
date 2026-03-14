@@ -44,7 +44,7 @@ class Navigation extends SupportModel implements HasMedia
 
     public function getRouteKeyName()
     {
-        return 'slug';
+        return Utils::getConfig('routes.route_key_name.navigation', 'slug');
     }
 
     protected function urlInfo(): Attribute
@@ -68,7 +68,7 @@ class Navigation extends SupportModel implements HasMedia
 
                 if ($this->type == NavigationTypeEnum::Page) {
                     // cms 导航页面，使用 Utils 路由方法拼接 cms 路由前缀
-                    $url = Utils::route('navigation', $attributes['slug']);
+                    $url = Utils::route('navigation.show', $this);
                 }
 
                 if ($this->type == NavigationTypeEnum::Url && isset($options['url'])) {
@@ -77,7 +77,7 @@ class Navigation extends SupportModel implements HasMedia
 
                 if ($this->type == NavigationTypeEnum::Content) {
                     // cms 内容页面，使用 Utils 路由方法拼接 cms 路由前缀
-                    $url = Utils::route('navigation', $attributes['slug']);
+                    $url = Utils::route('navigation.show', $this);
                 }
 
                 return [

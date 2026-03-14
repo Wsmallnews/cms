@@ -7,6 +7,7 @@ use Wsmallnews\Cms\Enums\NavigationType as NavigationTypeEnum;
 use Wsmallnews\Cms\Facades\ContentRegistry;
 use Wsmallnews\Cms\Livewire\Components\Base;
 use Wsmallnews\Cms\Livewire\Concerns\Navigationable;
+use Wsmallnews\Cms\Support\Utils;
 
 class NavigationContainer extends Base
 {
@@ -16,7 +17,8 @@ class NavigationContainer extends Base
 
     public function render()
     {
-        $navigation = $this->getScopedQuery()->normal()->withDepth()->where('slug', $this->slug)->firstOrFail();
+        $navigationModel = new (Utils::getNavigationModel());
+        $navigation = $this->getScopedQuery()->normal()->withDepth()->where($navigationModel->getRouteKeyName(), $this->slug)->firstOrFail();
 
         if ($navigation->type == NavigationTypeEnum::Content) {
             $scopeType = $this->getScopeType();

@@ -11,11 +11,12 @@ class Post extends Base
 {
     use CanBeContained;
 
-    public int $id;
+    public string $slug;
 
     public function render()
     {
-        $post = Utils::getPostModel()::snScope(...$this->getScopeable())->published()->with(['media', 'content'])->findOrFail($this->id);
+        $model = new (Utils::getPostModel());
+        $post = $model->snScope(...$this->getScopeable())->published()->with(['media', 'content'])->where($model->getRouteKeyName(), $this->slug)->firstOrFail();
 
         Model::withoutTimestamps(fn () => $post->increment('views'));        // 增加浏览量,不更新 updated_at
 

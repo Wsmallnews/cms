@@ -11,7 +11,7 @@
         return [
             'image' => $post->getFirstMediaUrl('post_image'),
             'label' => $post->title,
-            'url' => \Wsmallnews\Cms\Support\Utils::route('posts.show', $post->id),
+            'url' => \Wsmallnews\Cms\Support\Utils::route('posts.show', $post),
         ];
     })->toArray();
 @endphp
@@ -29,7 +29,7 @@
         @foreach($posts as $post)
             @if ($loop->index >= $listStartIndex)
                 <x-sn-cms::container.block-link
-                    href="{{ \Wsmallnews\Cms\Support\Utils::route('posts.show', $post->id) }}" 
+                    href="{{ \Wsmallnews\Cms\Support\Utils::route('posts.show', $post) }}" 
                     class="sn-link flex w-full h-28 lg:h-auto min-h-0 gap-2 group"
                 >
                     @if ($post->getFirstMediaUrl('post_image'))

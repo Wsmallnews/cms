@@ -15,7 +15,7 @@
                         'sn-container sn-hover sn-link p-4' => $contained,
                         'flex flex-row gap-4 overflow-hidden group'
                     ])
-                    href="{{ \Wsmallnews\Cms\Support\Utils::route('posts.show', $post->id) }}"
+                    href="{{ \Wsmallnews\Cms\Support\Utils::route('posts.show', $post) }}"
                 >
                     @if ($post->getFirstMediaUrl('post_image'))
                         <div class="w-44 h-44 shrink-0 rounded-md overflow-hidden">
