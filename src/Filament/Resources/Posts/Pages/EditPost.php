@@ -15,7 +15,7 @@ class EditPost extends EditRecord
     use Scopeable;
 
     protected static string $resource = PostResource::class;
- 
+
     protected function getHeaderActions(): array
     {
         return [
@@ -24,7 +24,6 @@ class EditPost extends EditRecord
             RestoreAction::make(),
         ];
     }
-
 
     /**
      * @param  array<string, mixed>  $data
@@ -37,7 +36,6 @@ class EditPost extends EditRecord
 
         return $data;
     }
-
 
     /**
      * Mutate the form data before creating a record.

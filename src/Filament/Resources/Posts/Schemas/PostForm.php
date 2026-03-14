@@ -8,9 +8,9 @@ use Filament\Schemas;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 use Livewire\Component;
-use Illuminate\Database\Eloquent\Builder;
 use Wsmallnews\Cms\Enums\PostStatus;
 use Wsmallnews\Support\Support\Utils as SupportUtils;
 
@@ -145,7 +145,7 @@ class PostForm
                                 ->placeholder('选择发布时间')
                                 ->displayFormat('Y-m-d H:i:s')
                                 ->native(false)
-                                ->required(fn(Get $get) => (bool) ($get('scheduled_at_type') === 'scheduled_at'))
+                                ->required(fn (Get $get) => (bool) ($get('scheduled_at_type') === 'scheduled_at'))
                                 ->markAsRequired()
                                 ->visibleJs(<<<'JS'
                                     $get('scheduled_at_type') == 'scheduled_at'
@@ -155,14 +155,14 @@ class PostForm
                                 ->placeholder('请输入分钟数')
                                 ->integer()
                                 ->minValue(0)
-                                ->required(fn(Get $get) => (bool) ($get('scheduled_at_type') === 'minutes_later'))
+                                ->required(fn (Get $get) => (bool) ($get('scheduled_at_type') === 'minutes_later'))
                                 ->markAsRequired()
                                 ->visibleJs(<<<'JS'
                                     $get('scheduled_at_type') == 'minutes_later'
                                 JS),
                         ])->visibleJs(<<<'JS'
                             $get('status') == 'scheduled'
-                        JS)
+                        JS),
                 ])->grow(false),
             ])
                 ->columnSpanFull()

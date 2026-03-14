@@ -32,7 +32,6 @@ class Post extends SupportModel implements HasMedia
         'status' => PostStatus::class,
     ];
 
-
     public function getRouteKeyName()
     {
         return 'slug';

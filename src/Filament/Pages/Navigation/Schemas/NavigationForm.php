@@ -15,7 +15,6 @@ use Livewire\Component;
 use Wsmallnews\Cms\Enums\NavigationStatus;
 use Wsmallnews\Cms\Enums\NavigationType as NavigationTypeEnum;
 use Wsmallnews\Cms\Facades\ContentRegistry;
-use Wsmallnews\Cms\Models\Navigation as NavigationModel;
 use Wsmallnews\Cms\Support\Utils;
 use Wsmallnews\Support\Support\Utils as SupportUtils;
 
