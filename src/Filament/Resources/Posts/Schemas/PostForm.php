@@ -113,7 +113,7 @@ class PostForm
                         ->rules(['integer', 'min:0']),
                     Forms\Components\Radio::make('status')
                         ->label('状态')
-                        ->default(PostStatus::Normal)
+                        ->default(PostStatus::Published)
                         ->inline()
                         ->options(PostStatus::class),
                 ])->grow(false),

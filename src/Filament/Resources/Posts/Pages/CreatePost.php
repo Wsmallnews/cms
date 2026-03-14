@@ -4,6 +4,7 @@ namespace Wsmallnews\Cms\Filament\Resources\Posts\Pages;
 
 use Filament\Facades\Filament;
 use Filament\Resources\Pages\CreateRecord;
+use Wsmallnews\Cms\Enums\PostStatus;
 use Wsmallnews\Cms\Filament\Resources\Posts\PostResource;
 use Wsmallnews\Support\Filament\Resources\Concerns\Pages\Scopeable;
 
@@ -30,6 +31,10 @@ class CreatePost extends CreateRecord
             'publisher_type' => $admin->getMorphClass(),
             'publisher_id' => $admin->id,
         ]);
+
+        if ($data['status'] === PostStatus::Published) {
+            $data['published_at'] = now();
+        }
 
         return parent::mutateFormDataBeforeCreate($data);
     }

@@ -28,6 +28,7 @@ class Post extends SupportModel implements HasMedia
     protected $casts = [
         'options' => 'array',
         'published_at' => 'datetime',
+        'scheduled_at' => 'datetime',
         'status' => PostStatus::class,
     ];
 
@@ -49,6 +50,11 @@ class Post extends SupportModel implements HasMedia
         });
     }
 
+    public function scopeDraft($query)
+    {
+        return $query->where('status', PostStatus::Draft);
+    }
+
     public function scopePublished($query)
     {
         return $query->where('status', PostStatus::Published);
@@ -57,6 +63,11 @@ class Post extends SupportModel implements HasMedia
     public function scopeHidden($query)
     {
         return $query->where('status', PostStatus::Hidden);
+    }
+
+    public function scopeScheduled($query)
+    {
+        return $query->where('status', PostStatus::Scheduled);
     }
 
     public function categories(): BelongsToMany
