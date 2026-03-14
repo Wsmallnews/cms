@@ -15,7 +15,7 @@ class EditPost extends EditRecord
     use Scopeable;
 
     protected static string $resource = PostResource::class;
- 
+
     protected function getHeaderActions(): array
     {
         return [
@@ -39,5 +39,4 @@ class EditPost extends EditRecord
 
         return parent::mutateFormDataBeforeCreate($data);
     }
-
 }
