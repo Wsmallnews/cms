@@ -59,9 +59,7 @@ class Post extends SupportModel implements HasMedia
 
     /**
      * 范围查询：有指定标签的帖子
-     * 
-     * @param Builder $query
-     * @param mixed $flag
+     *
      * @return Builder
      */
     public function scopeHasFlag(Builder $query, mixed $flag)

@@ -81,7 +81,7 @@ class CmsServiceProvider extends PackageServiceProvider
         $this->app->singleton(ContentRegistry::class, function (): ContentRegistry {
             return new ContentRegistry;
         });
-        
+
         // 注册推荐标签注册器
         $this->app->singleton(FlagRegistry::class, function (): FlagRegistry {
             return new FlagRegistry;

@@ -139,8 +139,6 @@ class Utils
 
     /**
      * Get model class by name.
-     *
-     * @return array
      */
     public static function getFlags(): ?array
     {

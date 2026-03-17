@@ -2,7 +2,6 @@
 
 namespace Wsmallnews\Cms;
 
-use Closure;
 use Illuminate\Support\Collection;
 
 class FlagRegistry
@@ -93,7 +92,6 @@ class FlagRegistry
             return [$flagInfo['type'] => $flagInfo['label']];
         })->toArray();
     }
-
 
     /**
      * 获取指定范围的内容类型颜色，用于显示 选项颜色
