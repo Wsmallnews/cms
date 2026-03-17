@@ -13,6 +13,8 @@ use Filament\Support\Enums\Width;
 use Filament\Tables;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
+use Livewire\Component;
+use Wsmallnews\Cms\Facades\FlagRegistry;
 
 class PostsTable
 {
@@ -44,6 +46,12 @@ class PostsTable
                     ->searchable()
                     ->toggleable()
                     ->badge(),
+                Tables\Columns\ViewColumn::make('flags')
+                    ->label('标志')
+                    ->toggleable()
+                    ->view('sn-cms::filament.tables.columns.flags-text', function (Component $livewire) {
+                        return ['scopeType' => $livewire::getScopeType()];
+                    }),
                 // Tables\Columns\SpatieTagsColumn::make('tags')
                 //     ->label('标签')
                 //     ->type('post_tags')
@@ -73,6 +81,14 @@ class PostsTable
             ->searchPlaceholder('搜索标题、描述等...')
             ->filtersFormWidth(Width::Medium)
             ->filters([
+                Tables\Filters\SelectFilter::make('flag')
+                    ->label('标志')
+                    ->options(fn (Component $livewire) => FlagRegistry::getTypesOptions($livewire::getScopeType()))
+                    ->query(function ($query, $data) {
+                        if ($data['value']) {
+                            $query->hasFlag($data['value']);
+                        }
+                    }),
                 // ...Common::createUpdateRangeFilter(),
                 TrashedFilter::make(),
             ])

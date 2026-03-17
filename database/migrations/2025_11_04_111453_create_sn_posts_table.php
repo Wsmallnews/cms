@@ -29,6 +29,7 @@ return new class extends Migration
             $table->timestamp('published_at')->nullable()->comment('发布时间');
             $table->timestamp('scheduled_at')->nullable()->comment('定时发布时间');
 
+            $table->json('flags')->nullable()->comment('标志');
             $table->json('options')->nullable()->comment('选项');
             $table->string('status')->nullable()->comment('状态');
             $table->unsignedInteger('order_column')->nullable()->comment('排序');

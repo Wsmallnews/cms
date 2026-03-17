@@ -24,6 +24,7 @@ use Spatie\LaravelPackageTools\PackageServiceProvider;
 use Wsmallnews\Category\Models\Category as CategoryModel;
 use Wsmallnews\Cms\Commands\CmsCommand;
 use Wsmallnews\Cms\Facades\ContentRegistry as ContentRegistryFacade;
+use Wsmallnews\Cms\Facades\FlagRegistry as FlagRegistryFacade;
 use Wsmallnews\Cms\Filament\Pages\Navigation\Components\BaseNavigation;
 use Wsmallnews\Cms\Http\Middleware\Authenticate;
 use Wsmallnews\Cms\Http\Middleware\EnsureEmailIsVerified;
@@ -79,6 +80,11 @@ class CmsServiceProvider extends PackageServiceProvider
         // 注册内容类型注册器
         $this->app->singleton(ContentRegistry::class, function (): ContentRegistry {
             return new ContentRegistry;
+        });
+        
+        // 注册推荐标签注册器
+        $this->app->singleton(FlagRegistry::class, function (): FlagRegistry {
+            return new FlagRegistry;
         });
     }
 
@@ -168,6 +174,9 @@ class CmsServiceProvider extends PackageServiceProvider
                 ],
             ];
         });
+
+        // 注册 flag 数组
+        FlagRegistryFacade::registers(Utils::getScopeType(), Utils::getFlags());
 
         // 注册导航内容
         ContentRegistryFacade::registers(Utils::getScopeType(), [

@@ -138,6 +138,18 @@ class Utils
     }
 
     /**
+     * Get model class by name.
+     *
+     * @return array
+     */
+    public static function getFlags(): ?array
+    {
+        $flags = self::getConfig('flags', []);
+
+        return $flags;
+    }
+
+    /**
      * Get file directory path with optional type and date.
      *
      * @param  string|null  $type  Directory type

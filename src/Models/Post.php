@@ -2,6 +2,7 @@
 
 namespace Wsmallnews\Cms\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
@@ -26,15 +27,16 @@ class Post extends SupportModel implements HasMedia
     protected $table = 'sn_posts';
 
     protected $casts = [
-        'options' => 'array',
         'published_at' => 'datetime',
         'scheduled_at' => 'datetime',
+        'flags' => 'array',
+        'options' => 'array',
         'status' => PostStatus::class,
     ];
 
     public function getRouteKeyName()
     {
-        return Utils::getConfig('routes.route_key_name.post', 'slug');
+        return is_in_panel() ? $this->getKeyName() : Utils::getConfig('routes.route_key_name.post', 'slug');
     }
 
     /**
@@ -53,6 +55,18 @@ class Post extends SupportModel implements HasMedia
         return $query->whereHas('categories', function ($query) use ($categoryIds) {
             $query->whereIn('id', $categoryIds);
         });
+    }
+
+    /**
+     * 范围查询：有指定标签的帖子
+     * 
+     * @param Builder $query
+     * @param mixed $flag
+     * @return Builder
+     */
+    public function scopeHasFlag(Builder $query, mixed $flag)
+    {
+        return $query->whereJsonContains('flags', $flag);
     }
 
     public function scopeDraft($query)

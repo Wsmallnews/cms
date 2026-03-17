@@ -1,5 +1,6 @@
 <?php
 
+use Filament\Support\Icons\Heroicon;
 use Wsmallnews\Cms\Enums;
 use Wsmallnews\Cms\Models;
 
@@ -126,6 +127,37 @@ return [
 
         // 页面容器
         'page_container' => 'sn-cms::container.page',
+    ],
+
+    /**
+     * 推荐标签配置
+     * 用户可以自定义追加，比如精品、必看等
+     */
+    'flags' => [
+        [
+            'type' => 'hot',
+            'label' => '热门',
+            'color' => 'danger',
+            'icon' => Heroicon::OutlinedFire,
+        ],
+        [
+            'type' => 'new',
+            'label' => '新',
+            'color' => 'danger',
+            'icon' => Heroicon::OutlinedSparkles,
+        ],
+        [
+            'type' => 'recommend',
+            'label' => '推荐',
+            'color' => 'primary',
+            'icon' => Heroicon::OutlinedStar,
+        ],
+        [
+            'type' => 'top',
+            'label' => '置顶',
+            'color' => 'warning',
+            'icon' => Heroicon::OutlinedArrowUp,
+        ],
     ],
 
     // 'enums' => [
