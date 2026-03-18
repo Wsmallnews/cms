@@ -1,3 +1,11 @@
+@php
+    use Wsmallnews\Cms\Facades\FlagRegistry;
+    $flags = FlagRegistry::getTypes($scopeType);
+
+    $currentUrl = request()->fullUrlWithoutQuery('flag');
+    $flagUrl = $currentUrl . (Str::contains($currentUrl, '?') ? '&' : '?') . 'flag=';
+@endphp
+
 <div class="w-full flex flex-col gap-4">
     @if ($categories->isNotEmpty())
         <div class="flex flex-wrap gap-4">
@@ -6,6 +14,26 @@
             @endforeach
         </div>
     @endif
+
+    <x-filament::tabs label="Content tabs">
+        <x-filament::tabs.item
+            tag="a"
+            :href="$currentUrl"
+            :active="blank($flag)"
+        >
+            全部
+        </x-filament::tabs.item>
+        @foreach ($flags as $flagItem)
+            <x-filament::tabs.item
+                tag="a"
+                :href="$flagUrl . $flagItem['type']"
+                :active="$flagItem['type'] == $flag"
+                :icon="$flagItem['icon']"
+            >
+                {{ $flagItem['label'] }}
+            </x-filament::tabs.item>
+        @endforeach
+    </x-filament::tabs>
 
     <x-sn-support::paginators.container :page-type="$pageType" :page-info="$pageInfo" :paginator-link="$paginatorLink" :page-name="$pageName">
         <div class="w-full flex flex-col gap-4">

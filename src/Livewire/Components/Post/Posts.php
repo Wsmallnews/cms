@@ -4,6 +4,7 @@ namespace Wsmallnews\Cms\Livewire\Components\Post;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Livewire\Attributes\Url;
 use Livewire\WithoutUrlPagination;
 use Wsmallnews\Category\Livewire\Concerns\Categoryable;
 use Wsmallnews\Cms\Livewire\Components\Base;
@@ -21,6 +22,9 @@ class Posts extends Base
     public int | array | null $categoryIds = [];
 
     public Collection $posts;
+
+    #[Url(except: '')]
+    public string $flag = '';
 
     public function mount()
     {
@@ -44,6 +48,12 @@ class Posts extends Base
         $query = Utils::getPostModel()::snScope(...$this->getScopeable())->published()->with(['media'])
             ->when($allCategories->isNotEmpty(), function ($query) use ($allCategories) {
                 $query->categoryIds($allCategories);
+            })
+            ->when($this->flag, function ($query) {
+                $query->hasFlag($this->flag);
+            })
+            ->when($this->flag != 'top', function ($query) {
+                $query->orderByRaw('JSON_CONTAINS(flags, \'"top"\') DESC');
             })
             ->orderBy('order_column', 'desc')
             ->orderBy('id', 'desc');
