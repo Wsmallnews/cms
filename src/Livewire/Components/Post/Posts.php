@@ -21,10 +21,15 @@ class Posts extends Base
 
     public int | array | null $categoryIds = [];
 
+    #[Url(except: 0)]
+    public int $categoryId = 0;
+
     public Collection $posts;
 
     #[Url(except: '')]
     public string $flag = '';
+
+    public string $categoryStyle = 'select';
 
     public function mount()
     {
@@ -38,7 +43,9 @@ class Posts extends Base
 
     public function render()
     {
-        $categoryIds = Arr::wrap($this->categoryIds);
+        // 根据 categoryStyle 类型读取特定的参数
+        $categoryIds = $this->categoryStyle == 'select' ? Arr::wrap($this->categoryIds) : Arr::wrap($this->categoryId);
+
         $categories = filled($categoryIds) ? $this->getScopedQuery()->normal()->whereIn('id', $categoryIds)->get() : collect([]);
 
         // 获取传入的分类的 id 以及所有子分类的 id

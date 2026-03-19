@@ -4,6 +4,8 @@ namespace Wsmallnews\Cms;
 
 use CodeWithDennis\FilamentSelectTree\SelectTree;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Toggle;
+use Filament\Forms\Components\ToggleButtons;
 use Filament\Schemas\Components\Group;
 use Filament\Support\Assets\AlpineComponent;
 use Filament\Support\Assets\Asset;
@@ -187,6 +189,18 @@ class CmsServiceProvider extends PackageServiceProvider
                     // 多选分类
                     Group::make()
                         ->schema([
+                            ToggleButtons::make('categoryStyle')->label('分类类型样式')
+                                ->default('select')
+                                ->options([
+                                    'select' => __('选择指定分类'),
+                                    'tree' => __('显示分类树'),
+                                ])
+                                ->colors([
+                                    'select' => 'warning',
+                                    'tree' => 'info',
+                                ])
+                                ->inline()
+                                ->helperText(__('选择全部分类将在页面左侧显示分类树')),
                             SelectTree::make('categoryIds')->label('选择分类')
                                 ->query(query: function () {
                                     return CategoryModel::scopeable(Utils::getScopeType(), Utils::getScopeId());
@@ -197,7 +211,10 @@ class CmsServiceProvider extends PackageServiceProvider
                                 ->withCount()
                                 ->placeholder(__('请选择图文分类'))
                                 ->emptyLabel(__('未搜索到分类'))
-                                ->treeKey('postCategories'),
+                                ->treeKey('postCategories')
+                                ->visibleJs(<<<'JS'
+                                    $get('categoryStyle') == 'select'
+                                JS),
                         ])
                         ->columns(['md' => 2])
                         ->columnSpanFull(),

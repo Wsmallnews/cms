@@ -12,6 +12,6 @@
             </div>
         @endif
 
-        <livewire:sn-cms-components-posts :scope-type="$scopeType" :scope-id="$scopeId" :category-ids="$categoryId" />
+        <livewire:sn-cms-components-posts :scope-type="$scopeType" :scope-id="$scopeId" :category-ids="$categoryId" category-type="tree" />
     </div>
 </x-dynamic-component>
