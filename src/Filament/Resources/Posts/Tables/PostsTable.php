@@ -47,6 +47,10 @@ class PostsTable
                     ->searchable()
                     ->toggleable()
                     ->badge(),
+                Tables\Columns\ViewColumn::make('publisher')
+                    ->label('发布者')
+                    ->toggleable()
+                    ->view('sn-cms::filament.tables.columns.publisher'),
                 Tables\Columns\ViewColumn::make('flags')
                     ->label('标志')
                     ->toggleable()
