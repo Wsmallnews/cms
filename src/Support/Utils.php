@@ -80,17 +80,13 @@ class Utils
         return self::getScopeableContext()->scopeId;
     }
 
-
     /**
      * 当前 cms 用户端认证用户
-     *
-     * @return Model|null
      */
     public static function getUser(): ?Model
     {
         return Auth::guard(self::getConfig('guard', 'web'))->user();
     }
-
 
     /**
      * Get model class by name.
@@ -163,8 +159,6 @@ class Utils
 
     /**
      * 获取 module 是否支持 评论
-     * 
-     * @return bool
      */
     public static function canComment($module): bool
     {
