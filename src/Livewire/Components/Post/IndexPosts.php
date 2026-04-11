@@ -3,8 +3,8 @@
 namespace Wsmallnews\Cms\Livewire\Components\Post;
 
 use Wsmallnews\Cms\Livewire\Components\Base;
-use Wsmallnews\Cms\Livewire\Concerns\CanBeContained;
 use Wsmallnews\Cms\Support\Utils;
+use Wsmallnews\Support\Livewire\Concerns\CanBeContained;
 
 class IndexPosts extends Base
 {

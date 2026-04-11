@@ -8,8 +8,8 @@ use Livewire\Attributes\Url;
 use Livewire\WithoutUrlPagination;
 use Wsmallnews\Category\Livewire\Concerns\Categoryable;
 use Wsmallnews\Cms\Livewire\Components\Base;
-use Wsmallnews\Cms\Livewire\Concerns\CanBeContained;
 use Wsmallnews\Cms\Support\Utils;
+use Wsmallnews\Support\Livewire\Concerns\CanBeContained;
 use Wsmallnews\Support\Livewire\Concerns\CanPagination;
 
 class Posts extends Base

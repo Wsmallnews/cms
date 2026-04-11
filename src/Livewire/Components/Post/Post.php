@@ -4,12 +4,16 @@ namespace Wsmallnews\Cms\Livewire\Components\Post;
 
 use Illuminate\Database\Eloquent\Model;
 use Wsmallnews\Cms\Livewire\Components\Base;
-use Wsmallnews\Cms\Livewire\Concerns\CanBeContained;
 use Wsmallnews\Cms\Support\Utils;
+use Wsmallnews\Comment\Livewire\Concerns\CanComment;
+use Wsmallnews\Support\Livewire\Concerns\CanBeContained;
+use Wsmallnews\Support\Livewire\Concerns\HasAuth;
 
 class Post extends Base
 {
+    use CanComment;
     use CanBeContained;
+    use HasAuth;
 
     public string $slug;
 

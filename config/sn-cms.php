@@ -111,6 +111,16 @@ return [
         ],
     ],
 
+    /**
+     * 是否支持评论
+     */
+    'can_comment' => [
+        /**
+         * post 默认不支持评论
+         */
+        'post' => false,
+    ],
+
     'themes' => [
         // 是否启用暗黑模式
         'dark_mode' => true,

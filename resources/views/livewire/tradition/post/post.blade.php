@@ -1,6 +1,12 @@
 @php
+    use Wsmallnews\Cms\Support\Utils;
+
     $scopeType = $this->getScopeType();
     $scopeId = $this->getScopeId();
+
+    $user = Utils::getUser();
+
+    $canComment = Utils::canComment('post');
 @endphp
 
 <x-dynamic-component :component="$this->getPageContainer()" :scope-type="$scopeType" :scope-id="$scopeId">
@@ -12,6 +18,11 @@
             </div>
         @endif
 
-        <livewire:sn-cms-components-post :scope-type="$scopeType" :scope-id="$scopeId" :slug="$slug" />
+        <livewire:sn-cms-components-post 
+            :scope-type="$scopeType" 
+            :scope-id="$scopeId" 
+            :user="$user" :slug="$slug" 
+            :can-comment="$canComment"
+        />
     </div>
 </x-dynamic-component>
