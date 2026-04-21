@@ -15,7 +15,7 @@
         </div>
 
         <div class="sn-tip-text flex gap-8">
-            <div>{{ __('发布时间') }}：{{ $post->published_at->format('Y-m-d H:i:s') }}</div>
+            <div>{{ __('发布时间') }}：{{ $post->published_at?->format('Y-m-d H:i:s') }}</div>
             <div>{{ __('浏览量') }}：{{ $post->views }}</div>
         </div>
 
