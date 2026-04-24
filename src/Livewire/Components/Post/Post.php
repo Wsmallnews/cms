@@ -2,7 +2,6 @@
 
 namespace Wsmallnews\Cms\Livewire\Components\Post;
 
-use Illuminate\Database\Eloquent\Model;
 use Wsmallnews\Cms\Livewire\Components\Base;
 use Wsmallnews\Cms\Support\Utils;
 use Wsmallnews\Comment\Livewire\Concerns\CanComment;
