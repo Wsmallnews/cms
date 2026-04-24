@@ -25,10 +25,7 @@ return new class extends Migration
             $table->string('title')->nullable()->comment('标题');
             $table->string('slug')->nullable()->comment('路径');
             $table->string('description')->nullable()->comment('描述');
-            $table->unsignedBigInteger('view_num')->default(0)->comment('浏览量');
-            $table->unsignedBigInteger('like_num')->default(0)->comment('喜欢数量');
-            $table->unsignedBigInteger('collect_num')->default(0)->comment('收藏数量');
-            $table->unsignedBigInteger('comment_num')->default(0)->comment('评论数量');
+            $table->json('counter')->nullable()->comment('计数器:view_num,like_num,collect_num等');
             $table->timestamp('published_at')->nullable()->comment('发布时间');
             $table->timestamp('scheduled_at')->nullable()->comment('定时发布时间');
 

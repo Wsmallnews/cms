@@ -22,7 +22,8 @@ class Post extends Base
         $model = new (Utils::getPostModel());
         $post = $model->snScope(...$this->getScopeable())->published()->with(['media', 'content'])->where($model->getRouteKeyName(), $this->slug)->firstOrFail();
 
-        Model::withoutTimestamps(fn () => $post->increment('views'));        // 增加浏览量,不更新 updated_at
+        // 增加浏览量
+        $post->view($this->getAuthUser());
 
         return view($this->getThemeView('components.post.post'), [
             'post' => $post,

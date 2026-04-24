@@ -15,6 +15,8 @@ use Spatie\Tags\HasTags;
 use Wsmallnews\Category\Support\Utils as CategoryUtils;
 use Wsmallnews\Cms\Enums\PostStatus;
 use Wsmallnews\Cms\Support\Utils;
+use Wsmallnews\Preference\Models\Concerns\Preferenceable;
+use Wsmallnews\Preference\Models\Concerns\Preferenceable\Viewable;
 use Wsmallnews\Support\Models\SupportModel;
 use Wsmallnews\Support\Support\Utils as SupportUtils;
 
@@ -22,7 +24,9 @@ class Post extends SupportModel implements HasMedia
 {
     use HasTags;
     use InteractsWithMedia;
+    use Preferenceable;
     use SoftDeletes;
+    use Viewable;
 
     protected $table = 'sn_posts';
 
