@@ -48,7 +48,7 @@
         <x-sn-support::paginators.container :page-type="$pageType" :page-info="$pageInfo" :paginator-link="$paginatorLink" :page-name="$pageName">
             <div class="w-full flex flex-col gap-4">
                 @foreach ($posts as $post)
-                    <x-sn-cms::container.block-link 
+                    <x-sn-cms::container.block-link
                         @class([
                             'sn-container sn-hover sn-link p-4' => $contained,
                             'flex flex-row gap-4 overflow-hidden group'

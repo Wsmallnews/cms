@@ -17,6 +17,7 @@ use Wsmallnews\Cms\Enums\PostStatus;
 use Wsmallnews\Cms\Support\Utils;
 use Wsmallnews\Preference\Models\Concerns\Preferenceable;
 use Wsmallnews\Preference\Models\Concerns\Preferenceable\Viewable;
+use Wsmallnews\Support\Casts\CounterCast;
 use Wsmallnews\Support\Models\SupportModel;
 use Wsmallnews\Support\Support\Utils as SupportUtils;
 
@@ -31,6 +32,7 @@ class Post extends SupportModel implements HasMedia
     protected $table = 'sn_posts';
 
     protected $casts = [
+        'counter' => CounterCast::class,
         'published_at' => 'datetime',
         'scheduled_at' => 'datetime',
         'flags' => 'array',
