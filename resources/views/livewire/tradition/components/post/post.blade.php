@@ -28,7 +28,7 @@
         @endif
 
         @if ($post->content)
-            <x-sn-support::collapse-content
+            <x-sn-support::content
                 :content-type="$post->content->content_type"
                 :content="$post->content->content"
             />
