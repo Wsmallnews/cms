@@ -128,9 +128,9 @@ class PostForm
                         ->label('标志')
                         ->multiple()
                         ->inline()
-                        ->options(fn (Component $livewire) => FlagRegistry::getTypesOptions($livewire::getScopeType()))
-                        ->colors(fn (Component $livewire) => FlagRegistry::getTypesColors($livewire::getScopeType()))
-                        ->icons(fn (Component $livewire) => FlagRegistry::getTypesIcons($livewire::getScopeType())),
+                        ->options(fn(Component $livewire) => FlagRegistry::getTypesOptions($livewire::getScopeType()))
+                        ->colors(fn(Component $livewire) => FlagRegistry::getTypesColors($livewire::getScopeType()))
+                        ->icons(fn(Component $livewire) => FlagRegistry::getTypesIcons($livewire::getScopeType())),
                     Forms\Components\TextInput::make('order_column')->label('排序')->integer()
                         ->placeholder('正序排列')
                         ->rules(['integer', 'min:0']),
@@ -154,7 +154,7 @@ class PostForm
                                 ->placeholder('选择发布时间')
                                 ->displayFormat('Y-m-d H:i:s')
                                 ->native(false)
-                                ->required(fn (Get $get) => (bool) ($get('status') == PostStatus::Scheduled && $get('scheduled_at_type') === 'scheduled_at'))
+                                ->required(fn(Get $get) => (bool) ($get('status') == PostStatus::Scheduled && $get('scheduled_at_type') === 'scheduled_at'))
                                 ->markAsRequired()
                                 ->visibleJs(<<<'JS'
                                     $get('scheduled_at_type') == 'scheduled_at'
@@ -164,7 +164,7 @@ class PostForm
                                 ->placeholder('请输入分钟数')
                                 ->integer()
                                 ->minValue(0)
-                                ->required(fn (Get $get) => (bool) ($get('status') == PostStatus::Scheduled && $get('scheduled_at_type') === 'minutes_later'))
+                                ->required(fn(Get $get) => (bool) ($get('status') == PostStatus::Scheduled && $get('scheduled_at_type') === 'minutes_later'))
                                 ->markAsRequired()
                                 ->visibleJs(<<<'JS'
                                     $get('scheduled_at_type') == 'minutes_later'

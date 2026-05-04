@@ -27,9 +27,12 @@
             <x-sn-support::swiper class="w-full aspect-video" :slides="$images" />
         @endif
 
-        <div class="sn-content-text">
-            {!! $post->content?->content !!}
-        </div>
+        @if ($post->content)
+            <x-sn-support::collapse-content
+                :content-type="$post->content->content_type"
+                :content="$post->content->content"
+            />
+        @endif
     </div>
 
     @if ($canComment)
@@ -42,6 +45,7 @@
                 :scope-id="$scopeId"
                 :contained="false"
                 :commentable="$post"
+                :editor-type="\Wsmallnews\Support\Enums\EditorType::Textarea"
                 :user="$user"
                 page-name="cp"
             />
