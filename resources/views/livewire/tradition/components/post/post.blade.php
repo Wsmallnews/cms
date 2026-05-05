@@ -45,7 +45,7 @@
                 :scope-id="$scopeId"
                 :contained="false"
                 :commentable="$post"
-                :editor-type="\Wsmallnews\Support\Enums\EditorType::Textarea"
+                :content-type="\Wsmallnews\Support\Enums\ContentType::Textarea"
                 :user="$user"
                 page-name="cp"
             />
