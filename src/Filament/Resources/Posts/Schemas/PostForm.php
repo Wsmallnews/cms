@@ -117,6 +117,7 @@ class PostForm
                             ->relationship('content')
                             ->mutateRelationshipDataBeforeFillUsing(function (array $data) {
                                 $data['content_' . $data['content_type']] = $data['content'];
+
                                 return $data;
                             })
                             ->mutateRelationshipDataBeforeCreateUsing(function (array $data): array {
@@ -137,17 +138,17 @@ class PostForm
                                     ->label('内容详情')
                                     ->placeholder('请输入内容...')
                                     ->rows(15)->autosize()
-                                    ->visible(fn(Get $get): bool => $get('content_type') === ContentType::Textarea),
+                                    ->visible(fn (Get $get): bool => $get('content_type') === ContentType::Textarea),
                                 Forms\Components\RichEditor::make('content_richtext')
                                     ->label('内容详情')
                                     ->fileAttachmentsDirectory(Utils::getFileDirectory('contents'))
-                                    ->visible(fn(Get $get): bool => $get('content_type') === ContentType::Richtext),
+                                    ->visible(fn (Get $get): bool => $get('content_type') === ContentType::Richtext),
                                 Forms\Components\MarkdownEditor::make('content_markdown')
                                     ->label('内容详情')
                                     ->placeholder('请输入内容详情（支持Markdown）')
                                     ->fileAttachmentsDirectory(Utils::getFileDirectory('contents'))
                                     ->required()
-                                    ->visible(fn(Get $get): bool => $get('content_type') === ContentType::Markdown),
+                                    ->visible(fn (Get $get): bool => $get('content_type') === ContentType::Markdown),
                             ])->columns(1),
                     ])->columns(1),
                 ])->columns(1),
@@ -159,9 +160,9 @@ class PostForm
                         ->label('标志')
                         ->multiple()
                         ->inline()
-                        ->options(fn(Component $livewire) => FlagRegistry::getTypesOptions($livewire::getScopeType()))
-                        ->colors(fn(Component $livewire) => FlagRegistry::getTypesColors($livewire::getScopeType()))
-                        ->icons(fn(Component $livewire) => FlagRegistry::getTypesIcons($livewire::getScopeType())),
+                        ->options(fn (Component $livewire) => FlagRegistry::getTypesOptions($livewire::getScopeType()))
+                        ->colors(fn (Component $livewire) => FlagRegistry::getTypesColors($livewire::getScopeType()))
+                        ->icons(fn (Component $livewire) => FlagRegistry::getTypesIcons($livewire::getScopeType())),
                     Forms\Components\TextInput::make('order_column')->label('排序')->integer()
                         ->placeholder('正序排列')
                         ->rules(['integer', 'min:0']),
@@ -185,7 +186,7 @@ class PostForm
                                 ->placeholder('选择发布时间')
                                 ->displayFormat('Y-m-d H:i:s')
                                 ->native(false)
-                                ->required(fn(Get $get) => (bool) ($get('status') == PostStatus::Scheduled && $get('scheduled_at_type') === 'scheduled_at'))
+                                ->required(fn (Get $get) => (bool) ($get('status') == PostStatus::Scheduled && $get('scheduled_at_type') === 'scheduled_at'))
                                 ->markAsRequired()
                                 ->visibleJs(<<<'JS'
                                     $get('scheduled_at_type') == 'scheduled_at'
@@ -195,7 +196,7 @@ class PostForm
                                 ->placeholder('请输入分钟数')
                                 ->integer()
                                 ->minValue(0)
-                                ->required(fn(Get $get) => (bool) ($get('status') == PostStatus::Scheduled && $get('scheduled_at_type') === 'minutes_later'))
+                                ->required(fn (Get $get) => (bool) ($get('status') == PostStatus::Scheduled && $get('scheduled_at_type') === 'minutes_later'))
                                 ->markAsRequired()
                                 ->visibleJs(<<<'JS'
                                     $get('scheduled_at_type') == 'minutes_later'
@@ -213,7 +214,7 @@ class PostForm
     /**
      * 处理可切换编辑器的 content 字段
      *
-     * @param array<string, mixed> $data
+     * @param  array<string, mixed>  $data
      * @return array<string, mixed>
      */
     public static function mapVirtualContentField(array $data): array
