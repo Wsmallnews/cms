@@ -23,21 +23,16 @@ class PostsTable
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('id')
+                    ->label('ID')
+                    ->searchable()
+                    ->sortable()
+                    ->alignCenter()
+                    ->toggleable(),
                 Tables\Columns\TextColumn::make('title')
                     ->label('标题')
                     ->searchable()
-                    ->description(fn ($record) => $record->description)
-                    ->limit(50)
-                    ->tooltip(function (Tables\Columns\TextColumn $column): ?string {
-                        $state = $column->getState();
-
-                        if (strlen($state) <= $column->getCharacterLimit()) {
-                            return null;
-                        }
-
-                        // Only render the tooltip if the column content exceeds the length limit.
-                        return $state;
-                    }),
+                    ->view('sn-cms::filament.tables.columns.post-title'),
                 // Tables\Columns\SpatieMediaLibraryImageColumn::make('image')
                 //     ->label('主图')
                 //     ->collection('main')
@@ -61,8 +56,9 @@ class PostsTable
                 //     ->label('标签')
                 //     ->type('post_tags')
                 //     ->toggleable(),
-                Tables\Columns\TextColumn::make('views')
+                Tables\Columns\TextColumn::make('counter')
                     ->label('浏览量')
+                    ->formatStateUsing(fn ($state) => $state->view_num)
                     ->alignCenter()
                     ->toggleable(),
                 Tables\Columns\TextColumn::make('order_column')
@@ -72,6 +68,10 @@ class PostsTable
                 Tables\Columns\TextColumn::make('status')
                     ->label('状态')
                     ->toggleable(),
+                Tables\Columns\TextColumn::make('published_at')
+                    ->label('发布时间')
+                    ->toggleable()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('创建时间')
                     ->toggleable()
