@@ -16,7 +16,7 @@ use Wsmallnews\Cms\Enums\NavigationStatus;
 use Wsmallnews\Cms\Enums\NavigationType as NavigationTypeEnum;
 use Wsmallnews\Cms\Facades\ContentRegistry;
 use Wsmallnews\Cms\Support\Utils;
-use Wsmallnews\Support\Support\Utils as SupportUtils;
+use Wsmallnews\Support\Filament\Forms\FormComponents;
 
 class NavigationForm
 {
@@ -62,36 +62,24 @@ class NavigationForm
             Schemas\Components\Fieldset::make('image_icons')
                 ->label('图片图标')
                 ->schema([
-                    Forms\Components\FileUpload::make('options.icon_src')
+                    FormComponents::localImageUpload('options.icon_src')
                         ->label('图标')
-                        ->image()
-                        ->disk(SupportUtils::getFilesystemDisk())
                         ->directory(Utils::getFileDirectory('icons'))
-                        ->visibility('public')
                         ->automaticallyResizeImagesMode('cover')
                         ->imageAspectRatio('1:1')
                         ->automaticallyCropImagesToAspectRatio()
                         ->automaticallyResizeImagesToHeight('200')
                         ->automaticallyResizeImagesToWidth('200')
-                        ->openable()
-                        ->downloadable()
-                        ->uploadingMessage('图标上传中...')
-                        ->imagePreviewHeight('100'),
-                    Forms\Components\FileUpload::make('options.active_icon_src')
+                        ->uploadingMessage('图标上传中...'),
+                    FormComponents::localImageUpload('options.active_icon_src')
                         ->label('活动图标')
-                        ->image()
-                        ->disk(SupportUtils::getFilesystemDisk())
                         ->directory(Utils::getFileDirectory('icons'))
-                        ->visibility('public')
                         ->automaticallyResizeImagesMode('cover')
                         ->imageAspectRatio('1:1')
                         ->automaticallyCropImagesToAspectRatio()
                         ->automaticallyResizeImagesToHeight('200')
                         ->automaticallyResizeImagesToWidth('200')
-                        ->openable()
-                        ->downloadable()
-                        ->uploadingMessage('活动图标上传中...')
-                        ->imagePreviewHeight('100'),
+                        ->uploadingMessage('活动图标上传中...'),
                     Schemas\Components\Text::make('请上传正方形图片，推荐大小为 200x200 像素，非正方形图片将被自动缩放裁剪')
                         ->columnSpanFull(),
 
@@ -119,22 +107,15 @@ class NavigationForm
                     // 只有内容 和 页面 需要设置标识
                     return in_array($get('type'), [NavigationTypeEnum::Page, NavigationTypeEnum::Content]);
                 }),
-            Forms\Components\SpatieMediaLibraryFileUpload::make('navigation_banner')
+            FormComponents::mediaImageUpload('navigation_banner', 'navigation_banner')
                 ->label('导航Banner')
-                ->collection('navigation_banner')
-                ->image()
-                ->disk(SupportUtils::getFilesystemDisk())
-                ->visibility('public')
                 ->customProperties(function (Component $livewire) {
                     return [
                         ...$livewire->getScopeable(),
                         'team_id' => current_tenant()?->id,
                     ];
                 })
-                ->openable()
-                ->downloadable()
                 ->uploadingMessage('Banner 上传中...')
-                ->imagePreviewHeight('200')
                 ->visible(function (Get $get) {
                     // 只有内容 和 页面 需要设置 Banner
                     return in_array($get('type'), [NavigationTypeEnum::Page, NavigationTypeEnum::Content]);
@@ -155,7 +136,7 @@ class NavigationForm
                     Schemas\Components\Group::make()
                         ->relationship('content')
                         ->schema([
-                            Forms\Components\RichEditor::make('content')
+                            FormComponents::richEditor('content')
                                 ->label('页面内容详情')
                                 ->fileAttachmentsDirectory('contents/' . date('Ymd'))
                                 ->required(),

@@ -15,7 +15,7 @@ use Wsmallnews\Cms\Enums\PostStatus;
 use Wsmallnews\Cms\Facades\FlagRegistry;
 use Wsmallnews\Cms\Support\Utils;
 use Wsmallnews\Support\Enums\ContentType;
-use Wsmallnews\Support\Support\Utils as SupportUtils;
+use Wsmallnews\Support\Filament\Forms\FormComponents;
 
 class PostForm
 {
@@ -77,28 +77,17 @@ class PostForm
                             ->placeholder('请输入描述'),
                     ])->columns(1),
                     Schemas\Components\Section::make('内容')->schema([
-                        Forms\Components\SpatieMediaLibraryFileUpload::make('post_image')
+                        FormComponents::mediaImageUpload('post_image', 'post_image')
                             ->label('主图')->required()
-                            ->collection('post_image')
-                            ->image()
-                            ->disk(SupportUtils::getFilesystemDisk())
-                            ->visibility('public')
                             ->customProperties(function (Component $livewire) {
                                 return [
                                     ...$livewire::getScopeable(),
                                     'team_id' => current_tenant()?->id,
                                 ];
                             })
-                            ->openable()
-                            ->downloadable()
-                            ->uploadingMessage('主图上传中...')
-                            ->imagePreviewHeight('200'),
-                        Forms\Components\SpatieMediaLibraryFileUpload::make('post_images')
+                            ->uploadingMessage('主图上传中...'),
+                        FormComponents::mediaImageUpload('post_images', 'post_images')
                             ->label('轮播图')
-                            ->collection('post_images')
-                            ->image()
-                            ->disk(SupportUtils::getFilesystemDisk())
-                            ->visibility('public')
                             ->customProperties(function (Component $livewire) {
                                 return [
                                     ...$livewire::getScopeable(),
@@ -106,13 +95,7 @@ class PostForm
                                 ];
                             })
                             ->multiple()
-                            ->openable()
-                            ->downloadable()
-                            ->reorderable()
-                            ->appendFiles()
-                            ->maxFiles(20)
-                            ->uploadingMessage('轮播图片上传中...')
-                            ->imagePreviewHeight('200'),
+                            ->uploadingMessage('轮播图片上传中...'),
                         Schemas\Components\Group::make()
                             ->relationship('content')
                             ->mutateRelationshipDataBeforeFillUsing(function (array $data) {
@@ -135,19 +118,18 @@ class PostForm
                                     ->live(),
                                 Forms\Components\Hidden::make('content'),
                                 Forms\Components\Textarea::make('content_textarea')
-                                    ->label('内容详情')
+                                    ->label('内容详情')->required()
                                     ->placeholder('请输入内容...')
                                     ->rows(15)->autosize()
                                     ->visible(fn (Get $get): bool => $get('content_type') === ContentType::Textarea),
-                                Forms\Components\RichEditor::make('content_richtext')
-                                    ->label('内容详情')
+                                FormComponents::richEditor('content_richtext')
+                                    ->label('内容详情')->required()
                                     ->fileAttachmentsDirectory(Utils::getFileDirectory('contents'))
                                     ->visible(fn (Get $get): bool => $get('content_type') === ContentType::Richtext),
-                                Forms\Components\MarkdownEditor::make('content_markdown')
-                                    ->label('内容详情')
+                                FormComponents::markdownEditor('content_markdown')
+                                    ->label('内容详情')->required()
                                     ->placeholder('请输入内容详情（支持Markdown）')
                                     ->fileAttachmentsDirectory(Utils::getFileDirectory('contents'))
-                                    ->required()
                                     ->visible(fn (Get $get): bool => $get('content_type') === ContentType::Markdown),
                             ])->columns(1),
                     ])->columns(1),
