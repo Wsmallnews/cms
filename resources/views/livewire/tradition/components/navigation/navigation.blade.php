@@ -118,12 +118,12 @@
     </div>
 
     <!-- Mobile Menu Button -->
-    <button class="flex text-white fixed md:hidden"
+    <button class="inline-flex items-center justify-center min-w-11 min-h-11 rounded-md text-white cursor-pointer hover:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-primary-500 transition-colors duration-200 motion-reduce:transition-none md:hidden"
         @click="mobileMenuIsOpen = !mobileMenuIsOpen"
         :aria-expanded="mobileMenuIsOpen"
-        x-bind:class="mobileMenuIsOpen ? 'fixed top-6 right-4 z-20' : 'absolute top-6 right-4 z-20'"
+        x-bind:class="mobileMenuIsOpen ? 'fixed top-3 right-3 z-20' : 'absolute top-3 right-3 z-20'"
         type="button"
-        aria-label="mobile menu"
+        aria-label="{{ __('移动端菜单') }}"
         aria-controls="mobileMenu"
     >
         <x-filament::icon icon="heroicon-m-bars-3" class="size-6" x-cloak x-show="!mobileMenuIsOpen" aria-hidden="true" />

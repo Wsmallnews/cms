@@ -1,4 +1,6 @@
 @php
+    use Filament\Support\Icons\Heroicon;
+    
     $maxListNum = 4;
     $count = $posts->count();
 
@@ -35,6 +37,10 @@
                     @if ($post->getFirstMediaUrl('post_image'))
                         <div class="h-full aspect-4/3 shrink-0 rounded-md">
                             <img class="w-full h-full object-cover transition duration-300 group-hover:scale-110" src="{{ $post->getFirstMediaUrl('post_image') }}" />
+                        </div>
+                    @else
+                        <div class="sn-image-placeholder">
+                            <x-filament::icon :icon="Heroicon::OutlinedPhoto" class="w-10 h-10" aria-hidden="true" />
                         </div>
                     @endif
 

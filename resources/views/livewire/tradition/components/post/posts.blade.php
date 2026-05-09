@@ -1,4 +1,5 @@
 @php
+    use Filament\Support\Icons\Heroicon;
     use Wsmallnews\Cms\Facades\FlagRegistry;
     $flags = FlagRegistry::getTypes($scopeType);
 
@@ -56,8 +57,12 @@
                         href="{{ \Wsmallnews\Cms\Support\Utils::route('posts.show', $post) }}"
                     >
                         @if ($post->getFirstMediaUrl('post_image'))
-                            <div class="w-44 h-44 shrink-0 rounded-md overflow-hidden">
-                                <img class="w-full h-full object-cover transition duration-300 group-hover:scale-110" src="{{ $post->getFirstMediaUrl('post_image') }}" />
+                            <div class="w-32 h-32 sm:w-44 sm:h-44 shrink-0 rounded-md overflow-hidden bg-gray-100 dark:bg-gray-800">
+                                <img class="w-full h-full object-cover sn-motion-scale" src="{{ $post->getFirstMediaUrl('post_image') }}" alt="{{ $post->title }}" loading="lazy" />
+                            </div>
+                        @else
+                            <div class="sn-image-placeholder">
+                                <x-filament::icon :icon="Heroicon::OutlinedPhoto" class="w-10 h-10" aria-hidden="true" />
                             </div>
                         @endif
 

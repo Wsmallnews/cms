@@ -67,9 +67,14 @@
         @vite('resources/css/app.css')
     </head>
 
-    <body class="sn-body antialiased bg-gray-50 dark:bg-gray-950">
-        
-        {{ $slot }}
+    <body class="sn-body antialiased bg-gray-50 dark:bg-gray-950 text-gray-700 dark:text-gray-200 flex flex-col min-h-screen">
+        <a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:px-4 focus:py-2 focus:rounded-md focus:bg-primary-600 focus:text-white focus:shadow-lg">
+            {{ __('跳转到主要内容') }}
+        </a>
+
+        <main id="main-content" class="flex flex-col grow">
+            {{ $slot }}
+        </main>
 
         @livewire('notifications')
         {{-- @livewire('database-notifications') --}}
