@@ -24,7 +24,7 @@ class NavigationForm
     {
         return [
             Forms\Components\Select::make('type')
-                ->helperText(fn (): ?HtmlString => new HtmlString('<span style="color: #F59E0B;">如果存在子导航，当前导航设置的 跳转链接/路由等将失效</span>'))
+                ->helperText(fn(): ?HtmlString => new HtmlString('<span style="color: #F59E0B;">如果存在子导航，当前导航设置的 跳转链接/路由等将失效</span>'))
                 ->label('导航类型')
                 ->options(NavigationTypeEnum::class)
                 ->default(NavigationTypeEnum::Route)
@@ -177,7 +177,7 @@ class NavigationForm
                                 ->label('路由参数')
                                 ->helperText('路由参数, 没有则不设置')
                                 ->reorderable()
-                                ->required(fn (Get $get) => (bool) $get('has_routes'))
+                                ->required(fn(Get $get) => (bool) $get('has_routes'))
                                 ->markAsRequired()
                                 ->visibleJs(<<<'JS'
                                     $get('has_routes')
@@ -195,7 +195,7 @@ class NavigationForm
                                 ->label('查询参数')
                                 ->helperText('查询参数, 拼接在地址栏后面, 没有则不设置')
                                 ->reorderable()
-                                ->required(fn (Get $get) => (bool) $get('has_queries'))
+                                ->required(fn(Get $get) => (bool) $get('has_queries'))
                                 ->markAsRequired()
                                 ->visibleJs(<<<'JS'
                                     $get('has_queries')
@@ -256,7 +256,7 @@ class NavigationForm
                             ->key('dynamicExtrasFields_' . $uuid),
                     ];
                 })
-                ->itemLabel(fn (array $state): ?string => $state['label'] ?? null)
+                ->itemLabel(fn(array $state): ?string => $state['label'] ?? null)
                 ->required()
                 ->minItems(1)
                 ->addActionLabel('添加分组')

@@ -2,11 +2,11 @@
 
 namespace Wsmallnews\Cms\Livewire;
 
-use Livewire\Component;
 use Wsmallnews\Cms\Livewire\Concerns\HasThemeView;
 use Wsmallnews\Cms\Support\Utils;
+use Wsmallnews\Support\Livewire\Base as BaseComponent;
 
-class Base extends Component
+class Base extends BaseComponent
 {
     use HasThemeView;
 
