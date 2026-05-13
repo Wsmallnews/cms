@@ -22,9 +22,9 @@
     "require": {
         "php": "^8.2",
         "bezhansalleh/filament-plugin-essentials": "^1.0",
-        "filament/filament": "^4.0",
-        "filament/spatie-laravel-settings-plugin": "^4.0",
-        "guava/filament-icon-picker": "^3.0",
+        "filament/filament": "^4.0 || ^5.0",
+        "filament/spatie-laravel-settings-plugin": "^4.0 || ^5.0",
+        "guava/filament-icon-picker": "^3.0 || ^4.0",
         "spatie/laravel-package-tools": "^1.15.0",
         "wsmallnews/comment": "^1.0",
         "wsmallnews/filament-nestedset": "^2.0",
@@ -33,11 +33,11 @@
     },
     "require-dev": {
         "laravel/pint": "^1.0",
-        "nunomaduro/collision": "^7.9",
-        "orchestra/testbench": "^8.0",
-        "pestphp/pest": "^2.0",
-        "pestphp/pest-plugin-arch": "^2.0",
-        "pestphp/pest-plugin-laravel": "^2.0",
+        "nunomaduro/collision": "^7.0 || ^8.0",
+        "orchestra/testbench": "^9.0 || ^10.0",
+        "pestphp/pest": "^2.0 || ^3.0 || ^4.0",
+        "pestphp/pest-plugin-arch": "^2.0 || ^3.0 || ^4.0",
+        "pestphp/pest-plugin-laravel": "^2.0 || ^3.0 || ^4.0",
         "spatie/laravel-ray": "^1.26"
     },
     "autoload": {
