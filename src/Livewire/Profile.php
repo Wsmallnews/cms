@@ -2,20 +2,18 @@
 
 namespace Wsmallnews\Cms\Livewire;
 
-use Livewire\Attributes\Title;
 use Wsmallnews\Cms\Support\Utils;
 
 class Profile extends Base
 {
-    #[Title('个人中心')]
     public function render()
     {
         $breadcrumbs = [
-            ['label' => '个人中心', 'url' => Utils::route('profile')],
+            ['label' => __('sn-cms::cms.frontend.profile'), 'url' => Utils::route('profile')],
         ];
 
         return view($this->getThemeView('profile'), [
             'breadcrumbs' => $breadcrumbs,
-        ])->layout(Utils::getLayout());
+        ])->layout(Utils::getLayout())->title(__('sn-cms::cms.frontend.profile'));
     }
 }

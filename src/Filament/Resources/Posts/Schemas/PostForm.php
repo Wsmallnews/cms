@@ -32,7 +32,7 @@ class PostForm
         return [
             Schemas\Components\Flex::make([
                 Schemas\Components\Group::make()->schema([
-                    Schemas\Components\Section::make('基础信息')->schema([
+                    Schemas\Components\Section::make(__('sn-cms::cms.post_form.basic_info'))->schema([
                         // 单选 分类
                         // SelectTree::make('category_id')->label('选择分类')
                         //     ->relationship(relationship: 'category', titleAttribute: 'name', parentAttribute: 'parent_id')
@@ -46,7 +46,7 @@ class PostForm
                         //     ,
 
                         // 多选分类
-                        SelectTree::make('categories')->label('选择分类')
+                        SelectTree::make('categories')->label(__('sn-cms::cms.post_form.categories'))
                             ->relationship(relationship: 'categories', titleAttribute: 'name', parentAttribute: 'parent_id', modifyQueryUsing: function ($query, Component $livewire) {
                                 return $query->scopeable($livewire::getScopeType(), $livewire::getScopeId());
                             }, modifyChildQueryUsing: function ($query, Component $livewire) {
@@ -55,12 +55,12 @@ class PostForm
                             ->searchable()
                             ->enableBranchNode()
                             ->withCount()
-                            ->placeholder(__('请选择图文分类'))
-                            ->emptyLabel(__('未搜索到分类'))
+                            ->placeholder(__('sn-cms::cms.post_form.categories_placeholder'))
+                            ->emptyLabel(__('sn-cms::cms.post_form.categories_empty'))
                             ->treeKey('postCategories'),
 
-                        Forms\Components\TextInput::make('title')->label('标题')
-                            ->placeholder('请输入内容标题')
+                        Forms\Components\TextInput::make('title')->label(__('sn-cms::cms.post_form.title'))
+                            ->placeholder(__('sn-cms::cms.post_form.title_placeholder'))
                             ->required()
                             ->live(onBlur: true)
                             ->afterStateUpdated(function (Set $set, $state) {
@@ -73,21 +73,21 @@ class PostForm
                             })
                             ->required()
                             ->maxLength(255),
-                        Forms\Components\Textarea::make('description')->label('描述')
-                            ->placeholder('请输入描述'),
+                        Forms\Components\Textarea::make('description')->label(__('sn-cms::cms.post_form.description'))
+                            ->placeholder(__('sn-cms::cms.post_form.description_placeholder')),
                     ])->columns(1),
-                    Schemas\Components\Section::make('内容')->schema([
+                    Schemas\Components\Section::make(__('sn-cms::cms.post_form.content_section'))->schema([
                         FormComponents::mediaImageUpload('post_image', 'post_image')
-                            ->label('主图')->required()
+                            ->label(__('sn-cms::cms.post_form.main_image'))->required()
                             ->customProperties(function (Component $livewire) {
                                 return [
                                     ...$livewire::getScopeable(),
                                     'team_id' => current_tenant()?->id,
                                 ];
                             })
-                            ->uploadingMessage('主图上传中...'),
+                            ->uploadingMessage(__('sn-cms::cms.post_form.main_image_uploading')),
                         FormComponents::mediaImageUpload('post_images', 'post_images')
-                            ->label('轮播图')
+                            ->label(__('sn-cms::cms.post_form.carousel_images'))
                             ->customProperties(function (Component $livewire) {
                                 return [
                                     ...$livewire::getScopeable(),
@@ -95,7 +95,7 @@ class PostForm
                                 ];
                             })
                             ->multiple()
-                            ->uploadingMessage('轮播图片上传中...'),
+                            ->uploadingMessage(__('sn-cms::cms.post_form.carousel_images_uploading')),
                         Schemas\Components\Group::make()
                             ->relationship('content')
                             ->mutateRelationshipDataBeforeFillUsing(function (array $data) {
@@ -111,74 +111,75 @@ class PostForm
                             })
                             ->schema([
                                 Forms\Components\ToggleButtons::make('content_type')
-                                    ->label('编辑器类型')
+                                    ->label(__('sn-cms::cms.post_form.editor_type'))
                                     ->default(ContentType::Richtext)
                                     ->options(ContentType::class)
                                     ->inline()->grouped()
                                     ->live(),
                                 Forms\Components\Hidden::make('content'),
                                 Forms\Components\Textarea::make('content_textarea')
-                                    ->label('内容详情')->required()
-                                    ->placeholder('请输入内容...')
-                                    ->rows(15)->autosize()
-                                    ->visible(fn (Get $get): bool => $get('content_type') === ContentType::Textarea),
+                                    ->label(__('sn-cms::cms.post_form.content_detail'))->required()
+                                    ->placeholder(__('sn-cms::cms.post_form.content_placeholder'))
+                                    ->rows(5)->autosize()
+                                    ->visible(fn(Get $get): bool => $get('content_type') === ContentType::Textarea),
                                 FormComponents::richEditor('content_richtext')
-                                    ->label('内容详情')->required()
+                                    ->label(__('sn-cms::cms.post_form.content_detail'))->required()
+                                    ->placeholder(__('sn-cms::cms.post_form.content_placeholder'))
                                     ->fileAttachmentsDirectory(Utils::getFileDirectory('contents'))
-                                    ->visible(fn (Get $get): bool => $get('content_type') === ContentType::Richtext),
+                                    ->visible(fn(Get $get): bool => $get('content_type') === ContentType::Richtext),
                                 FormComponents::markdownEditor('content_markdown')
-                                    ->label('内容详情')->required()
-                                    ->placeholder('请输入内容详情（支持Markdown）')
+                                    ->label(__('sn-cms::cms.post_form.content_detail'))->required()
+                                    ->placeholder(__('sn-cms::cms.post_form.content_markdown_placeholder'))
                                     ->fileAttachmentsDirectory(Utils::getFileDirectory('contents'))
-                                    ->visible(fn (Get $get): bool => $get('content_type') === ContentType::Markdown),
+                                    ->visible(fn(Get $get): bool => $get('content_type') === ContentType::Markdown),
                             ])->columns(1),
                     ])->columns(1),
                 ])->columns(1),
-                Schemas\Components\Section::make('状态')->schema([
+                Schemas\Components\Section::make(__('sn-cms::cms.post_form.status_section'))->schema([
                     // Forms\Components\SpatieTagsInput::make('tags')->label('标签')->type(function (Component $livewire) {
                     //     return $livewire::getResource()::getTagType();
                     // }),
                     Forms\Components\ToggleButtons::make('flags')
-                        ->label('标志')
+                        ->label(__('sn-cms::cms.post_form.flags'))
                         ->multiple()
                         ->inline()
-                        ->options(fn (Component $livewire) => FlagRegistry::getTypesOptions($livewire::getScopeType()))
-                        ->colors(fn (Component $livewire) => FlagRegistry::getTypesColors($livewire::getScopeType()))
-                        ->icons(fn (Component $livewire) => FlagRegistry::getTypesIcons($livewire::getScopeType())),
-                    Forms\Components\TextInput::make('order_column')->label('排序')->integer()
-                        ->placeholder('正序排列')
+                        ->options(fn(Component $livewire) => FlagRegistry::getTypesOptions($livewire::getScopeType()))
+                        ->colors(fn(Component $livewire) => FlagRegistry::getTypesColors($livewire::getScopeType()))
+                        ->icons(fn(Component $livewire) => FlagRegistry::getTypesIcons($livewire::getScopeType())),
+                    Forms\Components\TextInput::make('order_column')->label(__('sn-cms::cms.post_form.order'))->integer()
+                        ->placeholder(__('sn-cms::cms.post_form.order_placeholder'))
                         ->rules(['integer', 'min:0']),
                     Forms\Components\ToggleButtons::make('status')
-                        ->label('状态')
+                        ->label(__('sn-cms::cms.post_form.status'))
                         ->default(PostStatus::Published)
                         ->inline()
                         ->options(PostStatus::class),
                     Schemas\Components\Group::make()
                         ->schema([
                             Forms\Components\Radio::make('scheduled_at_type')
-                                ->label('计划发布时间类型')
+                                ->label(__('sn-cms::cms.post_form.scheduled_at_type'))
                                 ->default('scheduled_at')
                                 ->inline()
                                 ->options([
-                                    'scheduled_at' => '计划发布时间',
-                                    'minutes_later' => '分钟后发布',
+                                    'scheduled_at' => __('sn-cms::cms.post_form.scheduled_at'),
+                                    'minutes_later' => __('sn-cms::cms.post_form.minutes_later'),
                                 ]),
                             Forms\Components\DateTimePicker::make('scheduled_at')
-                                ->label('计划发布时间')
-                                ->placeholder('选择发布时间')
+                                ->label(__('sn-cms::cms.post_form.scheduled_at'))
+                                ->placeholder(__('sn-cms::cms.post_form.scheduled_at_placeholder'))
                                 ->displayFormat('Y-m-d H:i:s')
                                 ->native(false)
-                                ->required(fn (Get $get) => (bool) ($get('status') == PostStatus::Scheduled && $get('scheduled_at_type') === 'scheduled_at'))
+                                ->required(fn(Get $get) => (bool) ($get('status') == PostStatus::Scheduled && $get('scheduled_at_type') === 'scheduled_at'))
                                 ->markAsRequired()
                                 ->visibleJs(<<<'JS'
                                     $get('scheduled_at_type') == 'scheduled_at'
                                 JS),
                             Forms\Components\TextInput::make('minutes_later')
-                                ->label('分钟后发布')
-                                ->placeholder('请输入分钟数')
+                                ->label(__('sn-cms::cms.post_form.minutes_later'))
+                                ->placeholder(__('sn-cms::cms.post_form.minutes_later_placeholder'))
                                 ->integer()
                                 ->minValue(0)
-                                ->required(fn (Get $get) => (bool) ($get('status') == PostStatus::Scheduled && $get('scheduled_at_type') === 'minutes_later'))
+                                ->required(fn(Get $get) => (bool) ($get('status') == PostStatus::Scheduled && $get('scheduled_at_type') === 'minutes_later'))
                                 ->markAsRequired()
                                 ->visibleJs(<<<'JS'
                                     $get('scheduled_at_type') == 'minutes_later'

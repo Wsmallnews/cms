@@ -16,6 +16,7 @@ use Wsmallnews\Cms\Enums\NavigationStatus;
 use Wsmallnews\Cms\Enums\NavigationType as NavigationTypeEnum;
 use Wsmallnews\Cms\Facades\ContentRegistry;
 use Wsmallnews\Cms\Support\Utils;
+use Wsmallnews\Support\Enums\ContentType;
 use Wsmallnews\Support\Filament\Forms\FormComponents;
 
 class NavigationForm
@@ -24,35 +25,35 @@ class NavigationForm
     {
         return [
             Forms\Components\Select::make('type')
-                ->helperText(fn(): ?HtmlString => new HtmlString('<span style="color: #F59E0B;">如果存在子导航，当前导航设置的 跳转链接/路由等将失效</span>'))
-                ->label('导航类型')
+                ->helperText(fn(): ?HtmlString => new HtmlString('<span style="color: #F59E0B;">' . __('sn-cms::cms.navigation_form.type_helper') . '</span>'))
+                ->label(__('sn-cms::cms.navigation_form.type'))
                 ->options(NavigationTypeEnum::class)
                 ->default(NavigationTypeEnum::Route)
                 ->live()
                 ->required(),
-            Forms\Components\TextInput::make('name')->label('导航名称')
-                ->placeholder('请输入导航名称')
+            Forms\Components\TextInput::make('name')->label(__('sn-cms::cms.navigation_form.name'))
+                ->placeholder(__('sn-cms::cms.navigation_form.name_placeholder'))
                 ->required(),
-            Forms\Components\Textarea::make('description')->label('描述')
-                ->placeholder('请输入导航描述'),
+            Forms\Components\Textarea::make('description')->label(__('sn-cms::cms.navigation_form.description'))
+                ->placeholder(__('sn-cms::cms.navigation_form.description_placeholder')),
             Forms\Components\ToggleButtons::make('options.icon_type')
-                ->label('导航图标')
+                ->label(__('sn-cms::cms.navigation_form.icon_type'))
                 ->options([
-                    'none' => '无图标',
-                    'icon' => 'icon图标',
-                    'image' => '图片图标',
+                    'none' => __('sn-cms::cms.navigation_form.icon_type_none'),
+                    'icon' => __('sn-cms::cms.navigation_form.icon_type_icon'),
+                    'image' => __('sn-cms::cms.navigation_form.icon_type_image'),
                 ])
                 ->default('none')
                 ->inline(),
             Schemas\Components\Fieldset::make('icons')
-                ->label('icon 图标')
+                ->label(__('sn-cms::cms.navigation_form.icon_fieldset'))
                 ->schema([
-                    IconPicker::make('options.icon')->label('图标')
-                        ->placeholder('请选择图标')
+                    IconPicker::make('options.icon')->label(__('sn-cms::cms.navigation_form.icon'))
+                        ->placeholder(__('sn-cms::cms.navigation_form.icon_placeholder'))
                         ->sets(['heroicons'])
                         ->iconsSearchResults(),
-                    IconPicker::make('options.active_icon')->label('活动图标')
-                        ->placeholder('请选择活动图标')
+                    IconPicker::make('options.active_icon')->label(__('sn-cms::cms.navigation_form.active_icon'))
+                        ->placeholder(__('sn-cms::cms.navigation_form.active_icon_placeholder'))
                         ->sets(['heroicons'])
                         ->iconsSearchResults(),
                 ])
@@ -60,27 +61,27 @@ class NavigationForm
                     $get('options.icon_type') == 'icon'
                 JS),
             Schemas\Components\Fieldset::make('image_icons')
-                ->label('图片图标')
+                ->label(__('sn-cms::cms.navigation_form.image_icon_fieldset'))
                 ->schema([
                     FormComponents::localImageUpload('options.icon_src')
-                        ->label('图标')
+                        ->label(__('sn-cms::cms.navigation_form.image_icon'))
                         ->directory(Utils::getFileDirectory('icons'))
                         ->automaticallyResizeImagesMode('cover')
                         ->imageAspectRatio('1:1')
                         ->automaticallyCropImagesToAspectRatio()
                         ->automaticallyResizeImagesToHeight('200')
                         ->automaticallyResizeImagesToWidth('200')
-                        ->uploadingMessage('图标上传中...'),
+                        ->uploadingMessage(__('sn-cms::cms.navigation_form.image_icon_uploading')),
                     FormComponents::localImageUpload('options.active_icon_src')
-                        ->label('活动图标')
+                        ->label(__('sn-cms::cms.navigation_form.active_image_icon'))
                         ->directory(Utils::getFileDirectory('icons'))
                         ->automaticallyResizeImagesMode('cover')
                         ->imageAspectRatio('1:1')
                         ->automaticallyCropImagesToAspectRatio()
                         ->automaticallyResizeImagesToHeight('200')
                         ->automaticallyResizeImagesToWidth('200')
-                        ->uploadingMessage('活动图标上传中...'),
-                    Schemas\Components\Text::make('请上传正方形图片，推荐大小为 200x200 像素，非正方形图片将被自动缩放裁剪')
+                        ->uploadingMessage(__('sn-cms::cms.navigation_form.active_image_icon_uploading')),
+                    Schemas\Components\Text::make(__('sn-cms::cms.navigation_form.image_tip'))
                         ->columnSpanFull(),
 
                 ])
@@ -88,16 +89,16 @@ class NavigationForm
                     $get('options.icon_type') == 'image'
                 JS),
             Forms\Components\Toggle::make('options.footer_show')
-                ->label('底部显示')
+                ->label(__('sn-cms::cms.navigation_form.footer_show'))
                 ->default(false)
-                ->helperText('如果开启底部显示，则在页面底部显示该导航')
+                ->helperText(__('sn-cms::cms.navigation_form.footer_show_helper'))
                 ->inline(false)
                 ->visible(function (Get $get) {
                     // 只有子菜单 可以设置底部显示
                     return in_array($get('type'), [NavigationTypeEnum::Child]);
                 }),
             Forms\Components\TextInput::make('slug')
-                ->label('导航标识')
+                ->label(__('sn-cms::cms.navigation_form.slug'))
                 ->scopedUnique(modifyQueryUsing: function (Builder $query, Component $livewire) {
                     return $query->scopeable($livewire::getScopeType(), $livewire::getScopeId());
                 })
@@ -108,23 +109,23 @@ class NavigationForm
                     return in_array($get('type'), [NavigationTypeEnum::Page, NavigationTypeEnum::Content]);
                 }),
             FormComponents::mediaImageUpload('navigation_banner', 'navigation_banner')
-                ->label('导航Banner')
+                ->label(__('sn-cms::cms.navigation_form.banner'))
                 ->customProperties(function (Component $livewire) {
                     return [
                         ...$livewire->getScopeable(),
                         'team_id' => current_tenant()?->id,
                     ];
                 })
-                ->uploadingMessage('Banner 上传中...')
+                ->uploadingMessage(__('sn-cms::cms.navigation_form.banner_uploading'))
                 ->visible(function (Get $get) {
                     // 只有内容 和 页面 需要设置 Banner
                     return in_array($get('type'), [NavigationTypeEnum::Page, NavigationTypeEnum::Content]);
                 }),
             Forms\Components\Select::make('options.target')
-                ->label('跳转类型')
+                ->label(__('sn-cms::cms.navigation_form.target_type'))
                 ->options([
-                    '_self' => '当前窗口',
-                    '_blank' => '新窗口',
+                    '_self' => __('sn-cms::cms.navigation_form.target_self'),
+                    '_blank' => __('sn-cms::cms.navigation_form.target_blank'),
                 ])
                 ->default('_self')
                 ->visible(function (Get $get) {
@@ -132,50 +133,75 @@ class NavigationForm
                     return $get('type') != NavigationTypeEnum::Child;
                 }),
             Schemas\Components\Group::make()
+                ->relationship('content')
+                ->mutateRelationshipDataBeforeFillUsing(function (array $data) {
+                    $data['content_' . $data['content_type']] = $data['content'];
+
+                    return $data;
+                })
+                ->mutateRelationshipDataBeforeCreateUsing(function (array $data): array {
+                    return static::mapVirtualContentField($data);
+                })
+                ->mutateRelationshipDataBeforeSaveUsing(function (array $data): array {
+                    return static::mapVirtualContentField($data);
+                })
                 ->schema([
-                    Schemas\Components\Group::make()
-                        ->relationship('content')
-                        ->schema([
-                            FormComponents::richEditor('content')
-                                ->label('页面内容详情')
-                                ->fileAttachmentsDirectory('contents/' . date('Ymd'))
-                                ->required(),
-                        ])
-                        ->columnSpanFull(),
+                    Forms\Components\ToggleButtons::make('content_type')
+                        ->label(__('sn-cms::cms.post_form.editor_type'))
+                        ->default(ContentType::Richtext)
+                        ->options(ContentType::class)
+                        ->inline()->grouped()
+                        ->live(),
+                    Forms\Components\Hidden::make('content'),
+                    Forms\Components\Textarea::make('content_textarea')
+                        ->label(__('sn-cms::cms.post_form.content_detail'))->required()
+                        ->placeholder(__('sn-cms::cms.post_form.content_placeholder'))
+                        ->rows(5)->autosize()
+                        ->visible(fn(Get $get): bool => $get('content_type') === ContentType::Textarea),
+                    FormComponents::richEditor('content_richtext')
+                        ->label(__('sn-cms::cms.post_form.content_detail'))->required()
+                        ->placeholder(__('sn-cms::cms.post_form.content_placeholder'))
+                        ->fileAttachmentsDirectory(Utils::getFileDirectory('contents'))
+                        ->visible(fn(Get $get): bool => $get('content_type') === ContentType::Richtext),
+                    FormComponents::markdownEditor('content_markdown')
+                        ->label(__('sn-cms::cms.post_form.content_detail'))->required()
+                        ->placeholder(__('sn-cms::cms.post_form.content_markdown_placeholder'))
+                        ->fileAttachmentsDirectory(Utils::getFileDirectory('contents'))
+                        ->visible(fn(Get $get): bool => $get('content_type') === ContentType::Markdown),
                 ])
-                ->columns(2)
+                ->columns(1)
                 ->visible(function (Get $get) {
                     // page 页面设置页面详情
                     return $get('type') == NavigationTypeEnum::Page;
                 }),
             Forms\Components\TextInput::make('options.url')
-                ->label('跳转链接')
-                ->placeholder('请输入跳转链接')
+                ->label(__('sn-cms::cms.navigation_form.url'))
+                ->placeholder(__('sn-cms::cms.navigation_form.url_placeholder'))
                 ->required()
                 ->visible(function (Get $get) {
                     // Url 类型显示 跳转链接
                     return $get('type') == NavigationTypeEnum::Url;
                 }),
             Forms\Components\TextInput::make('options.route')
-                ->label('路由名称')
-                ->placeholder('请输入路由名称')
+                ->label(__('sn-cms::cms.navigation_form.route_name'))
+                ->placeholder(__('sn-cms::cms.navigation_form.route_name_placeholder'))
                 ->required()
                 ->visible(function (Get $get) {
                     // 跳转路由,填写路由名称
                     return $get('type') == NavigationTypeEnum::Route;
                 }),
             Schemas\Components\Fieldset::make('url_params')
-                ->label('请求参数')
+                ->label(__('sn-cms::cms.navigation_form.url_params'))
                 ->schema([
                     Schemas\Components\Group::make()
                         ->schema([
                             Forms\Components\Toggle::make('has_routes')
-                                ->label('路由参数')
+                                ->label(__('sn-cms::cms.navigation_form.route_param'))
                                 ->default(false)
-                                ->helperText('如果有路由参数，则开启当前选项'),
+                                ->helperText(__('sn-cms::cms.navigation_form.route_param_helper')),
                             Forms\Components\KeyValue::make('routes')
-                                ->label('路由参数')
-                                ->helperText('路由参数, 没有则不设置')
+                                ->label(__('sn-cms::cms.navigation_form.route_params'))
+                                ->helperText(__('sn-cms::cms.navigation_form.route_params_helper'))
                                 ->reorderable()
                                 ->required(fn(Get $get) => (bool) $get('has_routes'))
                                 ->markAsRequired()
@@ -188,12 +214,12 @@ class NavigationForm
                     Schemas\Components\Group::make()
                         ->schema([
                             Forms\Components\Toggle::make('has_queries')
-                                ->label('查询参数')
+                                ->label(__('sn-cms::cms.navigation_form.query_param'))
                                 ->default(false)
-                                ->helperText('如果有查询参数，则开启当前选项'),
+                                ->helperText(__('sn-cms::cms.navigation_form.query_param_helper')),
                             Forms\Components\KeyValue::make('queries')
-                                ->label('查询参数')
-                                ->helperText('查询参数, 拼接在地址栏后面, 没有则不设置')
+                                ->label(__('sn-cms::cms.navigation_form.query_params'))
+                                ->helperText(__('sn-cms::cms.navigation_form.query_params_helper'))
                                 ->reorderable()
                                 ->required(fn(Get $get) => (bool) $get('has_queries'))
                                 ->markAsRequired()
@@ -211,14 +237,14 @@ class NavigationForm
                     return $get('type') == NavigationTypeEnum::Route;
                 }),
             Forms\Components\Repeater::make('contentComponents')
-                ->label('自定义内容')
+                ->label(__('sn-cms::cms.navigation_form.custom_content'))
                 ->schema(function () use ($arguments) {
                     $uuid = Str::uuid();
 
                     return [
                         Forms\Components\Select::make('type')
-                            ->label('内容类型')
-                            ->placeholder('请选择内容类型')
+                            ->label(__('sn-cms::cms.navigation_form.content_type'))
+                            ->placeholder(__('sn-cms::cms.navigation_form.content_type_placeholder'))
                             ->options(ContentRegistry::getTypesOptions($arguments['scope_type']))
                             ->live()
                             ->required()
@@ -236,12 +262,12 @@ class NavigationForm
 
                         // 显示 type 对应的 label
                         Forms\Components\TextInput::make('label')
-                            ->label('内容名称')
+                            ->label(__('sn-cms::cms.navigation_form.content_name'))
                             ->live(onBlur: true)
-                            ->placeholder('请输入内容名称'),
+                            ->placeholder(__('sn-cms::cms.navigation_form.content_name_placeholder')),
 
                         Schemas\Components\Fieldset::make('extras')
-                            ->label('选项')
+                            ->label(__('sn-cms::cms.navigation_form.content_options'))
                             ->schema(function (Get $get) use ($arguments) {
                                 return filled($get('type')) ? ContentRegistry::getTypeForms($arguments['scope_type'], $get('type'), ['fields' => $get('../../../')]) : [];        // $get() 获取的为当前repeater 循环层级的数据，需要 ../../../ 获取所有变量
                             })->visible(function (Get $get) use ($arguments) {
@@ -259,7 +285,7 @@ class NavigationForm
                 ->itemLabel(fn(array $state): ?string => $state['label'] ?? null)
                 ->required()
                 ->minItems(1)
-                ->addActionLabel('添加分组')
+                ->addActionLabel(__('sn-cms::cms.navigation_form.add_group'))
                 ->collapsible()
                 ->cloneable()
                 ->addActionAlignment(Alignment::Start)
@@ -270,10 +296,28 @@ class NavigationForm
                 ->statePath('options.components'),
 
             Forms\Components\Radio::make('status')
-                ->label('导航状态')
+                ->label(__('sn-cms::cms.navigation_form.status'))
                 ->inline()
                 ->options(NavigationStatus::class)
                 ->default(NavigationStatus::Normal),
         ];
+    }
+
+    /**
+     * 处理可切换编辑器的 content 字段
+     *
+     * @param  array<string, mixed>  $data
+     * @return array<string, mixed>
+     */
+    public static function mapVirtualContentField(array $data): array
+    {
+        $contentType = $data['content_type'] ?? ContentType::Textarea;
+        $virtualField = 'content_' . $contentType->value;
+
+        $data['content'] = $data[$virtualField] ?? null;
+
+        unset($data['content_textarea'], $data['content_richtext'], $data['content_markdown']);
+
+        return $data;
     }
 }

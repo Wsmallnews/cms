@@ -18,10 +18,10 @@
                     <livewire:sn-user-components-user-menu :module="app(CmsPlugin::class)->getId()" switch-dark-mode="{{ Utils::hasDarkMode() && !Utils::hasDarkModeForced() }}" />
                 @else
                     <x-filament::button tag="a" href="{{ Utils::route('login') }}">
-                        登录
+                        {{ __('sn-cms::cms.frontend.login') }}
                     </x-filament::button>
                     <x-filament::button color="gray" tag="a" href="{{ Utils::route('register') }}">
-                        注册
+                        {{ __('sn-cms::cms.frontend.register') }}
                     </x-filament::button>
                 @endauth
             </div>

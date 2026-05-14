@@ -22,43 +22,46 @@ class GeneralSetting extends SettingsPage
     use Concerns\Resource\HasNavigation;
     use HasCustomProperties;
 
-    protected static ?string $title = '基础设置';
-
     protected static ?string $slug = 'general-settings';
 
     protected static string $settings = GeneralSettings::class;
+
+    public function getTitle(): string
+    {
+        return static::getNavigationLabel() ?? __('sn-cms::cms.general_setting.title');
+    }
 
     public function form(Schema $schema): Schema
     {
         return $schema
             ->components([
-                Schemas\Components\Section::make('基础信息')->schema([
+                Schemas\Components\Section::make(__('sn-cms::cms.general_setting.basic_info'))->schema([
                     Forms\Components\TextInput::make('wechat')
-                        ->label('官方微信号'),
+                        ->label(__('sn-cms::cms.general_setting.wechat')),
                     Forms\Components\TextInput::make('phone')
-                        ->label('联系电话'),
+                        ->label(__('sn-cms::cms.general_setting.phone')),
                     Forms\Components\TextInput::make('email')
-                        ->label('邮箱'),
+                        ->label(__('sn-cms::cms.general_setting.email')),
                     Forms\Components\TextInput::make('address')
-                        ->label('地址'),
+                        ->label(__('sn-cms::cms.general_setting.address')),
                     Forms\Components\TextInput::make('copyright')
-                        ->label('版权信息'),
+                        ->label(__('sn-cms::cms.general_setting.copyright')),
                     Forms\Components\TextInput::make('copytime')
-                        ->label('版权时间'),
+                        ->label(__('sn-cms::cms.general_setting.copytime')),
                     Forms\Components\TextInput::make('beian_no')
-                        ->label('备案号'),
+                        ->label(__('sn-cms::cms.general_setting.beian_no')),
                     Forms\Components\TextInput::make('beian_url')
-                        ->label('工信部网址'),
+                        ->label(__('sn-cms::cms.general_setting.beian_url')),
                 ])->columns(2),
-                Schemas\Components\Section::make('二维码上传')->schema([
+                Schemas\Components\Section::make(__('sn-cms::cms.general_setting.qrcode_section'))->schema([
                     FormComponents::localImageUpload('wechat_qrcode')
-                        ->label('微信二维码')
+                        ->label(__('sn-cms::cms.general_setting.wechat_qrcode'))
                         ->directory(Utils::getFileDirectory('settings'))
-                        ->uploadingMessage('微信二维码上传中...'),
+                        ->uploadingMessage(__('sn-cms::cms.general_setting.wechat_qrcode_uploading')),
                     FormComponents::localImageUpload('wechat_official_qrcode')
-                        ->label('公众号二维码')
+                        ->label(__('sn-cms::cms.general_setting.wechat_official_qrcode'))
                         ->directory(Utils::getFileDirectory('settings'))
-                        ->uploadingMessage('公众号二维码上传中...'),
+                        ->uploadingMessage(__('sn-cms::cms.general_setting.wechat_official_qrcode_uploading')),
                 ])->columns(2),
             ]);
     }

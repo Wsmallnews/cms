@@ -24,10 +24,10 @@ enum PostStatus: string implements HasColor, HasIcon, HasLabel
     public function getLabel(): ?string
     {
         return match ($this) {
-            self::Draft => '草稿',
-            self::Published => '已发布',
-            self::Hidden => '隐藏',
-            self::Scheduled => '定时发布',
+            self::Draft => __('sn-cms::cms.post_status.draft'),
+            self::Published => __('sn-cms::cms.post_status.published'),
+            self::Hidden => __('sn-cms::cms.post_status.hidden'),
+            self::Scheduled => __('sn-cms::cms.post_status.scheduled'),
         };
     }
 

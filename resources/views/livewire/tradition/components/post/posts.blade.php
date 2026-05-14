@@ -32,7 +32,7 @@
                 :href="$currentUrl"
                 :active="blank($flag)"
             >
-                全部
+                {{ __('sn-cms::cms.frontend.all') }}
             </x-filament::tabs.item>
             @foreach ($flags as $flagItem)
                 <x-filament::tabs.item

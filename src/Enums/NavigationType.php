@@ -22,11 +22,11 @@ enum NavigationType: string implements HasLabel
     public function getLabel(): ?string
     {
         return match ($this) {
-            self::Child => '子导航',
-            self::Url => '链接',
-            self::Route => '路由',
-            self::Page => '页面',
-            self::Content => '内容',
+            self::Child => __('sn-cms::cms.navigation_type_enum.child'),
+            self::Url => __('sn-cms::cms.navigation_type_enum.url'),
+            self::Route => __('sn-cms::cms.navigation_type_enum.route'),
+            self::Page => __('sn-cms::cms.navigation_type_enum.page'),
+            self::Content => __('sn-cms::cms.navigation_type_enum.content'),
         };
     }
 }

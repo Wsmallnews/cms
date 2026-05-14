@@ -20,8 +20,8 @@ enum NavigationTypeStatus: string implements HasColor, HasIcon, HasLabel
     public function getLabel(): ?string
     {
         return match ($this) {
-            self::Normal => '正常',
-            self::Disabled => '禁用',
+            self::Normal => __('sn-cms::cms.navigation_type_status.normal'),
+            self::Disabled => __('sn-cms::cms.navigation_type_status.disabled'),
         };
     }
 

@@ -10,12 +10,12 @@ class NavigationInfolist
     {
         return [
             Infolists\Components\TextEntry::make('type')
-                ->label('导航类型'),
+                ->label(__('sn-cms::cms.navigation_infolist.type')),
             Infolists\Components\TextEntry::make('description')
-                ->label('描述')
+                ->label(__('sn-cms::cms.navigation_infolist.description'))
                 ->visible(fn ($state): bool => $state ? true : false),
             Infolists\Components\IconEntry::make('status')
-                ->label('状态'),
+                ->label(__('sn-cms::cms.navigation_infolist.status')),
         ];
     }
 }

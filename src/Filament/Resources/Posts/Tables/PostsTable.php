@@ -24,13 +24,12 @@ class PostsTable
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('id')
-                    ->label('ID')
                     ->searchable()
                     ->sortable()
                     ->alignCenter()
                     ->toggleable(),
                 Tables\Columns\TextColumn::make('title')
-                    ->label('标题')
+                    ->label(__('sn-cms::cms.posts_table.title'))
                     ->searchable()
                     ->view('sn-cms::filament.tables.columns.post-title'),
                 // Tables\Columns\SpatieMediaLibraryImageColumn::make('image')
@@ -38,16 +37,16 @@ class PostsTable
                 //     ->collection('main')
                 //     ->toggleable(),
                 Tables\Columns\TextColumn::make('categories.name')
-                    ->label('分类')
+                    ->label(__('sn-cms::cms.posts_table.categories'))
                     ->searchable()
                     ->toggleable()
                     ->badge(),
                 Tables\Columns\ViewColumn::make('publisher')
-                    ->label('发布者')
+                    ->label(__('sn-cms::cms.posts_table.publisher'))
                     ->toggleable()
                     ->view('sn-cms::filament.tables.columns.publisher'),
                 Tables\Columns\ViewColumn::make('flags')
-                    ->label('标志')
+                    ->label(__('sn-cms::cms.posts_table.flags'))
                     ->toggleable()
                     ->view('sn-cms::filament.tables.columns.flags-text', function (Component $livewire) {
                         return ['scopeType' => $livewire::getScopeType()];
@@ -57,38 +56,38 @@ class PostsTable
                 //     ->type('post_tags')
                 //     ->toggleable(),
                 Tables\Columns\TextColumn::make('counter')
-                    ->label('浏览量')
-                    ->formatStateUsing(fn ($state) => $state->view_num)
+                    ->label(__('sn-cms::cms.posts_table.views'))
+                    ->formatStateUsing(fn($state) => $state->view_num)
                     ->alignCenter()
                     ->toggleable(),
                 Tables\Columns\TextColumn::make('order_column')
-                    ->label('排序')
+                    ->label(__('sn-cms::cms.posts_table.order'))
                     ->alignCenter()
                     ->toggleable(),
                 Tables\Columns\TextColumn::make('status')
-                    ->label('状态')
+                    ->label(__('sn-cms::cms.posts_table.status'))
                     ->toggleable(),
                 Tables\Columns\TextColumn::make('published_at')
-                    ->label('发布时间')
+                    ->label(__('sn-cms::cms.posts_table.published_at'))
                     ->toggleable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->label('创建时间')
+                    ->label(__('sn-cms::cms.posts_table.created_at'))
                     ->toggleable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('updated_at')
-                    ->label('更新时间')
+                    ->label(__('sn-cms::cms.posts_table.updated_at'))
                     ->toggleable()
                     ->sortable(),
             ])
             ->reorderable('order_column')
             ->defaultSort('order_column', 'asc')
-            ->searchPlaceholder('搜索标题、描述等...')
+            ->searchPlaceholder(__('sn-cms::cms.posts_table.search_placeholder'))
             ->filtersFormWidth(Width::Medium)
             ->filters([
                 Tables\Filters\SelectFilter::make('flag')
-                    ->label('标志')
-                    ->options(fn (Component $livewire) => FlagRegistry::getTypesOptions($livewire::getScopeType()))
+                    ->label(__('sn-cms::cms.posts_table.flag_filter'))
+                    ->options(fn(Component $livewire) => FlagRegistry::getTypesOptions($livewire::getScopeType()))
                     ->query(function ($query, $data) {
                         if ($data['value']) {
                             $query->hasFlag($data['value']);

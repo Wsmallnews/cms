@@ -12,8 +12,8 @@ class Post extends Base
     public function render()
     {
         $breadcrumbs = [
-            ['label' => '首页', 'url' => Utils::route('index')],
-            ['label' => '资讯详情', 'url' => Utils::route('posts.show', $this->slug)],
+            ['label' => __('sn-cms::cms.frontend.home'), 'url' => Utils::route('index')],
+            ['label' => __('sn-cms::cms.frontend.post_detail'), 'url' => Utils::route('posts.show', $this->slug)],
         ];
 
         return view($this->getThemeView('post.post'), [

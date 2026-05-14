@@ -15,8 +15,8 @@
         </div>
 
         <div class="sn-tip-text flex gap-8">
-            <div>{{ __('发布时间') }}：{{ $post->published_at?->format('Y-m-d H:i:s') }}</div>
-            <div>{{ __('浏览量') }}：{{ $post->counter['view_num'] }}</div>
+            <div>{{ __('sn-cms::cms.frontend.published_at') }}：{{ $post->published_at?->format('Y-m-d H:i:s') }}</div>
+            <div>{{ __('sn-cms::cms.frontend.views') }}：{{ $post->counter['view_num'] }}</div>
         </div>
 
         <div class="sn-descript-text sn-gray-bg p-2 rounded-md">
