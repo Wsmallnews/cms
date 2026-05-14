@@ -121,17 +121,17 @@ class PostForm
                                     ->label(__('sn-cms::cms.post_form.content_detail'))->required()
                                     ->placeholder(__('sn-cms::cms.post_form.content_placeholder'))
                                     ->rows(5)->autosize()
-                                    ->visible(fn(Get $get): bool => $get('content_type') === ContentType::Textarea),
+                                    ->visible(fn (Get $get): bool => $get('content_type') === ContentType::Textarea),
                                 FormComponents::richEditor('content_richtext')
                                     ->label(__('sn-cms::cms.post_form.content_detail'))->required()
                                     ->placeholder(__('sn-cms::cms.post_form.content_placeholder'))
                                     ->fileAttachmentsDirectory(Utils::getFileDirectory('contents'))
-                                    ->visible(fn(Get $get): bool => $get('content_type') === ContentType::Richtext),
+                                    ->visible(fn (Get $get): bool => $get('content_type') === ContentType::Richtext),
                                 FormComponents::markdownEditor('content_markdown')
                                     ->label(__('sn-cms::cms.post_form.content_detail'))->required()
                                     ->placeholder(__('sn-cms::cms.post_form.content_markdown_placeholder'))
                                     ->fileAttachmentsDirectory(Utils::getFileDirectory('contents'))
-                                    ->visible(fn(Get $get): bool => $get('content_type') === ContentType::Markdown),
+                                    ->visible(fn (Get $get): bool => $get('content_type') === ContentType::Markdown),
                             ])->columns(1),
                     ])->columns(1),
                 ])->columns(1),
@@ -143,9 +143,9 @@ class PostForm
                         ->label(__('sn-cms::cms.post_form.flags'))
                         ->multiple()
                         ->inline()
-                        ->options(fn(Component $livewire) => FlagRegistry::getTypesOptions($livewire::getScopeType()))
-                        ->colors(fn(Component $livewire) => FlagRegistry::getTypesColors($livewire::getScopeType()))
-                        ->icons(fn(Component $livewire) => FlagRegistry::getTypesIcons($livewire::getScopeType())),
+                        ->options(fn (Component $livewire) => FlagRegistry::getTypesOptions($livewire::getScopeType()))
+                        ->colors(fn (Component $livewire) => FlagRegistry::getTypesColors($livewire::getScopeType()))
+                        ->icons(fn (Component $livewire) => FlagRegistry::getTypesIcons($livewire::getScopeType())),
                     Forms\Components\TextInput::make('order_column')->label(__('sn-cms::cms.post_form.order'))->integer()
                         ->placeholder(__('sn-cms::cms.post_form.order_placeholder'))
                         ->rules(['integer', 'min:0']),
@@ -169,7 +169,7 @@ class PostForm
                                 ->placeholder(__('sn-cms::cms.post_form.scheduled_at_placeholder'))
                                 ->displayFormat('Y-m-d H:i:s')
                                 ->native(false)
-                                ->required(fn(Get $get) => (bool) ($get('status') == PostStatus::Scheduled && $get('scheduled_at_type') === 'scheduled_at'))
+                                ->required(fn (Get $get) => (bool) ($get('status') == PostStatus::Scheduled && $get('scheduled_at_type') === 'scheduled_at'))
                                 ->markAsRequired()
                                 ->visibleJs(<<<'JS'
                                     $get('scheduled_at_type') == 'scheduled_at'
@@ -179,7 +179,7 @@ class PostForm
                                 ->placeholder(__('sn-cms::cms.post_form.minutes_later_placeholder'))
                                 ->integer()
                                 ->minValue(0)
-                                ->required(fn(Get $get) => (bool) ($get('status') == PostStatus::Scheduled && $get('scheduled_at_type') === 'minutes_later'))
+                                ->required(fn (Get $get) => (bool) ($get('status') == PostStatus::Scheduled && $get('scheduled_at_type') === 'minutes_later'))
                                 ->markAsRequired()
                                 ->visibleJs(<<<'JS'
                                     $get('scheduled_at_type') == 'minutes_later'
