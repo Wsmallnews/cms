@@ -10,8 +10,8 @@ use Wsmallnews\Cms\Enums\PostStatus;
 use Wsmallnews\Cms\Filament\Resources\Posts\PostResource;
 use Wsmallnews\Cms\Support\Utils;
 use Wsmallnews\Comment\Filament\Pages\Comment\Widgets\Commentable as CommentableWidgets;
-use Wsmallnews\Support\Filament\Resources\Concerns\Pages\Scopeable;
 use Wsmallnews\Support\Enums\ContentType;
+use Wsmallnews\Support\Filament\Resources\Concerns\Pages\Scopeable;
 
 class EditPost extends EditRecord
 {
