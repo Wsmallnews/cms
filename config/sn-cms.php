@@ -3,6 +3,7 @@
 use Filament\Support\Icons\Heroicon;
 use Wsmallnews\Cms\Enums;
 use Wsmallnews\Cms\Models;
+use Wsmallnews\Support\Enums\ContentType;
 
 return [
     /**
@@ -119,6 +120,8 @@ return [
          * post 默认不支持评论
          */
         'post' => false,
+
+        'content_type' => ContentType::Textarea,
     ],
 
     'themes' => [

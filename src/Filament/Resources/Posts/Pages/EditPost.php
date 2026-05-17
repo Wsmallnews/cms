@@ -8,7 +8,10 @@ use Filament\Actions\RestoreAction;
 use Filament\Resources\Pages\EditRecord;
 use Wsmallnews\Cms\Enums\PostStatus;
 use Wsmallnews\Cms\Filament\Resources\Posts\PostResource;
+use Wsmallnews\Cms\Support\Utils;
+use Wsmallnews\Comment\Filament\Pages\Comment\Widgets\Commentable as CommentableWidgets;
 use Wsmallnews\Support\Filament\Resources\Concerns\Pages\Scopeable;
+use Wsmallnews\Support\Enums\ContentType;
 
 class EditPost extends EditRecord
 {
@@ -22,6 +25,22 @@ class EditPost extends EditRecord
             DeleteAction::make(),
             ForceDeleteAction::make(),
             RestoreAction::make(),
+        ];
+    }
+
+    protected function getFooterWidgets(): array
+    {
+        $record = $this->getRecord();
+
+        return [
+            CommentableWidgets::make([
+                // 'properties' => static::getResource()::getProperties() ?? [],
+                'scope_type' => static::getScopeType(),
+                'scope_id' => static::getScopeId(),
+                // 'content_type' => Utils::canComment('content_type'),
+                'content_type' => ContentType::Textarea,
+                'key' => 'widgets-post:' . $record?->id . '-comment',
+            ]),
         ];
     }
 
