@@ -9,6 +9,7 @@ use Wsmallnews\Cms\CmsPlugin;
 use Wsmallnews\Cms\Filament\Resources\Posts\Pages\CreatePost;
 use Wsmallnews\Cms\Filament\Resources\Posts\Pages\EditPost;
 use Wsmallnews\Cms\Filament\Resources\Posts\Pages\ListPosts;
+use Wsmallnews\Cms\Filament\Resources\Posts\Pages\ViewPost;
 use Wsmallnews\Cms\Filament\Resources\Tags\TagResource;
 use Wsmallnews\Cms\Support\Utils;
 use Wsmallnews\Support\Concerns\Resource\HasCustomProperties;
@@ -27,6 +28,7 @@ final class PostResource extends BaseResource
         return [
             'index' => ListPosts::route('/'),
             'create' => CreatePost::route('/create'),
+            'view' => ViewPost::route('/{record}'),
             'edit' => EditPost::route('/{record}/edit'),
         ];
     }

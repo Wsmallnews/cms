@@ -159,12 +159,18 @@ class Utils
 
     /**
      * 获取 module 是否支持 评论
+     * 
+     * @param  string  $module  Module name
+     * @param  string|null  $key  Configuration key
+     * @param  mixed  $default  Default value if not found
+     * @return mixed
      */
-    public static function canComment($module): bool
+    public static function commentConfig(string $module, ?string $key = null, $default = null): mixed
     {
-        $modules = self::getConfig('can_comment', []);
+        $modules = self::getConfig('comments', []);
+        $moduleConfig = $modules[$module] ?? [];
 
-        return $modules[$module] ?? false;
+        return filled($key) ? $moduleConfig[$key] ?? $default : $moduleConfig;
     }
 
     /**

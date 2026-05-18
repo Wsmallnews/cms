@@ -29,14 +29,19 @@ class Category extends BaseCategoryPage
         return self::getCustomScopeId() ?? Utils::getScopeId();
     }
 
-    public function getLevel(): ?int
+    public static function getLevel(): ?int
     {
         return self::getCustomProperty('level') ?? parent::getLevel();
     }
 
-    public function getEmptyLabel(): ?string
+    public static function getEmptyLabel(): ?string
     {
         return self::getCustomProperty('emptyLabel') ?? parent::getEmptyLabel();
+    }
+
+    public static function getEmptyTipLabel(): ?string
+    {
+        return self::getCustomProperty('emptyTipLabel') ?? parent::getEmptyTipLabel();
     }
 
     public static function getEssentialsPlugin(): ?CmsPlugin

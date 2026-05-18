@@ -13,6 +13,7 @@ use UnitEnum;
 use Wsmallnews\Cms\Filament\Resources\Posts\Schemas\PostForm;
 use Wsmallnews\Cms\Filament\Resources\Posts\Tables\PostsTable;
 use Wsmallnews\Cms\Support\Utils;
+use Wsmallnews\Comment\Filament\Pages\Comment\Widgets\Comment as CommentWidget;
 use Wsmallnews\Support\Filament\Resources\Concerns\Scopeable;
 
 abstract class BaseResource extends Resource
@@ -50,6 +51,13 @@ abstract class BaseResource extends Resource
     public static function table(Table $table): Table
     {
         return PostsTable::configure($table);
+    }
+
+    public static function getWidgets(): array
+    {
+        return [
+            CommentWidget::class,
+        ];
     }
 
     public static function getEloquentQuery(): Builder

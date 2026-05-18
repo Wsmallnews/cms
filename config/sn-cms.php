@@ -115,13 +115,14 @@ return [
     /**
      * 是否支持评论
      */
-    'can_comment' => [
+    'comments' => [
         /**
-         * post 默认不支持评论
+         * post comment
          */
-        'post' => false,
-
-        'content_type' => ContentType::Textarea,
+        'post' => [
+            'can_comment' => true,
+            'content_type' => ContentType::Textarea,
+        ]
     ],
 
     'themes' => [

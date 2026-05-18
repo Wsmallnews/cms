@@ -9,6 +9,7 @@ use Filament\Actions\EditAction;
 use Filament\Actions\ForceDeleteBulkAction;
 use Filament\Actions\RestoreAction;
 use Filament\Actions\RestoreBulkAction;
+use Filament\Actions\ViewAction;
 use Filament\Support\Enums\Width;
 use Filament\Tables;
 use Filament\Tables\Filters\TrashedFilter;
@@ -57,7 +58,7 @@ class PostsTable
                 //     ->toggleable(),
                 Tables\Columns\TextColumn::make('counter')
                     ->label(__('sn-cms::cms.posts_table.views'))
-                    ->formatStateUsing(fn ($state) => $state->view_num)
+                    ->formatStateUsing(fn($state) => $state->view_num)
                     ->alignCenter()
                     ->toggleable(),
                 Tables\Columns\TextColumn::make('order_column')
@@ -87,7 +88,7 @@ class PostsTable
             ->filters([
                 Tables\Filters\SelectFilter::make('flag')
                     ->label(__('sn-cms::cms.posts_table.flag_filter'))
-                    ->options(fn (Component $livewire) => FlagRegistry::getTypesOptions($livewire::getScopeType()))
+                    ->options(fn(Component $livewire) => FlagRegistry::getTypesOptions($livewire::getScopeType()))
                     ->query(function ($query, $data) {
                         if ($data['value']) {
                             $query->hasFlag($data['value']);
@@ -97,6 +98,7 @@ class PostsTable
                 TrashedFilter::make(),
             ])
             ->recordActions([
+                ViewAction::make(),
                 EditAction::make(),
                 DeleteAction::make(),
                 RestoreAction::make(),
