@@ -3,6 +3,7 @@
 use Filament\Support\Icons\Heroicon;
 use Wsmallnews\Cms\Enums;
 use Wsmallnews\Cms\Models;
+use Wsmallnews\Comment\Enums\CommentStatus;
 use Wsmallnews\Support\Enums\ContentType;
 
 return [
@@ -120,8 +121,22 @@ return [
          * post comment
          */
         'post' => [
-            'can_comment' => true,
+            /**
+             * 是否启用评论
+             */
+            'enable' => true,
+            /**
+             * 是否启用添加评论
+             */
+            'can_add_comment' => true,
+            /**
+             * 评论内容类型
+             */
             'content_type' => ContentType::Textarea,
+            /**
+             * 默认评论状态
+             */
+            'comment_status' => CommentStatus::Normal,
         ],
     ],
 

@@ -6,7 +6,7 @@
 
     $user = Utils::getUser();
 
-    $canComment = Utils::commentConfig('post', 'can_comment', false);
+    $canComment = Utils::commentConfig('post', 'enable', false);
 @endphp
 
 <x-dynamic-component :component="$this->getPageContainer()" :scope-type="$scopeType" :scope-id="$scopeId">

@@ -31,13 +31,15 @@ class ViewPost extends ViewRecord
 
         $widgets = [];
 
-        if (Utils::commentConfig('post', 'can_comment', false)) {
+        if (Utils::commentConfig('post', 'enable', false)) {
             $widgets[] = CommentWidgets::make([
                 'properties' => method_exists(static::getResource(), 'getProperties') ? static::getResource()::getProperties() : [],
-                'widget_type' => 'commentable',
-                'scope_type' => static::getScopeType(),
-                'scope_id' => static::getScopeId(),
-                'content_type' => Utils::commentConfig('post', 'content_type', ContentType::Textarea),
+                'widgetType' => 'commentable',
+                'scopeType' => static::getScopeType(),
+                'scopeId' => static::getScopeId(),
+                'canAddComment' => Utils::commentConfig('post', 'can_add_comment', false),
+                'contentType' => Utils::commentConfig('post', 'content_type', ContentType::Textarea),
+                'commentStatus' => Utils::commentConfig('post', 'comment_status'),
             ]);
         }
 
