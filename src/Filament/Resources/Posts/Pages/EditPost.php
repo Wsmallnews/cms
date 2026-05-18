@@ -25,7 +25,6 @@ class EditPost extends EditRecord
         ];
     }
 
-
     /**
      * @param  array<string, mixed>  $data
      * @return array<string, mixed>

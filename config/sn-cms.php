@@ -122,7 +122,7 @@ return [
         'post' => [
             'can_comment' => true,
             'content_type' => ContentType::Textarea,
-        ]
+        ],
     ],
 
     'themes' => [

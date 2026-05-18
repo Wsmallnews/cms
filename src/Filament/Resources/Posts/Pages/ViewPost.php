@@ -2,8 +2,8 @@
 
 namespace Wsmallnews\Cms\Filament\Resources\Posts\Pages;
 
-use Filament\Resources\Pages\ViewRecord;
 use Filament\Actions\EditAction;
+use Filament\Resources\Pages\ViewRecord;
 use Wsmallnews\Cms\Filament\Resources\Posts\PostResource;
 use Wsmallnews\Cms\Support\Utils;
 use Wsmallnews\Comment\Filament\Pages\Comment\Widgets\Comment as CommentWidgets;
@@ -37,7 +37,7 @@ class ViewPost extends ViewRecord
                 'widget_type' => 'commentable',
                 'scope_type' => static::getScopeType(),
                 'scope_id' => static::getScopeId(),
-                'content_type' => Utils::commentConfig('post', 'content_type', ContentType::Textarea)
+                'content_type' => Utils::commentConfig('post', 'content_type', ContentType::Textarea),
             ]);
         }
 
