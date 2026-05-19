@@ -16,7 +16,7 @@ use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use Livewire\Component;
 use Wsmallnews\Cms\Facades\FlagRegistry;
-use Wsmallnews\Support\Helpers\FilamentHelper;
+use Wsmallnews\Support\Filament\Filters\FilterComponents;
 
 class PostsTable
 {
@@ -94,7 +94,7 @@ class PostsTable
                             $query->hasFlag($data['value']);
                         }
                     }),
-                ...FilamentHelper::createUpdateRangeFilter(),
+                ...FilterComponents::createUpdateRangeFilter(),
                 TrashedFilter::make(),
             ])
             ->recordActions([
