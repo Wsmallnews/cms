@@ -19,10 +19,10 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\URL;
 use Livewire\Livewire;
-use Spatie\LaravelPackageTools\Commands\InstallCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 use Wsmallnews\Category\Models\Category as CategoryModel;
+use Wsmallnews\Cms\Commands\CmsInstallCommand;
 use Wsmallnews\Cms\Facades\ContentRegistry as ContentRegistryFacade;
 use Wsmallnews\Cms\Facades\FlagRegistry as FlagRegistryFacade;
 use Wsmallnews\Cms\Filament\Pages\Navigation\Components\BaseNavigation;
@@ -57,14 +57,7 @@ class CmsServiceProvider extends PackageServiceProvider
             ->hasConfigFile()
             ->hasMigrations($this->getMigrations())
             ->hasTranslations()
-            ->hasViews(static::$viewNamespace)
-            ->hasInstallCommand(function (InstallCommand $command) {
-                $command
-                    ->publishConfigFile()
-                    ->publishMigrations()
-                    ->askToRunMigrations()
-                    ->askToStarRepoOnGitHub('wsmallnews/cms');
-            });
+            ->hasViews(static::$viewNamespace);
 
         if (Utils::getConfig('routes.enabled') !== false) {     // 只要不等于 false 就注册路由
             $package->hasRoutes($this->getRoutes());
@@ -313,7 +306,9 @@ class CmsServiceProvider extends PackageServiceProvider
      */
     protected function getCommands(): array
     {
-        return [];
+        return [
+            CmsInstallCommand::class,
+        ];
     }
 
     /**
