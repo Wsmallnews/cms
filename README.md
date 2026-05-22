@@ -5,8 +5,6 @@
 [![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/wsmallnews/cms/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/wsmallnews/cms/actions?query=workflow%3A"Fix+PHP+code+styling"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/wsmallnews/cms.svg?style=flat-square)](https://packagist.org/packages/wsmallnews/cms)
 
-
-
 This is where your description should go. Limit it to a paragraph or two. Consider adding a small example.
 
 ## Installation
@@ -14,20 +12,32 @@ This is where your description should go. Limit it to a paragraph or two. Consid
 You can install the package via composer:
 
 ```bash
-composer require wsmallnews/cms
+composer require wsmallnews/cms:^1.0
 ```
 
-You can publish and run the migrations with:
+Installing this package will publish the configuration files and migration files of both the third-party dependency package and the current package:
+
+```bash
+php artisan sn-cms:install
+```
+
+You can publish only the config file individually:
+
+```bash
+php artisan vendor:publish --tag="cms-config"
+```
+
+Publish and run only the migrations individually:
 
 ```bash
 php artisan vendor:publish --tag="cms-migrations"
 php artisan migrate
 ```
 
-You can publish the config file with:
+Multi language support, you can publish the language files using:
 
 ```bash
-php artisan vendor:publish --tag="cms-config"
+php artisan vendor:publish --tag="sn-support-translations"
 ```
 
 Optionally, you can publish the views using
