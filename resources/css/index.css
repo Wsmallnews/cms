@@ -10,9 +10,6 @@
 
 @source '../views/**/*';
 
-/* wsmallnews/support css */
-@import '../../../support/resources/css/index.css';
-
 /* 定义字体系统，有待研究 */
 @theme inline {
     --font-mono:

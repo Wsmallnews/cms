@@ -7,6 +7,7 @@ use Filament\Resources\Pages\ViewRecord;
 use Wsmallnews\Cms\Filament\Resources\Posts\PostResource;
 use Wsmallnews\Cms\Support\Utils;
 use Wsmallnews\Comment\Filament\Pages\Comment\Widgets\Comment as CommentWidgets;
+use Wsmallnews\Preference\Filament\Pages\Preference\Widgets\Views as ViewsWidget;
 use Wsmallnews\Support\Enums\ContentType;
 use Wsmallnews\Support\Filament\Resources\Concerns\Pages\Scopeable;
 
@@ -42,6 +43,13 @@ class ViewPost extends ViewRecord
                 'commentStatus' => Utils::commentConfig('post', 'comment_status'),
             ]);
         }
+
+        $widgets[] = ViewsWidget::make([
+            'properties' => method_exists(static::getResource(), 'getProperties') ? static::getResource()::getProperties() : [],
+            'widgetType' => 'preferenceable',
+            'scopeType' => static::getScopeType(),
+            'scopeId' => static::getScopeId(),
+        ]);
 
         return $widgets;
     }
