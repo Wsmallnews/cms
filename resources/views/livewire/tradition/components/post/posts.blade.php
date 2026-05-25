@@ -56,16 +56,16 @@
                         ])
                         href="{{ \Wsmallnews\Cms\Support\Utils::route('posts.show', $post) }}"
                     >
-                        @if ($post->getFirstMediaUrl('post_image'))
-                            <div class="w-32 h-32 sm:w-44 sm:h-44 shrink-0 rounded-md overflow-hidden bg-gray-100 dark:bg-gray-800">
-                                <img class="w-full h-full object-cover sn-motion-scale" src="{{ $post->getFirstMediaUrl('post_image') }}" alt="{{ $post->title }}" loading="lazy" />
-                            </div>
-                        @else
-                            <div class="sn-image-placeholder">
-                                <x-filament::icon :icon="Heroicon::OutlinedPhoto" class="w-10 h-10" aria-hidden="true" />
-                            </div>
-                        @endif
-
+                        <div class="w-32 h-32 sm:w-44 sm:h-44 shrink-0 rounded-md overflow-hidden bg-gray-100 dark:bg-gray-800">
+                            @if ($post->getFirstMediaUrl('post_image'))
+                                <img class="sn-motion-scale w-full h-full object-cover" src="{{ $post->getFirstMediaUrl('post_image') }}" alt="{{ $post->title }}" loading="lazy" />
+                            @else
+                                <div class="sn-image-placeholder sn-motion-scale">
+                                    <x-filament::icon :icon="Heroicon::OutlinedPhoto" class="w-10 h-10" aria-hidden="true" />
+                                </div>
+                            @endif
+                        </div>
+                                
                         <div class="flex flex-col grow py-4 pr-4 gap-4">
                             <div class="sn-h3-text sn-hover line-clamp-1 transition duration-300">
                                 {{ $post->title }}

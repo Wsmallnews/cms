@@ -34,15 +34,15 @@
                     href="{{ \Wsmallnews\Cms\Support\Utils::route('posts.show', $post) }}" 
                     class="sn-link flex w-full h-28 lg:h-auto min-h-0 gap-2 group"
                 >
-                    @if ($post->getFirstMediaUrl('post_image'))
-                        <div class="h-full aspect-4/3 shrink-0 rounded-md">
-                            <img class="w-full h-full object-cover transition duration-300 group-hover:scale-110" src="{{ $post->getFirstMediaUrl('post_image') }}" />
-                        </div>
-                    @else
-                        <div class="sn-image-placeholder">
-                            <x-filament::icon :icon="Heroicon::OutlinedPhoto" class="w-10 h-10" aria-hidden="true" />
-                        </div>
-                    @endif
+                    <div class="h-full aspect-4/3 shrink-0 rounded-md overflow-hidden bg-gray-100 dark:bg-gray-800">
+                        @if ($post->getFirstMediaUrl('post_image'))
+                            <img class="sn-motion-scale w-full h-full object-cover" src="{{ $post->getFirstMediaUrl('post_image') }}" />
+                        @else
+                            <div class="sn-image-placeholder sn-motion-scale">
+                                <x-filament::icon :icon="Heroicon::OutlinedPhoto" class="w-10 h-10" aria-hidden="true" />
+                            </div>
+                        @endif
+                    </div>
 
                     <div class="min-w-0 flex flex-col grow py-2 px-4 gap-1">
                         <div class="sn-h4-text sn-hover line-clamp-1">
