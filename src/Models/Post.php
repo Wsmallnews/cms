@@ -19,10 +19,11 @@ use Wsmallnews\Comment\Models\Concerns\Commentable;
 use Wsmallnews\Preference\Models\Concerns\Preferenceable;
 use Wsmallnews\Preference\Models\Concerns\Preferenceable\Viewable;
 use Wsmallnews\Support\Casts\CounterCast;
+use Wsmallnews\Support\Contracts\HasSnSubject;
 use Wsmallnews\Support\Models\SupportModel;
 use Wsmallnews\Support\Support\Utils as SupportUtils;
 
-class Post extends SupportModel implements HasMedia
+class Post extends SupportModel implements HasMedia, HasSnSubject
 {
     use Commentable;
     use HasTags;
@@ -53,6 +54,26 @@ class Post extends SupportModel implements HasMedia
     public static function getTagClassName(): string
     {
         return Utils::getTagModel();
+    }
+
+    public function getSnSubjectId(): int
+    {
+        return $this->id;
+    }
+
+    public function getSnSubjectTitle(): ?string
+    {
+        return $this->title;
+    }
+
+    public function getSnSubjectDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function getSnSubjectCoverUrl(): ?string
+    {
+        return $this->getFirstMediaUrl('post_image');
     }
 
     /**
