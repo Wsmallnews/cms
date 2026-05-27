@@ -142,7 +142,7 @@ class CmsServiceProvider extends PackageServiceProvider
                     'register' => Utils::route('register'),
                     'profile' => Utils::route('profile'),
                     'forgot-password' => Utils::route('forgot.password'),
-                    'reset-password' => fn($params) => Utils::route('reset.password', $params),
+                    'reset-password' => fn ($params) => Utils::route('reset.password', $params),
                     'verify-email' => Utils::route('verify.email'),
                     'verify-email-verification' => function ($parameters) {
                         // @sn todo ，这里先直接填入 租户参数
@@ -172,7 +172,7 @@ class CmsServiceProvider extends PackageServiceProvider
             [
                 'type' => 'posts',
                 'label' => '图文列表',
-                'forms' => fn($fields) => [
+                'forms' => fn ($fields) => [
                     // 多选分类
                     Group::make()
                         ->schema([
@@ -216,7 +216,7 @@ class CmsServiceProvider extends PackageServiceProvider
             [
                 'type' => 'index-posts',
                 'label' => '图文轮播列表',
-                'forms' => fn($fields) => [],
+                'forms' => fn ($fields) => [],
                 'components' => [
                     IndexPosts::class => [
                         'scopeType' => Utils::getScopeType(),
@@ -227,12 +227,12 @@ class CmsServiceProvider extends PackageServiceProvider
             [
                 'type' => 'post-detail',
                 'label' => '图文详情',
-                'forms' => fn($fields) => [
+                'forms' => fn ($fields) => [
                     Group::make()
                         ->schema([
                             Select::make('id')->label('选择图文')
                                 ->options(PostModel::published()->scopeable(Utils::getScopeType(), Utils::getScopeId())->limit(30)->pluck('title', 'id'))
-                                ->getSearchResultsUsing(fn(string $search): array => PostModel::published()->scopeable(Utils::getScopeType(), Utils::getScopeId())->where('title', 'like', "%{$search}%")->limit(30)->pluck('title', 'id')->toArray())
+                                ->getSearchResultsUsing(fn (string $search): array => PostModel::published()->scopeable(Utils::getScopeType(), Utils::getScopeId())->where('title', 'like', "%{$search}%")->limit(30)->pluck('title', 'id')->toArray())
                                 ->placeholder('请选择图文详情')
                                 ->searchable()
                                 ->preload()
@@ -252,41 +252,41 @@ class CmsServiceProvider extends PackageServiceProvider
 
         // 注册用户侧边栏菜单
         SidebarMenuRegistryFacade::registers(app(CmsPlugin::class)->getId(), [
-            fn() => [
+            fn () => [
                 'key' => 'profile',
                 'label' => '个人中心',
                 'url' => Utils::route('profile'),
                 'icon' => Heroicon::OutlinedUser,
                 'active_icon' => Heroicon::User,
             ],
-            fn() => [
+            fn () => [
                 'key' => 'profile-views',
                 'label' => '浏览记录',
                 'url' => Utils::route('profile.views'),
                 'icon' => Heroicon::OutlinedEye,
                 'active_icon' => Heroicon::Eye,
             ],
-            fn() => [
+            fn () => [
                 'key' => 'settings-profile',
                 'label' => '修改资料',
                 'url' => Utils::route('settings.profile'),
                 'icon' => Heroicon::OutlinedPencilSquare,
                 'active_icon' => Heroicon::PencilSquare,
             ],
-            fn() => [
+            fn () => [
                 'key' => 'settings-password',
                 'label' => '修改密码',
                 'url' => Utils::route('settings.password'),
                 'icon' => Heroicon::OutlinedLockClosed,
                 'active_icon' => Heroicon::LockClosed,
             ],
-            fn() => [
+            fn () => [
                 'key' => 'settings-two-factor',
                 'label' => '双因素认证',
-                'url' => fn() => Utils::route('settings.two-factor'),
+                'url' => fn () => Utils::route('settings.two-factor'),
                 'icon' => Heroicon::OutlinedKey,
                 'active_icon' => Heroicon::Key,
-                'hidden' => fn() => ! Utils::getConfig('two_factor.enabled', false),
+                'hidden' => fn () => ! Utils::getConfig('two_factor.enabled', false),
             ],
         ]);
     }
