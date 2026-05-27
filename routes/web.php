@@ -13,6 +13,7 @@ use Wsmallnews\Cms\Livewire\Navigation\Navigation;
 use Wsmallnews\Cms\Livewire\Post\Post;
 use Wsmallnews\Cms\Livewire\Post\Posts;
 use Wsmallnews\Cms\Livewire\Profile;
+use Wsmallnews\Cms\Livewire\Profile\Views;
 use Wsmallnews\Cms\Livewire\Settings\Password as SettingsPassword;
 use Wsmallnews\Cms\Livewire\Settings\Profile as SettingsProfile;
 use Wsmallnews\Cms\Livewire\Settings\TwoFactor;
@@ -52,6 +53,8 @@ Route::domain(Utils::getConfig('routes.domain'))
 
             // 个人中心
             Route::get(Utils::getConfig('routes.uri.profile'), Profile::class)->name('profile');
+            // 浏览记录
+            Route::get(Utils::getConfig('routes.uri.profile-views'), Views::class)->name('profile.views');
 
             // 个人设置
             Route::get(Utils::getConfig('routes.uri.settings.profile'), SettingsProfile::class)->name('settings.profile');

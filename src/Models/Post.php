@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
+use Illuminate\Support\HtmlString;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Tags\HasTags;
@@ -61,19 +62,24 @@ class Post extends SupportModel implements HasMedia, HasSnSubject
         return $this->id;
     }
 
-    public function getSnSubjectTitle(): ?string
+    public function getSnSubjectTitle(): string | HtmlString | null
     {
         return $this->title;
     }
 
-    public function getSnSubjectDescription(): ?string
+    public function getSnSubjectDescription(): string | HtmlString | null
     {
         return $this->description;
     }
 
-    public function getSnSubjectCoverUrl(): ?string
+    public function getSnSubjectCoverUrl(): string | HtmlString | null
     {
         return $this->getFirstMediaUrl('post_image');
+    }
+
+    public function getSnSubjectHrefUrl(): string | HtmlString | null
+    {
+        return null;
     }
 
     /**
