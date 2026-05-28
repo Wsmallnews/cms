@@ -20,13 +20,13 @@
             <div class="w-full md:w-72">
                 <livewire:sn-user-components-user-sidebar-menu :module="app(\Wsmallnews\Cms\CmsPlugin::class)->getId()" />
             </div>    
-            <div class="sn-container w-full px-4 py-8">
+            <div class="sn-container w-full">
                 <livewire:sn-preference-components-views 
                     :scope-type="$scopeType"
                     :scope-id="$scopeId"
                     :user="$user"
                     :preferencer="$user"
-                    :manage-mode="true"
+                    :manageable="true"
                     :contained="false" />
             </div>
         </div>
