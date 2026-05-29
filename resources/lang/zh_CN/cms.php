@@ -151,6 +151,15 @@ return [
         'description' => '描述',
         'status' => '状态',
     ],
+    'navigation_management' => [
+        'model_label' => '导航',
+        'plural_model_label' => '导航管理',
+        'title' => '导航管理',
+        'navigation_label' => '导航',
+        'navigation_group' => '内容管理',
+        'empty_label' => '暂无导航',
+        'empty_tip_label' => '暂无导航数据，请创建一个导航',
+    ],
     'general_setting' => [
         'title' => '基础设置',
         'basic_info' => '基础信息',

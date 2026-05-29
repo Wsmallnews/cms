@@ -151,6 +151,15 @@ return [
         'description' => 'Description',
         'status' => 'Status',
     ],
+    'navigation_management' => [
+        'model_label' => 'Navigation',
+        'plural_model_label' => 'Navigations',
+        'title' => 'Navigation Management',
+        'navigation_label' => 'Navigations',
+        'navigation_group' => 'Content Management',
+        'empty_label' => 'No navigations',
+        'empty_tip_label' => 'No navigations found. Please create one.',
+    ],
     'general_setting' => [
         'title' => 'General Settings',
         'basic_info' => 'Basic Information',

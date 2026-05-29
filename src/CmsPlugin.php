@@ -9,8 +9,7 @@ use Filament\Support\Concerns\EvaluatesClosures;
 use Filament\Support\Icons\Heroicon;
 use Wsmallnews\Cms\Filament\Pages\Category as CategoryPage;
 use Wsmallnews\Cms\Filament\Pages\GeneralSetting as GeneralSettingPage;
-use Wsmallnews\Cms\Filament\Pages\ManageNavigation as ManageNavigationPage;
-use Wsmallnews\Cms\Filament\Pages\Navigation as NavigationPage;
+use Wsmallnews\Cms\Filament\Pages\Navigation\NavigationPage;
 use Wsmallnews\Cms\Filament\Resources\NavigationTypes\NavigationTypeResource;
 use Wsmallnews\Cms\Filament\Resources\Posts\PostResource;
 use Wsmallnews\Cms\Filament\Resources\Tags\TagResource;
@@ -101,30 +100,6 @@ class CmsPlugin implements Plugin
                     'scopeToTenant' => true,
                     'tenantRelationshipName' => null,
                     'tenantOwnershipRelationshipName' => null,
-                ],
-                ManageNavigationPage::class => [
-                    // hasLabels
-                    'recordTitleAttribute' => 'name',
-
-                    // hasNavigation
-                    'navigationLabel' => '导航设置',
-                    'navigationIcon' => Heroicon::OutlinedBars3BottomLeft,
-                    'activeNavigationIcon' => Heroicon::Bars3,
-                    'navigationGroup' => 'Cms管理',
-                    'navigationSort' => 1,
-                    'navigationBadge' => null,
-                    'navigationBadgeColor' => null,
-                    'navigationParentItem' => null,
-                    'registerNavigation' => true,
-
-                    // hasGlobalSearch
-                    'globallySearchable' => false,
-                    'globalSearchResultsLimit' => 50,
-                    'forceGlobalSearchCaseInsensitive' => null,
-                    'splitGlobalSearchTerms' => false,
-
-                    // belongsToParent
-                    'parentResource' => null,
                 ],
                 NavigationPage::class => [
                     // hasLabels

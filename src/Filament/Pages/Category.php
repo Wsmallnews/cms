@@ -34,6 +34,11 @@ class Category extends BaseCategoryPage
         return self::getCustomProperty('level') ?? parent::getLevel();
     }
 
+    public static function getCanManage(): bool
+    {
+        return self::getCustomProperty('canManage', false);
+    }
+
     public static function getEmptyLabel(): ?string
     {
         return self::getCustomProperty('emptyLabel') ?? parent::getEmptyLabel();

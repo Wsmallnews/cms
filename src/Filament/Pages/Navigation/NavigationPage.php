@@ -1,14 +1,13 @@
 <?php
 
-namespace Wsmallnews\Cms\Filament\Pages;
+namespace Wsmallnews\Cms\Filament\Pages\Navigation;
 
 use BezhanSalleh\PluginEssentials\Concerns;
 use Wsmallnews\Cms\CmsPlugin;
-use Wsmallnews\Cms\Filament\Pages\Navigation\Base as BaseNavigationPage;
 use Wsmallnews\Cms\Support\Utils;
 use Wsmallnews\Support\Concerns\Resource\HasCustomProperties;
 
-final class Navigation extends BaseNavigationPage
+final class NavigationPage extends Base
 {
     use Concerns\Resource\BelongsToParent;
     use Concerns\Resource\BelongsToTenant;
@@ -16,16 +15,6 @@ final class Navigation extends BaseNavigationPage
     use Concerns\Resource\HasLabels;
     use Concerns\Resource\HasNavigation;
     use HasCustomProperties;
-
-    protected function schema(array $arguments): array
-    {
-        return self::getCustomFormArray($arguments) ?: parent::schema($arguments);
-    }
-
-    public function infolistSchema(): array
-    {
-        return self::getCustomInfolistArray() ?: parent::infolistSchema();
-    }
 
     public static function getScopeType(): string
     {
@@ -37,14 +26,24 @@ final class Navigation extends BaseNavigationPage
         return self::getCustomScopeId() ?? Utils::getScopeId();
     }
 
-    public function getLevel(): ?int
+    public static function getLevel(): ?int
     {
         return self::getCustomProperty('level') ?? parent::getLevel();
     }
 
-    public function getEmptyLabel(): ?string
+    public static function getCanManage(): bool
+    {
+        return self::getCustomProperty('canManage', false);
+    }
+
+    public static function getEmptyLabel(): ?string
     {
         return self::getCustomProperty('emptyLabel') ?? parent::getEmptyLabel();
+    }
+
+    public static function getEmptyTipLabel(): ?string
+    {
+        return self::getCustomProperty('emptyTipLabel') ?? parent::getEmptyTipLabel();
     }
 
     public static function getEssentialsPlugin(): ?CmsPlugin
