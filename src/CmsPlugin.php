@@ -13,6 +13,7 @@ use Wsmallnews\Cms\Filament\Pages\Navigation\NavigationPage;
 use Wsmallnews\Cms\Filament\Resources\NavigationTypes\NavigationTypeResource;
 use Wsmallnews\Cms\Filament\Resources\Posts\PostResource;
 use Wsmallnews\Cms\Filament\Resources\Tags\TagResource;
+use Wsmallnews\Cms\Support\Utils;
 use Wsmallnews\Support\Concerns\Plugin\HasCustomProperties;
 
 class CmsPlugin implements Plugin
@@ -34,14 +35,17 @@ class CmsPlugin implements Plugin
 
     public function register(Panel $panel): void
     {
-        $panel->resources([
-            PostResource::class,
-            // TagResource::class,
-        ])->pages([
-            NavigationPage::class,
-            CategoryPage::class,
-            GeneralSettingPage::class,
-        ]);
+        if (Utils::getPanelRegister('pages')) {
+            $panel->pages([
+                ...Utils::getPanelRegister('pages'),
+            ]);
+        }
+
+        if (Utils::getPanelRegister('resources')) {
+            $panel->resources([
+                ...Utils::getPanelRegister('resources'),
+            ]);
+        }
     }
 
     public function boot(Panel $panel): void
@@ -71,16 +75,16 @@ class CmsPlugin implements Plugin
             'resources' => [
                 NavigationTypeResource::class => [
                     // hasLabels
-                    'modelLabel' => '导航类型',
-                    'pluralModelLabel' => '导航类型',
+                    'modelLabel' => __('sn-cms::cms.navigation_type_resource.model_label'),
+                    'pluralModelLabel' => __('sn-cms::cms.navigation_type_resource.plural_model_label'),
                     'recordTitleAttribute' => 'name',
                     // 'titleCaseModelLabel' => true,
 
                     // hasNavigation
-                    'navigationLabel' => '导航类型',
+                    'navigationLabel' => __('sn-cms::cms.navigation_type_resource.navigation_label'),
                     'navigationIcon' => Heroicon::OutlinedBars3BottomRight,
                     'activeNavigationIcon' => Heroicon::Bars3BottomRight,
-                    'navigationGroup' => 'Cms管理',
+                    'navigationGroup' => __('sn-cms::cms.navigation_type_resource.navigation_group'),
                     'navigationSort' => 1,
                     'navigationBadge' => null,
                     'navigationBadgeColor' => null,
@@ -106,10 +110,10 @@ class CmsPlugin implements Plugin
                     'recordTitleAttribute' => 'name',
 
                     // hasNavigation
-                    'navigationLabel' => '导航',
+                    'navigationLabel' => __('sn-cms::cms.navigation_page.navigation_label'),
                     'navigationIcon' => Heroicon::OutlinedBars3BottomLeft,
                     'activeNavigationIcon' => Heroicon::Bars3,
-                    'navigationGroup' => 'Cms管理',
+                    'navigationGroup' => __('sn-cms::cms.navigation_page.navigation_group'),
                     'navigationSort' => 1,
                     'navigationBadge' => null,
                     'navigationBadgeColor' => null,
@@ -127,16 +131,16 @@ class CmsPlugin implements Plugin
                 ],
                 PostResource::class => [
                     // hasLabels
-                    'modelLabel' => '图文内容',
-                    'pluralModelLabel' => '图文内容',
+                    'modelLabel' => __('sn-cms::cms.post_resource.model_label'),
+                    'pluralModelLabel' => __('sn-cms::cms.post_resource.plural_model_label'),
                     'recordTitleAttribute' => 'title',
                     // 'titleCaseModelLabel' => true,
 
                     // hasNavigation
-                    'navigationLabel' => '图文管理',
+                    'navigationLabel' => __('sn-cms::cms.post_resource.navigation_label'),
                     'navigationIcon' => Heroicon::OutlinedDocumentText,
                     'activeNavigationIcon' => Heroicon::DocumentText,
-                    'navigationGroup' => 'Cms管理',
+                    'navigationGroup' => __('sn-cms::cms.post_resource.navigation_group'),
                     'navigationSort' => 2,
                     'navigationBadge' => null,
                     'navigationBadgeColor' => null,
@@ -159,20 +163,20 @@ class CmsPlugin implements Plugin
                 ],
                 TagResource::class => [
                     // hasLabels
-                    'modelLabel' => '标签',
-                    'pluralModelLabel' => '标签',
+                    'modelLabel' => __('sn-cms::cms.tag_resource.model_label'),
+                    'pluralModelLabel' => __('sn-cms::cms.tag_resource.plural_model_label'),
                     'recordTitleAttribute' => 'name',
                     // 'titleCaseModelLabel' => true,
 
                     // hasNavigation
-                    'navigationLabel' => '标签管理',
+                    'navigationLabel' => __('sn-cms::cms.tag_resource.navigation_label'),
                     'navigationIcon' => Heroicon::OutlinedTag,
                     'activeNavigationIcon' => Heroicon::Tag,
-                    'navigationGroup' => 'Cms管理',
+                    'navigationGroup' => __('sn-cms::cms.tag_resource.navigation_group'),
                     'navigationSort' => 3,
                     'navigationBadge' => null,
                     'navigationBadgeColor' => null,
-                    'navigationParentItem' => '图文管理',
+                    'navigationParentItem' => null,
                     'registerNavigation' => true,
 
                     // hasGlobalSearch
@@ -196,19 +200,19 @@ class CmsPlugin implements Plugin
                 ],
                 CategoryPage::class => [
                     // hasLabels
-                    'modelLabel' => '分类',
-                    'pluralModelLabel' => '图文分类管理',
+                    'modelLabel' => __('sn-cms::cms.category_page.model_label'),
+                    'pluralModelLabel' => __('sn-cms::cms.category_page.plural_model_label'),
                     'recordTitleAttribute' => 'name',
 
                     // hasNavigation
-                    'navigationLabel' => '图文分类',
+                    'navigationLabel' => __('sn-cms::cms.category_page.navigation_label'),
                     'navigationIcon' => Heroicon::OutlinedBars3BottomLeft,
                     'activeNavigationIcon' => Heroicon::Bars3BottomLeft,
-                    'navigationGroup' => 'Cms管理',
+                    'navigationGroup' => __('sn-cms::cms.category_page.navigation_group'),
                     'navigationSort' => 1,
                     'navigationBadge' => null,
                     'navigationBadgeColor' => null,
-                    'navigationParentItem' => '图文管理',
+                    'navigationParentItem' => null,
                     'registerNavigation' => true,
 
                     // hasGlobalSearch
@@ -230,10 +234,10 @@ class CmsPlugin implements Plugin
                     'recordTitleAttribute' => 'name',
 
                     // hasNavigation
-                    'navigationLabel' => '基础设置',
+                    'navigationLabel' => __('sn-cms::cms.general_setting_page.navigation_label'),
                     'navigationIcon' => Heroicon::OutlinedCog6Tooth,
                     'activeNavigationIcon' => Heroicon::OutlinedCog6Tooth,
-                    'navigationGroup' => 'Cms管理',
+                    'navigationGroup' => __('sn-cms::cms.general_setting_page.navigation_group'),
                     'navigationSort' => 3,
                     'navigationBadge' => null,
                     'navigationBadgeColor' => null,

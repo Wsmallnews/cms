@@ -6,7 +6,7 @@ use Filament\Actions\EditAction;
 use Filament\Resources\Pages\ViewRecord;
 use Wsmallnews\Cms\Filament\Resources\Posts\PostResource;
 use Wsmallnews\Cms\Support\Utils;
-use Wsmallnews\Comment\Filament\Pages\Comment\Widgets\Comment as CommentWidgets;
+use Wsmallnews\Comment\Filament\Pages\Comment\Widgets\Comment as CommentWidget;
 use Wsmallnews\Preference\Filament\Pages\Preference\Widgets\Views as ViewsWidget;
 use Wsmallnews\Support\Enums\ContentType;
 use Wsmallnews\Support\Filament\Resources\Concerns\Pages\Scopeable;
@@ -33,7 +33,7 @@ class ViewPost extends ViewRecord
         $widgets = [];
 
         if (Utils::commentConfig('post', 'enable', false)) {
-            $widgets[] = CommentWidgets::make([
+            $widgets[] = CommentWidget::make([
                 'properties' => method_exists(static::getResource(), 'getProperties') ? static::getResource()::getProperties() : [],
                 'widgetType' => 'commentable',
                 'scopeType' => static::getScopeType(),

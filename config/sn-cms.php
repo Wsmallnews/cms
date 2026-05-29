@@ -1,7 +1,11 @@
 <?php
 
 use Filament\Support\Icons\Heroicon;
-use Wsmallnews\Cms\Enums;
+use Wsmallnews\Cms\Filament\Pages\Category as CategoryPage;
+use Wsmallnews\Cms\Filament\Pages\GeneralSetting as GeneralSettingPage;
+use Wsmallnews\Cms\Filament\Pages\Navigation\NavigationPage;
+use Wsmallnews\Cms\Filament\Resources\NavigationTypes\NavigationTypeResource;
+use Wsmallnews\Cms\Filament\Resources\Posts\PostResource;
 use Wsmallnews\Cms\Models;
 use Wsmallnews\Comment\Enums\CommentStatus;
 use Wsmallnews\Support\Enums\ContentType;
@@ -22,6 +26,21 @@ return [
         'navigation' => Models\Navigation::class,
         'navigation_type' => Models\NavigationType::class,
         'post' => Models\Post::class,
+    ],
+
+    /**
+     * Panel register
+     */
+    'panel_register' => [
+        'pages' => [
+            CategoryPage::class,
+            GeneralSettingPage::class,
+            NavigationPage::class,
+        ],
+        'resources' => [
+            NavigationTypeResource::class,
+            PostResource::class,
+        ],
     ],
 
     /**

@@ -14,6 +14,7 @@ use Wsmallnews\Cms\Filament\Resources\Posts\Schemas\PostForm;
 use Wsmallnews\Cms\Filament\Resources\Posts\Tables\PostsTable;
 use Wsmallnews\Cms\Support\Utils;
 use Wsmallnews\Comment\Filament\Pages\Comment\Widgets\Comment as CommentWidget;
+use Wsmallnews\Preference\Filament\Pages\Preference\Widgets\Views as ViewsWidget;
 use Wsmallnews\Support\Filament\Resources\Concerns\Scopeable;
 
 abstract class BaseResource extends Resource
@@ -24,23 +25,35 @@ abstract class BaseResource extends Resource
 
     protected static string | BackedEnum | null $activeNavigationIcon = Heroicon::DocumentText;
 
-    protected static ?string $navigationLabel = '图文管理';
-
-    protected static string | UnitEnum | null $navigationGroup = '内容管理';
-
     protected static ?string $slug = 'posts';
 
     protected static ?string $recordTitleAttribute = 'title';
-
-    protected static ?string $modelLabel = '图文';
-
-    protected static ?string $pluralModelLabel = '图文';
 
     protected static ?int $navigationSort = 2;
 
     public static function getModel(): string
     {
         return Utils::getPostModel();
+    }
+
+    public static function getModelLabel(): string
+    {
+        return static::$modelLabel ?? __('sn-cms::cms.post_resource.model_label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return static::$pluralModelLabel ?? __('sn-cms::cms.post_resource.plural_model_label');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return static::$navigationLabel ?? __('sn-cms::cms.post_resource.navigation_label');
+    }
+
+    public static function getNavigationGroup(): string | UnitEnum | null
+    {
+        return static::$navigationGroup ?? __('sn-cms::cms.post_resource.navigation_group');
     }
 
     public static function form(Schema $schema): Schema
@@ -57,6 +70,7 @@ abstract class BaseResource extends Resource
     {
         return [
             CommentWidget::class,
+            ViewsWidget::class,
         ];
     }
 

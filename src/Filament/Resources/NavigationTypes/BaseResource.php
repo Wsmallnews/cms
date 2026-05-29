@@ -10,7 +10,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use UnitEnum;
-use Wsmallnews\Cms\Filament\Pages\Navigation\Widgets\NavigationManage as NavigationManageWidgets;
+use Wsmallnews\Cms\Filament\Pages\Navigation\Widgets\Navigation as NavigationWidget;
 use Wsmallnews\Cms\Filament\Resources\NavigationTypes\Schemas\NavigationTypeForm;
 use Wsmallnews\Cms\Filament\Resources\NavigationTypes\Tables\NavigationTypesTable;
 use Wsmallnews\Cms\Support\Utils;
@@ -24,23 +24,35 @@ abstract class BaseResource extends Resource
 
     protected static string | BackedEnum | null $activeNavigationIcon = Heroicon::Bars3BottomRight;
 
-    protected static ?string $navigationLabel = '导航类型';
-
-    protected static string | UnitEnum | null $navigationGroup = '导航管理';
-
     protected static ?string $slug = 'navigation-types';
 
     protected static ?string $recordTitleAttribute = 'name';
-
-    protected static ?string $modelLabel = '导航类型';
-
-    protected static ?string $pluralModelLabel = '导航类型';
 
     protected static ?int $navigationSort = 1;
 
     public static function getModel(): string
     {
         return Utils::getNavigationTypeModel();
+    }
+
+    public static function getModelLabel(): string
+    {
+        return static::$modelLabel ?? __('sn-cms::cms.navigation_type_resource.model_label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return static::$pluralModelLabel ?? __('sn-cms::cms.navigation_type_resource.plural_model_label');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return static::$navigationLabel ?? __('sn-cms::cms.navigation_type_resource.navigation_label');
+    }
+
+    public static function getNavigationGroup(): string | UnitEnum | null
+    {
+        return static::$navigationGroup ?? __('sn-cms::cms.navigation_type_resource.navigation_group');
     }
 
     public static function form(Schema $schema): Schema
@@ -56,7 +68,7 @@ abstract class BaseResource extends Resource
     public static function getWidgets(): array
     {
         return [
-            NavigationManageWidgets::class,
+            NavigationWidget::class,
         ];
     }
 

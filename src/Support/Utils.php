@@ -89,6 +89,17 @@ class Utils
     }
 
     /**
+     * Get panel register.
+     *
+     * @param  string  $type  Register type (pages or resources)
+     * @return array
+     */
+    public static function getPanelRegister($type = 'pages'): array
+    {
+        return self::getConfig("panel_register.$type", []);
+    }
+
+    /**
      * Get model class by name.
      *
      * @param  string  $name  Model name (e.g., 'post', 'navigation')

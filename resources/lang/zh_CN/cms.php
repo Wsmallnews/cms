@@ -157,6 +157,7 @@ return [
         'title' => '导航管理',
         'navigation_label' => '导航',
         'navigation_group' => '内容管理',
+        'save_success' => '保存成功',
         'empty_label' => '暂无导航',
         'empty_tip_label' => '暂无导航数据，请创建一个导航',
     ],
@@ -203,5 +204,37 @@ return [
         'profile' => '个人中心',
         'current_location' => '当前位置',
         'copyright' => 'Copyright © :copytime :copyright 版权所有',
+    ],
+    'navigation_type_resource' => [
+        'model_label' => '导航类型',
+        'plural_model_label' => '导航类型',
+        'navigation_label' => '导航类型',
+        'navigation_group' => 'Cms管理',
+    ],
+    'post_resource' => [
+        'model_label' => '图文',
+        'plural_model_label' => '图文',
+        'navigation_label' => '图文管理',
+        'navigation_group' => 'Cms管理',
+    ],
+    'tag_resource' => [
+        'model_label' => '标签',
+        'plural_model_label' => '标签',
+        'navigation_label' => '标签管理',
+        'navigation_group' => 'Cms管理',
+    ],
+    'category_page' => [
+        'model_label' => '分类',
+        'plural_model_label' => '图文分类管理',
+        'navigation_label' => '图文分类',
+        'navigation_group' => 'Cms管理',
+    ],
+    'general_setting_page' => [
+        'navigation_label' => '基础设置',
+        'navigation_group' => 'Cms管理',
+    ],
+    'navigation_page' => [
+        'navigation_label' => '导航',
+        'navigation_group' => 'Cms管理',
     ],
 ];

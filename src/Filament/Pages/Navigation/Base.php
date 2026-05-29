@@ -30,7 +30,7 @@ abstract class Base extends Page
 
     public ?NavigationTypeModel $navigationType = null;
 
-    protected static ?string $pluralModelLabel = null;
+    protected static ?int $level = null;
 
     protected static string | BackedEnum | null $navigationIcon = Heroicon::OutlinedBars3BottomLeft;
 
@@ -45,8 +45,6 @@ abstract class Base extends Page
     protected static ?string $emptyLabel = null;
 
     protected static ?string $emptyTipLabel = null;
-
-    protected static ?int $level = null;
 
     /**
      * 是否可管理导航类型
@@ -119,7 +117,6 @@ abstract class Base extends Page
 
             $this->form->fill($attributes);
         }
-        parent::mount();
     }
 
     public function getNavigationType(): ?NavigationTypeModel
@@ -186,7 +183,7 @@ abstract class Base extends Page
 
         Notification::make()
             ->success()
-            ->title('保存成功')
+            ->title(__('sn-cms::cms.navigation_management.save_success'))
             ->send();
     }
 }
