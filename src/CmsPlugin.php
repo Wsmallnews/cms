@@ -72,180 +72,66 @@ class CmsPlugin implements Plugin
     protected function getPluginDefaults(): array
     {
         return [
+            'navigationGroup' => fn () => __('sn-cms::cms.global_default.navigation_group'),
+            'globallySearchable' => false,
+            'globalSearchResultsLimit' => 25,
+
             'resources' => [
                 NavigationTypeResource::class => [
-                    // hasLabels
-                    'modelLabel' => __('sn-cms::cms.navigation_type_resource.model_label'),
-                    'pluralModelLabel' => __('sn-cms::cms.navigation_type_resource.plural_model_label'),
-                    'recordTitleAttribute' => 'name',
-                    // 'titleCaseModelLabel' => true,
+                    'modelLabel' => fn () => __('sn-cms::cms.navigation_type_resource.model_label'),
+                    'pluralModelLabel' => fn () => __('sn-cms::cms.navigation_type_resource.plural_model_label'),
 
-                    // hasNavigation
-                    'navigationLabel' => __('sn-cms::cms.navigation_type_resource.navigation_label'),
+                    'navigationLabel' => fn () => __('sn-cms::cms.navigation_type_resource.navigation_label'),
                     'navigationIcon' => Heroicon::OutlinedBars3BottomRight,
                     'activeNavigationIcon' => Heroicon::Bars3BottomRight,
-                    'navigationGroup' => __('sn-cms::cms.navigation_type_resource.navigation_group'),
                     'navigationSort' => 1,
-                    'navigationBadge' => null,
-                    'navigationBadgeColor' => null,
-                    'navigationParentItem' => null,
-                    'registerNavigation' => true,
-
-                    // hasGlobalSearch
-                    'globallySearchable' => false,
-                    'globalSearchResultsLimit' => 50,
-                    'forceGlobalSearchCaseInsensitive' => null,
-                    'splitGlobalSearchTerms' => false,
-
-                    // belongsToParent
-                    'parentResource' => null,
-
-                    // BelongsToTenant
-                    'scopeToTenant' => true,
-                    'tenantRelationshipName' => null,
-                    'tenantOwnershipRelationshipName' => null,
                 ],
                 NavigationPage::class => [
-                    // hasLabels
-                    'recordTitleAttribute' => 'name',
-
-                    // hasNavigation
-                    'navigationLabel' => __('sn-cms::cms.navigation_page.navigation_label'),
+                    'navigationLabel' => fn () => __('sn-cms::cms.navigation_page.navigation_label'),
                     'navigationIcon' => Heroicon::OutlinedBars3BottomLeft,
                     'activeNavigationIcon' => Heroicon::Bars3,
-                    'navigationGroup' => __('sn-cms::cms.navigation_page.navigation_group'),
                     'navigationSort' => 1,
-                    'navigationBadge' => null,
-                    'navigationBadgeColor' => null,
-                    'navigationParentItem' => null,
-                    'registerNavigation' => true,
-
-                    // hasGlobalSearch
-                    'globallySearchable' => false,
-                    'globalSearchResultsLimit' => 50,
-                    'forceGlobalSearchCaseInsensitive' => null,
-                    'splitGlobalSearchTerms' => false,
-
-                    // belongsToParent
-                    'parentResource' => null,
                 ],
                 PostResource::class => [
-                    // hasLabels
-                    'modelLabel' => __('sn-cms::cms.post_resource.model_label'),
-                    'pluralModelLabel' => __('sn-cms::cms.post_resource.plural_model_label'),
-                    'recordTitleAttribute' => 'title',
-                    // 'titleCaseModelLabel' => true,
+                    'modelLabel' => fn () => __('sn-cms::cms.post_resource.model_label'),
+                    'pluralModelLabel' => fn () => __('sn-cms::cms.post_resource.plural_model_label'),
 
-                    // hasNavigation
-                    'navigationLabel' => __('sn-cms::cms.post_resource.navigation_label'),
+                    'navigationLabel' => fn () => __('sn-cms::cms.post_resource.navigation_label'),
                     'navigationIcon' => Heroicon::OutlinedDocumentText,
                     'activeNavigationIcon' => Heroicon::DocumentText,
-                    'navigationGroup' => __('sn-cms::cms.post_resource.navigation_group'),
                     'navigationSort' => 2,
-                    'navigationBadge' => null,
-                    'navigationBadgeColor' => null,
-                    'navigationParentItem' => null,
-                    'registerNavigation' => true,
-
-                    // hasGlobalSearch
-                    'globallySearchable' => false,
-                    'globalSearchResultsLimit' => 50,
-                    'forceGlobalSearchCaseInsensitive' => null,
-                    'splitGlobalSearchTerms' => false,
-
-                    // belongsToParent
-                    'parentResource' => null,
-
-                    // BelongsToTenant
-                    'scopeToTenant' => true,
-                    'tenantRelationshipName' => null,
-                    'tenantOwnershipRelationshipName' => null,
                 ],
                 TagResource::class => [
-                    // hasLabels
-                    'modelLabel' => __('sn-cms::cms.tag_resource.model_label'),
-                    'pluralModelLabel' => __('sn-cms::cms.tag_resource.plural_model_label'),
-                    'recordTitleAttribute' => 'name',
-                    // 'titleCaseModelLabel' => true,
+                    'modelLabel' => fn () => __('sn-cms::cms.tag_resource.model_label'),
+                    'pluralModelLabel' => fn () => __('sn-cms::cms.tag_resource.plural_model_label'),
 
-                    // hasNavigation
-                    'navigationLabel' => __('sn-cms::cms.tag_resource.navigation_label'),
+                    'navigationLabel' => fn () => __('sn-cms::cms.tag_resource.navigation_label'),
                     'navigationIcon' => Heroicon::OutlinedTag,
                     'activeNavigationIcon' => Heroicon::Tag,
-                    'navigationGroup' => __('sn-cms::cms.tag_resource.navigation_group'),
                     'navigationSort' => 3,
-                    'navigationBadge' => null,
-                    'navigationBadgeColor' => null,
-                    'navigationParentItem' => null,
-                    'registerNavigation' => true,
 
-                    // hasGlobalSearch
-                    'globallySearchable' => false,
-                    'globalSearchResultsLimit' => 50,
-                    'forceGlobalSearchCaseInsensitive' => null,
-                    'splitGlobalSearchTerms' => false,
-
-                    // belongsToParent
-                    'parentResource' => null,
-
-                    // BelongsToTenant
-                    'scopeToTenant' => true,
-                    'tenantRelationshipName' => null,
-                    'tenantOwnershipRelationshipName' => null,
-
-                    // HasCustomProperties
                     'customProperties' => [
                         'tag_type' => 'post_tag',
                     ],
                 ],
                 CategoryPage::class => [
-                    // hasLabels
-                    'modelLabel' => __('sn-cms::cms.category_page.model_label'),
-                    'pluralModelLabel' => __('sn-cms::cms.category_page.plural_model_label'),
-                    'recordTitleAttribute' => 'name',
+                    'modelLabel' => fn () => __('sn-cms::cms.category_page.model_label'),
+                    'pluralModelLabel' => fn () => __('sn-cms::cms.category_page.plural_model_label'),
 
-                    // hasNavigation
-                    'navigationLabel' => __('sn-cms::cms.category_page.navigation_label'),
+                    'navigationLabel' => fn () => __('sn-cms::cms.category_page.navigation_label'),
                     'navigationIcon' => Heroicon::OutlinedBars3BottomLeft,
                     'activeNavigationIcon' => Heroicon::Bars3BottomLeft,
-                    'navigationGroup' => __('sn-cms::cms.category_page.navigation_group'),
                     'navigationSort' => 1,
-                    'navigationBadge' => null,
-                    'navigationBadgeColor' => null,
-                    'navigationParentItem' => null,
-                    'registerNavigation' => true,
 
-                    // hasGlobalSearch
-                    'globallySearchable' => false,
-                    'globalSearchResultsLimit' => 50,
-                    'forceGlobalSearchCaseInsensitive' => null,
-                    'splitGlobalSearchTerms' => false,
-
-                    // belongsToParent
-                    'parentResource' => null,
-
-                    // HasCustomProperties
                     'customProperties' => [
                         'level' => 2,
                     ],
                 ],
                 GeneralSettingPage::class => [
-                    // hasLabels
-                    'recordTitleAttribute' => 'name',
-
-                    // hasNavigation
-                    'navigationLabel' => __('sn-cms::cms.general_setting_page.navigation_label'),
+                    'navigationLabel' => fn () => __('sn-cms::cms.general_setting_page.navigation_label'),
                     'navigationIcon' => Heroicon::OutlinedCog6Tooth,
                     'activeNavigationIcon' => Heroicon::OutlinedCog6Tooth,
-                    'navigationGroup' => __('sn-cms::cms.general_setting_page.navigation_group'),
                     'navigationSort' => 3,
-                    'navigationBadge' => null,
-                    'navigationBadgeColor' => null,
-                    'navigationParentItem' => null,
-                    'registerNavigation' => true,
-
-                    // belongsToParent
-                    'parentResource' => null,
                 ],
             ],
         ];

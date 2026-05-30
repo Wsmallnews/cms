@@ -151,16 +151,6 @@ return [
         'description' => 'Description',
         'status' => 'Status',
     ],
-    'navigation_management' => [
-        'model_label' => 'Navigation',
-        'plural_model_label' => 'Navigations',
-        'title' => 'Navigation Management',
-        'navigation_label' => 'Navigations',
-        'navigation_group' => 'Content Management',
-        'save_success' => 'Save Success',
-        'empty_label' => 'No navigations',
-        'empty_tip_label' => 'No navigations found. Please create one.',
-    ],
     'general_setting' => [
         'title' => 'General Settings',
         'basic_info' => 'Basic Information',
@@ -205,36 +195,39 @@ return [
         'current_location' => 'Current Location',
         'copyright' => 'Copyright © :copytime :copyright All Rights Reserved',
     ],
+    'global_default' => [
+        'navigation_group' => 'Cms Management',
+    ],
     'navigation_type_resource' => [
         'model_label' => 'Navigation Type',
         'plural_model_label' => 'Navigation Types',
         'navigation_label' => 'Navigation Types',
-        'navigation_group' => 'Cms Management',
     ],
     'post_resource' => [
         'model_label' => 'Post',
         'plural_model_label' => 'Posts',
         'navigation_label' => 'Post Management',
-        'navigation_group' => 'Cms Management',
     ],
     'tag_resource' => [
         'model_label' => 'Tag',
         'plural_model_label' => 'Tags',
         'navigation_label' => 'Tag Management',
-        'navigation_group' => 'Cms Management',
     ],
     'category_page' => [
         'model_label' => 'Category',
         'plural_model_label' => 'Post Categories',
         'navigation_label' => 'Post Categories',
-        'navigation_group' => 'Cms Management',
     ],
     'general_setting_page' => [
         'navigation_label' => 'General Settings',
-        'navigation_group' => 'Cms Management',
     ],
     'navigation_page' => [
-        'navigation_label' => 'Navigation',
-        'navigation_group' => 'Cms Management',
+        'model_label' => 'Navigation',
+        'plural_model_label' => 'Navigations',
+        'title' => 'Navigation Management',
+        'navigation_label' => 'Navigations',
+        'save_success' => 'Save Success',
+        'empty_label' => 'No navigations',
+        'empty_tip_label' => 'No navigations found. Please create one.',
     ],
 ];

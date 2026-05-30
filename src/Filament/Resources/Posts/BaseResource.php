@@ -21,9 +21,9 @@ abstract class BaseResource extends Resource
 {
     use Scopeable;
 
-    protected static string | BackedEnum | null $navigationIcon = Heroicon::OutlinedDocumentText;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedDocumentText;
 
-    protected static string | BackedEnum | null $activeNavigationIcon = Heroicon::DocumentText;
+    protected static string|BackedEnum|null $activeNavigationIcon = Heroicon::DocumentText;
 
     protected static ?string $slug = 'posts';
 
@@ -51,9 +51,9 @@ abstract class BaseResource extends Resource
         return static::$navigationLabel ?? __('sn-cms::cms.post_resource.navigation_label');
     }
 
-    public static function getNavigationGroup(): string | UnitEnum | null
+    public static function getNavigationGroup(): string|UnitEnum|null
     {
-        return static::$navigationGroup ?? __('sn-cms::cms.post_resource.navigation_group');
+        return static::$navigationGroup ?? __('sn-cms::cms.global_default.navigation_group');
     }
 
     public static function form(Schema $schema): Schema

@@ -32,9 +32,9 @@ abstract class Base extends Page
 
     protected static ?int $level = null;
 
-    protected static string | BackedEnum | null $navigationIcon = Heroicon::OutlinedBars3BottomLeft;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBars3BottomLeft;
 
-    protected static string | BackedEnum | null $activeNavigationIcon = Heroicon::Bars3BottomLeft;
+    protected static string|BackedEnum|null $activeNavigationIcon = Heroicon::Bars3BottomLeft;
 
     protected static ?string $slug = 'navigations';
 
@@ -55,27 +55,27 @@ abstract class Base extends Page
 
     public static function getModelLabel(): string
     {
-        return static::$modelLabel ?? __('sn-cms::cms.navigation_management.model_label');
+        return static::$modelLabel ?? __('sn-cms::cms.navigation_page.model_label');
     }
 
     public static function getPluralModelLabel(): string
     {
-        return static::$pluralModelLabel ?? __('sn-cms::cms.navigation_management.plural_model_label');
+        return static::$pluralModelLabel ?? __('sn-cms::cms.navigation_page.plural_model_label');
     }
 
-    public function getTitle(): string | Htmlable
+    public function getTitle(): string|Htmlable
     {
-        return static::$title ?? __('sn-cms::cms.navigation_management.title');
+        return static::$title ?? __('sn-cms::cms.navigation_page.title');
     }
 
     public static function getNavigationLabel(): string
     {
-        return static::$navigationLabel ?? static::$title ?? __('sn-cms::cms.navigation_management.navigation_label');
+        return static::$navigationLabel ?? static::$title ?? __('sn-cms::cms.navigation_page.navigation_label');
     }
 
-    public static function getNavigationGroup(): string | UnitEnum | null
+    public static function getNavigationGroup(): string|UnitEnum|null
     {
-        return static::$navigationGroup ?? __('sn-cms::cms.navigation_management.navigation_group');
+        return static::$navigationGroup ?? __('sn-cms::cms.global_default.navigation_group');
     }
 
     public static function getCanManage(): bool
@@ -90,12 +90,12 @@ abstract class Base extends Page
 
     public static function getEmptyLabel(): ?string
     {
-        return static::$emptyLabel ?? __('sn-cms::cms.navigation_management.empty_label');
+        return static::$emptyLabel ?? __('sn-cms::cms.navigation_page.empty_label');
     }
 
     public static function getEmptyTipLabel(): ?string
     {
-        return static::$emptyTipLabel ?? __('sn-cms::cms.navigation_management.empty_tip_label');
+        return static::$emptyTipLabel ?? __('sn-cms::cms.navigation_page.empty_tip_label');
     }
 
     public static function getProperties(): array
@@ -183,7 +183,7 @@ abstract class Base extends Page
 
         Notification::make()
             ->success()
-            ->title(__('sn-cms::cms.navigation_management.save_success'))
+            ->title(__('sn-cms::cms.navigation_page.save_success'))
             ->send();
     }
 }
