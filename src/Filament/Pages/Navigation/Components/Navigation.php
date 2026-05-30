@@ -30,13 +30,13 @@ class Navigation extends NestedsetPage
 
     protected static ?string $title = null;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::Bars3BottomLeft;
+    protected static string | BackedEnum | null $navigationIcon = Heroicon::Bars3BottomLeft;
 
-    protected static string|BackedEnum|null $activeNavigationIcon = Heroicon::Bars3BottomLeft;
+    protected static string | BackedEnum | null $activeNavigationIcon = Heroicon::Bars3BottomLeft;
 
     protected static ?string $navigationLabel = null;
 
-    protected static string|UnitEnum|null $navigationGroup = null;
+    protected static string | UnitEnum | null $navigationGroup = null;
 
     protected static ?string $slug = 'navigations';
 
@@ -59,7 +59,7 @@ class Navigation extends NestedsetPage
         return static::$pluralModelLabel ?? __('sn-cms::cms.navigation_page.plural_model_label');
     }
 
-    public function getTitle(): string|Htmlable
+    public function getTitle(): string | Htmlable
     {
         return static::$title ?? __('sn-cms::cms.navigation_page.title');
     }
@@ -69,7 +69,7 @@ class Navigation extends NestedsetPage
         return static::$navigationLabel ?? static::$title ?? __('sn-cms::cms.navigation_page.navigation_label');
     }
 
-    public static function getNavigationGroup(): string|UnitEnum|null
+    public static function getNavigationGroup(): string | UnitEnum | null
     {
         return static::$navigationGroup ?? __('sn-cms::cms.global_default.navigation_group');
     }
@@ -84,7 +84,7 @@ class Navigation extends NestedsetPage
         return $this->getProperty('emptyTipLabel') ?: (static::$emptyTipLabel ?? __('sn-cms::cms.navigation_page.empty_tip_label'));
     }
 
-    public function getRecordLabel(Model $navigation): HtmlString|string
+    public function getRecordLabel(Model $navigation): HtmlString | string
     {
         return $navigation->name_label;
     }

@@ -20,9 +20,9 @@ abstract class BaseResource extends Resource
 {
     use Scopeable;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBars3BottomRight;
+    protected static string | BackedEnum | null $navigationIcon = Heroicon::OutlinedBars3BottomRight;
 
-    protected static string|BackedEnum|null $activeNavigationIcon = Heroicon::Bars3BottomRight;
+    protected static string | BackedEnum | null $activeNavigationIcon = Heroicon::Bars3BottomRight;
 
     protected static ?string $slug = 'navigation-types';
 
@@ -50,7 +50,7 @@ abstract class BaseResource extends Resource
         return static::$navigationLabel ?? __('sn-cms::cms.navigation_type_resource.navigation_label');
     }
 
-    public static function getNavigationGroup(): string|UnitEnum|null
+    public static function getNavigationGroup(): string | UnitEnum | null
     {
         return static::$navigationGroup ?? __('sn-cms::cms.global_default.navigation_group');
     }
