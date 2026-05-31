@@ -225,7 +225,7 @@ return [
         'model_label' => 'Navigation',
         'plural_model_label' => 'Navigations',
         'title' => 'Navigation Management',
-        'navigation_label' => 'Navigations',
+        'navigation_label' => 'Navigation Management',
         'save_success' => 'Save Success',
         'empty_label' => 'No navigations',
         'empty_tip_label' => 'No navigations found. Please create one.',

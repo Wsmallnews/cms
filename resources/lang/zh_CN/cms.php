@@ -223,9 +223,9 @@ return [
     ],
     'navigation_page' => [
         'model_label' => '导航',
-        'plural_model_label' => '导航管理',
+        'plural_model_label' => '导航',
         'title' => '导航管理',
-        'navigation_label' => '导航',
+        'navigation_label' => '导航管理',
         'save_success' => '保存成功',
         'empty_label' => '暂无导航',
         'empty_tip_label' => '暂无导航数据，请创建一个导航',

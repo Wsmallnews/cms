@@ -1,5 +1,4 @@
 @php
-    $properties = static::getProperties();
     $canManage = static::getCanManage();
 @endphp
 
@@ -8,10 +7,19 @@
         {{ $this->form }}
     @endif
 
+    {{ $this->content }}
+
     @if ($navigationType)
-        <livewire:sn-cms-fi-navigation
-            :properties="$properties"
-            :navigation-type="$navigationType"
+        <livewire:sn-filament-nestedset-fi-nestedset
+            :page-class="static::class"
+            :active-tab="$activeTab"
+            :model="static::getModel()"
+            :tab-field-name="static::getTabFieldName()"
+            :record-title-attribute="static::getRecordTitleAttribute()"
+            :level="static::getLevel()"
+            :empty-label="static::getEmptyLabel()"
+            :empty-tip-label="static::getEmptyTipLabel()"
+            :is-scoped-to-tenant="static::isScopedToTenant()"
             :key="'fi-components-sn-navigation-' . $navigationType->id . '-' . $navigationType->level"
         />
     @endif

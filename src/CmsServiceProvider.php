@@ -25,7 +25,6 @@ use Wsmallnews\Category\Models\Category as CategoryModel;
 use Wsmallnews\Cms\Commands\CmsInstallCommand;
 use Wsmallnews\Cms\Facades\ContentRegistry as ContentRegistryFacade;
 use Wsmallnews\Cms\Facades\FlagRegistry as FlagRegistryFacade;
-use Wsmallnews\Cms\Filament\Pages\Navigation\Components\Navigation as FilamentNavigation;
 use Wsmallnews\Cms\Http\Middleware\Authenticate;
 use Wsmallnews\Cms\Http\Middleware\EnsureEmailIsVerified;
 use Wsmallnews\Cms\Http\Middleware\RedirectIfAuthenticated;
@@ -108,15 +107,12 @@ class CmsServiceProvider extends PackageServiceProvider
 
         // Handle Stubs
         if (app()->runningInConsole()) {
-            foreach (app(Filesystem::class)->files(__DIR__ . '/../stubs/') as $file) {
+            foreach (app(Filesystem::class)->files(__DIR__.'/../stubs/') as $file) {
                 $this->publishes([
                     $file->getRealPath() => base_path("stubs/cms/{$file->getFilename()}"),
                 ], 'cms-stubs');
             }
         }
-
-        // 注册组件 (panel 组件)
-        Livewire::component('sn-cms-fi-navigation', FilamentNavigation::class);
 
         // 注册组件 (前端组件)
         Livewire::component('sn-cms-components-footer', Footer::class);
@@ -154,7 +150,7 @@ class CmsServiceProvider extends PackageServiceProvider
                         $parameters['module'] = app(CmsPlugin::class)->getId();             // 当前模块名
 
                         return URL::temporarySignedRoute(
-                            Utils::getConfig('routes.name', '') . 'verify.email.verification',
+                            Utils::getConfig('routes.name', '').'verify.email.verification',
                             Carbon::now()->addMinutes(Config::get('auth.verification.expire', 60)),
                             $parameters
                         );
