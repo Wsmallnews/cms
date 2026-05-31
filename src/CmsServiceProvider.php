@@ -107,7 +107,7 @@ class CmsServiceProvider extends PackageServiceProvider
 
         // Handle Stubs
         if (app()->runningInConsole()) {
-            foreach (app(Filesystem::class)->files(__DIR__.'/../stubs/') as $file) {
+            foreach (app(Filesystem::class)->files(__DIR__ . '/../stubs/') as $file) {
                 $this->publishes([
                     $file->getRealPath() => base_path("stubs/cms/{$file->getFilename()}"),
                 ], 'cms-stubs');
@@ -150,7 +150,7 @@ class CmsServiceProvider extends PackageServiceProvider
                         $parameters['module'] = app(CmsPlugin::class)->getId();             // 当前模块名
 
                         return URL::temporarySignedRoute(
-                            Utils::getConfig('routes.name', '').'verify.email.verification',
+                            Utils::getConfig('routes.name', '') . 'verify.email.verification',
                             Carbon::now()->addMinutes(Config::get('auth.verification.expire', 60)),
                             $parameters
                         );
