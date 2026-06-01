@@ -53,7 +53,7 @@ abstract class Base extends NestedsetPage
     {
         parent::mount();
 
-        $this->navigationType = $this->getNavigationType();
+        $this->navigationType = static::getNavigationType();
 
         // 可管理导航类型，填充表单数据
         if (static::getCanManage()) {
@@ -114,45 +114,47 @@ abstract class Base extends NestedsetPage
         return static::$emptyTipLabel ?? __('sn-cms::cms.navigation_page.empty_tip_label');
     }
 
-    public function getRecordLabel(Model $record): HtmlString | string
+    public static function getRecordLabel(Model $record): HtmlString | string
     {
         return $record->name_label;
     }
 
-    public function nestedScoped(): array
+    public static function nestedScoped(): array
     {
+        $navigationType = static::getNavigationType();
+
         return [
-            'scope_type' => $this->navigationType?->scope_type,
-            'scope_id' => $this->navigationType?->scope_id,
-            'type_id' => $this->navigationType?->id,
+            'scope_type' => $navigationType?->scope_type,
+            'scope_id' => $navigationType?->scope_id,
+            'type_id' => $navigationType?->id,
         ];
     }
 
-    public function createSchema(array $arguments): array
+    public static function createSchema(array $arguments): array
     {
-        $arguments = array_merge($arguments, $this->nestedScoped());
+        $arguments = array_merge($arguments, static::nestedScoped());
 
-        return $this->schema($arguments);
+        return static::schema($arguments);
     }
 
-    public function editSchema(array $arguments): array
+    public static function editSchema(array $arguments): array
     {
-        $arguments = array_merge($arguments, $this->nestedScoped());
+        $arguments = array_merge($arguments, static::nestedScoped());
 
-        return $this->schema($arguments);
+        return static::schema($arguments);
     }
 
-    public function schema(array $arguments): array
+    public static function schema(array $arguments): array
     {
         return NavigationForm::forms($arguments);
     }
 
-    public function infolistSchema(): array
+    public static function infolistSchema(): array
     {
         return NavigationInfolist::infolist();
     }
 
-    public function getNavigationType(): ?NavigationTypeModel
+    public static function getNavigationType(): ?NavigationTypeModel
     {
         $navigationType = Utils::getNavigationTypeModel()::query()
             ->snScope(static::getScopeType(), static::getScopeId())
