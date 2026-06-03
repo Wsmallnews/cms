@@ -34,9 +34,9 @@ abstract class Base extends NestedsetPage
 
     public ?NavigationTypeModel $navigationType = null;
 
-    protected static string | BackedEnum | null $navigationIcon = Heroicon::OutlinedBars3BottomLeft;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBars3BottomLeft;
 
-    protected static string | BackedEnum | null $activeNavigationIcon = Heroicon::Bars3BottomLeft;
+    protected static string|BackedEnum|null $activeNavigationIcon = Heroicon::Bars3BottomLeft;
 
     protected static ?string $slug = 'navigations';
 
@@ -51,8 +51,6 @@ abstract class Base extends NestedsetPage
 
     public function mount(): void
     {
-        parent::mount();
-
         $this->navigationType = static::getNavigationType();
 
         // 可管理导航类型，填充表单数据
@@ -62,6 +60,19 @@ abstract class Base extends NestedsetPage
 
             $this->form->fill($attributes);
         }
+    }
+
+    protected function getHeaderActions(): array
+    {
+        return [];
+    }
+
+    protected function getNestedsetActions()
+    {
+        return [
+            $this->createAction(),
+            $this->fixNestedsetAction(),
+        ];
     }
 
     public static function getModel(): ?string
@@ -79,7 +90,7 @@ abstract class Base extends NestedsetPage
         return static::$pluralModelLabel ?? __('sn-cms::cms.navigation_page.plural_model_label');
     }
 
-    public function getTitle(): string | Htmlable
+    public function getTitle(): string|Htmlable
     {
         return static::$title ?? __('sn-cms::cms.navigation_page.title');
     }
@@ -89,7 +100,7 @@ abstract class Base extends NestedsetPage
         return static::$navigationLabel ?? static::$title ?? __('sn-cms::cms.navigation_page.navigation_label');
     }
 
-    public static function getNavigationGroup(): string | UnitEnum | null
+    public static function getNavigationGroup(): string|UnitEnum|null
     {
         return static::$navigationGroup ?? __('sn-cms::cms.global_default.navigation_group');
     }
@@ -114,7 +125,7 @@ abstract class Base extends NestedsetPage
         return static::$emptyTipLabel ?? __('sn-cms::cms.navigation_page.empty_tip_label');
     }
 
-    public function getRecordLabel(Model $record): HtmlString | string
+    public function getRecordLabel(Model $record): HtmlString|string
     {
         return $record->name_label;
     }

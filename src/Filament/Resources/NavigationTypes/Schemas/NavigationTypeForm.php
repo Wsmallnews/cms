@@ -52,6 +52,7 @@ class NavigationTypeForm
                         ->rules(['integer', 'min:0']),
                     Forms\Components\Radio::make('status')
                         ->label(__('sn-cms::cms.navigation_type_form.status'))
+                        ->required()
                         ->default(NavigationTypeStatus::Normal)
                         ->inline()
                         ->options(NavigationTypeStatus::class),
