@@ -31,7 +31,7 @@ class EditNavigationType extends EditRecord
 
         return [
             NavigationWidget::make([
-                'key' => 'widgets-'.$record?->id.'-'.$record?->level,
+                'key' => 'widgets-' . $record?->id . '-' . $record?->level,
             ]),
         ];
     }
