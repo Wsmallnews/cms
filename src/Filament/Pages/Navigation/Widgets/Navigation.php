@@ -26,7 +26,7 @@ class Navigation extends Nestedset
         return static::$modelLabel ?? __('sn-cms::cms.navigation_page.model_label');
     }
 
-    public function getRecordLabel(Model $record): HtmlString|string
+    public function getRecordLabel(Model $record): HtmlString | string
     {
         return $record->name_label;
     }
