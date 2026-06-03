@@ -7,7 +7,7 @@
         {{ $this->form }}
     @endif
 
-     @if ($categoryType)
+     @if ($navigationType)
         @php
             $nestedset = $this->getNestedset();
         @endphp

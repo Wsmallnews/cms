@@ -27,7 +27,7 @@ class NavigationForm
 
         return [
             Forms\Components\Select::make('type')
-                ->helperText(fn (): ?HtmlString => new HtmlString('<span style="color: #F59E0B;">' . __('sn-cms::cms.navigation_form.type_helper') . '</span>'))
+                ->helperText(fn (): ?HtmlString => new HtmlString('<span style="color: #F59E0B;">'.__('sn-cms::cms.navigation_form.type_helper').'</span>'))
                 ->label(__('sn-cms::cms.navigation_form.type'))
                 ->options(NavigationTypeEnum::class)
                 ->default(NavigationTypeEnum::Route)
@@ -101,8 +101,12 @@ class NavigationForm
                 }),
             Forms\Components\TextInput::make('slug')
                 ->label(__('sn-cms::cms.navigation_form.slug'))
-                ->scopedUnique(modifyQueryUsing: function (Builder $query, Component $livewire) {
-                    return $query->scopeable($livewire->getScopeType(), $livewire->getScopeId());
+                ->scopedUnique(modifyQueryUsing: function (Builder $query, Component $livewire) use ($arguments) {
+                    $id = $arguments['id'] ?? null;
+
+                    return $query->scopeable($livewire->getScopeType(), $livewire->getScopeId())->when($id, function ($query) use ($id) {
+                        $query->where('id', '<>', $id);
+                    });
                 })
                 ->required()
                 ->maxLength(255)
@@ -137,7 +141,7 @@ class NavigationForm
             Schemas\Components\Group::make()
                 ->relationship('content')
                 ->mutateRelationshipDataBeforeFillUsing(function (array $data) {
-                    $data['content_' . $data['content_type']] = $data['content'];
+                    $data['content_'.$data['content_type']] = $data['content'];
 
                     return $data;
                 })
@@ -257,7 +261,7 @@ class NavigationForm
                                 // 填充组件特定字段
                                 return $state && $component
                                     ->getContainer()
-                                    ->getComponent('dynamicExtrasFields_' . $uuid)       // 当 dynamicExtrasFields visible = false, 也就是不可见时， 这里获取的是 null
+                                    ->getComponent('dynamicExtrasFields_'.$uuid)       // 当 dynamicExtrasFields visible = false, 也就是不可见时， 这里获取的是 null
                                     ?->getChildSchema()
                                     ->fill();
                             }),
@@ -281,7 +285,7 @@ class NavigationForm
                             ->columns(['md' => 2])
                             ->columnSpanFull()
                             ->statePath('extras')
-                            ->key('dynamicExtrasFields_' . $uuid),
+                            ->key('dynamicExtrasFields_'.$uuid),
                     ];
                 })
                 ->itemLabel(fn (array $state): ?string => $state['label'] ?? null)
@@ -314,7 +318,7 @@ class NavigationForm
     public static function mapVirtualContentField(array $data): array
     {
         $contentType = $data['content_type'] ?? ContentType::Textarea;
-        $virtualField = 'content_' . $contentType->value;
+        $virtualField = 'content_'.$contentType->value;
 
         $data['content'] = $data[$virtualField] ?? null;
 
