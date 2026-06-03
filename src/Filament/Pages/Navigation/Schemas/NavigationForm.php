@@ -23,6 +23,8 @@ class NavigationForm
 {
     public static function forms(array $arguments = []): array
     {
+        $scopeType = $arguments['scope_type'] ?? '';
+
         return [
             Forms\Components\Select::make('type')
                 ->helperText(fn (): ?HtmlString => new HtmlString('<span style="color: #F59E0B;">' . __('sn-cms::cms.navigation_form.type_helper') . '</span>'))
@@ -100,7 +102,7 @@ class NavigationForm
             Forms\Components\TextInput::make('slug')
                 ->label(__('sn-cms::cms.navigation_form.slug'))
                 ->scopedUnique(modifyQueryUsing: function (Builder $query, Component $livewire) {
-                    return $query->scopeable($livewire::getScopeType(), $livewire::getScopeId());
+                    return $query->scopeable($livewire->getScopeType(), $livewire->getScopeId());
                 })
                 ->required()
                 ->maxLength(255)
@@ -238,19 +240,19 @@ class NavigationForm
                 }),
             Forms\Components\Repeater::make('contentComponents')
                 ->label(__('sn-cms::cms.navigation_form.custom_content'))
-                ->schema(function () use ($arguments) {
+                ->schema(function () use ($scopeType) {
                     $uuid = Str::uuid();
 
                     return [
                         Forms\Components\Select::make('type')
                             ->label(__('sn-cms::cms.navigation_form.content_type'))
                             ->placeholder(__('sn-cms::cms.navigation_form.content_type_placeholder'))
-                            ->options(ContentRegistry::getTypesOptions($arguments['scope_type']))
+                            ->options(ContentRegistry::getTypesOptions($scopeType))
                             ->live()
                             ->required()
-                            ->afterStateUpdated(function (Forms\Components\Select $component, $state, Set $set) use ($uuid, $arguments) {
+                            ->afterStateUpdated(function (Forms\Components\Select $component, $state, Set $set) use ($uuid, $scopeType) {
                                 // 默认设置内容类型 label
-                                $set('label', ContentRegistry::getTypesOptions($arguments['scope_type'])[$state] ?? '');
+                                $set('label', ContentRegistry::getTypesOptions($scopeType)[$state] ?? '');
 
                                 // 填充组件特定字段
                                 return $state && $component
@@ -268,10 +270,10 @@ class NavigationForm
 
                         Schemas\Components\Fieldset::make('extras')
                             ->label(__('sn-cms::cms.navigation_form.content_options'))
-                            ->schema(function (Get $get) use ($arguments) {
-                                return filled($get('type')) ? ContentRegistry::getTypeForms($arguments['scope_type'], $get('type'), ['fields' => $get('../../../')]) : [];        // $get() 获取的为当前repeater 循环层级的数据，需要 ../../../ 获取所有变量
-                            })->visible(function (Get $get) use ($arguments) {
-                                $hasForms = filled($get('type')) ? ContentRegistry::hasTypeForms($arguments['scope_type'], $get('type'), ['fields' => $get('../../../')]) : false;    // $get() 获取的为当前repeater 循环层级的数据，需要 ../../../ 获取所有变量
+                            ->schema(function (Get $get) use ($scopeType) {
+                                return filled($get('type')) ? ContentRegistry::getTypeForms($scopeType, $get('type'), ['fields' => $get('../../../')]) : [];        // $get() 获取的为当前repeater 循环层级的数据，需要 ../../../ 获取所有变量
+                            })->visible(function (Get $get) use ($scopeType) {
+                                $hasForms = filled($get('type')) ? ContentRegistry::hasTypeForms($scopeType, $get('type'), ['fields' => $get('../../../')]) : false;    // $get() 获取的为当前repeater 循环层级的数据，需要 ../../../ 获取所有变量
 
                                 // 选了内容类型，并且内容类型有 form 表单
                                 return filled($get('type')) && $hasForms;

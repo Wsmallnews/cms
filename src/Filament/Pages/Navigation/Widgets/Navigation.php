@@ -10,23 +10,11 @@ use Wsmallnews\Cms\Filament\Pages\Navigation\Schemas\NavigationInfolist;
 use Wsmallnews\Cms\Models\NavigationType as NavigationTypeModel;
 use Wsmallnews\Cms\Support\Utils;
 use Wsmallnews\FilamentNestedset\Filament\Pages\Widgets\Nestedset;
-use Wsmallnews\Support\Filament\Pages\Concerns\Scopeable;
 
 class Navigation extends Nestedset
 {
-    use Scopeable;
-
     #[Reactive]
     public ?NavigationTypeModel $record = null;
-
-    protected static ?NavigationTypeModel $navigationType = null;
-
-    public function mount(): void
-    {
-        parent::mount();
-
-        static::$navigationType = $this->record;
-    }
 
     public static function getModel(): ?string
     {
@@ -38,26 +26,61 @@ class Navigation extends Nestedset
         return static::$modelLabel ?? __('sn-cms::cms.navigation_page.model_label');
     }
 
-    public static function getRecordLabel(Model $record): HtmlString | string
+    public function getRecordLabel(Model $record): HtmlString | string
     {
         return $record->name_label;
     }
 
-    public static function nestedScoped(): array
+    public function getScopeType(): string
+    {
+        return (string) $this->record?->scope_type;
+    }
+
+    public function getScopeId(): int
+    {
+        return (int) $this->record?->scope_id;
+    }
+
+    /**
+     * @return array{scope_type: string, scope_id: int}
+     */
+    public function getScopeable(): array
     {
         return [
-            'scope_type' => static::$navigationType?->scope_type,
-            'scope_id' => static::$navigationType?->scope_id,
-            'type_id' => static::$navigationType?->id,
+            'scope_type' => $this->getScopeType(),
+            'scope_id' => $this->getScopeId(),
         ];
     }
 
-    public static function schema(array $arguments): array
+    public function nestedScoped(): array
+    {
+        return [
+            'scope_type' => $this->record?->scope_type,
+            'scope_id' => $this->record?->scope_id,
+            'type_id' => $this->record?->id,
+        ];
+    }
+
+    public function createSchema(array $arguments): array
+    {
+        $arguments = array_merge($arguments, $this->nestedScoped());
+
+        return $this->schema($arguments);
+    }
+
+    public function editSchema(array $arguments): array
+    {
+        $arguments = array_merge($arguments, $this->nestedScoped());
+
+        return $this->schema($arguments);
+    }
+
+    public function schema(array $arguments): array
     {
         return NavigationForm::forms($arguments);
     }
 
-    public static function infolistSchema(): array
+    public function infolistSchema(): array
     {
         return NavigationInfolist::infolist();
     }
