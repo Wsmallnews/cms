@@ -51,7 +51,9 @@ abstract class Base extends NestedsetPage
 
     public function mount(): void
     {
-        $this->navigationType = static::getNavigationType();
+        $this->navigationType = $this->getNavigationType();
+
+        static::$level = $this->navigationType?->level ?? null;
 
         // 可管理导航类型，填充表单数据
         if (static::getCanManage()) {
@@ -125,45 +127,7 @@ abstract class Base extends NestedsetPage
         return static::$emptyTipLabel ?? __('sn-cms::cms.navigation_page.empty_tip_label');
     }
 
-    public function getRecordLabel(Model $record): HtmlString | string
-    {
-        return $record->name_label;
-    }
-
-    public function nestedScoped(): array
-    {
-        return [
-            'scope_type' => $this->navigationType?->scope_type,
-            'scope_id' => $this->navigationType?->scope_id,
-            'type_id' => $this->navigationType?->id,
-        ];
-    }
-
-    public function createSchema(array $arguments): array
-    {
-        $arguments = array_merge($arguments, $this->nestedScoped());
-
-        return $this->schema($arguments);
-    }
-
-    public function editSchema(array $arguments): array
-    {
-        $arguments = array_merge($arguments, $this->nestedScoped());
-
-        return $this->schema($arguments);
-    }
-
-    public function schema(array $arguments): array
-    {
-        return NavigationForm::forms($arguments);
-    }
-
-    public function infolistSchema(): array
-    {
-        return NavigationInfolist::infolist();
-    }
-
-    public static function getNavigationType(): ?NavigationTypeModel
+    public function getNavigationType(): ?NavigationTypeModel
     {
         $navigationType = Utils::getNavigationTypeModel()::query()
             ->snScope(static::getScopeType(), static::getScopeId())
@@ -178,6 +142,13 @@ abstract class Base extends NestedsetPage
                 ...static::getScopeable(),
                 'team_id' => Filament::getTenant()?->id,
             ]);
+        }
+
+        // 不可管理模式，自动更新自定义设置的层级
+        if ($navigationType && ! static::getCanManage()) {
+            // 固定层级
+            $navigationType->level = static::getLevel();
+            $navigationType->save();
         }
 
         return $navigationType;
@@ -225,9 +196,54 @@ abstract class Base extends NestedsetPage
             $this->form->record($this->navigationType)->saveRelationships();
         }
 
+        static::$level = $this->navigationType->level ?? null;
+
         Notification::make()
             ->success()
             ->title(__('sn-cms::cms.navigation_page.save_success'))
             ->send();
+    }
+
+    protected function getRecordLabel(Model $record): HtmlString | string
+    {
+        return $record->name_label;
+    }
+
+    protected function nestedScoped(): array
+    {
+        return [
+            'scope_type' => $this->navigationType?->scope_type,
+            'scope_id' => $this->navigationType?->scope_id,
+            'type_id' => $this->navigationType?->id,
+        ];
+    }
+
+    protected function createSchema(array $arguments): array
+    {
+        $arguments = array_merge($arguments, $this->nestedScoped());
+
+        return $this->schema($arguments);
+    }
+
+    protected function editSchema(array $arguments): array
+    {
+        $arguments = array_merge($arguments, $this->nestedScoped());
+
+        return $this->schema($arguments);
+    }
+
+    protected function schema(array $arguments): array
+    {
+        return NavigationForm::forms($arguments);
+    }
+
+    protected function infolistSchema(): array
+    {
+        return NavigationInfolist::infolist();
+    }
+
+    protected function getEloquentQuery($query)
+    {
+        return $query->with(['content']);
     }
 }

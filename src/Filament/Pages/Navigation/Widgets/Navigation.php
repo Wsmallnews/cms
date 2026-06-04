@@ -16,6 +16,11 @@ class Navigation extends Nestedset
     #[Reactive]
     public ?NavigationTypeModel $record = null;
 
+    public function boot()
+    {
+        static::$level = $this->record?->level ?? null;
+    }
+
     public static function getModel(): ?string
     {
         return Utils::getNavigationModel();
@@ -31,27 +36,6 @@ class Navigation extends Nestedset
         return $record->name_label;
     }
 
-    public function getScopeType(): string
-    {
-        return (string) $this->record?->scope_type;
-    }
-
-    public function getScopeId(): int
-    {
-        return (int) $this->record?->scope_id;
-    }
-
-    /**
-     * @return array{scope_type: string, scope_id: int}
-     */
-    public function getScopeable(): array
-    {
-        return [
-            'scope_type' => $this->getScopeType(),
-            'scope_id' => $this->getScopeId(),
-        ];
-    }
-
     public function nestedScoped(): array
     {
         return [
@@ -61,27 +45,20 @@ class Navigation extends Nestedset
         ];
     }
 
-    public function createSchema(array $arguments): array
-    {
-        $arguments = array_merge($arguments, $this->nestedScoped());
-
-        return $this->schema($arguments);
-    }
-
-    public function editSchema(array $arguments): array
-    {
-        $arguments = array_merge($arguments, $this->nestedScoped());
-
-        return $this->schema($arguments);
-    }
-
     public function schema(array $arguments): array
     {
+        $arguments = array_merge($arguments, $this->nestedScoped());
+
         return NavigationForm::forms($arguments);
     }
 
     public function infolistSchema(): array
     {
         return NavigationInfolist::infolist();
+    }
+
+    public function getEloquentQuery($query)
+    {
+        return $query->with(['content']);
     }
 }

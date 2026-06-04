@@ -28,6 +28,12 @@ final class NavigationPage extends Base
 
     public static function getLevel(): ?int
     {
+        if (static::getCanManage()) {
+            // 可管理导航类型，则使用父级 getLevel 方法
+            return parent::getLevel();
+        }
+
+        // 固定层级
         return self::getCustomProperty('level') ?? parent::getLevel();
     }
 
