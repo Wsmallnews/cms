@@ -4,9 +4,10 @@
 
 ### 核心架构
 
-- 依赖 `wsmallnews/filament-nestedset ^3.0`
-- **Base**（`Wsmallnews\Cms\Filament\Pages\Navigation\Base`）：继承 `NestedsetPage` 的抽象页面类，负责配置、schema 定义、导航类型管理
+- 依赖 `wsmallnews/filament-nestedset`（`NestedsetPage` 基类）
+- **Base**（`Wsmallnews\Cms\Filament\Pages\Navigation\Base`）：继承 `Wsmallnews\FilamentNestedset\Filament\Pages\NestedsetPage` 的抽象页面类，负责配置、schema 定义、导航类型管理
 - **NavigationPage**（`Wsmallnews\Cms\Filament\Pages\Navigation\NavigationPage`）：继承 Base 的具体页面类，注册到 Filament 面板
+- **Navigation Widget**（`Wsmallnews\Cms\Filament\Pages\Navigation\Widgets\Navigation`）：Filament Widget 变体
 
 ### 导航类型（NavigationType）
 
@@ -67,6 +68,12 @@ public function getEloquentQuery($query) { return $query; }
 public function nestedScoped(): array { return []; }
 ```
 
+### 关键可覆盖方法
+
+Base 页面自动通过 `nestedScoped()` 将 `scope_type`、`scope_id`、`type_id` 注入 nestedset 查询，不要手动重复添加这些 scope。`$navigationType` 会自动从配置的 `scopeType` / `scopeId` 解析或创建。
+
+Base 页面覆盖了 `getRecordLabel()`（返回 `$record->name_label`）、`getHeaderActions()` / `getNestedsetActions()`（仅返回 createAction 和 fixNestedsetAction）、以及 `getEloquentQuery()`（追加 `->with(['content'])`）。
+
 ### 模型要求
 
 模型必须 use `Kalnoy\Nestedset\NodeTrait`，并且实现 `getScopeAttributes()`：
@@ -85,16 +92,21 @@ class Navigation extends Model
 }
 ```
 
+`Navigation` 模型的 `getScopeAttributes()` 返回 `['scope_type', 'scope_id', 'type_id']`，多租户时追加 `'team_id'`。不要将 `type_id` 忽略，否则 scoped 查询会遗漏导航类型过滤。
+
 ### 正确命名空间速查
 
 | 类别 | 命名空间 |
 |---|---|
 | Page 基类 | `Wsmallnews\Cms\Filament\Pages\Navigation\Base` |
 | Page 实现 | `Wsmallnews\Cms\Filament\Pages\Navigation\NavigationPage` |
+| Widget | `Wsmallnews\Cms\Filament\Pages\Navigation\Widgets\Navigation` |
 | Schema Form | `Wsmallnews\Cms\Filament\Pages\Navigation\Schemas\NavigationForm` |
 | Schema Infolist | `Wsmallnews\Cms\Filament\Pages\Navigation\Schemas\NavigationInfolist` |
 | 模型 | `Wsmallnews\Cms\Models\Navigation` |
 | 导航类型模型 | `Wsmallnews\Cms\Models\NavigationType` |
+| 文章模型 | `Wsmallnews\Cms\Models\Post` |
+| Plugin | `Wsmallnews\Cms\CmsPlugin` |
 | ServiceProvider | `Wsmallnews\Cms\CmsServiceProvider` |
 
 ### 常见错误
