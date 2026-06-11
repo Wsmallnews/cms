@@ -157,7 +157,7 @@
             />
         @empty
             <li class="w-full px-3 py-2 text-center">
-                {{ $this->getEmptyLabel() ?: __('sn-filament-nestedset::nestedset.tree.empty_label')}}
+                {{ $this->getEmptyLabel() ?: __('sn-filament-nestedset::nestedset.nestedset.empty_label')}}
             </li>
         @endforelse
     </ul>

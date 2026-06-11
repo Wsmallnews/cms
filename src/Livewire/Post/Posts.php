@@ -13,7 +13,7 @@ class Posts extends Base
 
     public function mount()
     {
-        $this->categoryId = request()->input('category_id', 0);
+        $this->categoryId = request()->input('categoryId', 0);
     }
 
     public function render()
