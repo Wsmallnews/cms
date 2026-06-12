@@ -102,7 +102,6 @@ class Posts extends Base
         return $allCategories;
     }
 
-
     protected function getFingerprint(): string
     {
         return md5(serialize([
