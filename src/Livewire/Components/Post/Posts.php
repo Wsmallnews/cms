@@ -29,6 +29,9 @@ class Posts extends Base
     #[Url(except: '')]
     public string $flag = '';
 
+    #[Url(except: '')]
+    public string $search = '';
+
     public string $categoryStyle = 'select';
 
     public function mount()
@@ -59,14 +62,19 @@ class Posts extends Base
             ->when($this->flag, function ($query) {
                 $query->hasFlag($this->flag);
             })
+            ->when($this->search, function ($query) {
+                $query->where(function ($query) {
+                    $query->where('title', 'like', "%{$this->search}%");
+                    $query->orWhere('description', 'like', "%{$this->search}%");
+                });
+            })
             ->when($this->flag != 'top', function ($query) {
                 $query->orderByRaw('JSON_CONTAINS(flags, \'"top"\') DESC');
             })
             ->orderBy('order_column', 'desc')
             ->orderBy('id', 'desc');
 
-        // 分页
-        $this->posts = $this->withPagination($query);
+        $this->posts = $this->withPagination($query, $this->getFingerprint());
 
         return view($this->getThemeView('components.post.posts'), [
             'categories' => $categories,
@@ -92,5 +100,17 @@ class Posts extends Base
         $allCategories = $allCategories->filter()->unique()->values();
 
         return $allCategories;
+    }
+
+
+    protected function getFingerprint(): string
+    {
+        return md5(serialize([
+            'search' => $this->search,
+            'flag' => $this->flag,
+            'categoryIds' => json_encode($this->categoryIds),
+            'categoryId' => $this->categoryId,
+            ...$this->getScopeable(),
+        ]));
     }
 }

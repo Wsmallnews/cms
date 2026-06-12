@@ -3,9 +3,6 @@
     use Wsmallnews\Cms\Facades\FlagRegistry;
     $flags = FlagRegistry::getTypes($scopeType);
 
-    $currentUrl = request()->fullUrlWithoutQuery('flag');
-    $flagUrl = $currentUrl . (Str::contains($currentUrl, '?') ? '&' : '?') . 'flag=';
-
     $view = $this->getThemeView('components.category.categories');
     $recordView = $this->getBladeThemeView('components.category.category-record');
 @endphp
@@ -13,7 +10,12 @@
 <div class="w-full flex flex-col lg:flex-row gap-4">
     @if ($categoryStyle == 'tree')
         <div class="w-full lg:w-72">
-            <livewire:sn-category-components-categories :scope-type="$scopeType" :use-url="true" :view="$view" :record-view="$recordView" />
+            <livewire:sn-category-components-categories 
+                :scope-type="$scopeType" 
+                :use-url="true" 
+                :view="$view" 
+                :record-view="$recordView"
+                :key="'sn-category-components-categories-' . $this->getFingerprint()" />
         </div>
     @endif
 
@@ -28,16 +30,14 @@
 
         <x-filament::tabs label="flags">
             <x-filament::tabs.item
-                tag="a"
-                :href="$currentUrl"
+                wire:click="$set('flag', '')"
                 :active="blank($flag)"
             >
                 {{ __('sn-cms::cms.frontend.all') }}
             </x-filament::tabs.item>
             @foreach ($flags as $flagItem)
                 <x-filament::tabs.item
-                    tag="a"
-                    :href="$flagUrl . $flagItem['type']"
+                    wire:click="$set('flag', '{{ $flagItem['type'] }}')"
                     :active="$flagItem['type'] == $flag"
                     :icon="$flagItem['icon']"
                 >
@@ -45,6 +45,22 @@
                 </x-filament::tabs.item>
             @endforeach
         </x-filament::tabs>
+
+        {{-- <div class="w-full flex flex-row-reverse gap-4">
+            <x-filament::input.wrapper
+                class="w-full md:w-80"
+                inline-prefix
+                :prefix-icon="\Filament\Support\Icons\Heroicon::MagnifyingGlass"
+            >
+                <label for="post-search" class="sr-only">{{ __('sn-cms::cms.frontend.search') }}</label>
+                <x-filament::input
+                    id="post-search"
+                    type="search"
+                    placeholder="{{ __('sn-cms::cms.frontend.search_placeholder') }}"
+                    wire:model.live.debounce.250ms="search"
+                />
+            </x-filament::input.wrapper>
+        </div> --}}
 
         <x-sn-support::paginators.container :page-type="$pageType" :page-info="$pageInfo" :paginator-link="$paginatorLink" :page-name="$pageName">
             <div class="w-full flex flex-col gap-4">

@@ -169,6 +169,8 @@ return [
         'wechat_official_qrcode_uploading' => 'Uploading official account QR code...',
     ],
     'frontend' => [
+        'search' => 'Search',
+        'search_placeholder' => 'Search title, description...',
         'skip_to_content' => 'Skip to main content',
         'login' => 'Login',
         'register' => 'Register',

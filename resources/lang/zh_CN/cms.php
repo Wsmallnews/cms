@@ -169,6 +169,8 @@ return [
         'wechat_official_qrcode_uploading' => '公众号二维码上传中...',
     ],
     'frontend' => [
+        'search' => '搜索',
+        'search_placeholder' => '搜索标题、描述等...',
         'skip_to_content' => '跳转到主要内容',
         'login' => '登录',
         'register' => '注册',
