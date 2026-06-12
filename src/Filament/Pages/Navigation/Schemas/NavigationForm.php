@@ -27,7 +27,7 @@ class NavigationForm
 
         return [
             Forms\Components\Select::make('type')
-                ->helperText(fn(): ?HtmlString => new HtmlString('<span style="color: #F59E0B;">' . __('sn-cms::cms.navigation_form.type_helper') . '</span>'))
+                ->helperText(fn (): ?HtmlString => new HtmlString('<span style="color: #F59E0B;">' . __('sn-cms::cms.navigation_form.type_helper') . '</span>'))
                 ->label(__('sn-cms::cms.navigation_form.type'))
                 ->options(NavigationTypeEnum::class)
                 ->default(NavigationTypeEnum::Route)
@@ -159,17 +159,17 @@ class NavigationForm
                         ->label(__('sn-cms::cms.post_form.content_detail'))->required()
                         ->placeholder(__('sn-cms::cms.post_form.content_placeholder'))
                         ->rows(5)->autosize()
-                        ->visible(fn(Get $get): bool => $get('content_type') === ContentType::Textarea),
+                        ->visible(fn (Get $get): bool => $get('content_type') === ContentType::Textarea),
                     FormComponents::richEditor('content_richtext')
                         ->label(__('sn-cms::cms.post_form.content_detail'))->required()
                         ->placeholder(__('sn-cms::cms.post_form.content_placeholder'))
                         ->fileAttachmentsDirectory(Utils::getFileDirectory('contents'))
-                        ->visible(fn(Get $get): bool => $get('content_type') === ContentType::Richtext),
+                        ->visible(fn (Get $get): bool => $get('content_type') === ContentType::Richtext),
                     FormComponents::markdownEditor('content_markdown')
                         ->label(__('sn-cms::cms.post_form.content_detail'))->required()
                         ->placeholder(__('sn-cms::cms.post_form.content_markdown_placeholder'))
                         ->fileAttachmentsDirectory(Utils::getFileDirectory('contents'))
-                        ->visible(fn(Get $get): bool => $get('content_type') === ContentType::Markdown),
+                        ->visible(fn (Get $get): bool => $get('content_type') === ContentType::Markdown),
                 ])
                 ->columns(1)
                 ->visible(function (Get $get) {
@@ -205,7 +205,7 @@ class NavigationForm
                                 ->label(__('sn-cms::cms.navigation_form.route_params'))
                                 ->helperText(__('sn-cms::cms.navigation_form.route_params_helper'))
                                 ->reorderable()
-                                ->required(fn(Get $get) => (bool) $get('has_routes'))
+                                ->required(fn (Get $get) => (bool) $get('has_routes'))
                                 ->markAsRequired()
                                 ->visibleJs(<<<'JS'
                                     $get('has_routes')
@@ -223,7 +223,7 @@ class NavigationForm
                                 ->label(__('sn-cms::cms.navigation_form.query_params'))
                                 ->helperText(__('sn-cms::cms.navigation_form.query_params_helper'))
                                 ->reorderable()
-                                ->required(fn(Get $get) => (bool) $get('has_queries'))
+                                ->required(fn (Get $get) => (bool) $get('has_queries'))
                                 ->markAsRequired()
                                 ->visibleJs(<<<'JS'
                                     $get('has_queries')
@@ -284,7 +284,7 @@ class NavigationForm
                             ->key('dynamicExtrasFields_' . $uuid),
                     ];
                 })
-                ->itemLabel(fn(array $state): ?string => $state['label'] ?? null)
+                ->itemLabel(fn (array $state): ?string => $state['label'] ?? null)
                 ->required()
                 ->minItems(1)
                 ->addActionLabel(__('sn-cms::cms.navigation_form.add_group'))
