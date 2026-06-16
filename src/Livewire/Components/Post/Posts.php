@@ -4,6 +4,7 @@ namespace Wsmallnews\Cms\Livewire\Components\Post;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Url;
 use Livewire\WithoutUrlPagination;
 use Wsmallnews\Category\Livewire\Concerns\Categoryable;
@@ -37,6 +38,16 @@ class Posts extends Base
     public function mount()
     {
         $this->posts = $this->posts ?? collect([]);
+    }
+
+    /**
+     * 监听分类树叶子节点点击事件，筛选文章列表
+     */
+    #[On('sn-filament-nestedset-leaf-click')]
+    public function onCategoryLeafClick(int $recordId): void
+    {
+        // 切换选中状态：再次点击同一分类则取消选中
+        $this->categoryId = ($this->categoryId == $recordId) ? 0 : $recordId;
     }
 
     protected function getCurrents()

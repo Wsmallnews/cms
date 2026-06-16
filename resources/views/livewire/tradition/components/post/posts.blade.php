@@ -7,13 +7,16 @@
     $recordView = $this->getBladeThemeView('components.category.category-record');
 @endphp
 
-<div class="w-full flex flex-col lg:flex-row gap-4">
+<div class="w-full flex flex-col lg:flex-row gap-4 relative">
+    <x-sn-support::loading.overlay />
+
     @if ($categoryStyle == 'tree')
         <div class="w-full lg:w-72">
-            <livewire:sn-category-components-categories 
-                :scope-type="$scopeType" 
-                :use-url="true" 
-                :view="$view" 
+            <livewire:sn-category-components-categories
+                :scope-type="$scopeType"
+                :use-url="false"
+                :active-category-id="$categoryId"
+                :view="$view"
                 :record-view="$recordView"
                 :key="'sn-category-components-categories-' . $this->getFingerprint()" />
         </div>
@@ -46,7 +49,7 @@
             @endforeach
         </x-filament::tabs>
 
-        {{-- <div class="w-full flex flex-row-reverse gap-4">
+        <div class="w-full flex flex-row-reverse gap-4">
             <x-filament::input.wrapper
                 class="w-full md:w-80"
                 inline-prefix
@@ -60,7 +63,7 @@
                     wire:model.live.debounce.250ms="search"
                 />
             </x-filament::input.wrapper>
-        </div> --}}
+        </div>
 
         <x-sn-support::paginators.container :page-type="$pageType" :page-info="$pageInfo" :paginator-link="$paginatorLink" :page-name="$pageName">
             <div class="w-full flex flex-col gap-4">
@@ -81,7 +84,7 @@
                                 </div>
                             @endif
                         </div>
-                                
+
                         <div class="flex flex-col grow py-4 pr-4 gap-4">
                             <div class="sn-h3-text sn-hover line-clamp-1 transition duration-300">
                                 {{ $post->title }}
