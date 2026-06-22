@@ -40,7 +40,7 @@
             'sn-container px-4 py-8' => $contained,
             'w-full flex flex-col gap-4'
         ])>
-            <livewire:sn-comment-components-comments
+            <livewire:sn-comment::components.comments
                 :scope-type="$scopeType"
                 :scope-id="$scopeId"
                 :contained="false"

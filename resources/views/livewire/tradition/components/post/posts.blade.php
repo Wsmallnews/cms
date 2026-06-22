@@ -12,13 +12,13 @@
 
     @if ($categoryStyle == 'tree')
         <div class="w-full lg:w-72">
-            <livewire:sn-category-components-categories
+            <livewire:sn-category::components.categories
                 :scope-type="$scopeType"
                 :use-url="false"
                 :active-category-id="$categoryId"
                 :view="$view"
                 :record-view="$recordView"
-                :key="'sn-category-components-categories-' . $this->getFingerprint()" />
+                :key="'sn-category::components.categories-' . $this->getFingerprint()" />
         </div>
     @endif
 

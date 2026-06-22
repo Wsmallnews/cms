@@ -29,15 +29,10 @@ use Wsmallnews\Cms\Http\Middleware\Authenticate;
 use Wsmallnews\Cms\Http\Middleware\EnsureEmailIsVerified;
 use Wsmallnews\Cms\Http\Middleware\RedirectIfAuthenticated;
 use Wsmallnews\Cms\Http\Middleware\RequirePassword;
-use Wsmallnews\Cms\Livewire\Components\Footer;
-use Wsmallnews\Cms\Livewire\Components\Navigation\Breadcrumb;
-use Wsmallnews\Cms\Livewire\Components\Navigation\Brothers;
-use Wsmallnews\Cms\Livewire\Components\Navigation\Content;
-use Wsmallnews\Cms\Livewire\Components\Navigation\Navigation;
-use Wsmallnews\Cms\Livewire\Components\Navigation\NavigationContainer;
 use Wsmallnews\Cms\Livewire\Components\Post\IndexPosts;
 use Wsmallnews\Cms\Livewire\Components\Post\Post;
 use Wsmallnews\Cms\Livewire\Components\Post\Posts;
+use Wsmallnews\Cms\Livewire\Index;
 use Wsmallnews\Cms\Models\Post as PostModel;
 use Wsmallnews\Cms\Support\Utils;
 use Wsmallnews\User\Facades\SidebarMenuRegistry as SidebarMenuRegistryFacade;
@@ -114,18 +109,14 @@ class CmsServiceProvider extends PackageServiceProvider
             }
         }
 
-        // 注册组件 (前端组件)
-        Livewire::component('sn-cms-components-footer', Footer::class);
-        // 导航相关
-        Livewire::component('sn-cms-components-navigation', Navigation::class);
-        Livewire::component('sn-cms-components-navigation-breadcrumb', Breadcrumb::class);
-        Livewire::component('sn-cms-components-navigation-brothers', Brothers::class);
-        Livewire::component('sn-cms-components-navigation-container', NavigationContainer::class);
-        Livewire::component('sn-cms-components-navigation-content', Content::class);
-        // 内容相关
-        Livewire::component('sn-cms-components-index-posts', IndexPosts::class);
-        Livewire::component('sn-cms-components-posts', Posts::class);
-        Livewire::component('sn-cms-components-post', Post::class);
+        // 注册 livewire 命名空间（自动发现 src/Livewire/ 下的组件）
+        Livewire::addNamespace(
+            namespace: 'sn-cms',
+            classNamespace: 'Wsmallnews\\Cms\\Livewire'
+        );
+
+        // 路由处理器反向查找注册（Route::get(Index::class) 需要类名→别名映射）
+        Livewire::component('sn-cms::index', Index::class);
 
         // 注册用户认证信息
         UserConfigFacade::config(app(CmsPlugin::class)->getId(), function () {

@@ -15,7 +15,7 @@
 
             <div class="flex gap-4">
                 @auth
-                    <livewire:sn-user-components-user-menu :module="app(CmsPlugin::class)->getId()" switch-dark-mode="{{ Utils::hasDarkMode() && !Utils::hasDarkModeForced() }}" />
+                    <livewire:sn-user::components.user.menu :module="app(CmsPlugin::class)->getId()" switch-dark-mode="{{ Utils::hasDarkMode() && !Utils::hasDarkModeForced() }}" />
                 @else
                     <x-filament::button tag="a" href="{{ Utils::route('login') }}">
                         {{ __('sn-cms::cms.frontend.login') }}
@@ -29,10 +29,10 @@
     </div>
 
     <div class="w-full flex flex-col grow">
-        <livewire:sn-cms-components-navigation :scope-type="$scopeType" :scope-id="$scopeId" />
+        <livewire:sn-cms::components.navigation.navigation :scope-type="$scopeType" :scope-id="$scopeId" />
 
         {{ $slot }}
 
-        <livewire:sn-cms-components-footer :scope-type="$scopeType" :scope-id="$scopeId" />
+        <livewire:sn-cms::components.footer :scope-type="$scopeType" :scope-id="$scopeId" />
     </div>
 </div>

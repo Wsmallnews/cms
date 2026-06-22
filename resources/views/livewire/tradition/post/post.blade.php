@@ -18,7 +18,7 @@
             </div>
         @endif
 
-        <livewire:sn-cms-components-post 
+        <livewire:sn-cms::components.post.post 
             :scope-type="$scopeType" 
             :scope-id="$scopeId" 
             :user="$user" :slug="$slug" 
