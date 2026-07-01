@@ -10,6 +10,8 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
 use Illuminate\Support\HtmlString;
+use Spatie\Activitylog\Models\Concerns\LogsActivity;
+use Spatie\Activitylog\Support\LogOptions;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Tags\HasTags;
@@ -29,6 +31,7 @@ class Post extends SupportModel implements HasMedia, HasSnSubject
     use Commentable;
     use HasTags;
     use InteractsWithMedia;
+    use LogsActivity;
     use Preferenceable;
     use SoftDeletes;
     use Viewable;
@@ -43,6 +46,15 @@ class Post extends SupportModel implements HasMedia, HasSnSubject
         'options' => 'array',
         'status' => PostStatus::class,
     ];
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logAll()
+            ->logOnlyDirty()
+            ->dontLogIfAttributesChangedOnly(['order_column', 'updated_at'])        // 如果只更新排序，则忽略不记录日志
+            ->setDescriptionForEvent(fn(string $eventName) => $eventName);
+    }
 
     public function getRouteKeyName()
     {

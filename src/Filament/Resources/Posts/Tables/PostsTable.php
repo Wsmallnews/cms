@@ -17,6 +17,7 @@ use Filament\Tables\Table;
 use Livewire\Component;
 use Wsmallnews\Cms\Facades\FlagRegistry;
 use Wsmallnews\Support\Filament\Filters\FilterComponents;
+use Wsmallnews\Support\Filament\Tables\ColumnComponents;
 
 class PostsTable
 {
@@ -29,14 +30,11 @@ class PostsTable
                     ->sortable()
                     ->alignCenter()
                     ->toggleable(),
-                Tables\Columns\TextColumn::make('title')
-                    ->label(__('sn-cms::cms.posts_table.title'))
-                    ->searchable()
-                    ->view('sn-cms::filament.tables.columns.post-title'),
-                // Tables\Columns\SpatieMediaLibraryImageColumn::make('image')
-                //     ->label('主图')
-                //     ->collection('main')
-                //     ->toggleable(),
+                ColumnComponents::modelColumn(
+                    'title',
+                    __('sn-cms::cms.posts_table.title'),
+                    fn ($record) => $record,
+                )->searchable(['title', 'description']),
                 Tables\Columns\TextColumn::make('categories.name')
                     ->label(__('sn-cms::cms.posts_table.categories'))
                     ->searchable()
