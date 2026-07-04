@@ -11,8 +11,8 @@ use Wsmallnews\Support\Livewire\Concerns\HasAuth;
 class Post extends Base
 {
     use CanBeContained;
-    use HasComment;
     use HasAuth;
+    use HasComment;
 
     public string $slug;
 
