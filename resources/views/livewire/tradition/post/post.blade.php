@@ -7,6 +7,9 @@
     $user = Utils::getUser();
 
     $hasComment = Utils::commentConfig('post', 'enable', false);
+    $canAddComment = Utils::commentConfig('post', 'can_add_comment', false);
+    $contentType = Utils::commentConfig('post', 'content_type', false);
+    $commentStatus = Utils::commentConfig('post', 'comment_status', false);
 @endphp
 
 <x-dynamic-component :component="$this->getPageContainer()" :scope-type="$scopeType" :scope-id="$scopeId">
@@ -23,6 +26,9 @@
             :scope-id="$scopeId" 
             :user="$user" :slug="$slug" 
             :has-comment="$hasComment"
+            :can-add-comment="$canAddComment"
+            :content-type="$contentType"
+            :comment-status="$commentStatus"
         />
     </div>
 </x-dynamic-component>
