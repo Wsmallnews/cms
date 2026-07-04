@@ -35,7 +35,7 @@
         @endif
     </div>
 
-    @if ($canComment)
+    @if ($hasComment)
         <div @class([
             'sn-container px-4 py-8' => $contained,
             'w-full flex flex-col gap-4'

@@ -4,14 +4,14 @@ namespace Wsmallnews\Cms\Livewire\Components\Post;
 
 use Wsmallnews\Cms\Livewire\Components\Base;
 use Wsmallnews\Cms\Support\Utils;
-use Wsmallnews\Comment\Livewire\Concerns\CanComment;
+use Wsmallnews\Comment\Livewire\Concerns\HasComment;
 use Wsmallnews\Support\Livewire\Concerns\CanBeContained;
 use Wsmallnews\Support\Livewire\Concerns\HasAuth;
 
 class Post extends Base
 {
     use CanBeContained;
-    use CanComment;
+    use HasComment;
     use HasAuth;
 
     public string $slug;
