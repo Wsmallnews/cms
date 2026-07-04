@@ -15,10 +15,10 @@ class Post extends Base
 {
     use CanBeContained;
     use CanAddComment;
+    use HasAuth;
     use HasComment;
     use HasCommentStatus;
     use HasContentType;
-    use HasAuth;
 
     public string $slug;
 
