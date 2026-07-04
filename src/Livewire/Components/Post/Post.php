@@ -13,8 +13,8 @@ use Wsmallnews\Support\Livewire\Concerns\HasContentType;
 
 class Post extends Base
 {
-    use CanBeContained;
     use CanAddComment;
+    use CanBeContained;
     use HasAuth;
     use HasComment;
     use HasCommentStatus;
