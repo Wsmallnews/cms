@@ -2,7 +2,6 @@
 
 namespace Wsmallnews\Cms\Filament\Resources\NavigationTypes\Tables;
 
-use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -16,6 +15,7 @@ use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use Wsmallnews\Support\Filament\Actions\ActionComponents;
 use Wsmallnews\Support\Filament\Filters\FilterComponents;
 
 class NavigationTypesTable
@@ -65,17 +65,19 @@ class NavigationTypesTable
                 TrashedFilter::make(),
             ])
             ->recordActions([
-                EditAction::make(),
-                DeleteAction::make(),
-                ForceDeleteAction::make()
-                    ->before(function (Model $record) {
-                        // 强制删除时，先删除关联的导航
-                        $record->navigations()->delete();
-                    }),
-                RestoreAction::make(),
+                ...ActionComponents::recordActions([
+                    EditAction::make(),
+                    DeleteAction::make(),
+                    ForceDeleteAction::make()
+                        ->before(function (Model $record) {
+                            // 强制删除时，先删除关联的导航
+                            $record->navigations()->delete();
+                        }),
+                    RestoreAction::make(),
+                ]),
             ])
             ->toolbarActions([
-                BulkActionGroup::make([
+                ...ActionComponents::toolbarActions([
                     DeleteBulkAction::make(),
                     ForceDeleteBulkAction::make()
                         ->before(function (Collection $records) {
