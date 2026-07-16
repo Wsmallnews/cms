@@ -32,16 +32,16 @@ final class PostResource extends BaseResource
 
     public static function form(Schema $schema): Schema
     {
-        $resolveForm = static::resolveCustomProperty('form');
-        $schema = $resolveForm instanceof Closure ? $resolveForm($schema, static::class) : null;
+        $resolveForm = self::resolveCustomProperty('form');
+        $schema = $resolveForm instanceof Closure ? $resolveForm($schema, self::class) : null;
 
         return $schema ?? parent::form($schema);
     }
 
     public static function table(Table $table): Table
     {
-        $resolveTable = static::resolveCustomProperty('table');
-        $table = $resolveTable instanceof Closure ? $resolveTable($table, static::class) : null;
+        $resolveTable = self::resolveCustomProperty('table');
+        $table = $resolveTable instanceof Closure ? $resolveTable($table, self::class) : null;
 
         return $table ?? parent::table($table);
     }

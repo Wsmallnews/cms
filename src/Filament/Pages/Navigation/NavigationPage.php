@@ -14,27 +14,27 @@ final class NavigationPage extends Base
 
     public static function getLevel(): ?int
     {
-        if (static::getCanManage()) {
+        if (self::getCanManage()) {
             // 可管理导航类型，则使用父级 getLevel 方法
             return parent::getLevel();
         }
 
-        return static::resolveCustomProperty('level') ?? parent::getLevel();
+        return self::resolveCustomProperty('level') ?? parent::getLevel();
     }
 
     public static function getCanManage(): bool
     {
-        return static::resolveCustomProperty('canManage') ?? false;
+        return self::resolveCustomProperty('canManage') ?? false;
     }
 
     public static function getEmptyLabel(): ?string
     {
-        return static::resolveCustomProperty('emptyLabel') ?? parent::getEmptyLabel();
+        return self::resolveCustomProperty('emptyLabel') ?? parent::getEmptyLabel();
     }
 
     public static function getEmptyTipLabel(): ?string
     {
-        return static::resolveCustomProperty('emptyTipLabel') ?? parent::getEmptyTipLabel();
+        return self::resolveCustomProperty('emptyTipLabel') ?? parent::getEmptyTipLabel();
     }
 
     public static function getEssentialsPlugin(): ?CmsPlugin
