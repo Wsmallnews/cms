@@ -2,7 +2,7 @@
 
 namespace Wsmallnews\Cms\Filament\Resources\Posts;
 
-use BezhanSalleh\PluginEssentials\Concerns;
+use Closure;
 use Filament\Schemas\Schema;
 use Filament\Tables\Table;
 use Wsmallnews\Cms\CmsPlugin;
@@ -11,17 +11,14 @@ use Wsmallnews\Cms\Filament\Resources\Posts\Pages\EditPost;
 use Wsmallnews\Cms\Filament\Resources\Posts\Pages\ListPosts;
 use Wsmallnews\Cms\Filament\Resources\Posts\Pages\ViewPost;
 use Wsmallnews\Cms\Filament\Resources\Tags\TagResource;
-use Wsmallnews\Cms\Support\Utils;
-use Wsmallnews\Support\Concerns\Resource\HasCustomProperties;
+use Wsmallnews\Support\Filament\Concerns\CanBeConfigured;
+use Wsmallnews\Support\Filament\Resources\ResourceConfiguration;
 
 final class PostResource extends BaseResource
 {
-    use Concerns\Resource\BelongsToParent;
-    use Concerns\Resource\BelongsToTenant;
-    use Concerns\Resource\HasGlobalSearch;
-    use Concerns\Resource\HasLabels;
-    use Concerns\Resource\HasNavigation;
-    use HasCustomProperties;
+    use CanBeConfigured;
+
+    protected static ?string $configurationClass = ResourceConfiguration::class;
 
     public static function getPages(): array
     {
@@ -35,22 +32,18 @@ final class PostResource extends BaseResource
 
     public static function form(Schema $schema): Schema
     {
-        return self::getCustomForm($schema) ?: parent::form($schema);
+        $resolveForm = static::resolveCustomProperty('form');
+        $schema = $resolveForm instanceof Closure ? $resolveForm($schema, static::class) : null;
+
+        return $schema ?? parent::form($schema);
     }
 
     public static function table(Table $table): Table
     {
-        return self::getCustomTable($table) ?: parent::table($table);
-    }
+        $resolveTable = static::resolveCustomProperty('table');
+        $table = $resolveTable instanceof Closure ? $resolveTable($table, static::class) : null;
 
-    public static function getScopeType(): string
-    {
-        return self::getCustomScopeType() ?? Utils::getScopeType();
-    }
-
-    public static function getScopeId(): int
-    {
-        return self::getCustomScopeId() ?? Utils::getScopeId();
+        return $table ?? parent::table($table);
     }
 
     /**

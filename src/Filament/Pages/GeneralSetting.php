@@ -2,7 +2,6 @@
 
 namespace Wsmallnews\Cms\Filament\Pages;
 
-use BezhanSalleh\PluginEssentials\Concerns;
 use Filament\Forms;
 use Filament\Pages\SettingsPage;
 use Filament\Schemas;
@@ -10,19 +9,15 @@ use Filament\Schemas\Schema;
 use Wsmallnews\Cms\CmsPlugin;
 use Wsmallnews\Cms\Settings\GeneralSettings;
 use Wsmallnews\Cms\Support\Utils;
-use Wsmallnews\Support\Concerns\Resource\HasCustomProperties;
+use Wsmallnews\Support\Filament\Concerns\CanBeConfigured;
 use Wsmallnews\Support\Filament\Forms\FormComponents;
+use Wsmallnews\Support\Filament\Pages\PageConfiguration;
 
 class GeneralSetting extends SettingsPage
 {
-    use Concerns\Resource\BelongsToParent;
-    use Concerns\Resource\BelongsToTenant;
-    use Concerns\Resource\HasGlobalSearch;
-    use Concerns\Resource\HasLabels;
-    use Concerns\Resource\HasNavigation;
-    use HasCustomProperties;
+    use CanBeConfigured;
 
-    protected static ?string $slug = 'general-settings';
+    protected static ?string $configurationClass = PageConfiguration::class;
 
     protected static string $settings = GeneralSettings::class;
 

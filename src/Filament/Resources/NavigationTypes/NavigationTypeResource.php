@@ -2,24 +2,21 @@
 
 namespace Wsmallnews\Cms\Filament\Resources\NavigationTypes;
 
-use BezhanSalleh\PluginEssentials\Concerns;
+use Closure;
 use Filament\Schemas\Schema;
 use Filament\Tables\Table;
 use Wsmallnews\Cms\CmsPlugin;
 use Wsmallnews\Cms\Filament\Resources\NavigationTypes\Pages\CreateNavigationType;
 use Wsmallnews\Cms\Filament\Resources\NavigationTypes\Pages\EditNavigationType;
 use Wsmallnews\Cms\Filament\Resources\NavigationTypes\Pages\ListNavigationTypes;
-use Wsmallnews\Cms\Support\Utils;
-use Wsmallnews\Support\Concerns\Resource\HasCustomProperties;
+use Wsmallnews\Support\Filament\Concerns\CanBeConfigured;
+use Wsmallnews\Support\Filament\Resources\ResourceConfiguration;
 
 final class NavigationTypeResource extends BaseResource
 {
-    use Concerns\Resource\BelongsToParent;
-    use Concerns\Resource\BelongsToTenant;
-    use Concerns\Resource\HasGlobalSearch;
-    use Concerns\Resource\HasLabels;
-    use Concerns\Resource\HasNavigation;
-    use HasCustomProperties;
+    use CanBeConfigured;
+
+    protected static ?string $configurationClass = ResourceConfiguration::class;
 
     public static function getPages(): array
     {
@@ -32,28 +29,24 @@ final class NavigationTypeResource extends BaseResource
 
     public static function form(Schema $schema): Schema
     {
-        return self::getCustomForm($schema) ?: parent::form($schema);
+        $resolveForm = static::resolveCustomProperty('form');
+        $schema = $resolveForm instanceof Closure ? $resolveForm($schema, static::class) : null;
+
+        return $schema ?? parent::form($schema);
     }
 
     public static function table(Table $table): Table
     {
-        return self::getCustomTable($table) ?: parent::table($table);
-    }
+        $resolveTable = static::resolveCustomProperty('table');
+        $table = $resolveTable instanceof Closure ? $resolveTable($table, static::class) : null;
 
-    public static function getScopeType(): string
-    {
-        return self::getCustomScopeType() ?? Utils::getScopeType();
-    }
-
-    public static function getScopeId(): int
-    {
-        return self::getCustomScopeId() ?? Utils::getScopeId();
+        return $table ?? parent::table($table);
     }
 
     public static function getProperties(): array
     {
         return [
-            'emptyLabel' => self::getCustomProperty('emptyLabel') ?? null,
+            'emptyLabel' => static::resolveCustomProperty('emptyLabel'),
         ];
     }
 

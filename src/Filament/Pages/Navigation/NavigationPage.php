@@ -2,54 +2,39 @@
 
 namespace Wsmallnews\Cms\Filament\Pages\Navigation;
 
-use BezhanSalleh\PluginEssentials\Concerns;
 use Wsmallnews\Cms\CmsPlugin;
-use Wsmallnews\Cms\Support\Utils;
-use Wsmallnews\Support\Concerns\Resource\HasCustomProperties;
+use Wsmallnews\Support\Filament\Concerns\CanBeConfigured;
+use Wsmallnews\Support\Filament\Pages\PageConfiguration;
 
 final class NavigationPage extends Base
 {
-    use Concerns\Resource\BelongsToParent;
-    use Concerns\Resource\BelongsToTenant;
-    use Concerns\Resource\HasGlobalSearch;
-    use Concerns\Resource\HasLabels;
-    use Concerns\Resource\HasNavigation;
-    use HasCustomProperties;
+    use CanBeConfigured;
 
-    public static function getScopeType(): string
-    {
-        return self::getCustomScopeType() ?? Utils::getScopeType();
-    }
-
-    public static function getScopeId(): int
-    {
-        return self::getCustomScopeId() ?? Utils::getScopeId();
-    }
+    protected static ?string $configurationClass = PageConfiguration::class;
 
     public static function getLevel(): ?int
     {
-        if (self::getCanManage()) {
+        if (static::getCanManage()) {
             // 可管理导航类型，则使用父级 getLevel 方法
             return parent::getLevel();
         }
 
-        // 固定层级
-        return self::getCustomProperty('level') ?? parent::getLevel();
+        return static::resolveCustomProperty('level') ?? parent::getLevel();
     }
 
     public static function getCanManage(): bool
     {
-        return self::getCustomProperty('canManage', false);
+        return static::resolveCustomProperty('canManage') ?? false;
     }
 
     public static function getEmptyLabel(): ?string
     {
-        return self::getCustomProperty('emptyLabel') ?? parent::getEmptyLabel();
+        return static::resolveCustomProperty('emptyLabel') ?? parent::getEmptyLabel();
     }
 
     public static function getEmptyTipLabel(): ?string
     {
-        return self::getCustomProperty('emptyTipLabel') ?? parent::getEmptyTipLabel();
+        return static::resolveCustomProperty('emptyTipLabel') ?? parent::getEmptyTipLabel();
     }
 
     public static function getEssentialsPlugin(): ?CmsPlugin

@@ -2,23 +2,20 @@
 
 namespace Wsmallnews\Cms\Filament\Resources\Tags;
 
-use BezhanSalleh\PluginEssentials\Concerns;
 use Wsmallnews\Cms\CmsPlugin;
 use Wsmallnews\Cms\Filament\Resources\Tags\Pages\CreateTag;
 use Wsmallnews\Cms\Filament\Resources\Tags\Pages\EditTag;
 use Wsmallnews\Cms\Filament\Resources\Tags\Pages\ListTags;
 use Wsmallnews\Cms\Support\Utils;
-use Wsmallnews\Support\Concerns\Resource\HasCustomProperties;
+use Wsmallnews\Support\Filament\Concerns\CanBeConfigured;
+use Wsmallnews\Support\Filament\Resources\ResourceConfiguration;
 use Wsmallnews\Support\Filament\Resources\Tags\BaseResource as BaseTagResource;
 
 final class TagResource extends BaseTagResource
 {
-    use Concerns\Resource\BelongsToParent;
-    use Concerns\Resource\BelongsToTenant;
-    use Concerns\Resource\HasGlobalSearch;
-    use Concerns\Resource\HasLabels;
-    use Concerns\Resource\HasNavigation;
-    use HasCustomProperties;
+    use CanBeConfigured;
+
+    protected static ?string $configurationClass = ResourceConfiguration::class;
 
     public static function getModel(): string
     {
@@ -34,19 +31,9 @@ final class TagResource extends BaseTagResource
         ];
     }
 
-    public static function getScopeType(): string
-    {
-        return self::getCustomScopeType() ?? Utils::getScopeType();
-    }
-
-    public static function getScopeId(): int
-    {
-        return self::getCustomScopeId() ?? Utils::getScopeId();
-    }
-
     public static function getTagType(): string
     {
-        return self::getCustomProperty('tag_type') ?? parent::getTagType();
+        return static::resolveCustomProperty('tag_type') ?? parent::getTagType();
     }
 
     public static function getEssentialsPlugin(): ?CmsPlugin

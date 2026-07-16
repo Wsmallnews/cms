@@ -30,6 +30,11 @@ return [
 
     /**
      * Panel register
+     *
+     * 支持两种格式：
+     *   - 简单注册：ClassName::class（使用 Base 类中的硬编码默认值）
+     *   - 带配置：ClassName::class => ['key' => 'value']（覆盖默认值）
+     * 配置项键名使用 snake_case（如 navigationGroup → navigation_group）
      */
     'panel_register' => [
         'pages' => [
@@ -208,10 +213,4 @@ return [
             'icon' => Heroicon::OutlinedArrowUp,
         ],
     ],
-
-    // 'enums' => [
-    //     'navigation_status' => Enums\NavigationStatus::class,
-    //     'navigation_type_status' => Enums\NavigationTypeStatus::class,
-    //     'post_status' => Enums\PostStatus::class,
-    // ],
 ];
