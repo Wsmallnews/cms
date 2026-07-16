@@ -8,14 +8,11 @@ use Wsmallnews\Cms\Filament\Resources\Tags\Pages\EditTag;
 use Wsmallnews\Cms\Filament\Resources\Tags\Pages\ListTags;
 use Wsmallnews\Cms\Support\Utils;
 use Wsmallnews\Support\Filament\Concerns\CanBeConfigured;
-use Wsmallnews\Support\Filament\Resources\ResourceConfiguration;
 use Wsmallnews\Support\Filament\Resources\Tags\BaseResource as BaseTagResource;
 
 final class TagResource extends BaseTagResource
 {
     use CanBeConfigured;
-
-    protected static ?string $configurationClass = ResourceConfiguration::class;
 
     public static function getModel(): string
     {
