@@ -42,7 +42,7 @@ final class NavigationTypeResource extends BaseResource
     public static function getProperties(): array
     {
         return [
-            'emptyLabel' => static::resolveCustomProperty('emptyLabel'),
+            'emptyLabel' => self::resolveCustomProperty('emptyLabel'),
         ];
     }
 

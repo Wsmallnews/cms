@@ -30,7 +30,7 @@ final class TagResource extends BaseTagResource
 
     public static function getTagType(): string
     {
-        return static::resolveCustomProperty('tag_type') ?? parent::getTagType();
+        return self::resolveCustomProperty('tag_type') ?? parent::getTagType();
     }
 
     public static function getEssentialsPlugin(): ?CmsPlugin
