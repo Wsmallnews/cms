@@ -89,7 +89,6 @@ class Utils
      * Get panel register config.
      *
      * @param  string|null  $type  Register type (pages, resources, global_default) or null for all
-     * @return mixed
      */
     public static function getPanelRegister(?string $type = null): mixed
     {
