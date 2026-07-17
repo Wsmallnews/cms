@@ -14,6 +14,7 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 use Wsmallnews\Cms\Enums\NavigationStatus as NavigationStatusEnum;
 use Wsmallnews\Cms\Enums\NavigationType as NavigationTypeEnum;
 use Wsmallnews\Cms\Support\Utils;
+use Wsmallnews\Support\Models\Concerns\HasActivityLog;
 use Wsmallnews\Support\Models\SupportModel;
 use Wsmallnews\Support\Support\Utils as SupportUtils;
 
@@ -21,6 +22,7 @@ use function Filament\Support\generate_icon_html;
 
 class Navigation extends SupportModel implements HasMedia
 {
+    use HasActivityLog;
     use InteractsWithMedia;
     use NodeTrait;
 
@@ -31,6 +33,11 @@ class Navigation extends SupportModel implements HasMedia
         'options' => 'array',
         'status' => NavigationStatusEnum::class,
     ];
+
+    protected function getActivityIgnoreAttributes(): array
+    {
+        return ['_lft', '_rgt', 'updated_at'];
+    }
 
     public function getScopeAttributes(): array
     {

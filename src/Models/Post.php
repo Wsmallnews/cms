@@ -10,8 +10,6 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
 use Illuminate\Support\HtmlString;
-use Spatie\Activitylog\Models\Concerns\LogsActivity;
-use Spatie\Activitylog\Support\LogOptions;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Tags\HasTags;
@@ -23,15 +21,16 @@ use Wsmallnews\Preference\Models\Concerns\Preferenceable;
 use Wsmallnews\Preference\Models\Concerns\Preferenceable\Viewable;
 use Wsmallnews\Support\Casts\CounterCast;
 use Wsmallnews\Support\Contracts\HasSnSubject;
+use Wsmallnews\Support\Models\Concerns\HasActivityLog;
 use Wsmallnews\Support\Models\SupportModel;
 use Wsmallnews\Support\Support\Utils as SupportUtils;
 
 class Post extends SupportModel implements HasMedia, HasSnSubject
 {
     use Commentable;
+    use HasActivityLog;
     use HasTags;
     use InteractsWithMedia;
-    use LogsActivity;
     use Preferenceable;
     use SoftDeletes;
     use Viewable;
@@ -47,13 +46,9 @@ class Post extends SupportModel implements HasMedia, HasSnSubject
         'status' => PostStatus::class,
     ];
 
-    public function getActivitylogOptions(): LogOptions
+    protected function getActivityTitleAttribute(): string
     {
-        return LogOptions::defaults()
-            ->logAll()
-            ->logOnlyDirty()
-            ->dontLogIfAttributesChangedOnly(['order_column', 'updated_at'])        // 如果只更新排序，则忽略不记录日志
-            ->setDescriptionForEvent(fn (string $eventName) => $eventName);
+        return 'title';
     }
 
     public function getRouteKeyName()

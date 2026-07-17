@@ -7,11 +7,13 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Wsmallnews\Cms\Enums\NavigationTypeStatus;
 use Wsmallnews\Cms\Support\Utils;
+use Wsmallnews\Support\Models\Concerns\HasActivityLog;
 use Wsmallnews\Support\Models\SupportModel;
 use Wsmallnews\Support\Support\Utils as SupportUtils;
 
 class NavigationType extends SupportModel
 {
+    use HasActivityLog;
     use SoftDeletes;
 
     protected $table = 'sn_navigation_types';
