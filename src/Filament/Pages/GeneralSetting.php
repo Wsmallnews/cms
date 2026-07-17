@@ -2,10 +2,12 @@
 
 namespace Wsmallnews\Cms\Filament\Pages;
 
+use BackedEnum;
 use Filament\Forms;
 use Filament\Pages\SettingsPage;
 use Filament\Schemas;
 use Filament\Schemas\Schema;
+use Filament\Support\Icons\Heroicon;
 use Wsmallnews\Cms\CmsPlugin;
 use Wsmallnews\Cms\Settings\GeneralSettings;
 use Wsmallnews\Cms\Support\Utils;
@@ -20,6 +22,18 @@ class GeneralSetting extends SettingsPage
     protected static ?string $configurationClass = PageConfiguration::class;
 
     protected static string $settings = GeneralSettings::class;
+
+    protected static string | BackedEnum | null $navigationIcon = Heroicon::OutlinedCog6Tooth;
+
+    protected static string | BackedEnum | null $activeNavigationIcon = Heroicon::OutlinedCog6Tooth;
+
+    protected static ?int $navigationSort = 5;
+
+    public static function getNavigationLabel(): string
+    {
+        // 覆盖 CanBeConfigured 中的 getNavigationLabel
+        return static::getConfigurationValue('navigationLabel') ?? __('sn-cms::cms.general_setting_page.navigation_label');
+    }
 
     public function getTitle(): string
     {

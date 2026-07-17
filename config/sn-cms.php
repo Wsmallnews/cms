@@ -1,7 +1,7 @@
 <?php
 
 use Filament\Support\Icons\Heroicon;
-use Wsmallnews\Cms\Filament\Pages\Category as CategoryPage;
+use Wsmallnews\Category\Filament\Pages\Category\CategoryPage as PostCategoryPage;
 use Wsmallnews\Cms\Filament\Pages\GeneralSetting as GeneralSettingPage;
 use Wsmallnews\Cms\Filament\Pages\Navigation\NavigationPage;
 use Wsmallnews\Cms\Filament\Resources\NavigationTypes\NavigationTypeResource;
@@ -31,20 +31,33 @@ return [
     /**
      * Panel register
      *
-     * 支持两种格式：
-     *   - 简单注册：ClassName::class（使用 Base 类中的硬编码默认值）
-     *   - 带配置：ClassName::class => ['key' => 'value']（覆盖默认值）
-     * 配置项键名使用 snake_case（如 navigationGroup → navigation_group）
+     * global_default 共享默认（非 FQCN 的 string key）会合并到所有条目：
+     *   - navigation_group: 所有页面/资源的默认导航组
+     *
+     * 条目格式：
+     *   - 简单 FQCN：ClassName::class（仅合并共享默认）
+     *   - 键值对：ClassName::class => ['key' => 'value']（合并共享默认 + 自定义覆盖）
+     *   - 配置项键名使用 snake_case（如 navigation_label、navigation_icon）
      */
     'panel_register' => [
-        'pages' => [
-            CategoryPage::class,
-            GeneralSettingPage::class,
-            NavigationPage::class,
+        'global_default' => [
+            'navigation_group' => 'sn-cms::cms.global_default.navigation_group',
         ],
         'resources' => [
             NavigationTypeResource::class,
             PostResource::class,
+        ],
+        'pages' => [
+            PostCategoryPage::class => [
+                'key' => 'post-category',
+                'navigation_parent_item' => 'sn-cms::cms.post_resource.navigation_label',
+
+                // 需与 PostResource 的 scopeable 保持一致(PostResource 默认值为当前配置文件的 scopeable 配置)
+                'scope_type' => 'sn-cms',
+                'scope_id' => 0,
+            ],
+            GeneralSettingPage::class,
+            NavigationPage::class,
         ],
     ],
 
