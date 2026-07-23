@@ -109,6 +109,12 @@ class CmsServiceProvider extends PackageServiceProvider
             }
         }
 
+        // Publish settings migrations
+        $this->publishes([
+            __DIR__ . '/../database/settings/create_sn_general_settings.php.stub'
+                => database_path('settings/create_sn_general_settings.php'),
+        ], 'sn-cms-settings');
+
         // 注册 livewire 命名空间（自动发现 src/Livewire/ 下的组件）
         Livewire::addNamespace(
             namespace: 'sn-cms',

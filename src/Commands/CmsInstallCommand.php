@@ -72,6 +72,15 @@ class CmsInstallCommand extends InstallCommand
             $this->newLine();
         }
 
+        // 发布 settings 数据迁移
+        $this->comment('Publishing settings migration for cms...');
+        Artisan::call('vendor:publish', [
+            '--provider' => 'Wsmallnews\\Cms\\CmsServiceProvider',
+            '--tag' => 'sn-cms-settings',
+            '--ansi' => true,
+        ]);
+        $this->newLine();
+
         parent::handle();
 
         return self::SUCCESS;
