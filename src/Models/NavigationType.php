@@ -18,6 +18,11 @@ class NavigationType extends SupportModel implements HasSnSubject
     use HasActivityLog;
     use SoftDeletes;
 
+    /**
+     * 搜索字段（用于 morphFilter 关键词搜索）。
+     */
+    public static array $keywordSearchFields = ['name', 'description'];
+
     protected $table = 'sn_navigation_types';
 
     protected $casts = [

@@ -46,6 +46,11 @@ class Post extends SupportModel implements HasMedia, HasSnSubject
         'status' => PostStatus::class,
     ];
 
+    /**
+     * 搜索字段（用于 morphFilter 关键词搜索）。
+     */
+    public static array $keywordSearchFields = ['title', 'description'];
+
     protected function getActivityTitleAttribute(): string
     {
         return 'title';

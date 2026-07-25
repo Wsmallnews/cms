@@ -35,6 +35,11 @@ class Navigation extends SupportModel implements HasMedia, HasSnSubject
         'status' => NavigationStatusEnum::class,
     ];
 
+    /**
+     * 搜索字段（用于 morphFilter 关键词搜索）。
+     */
+    public static array $keywordSearchFields = ['name', 'description'];
+
     protected function getActivityIgnoreAttributes(): array
     {
         return ['_lft', '_rgt', 'updated_at'];
