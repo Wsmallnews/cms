@@ -28,6 +28,7 @@
         "spatie/laravel-package-tools": "^1.15.0",
         "wsmallnews/comment": "^1.0",
         "wsmallnews/filament-nestedset": "^3.0",
+        "wsmallnews/member": "^1.0",
         "wsmallnews/preference": "^1.0",
         "wsmallnews/support": "^1.0"
     },
