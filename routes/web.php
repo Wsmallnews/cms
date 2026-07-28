@@ -18,12 +18,19 @@ use Wsmallnews\Cms\Livewire\Settings\Password as SettingsPassword;
 use Wsmallnews\Cms\Livewire\Settings\Profile as SettingsProfile;
 use Wsmallnews\Cms\Livewire\Settings\TwoFactor;
 use Wsmallnews\Cms\Support\Utils;
+use Wsmallnews\Member\Http\Middleware\ResolveMember;
 use Wsmallnews\Support\Http\Middleware\IdentifyTenant;
 use Wsmallnews\Support\Support\Utils as SupportUtils;
 use Wsmallnews\User\Http\Controllers\Auth\VerifyEmailController;
 
 $middlewares = Utils::getConfig('routes.middleware') ?? [];
+$guard = Utils::getConfig('guard', 'web');
 SupportUtils::isTenancyEnabled() && array_unshift($middlewares, IdentifyTenant::class);
+
+if (Utils::getConfig('auth_user_type', 'member') === 'member') {
+    // 解析当前 Member 到请求上下文（传入 CMS 的 guard）
+    $middlewares[] = ResolveMember::class . ':' . $guard;
+}
 
 // 记录路由历史
 $middlewares[] = LivewireUrlsMiddleware::class;
@@ -32,16 +39,16 @@ Route::domain(Utils::getConfig('routes.domain'))
     ->middleware($middlewares)
     ->prefix(Utils::getConfig('routes.prefix'))
     ->name(Utils::getConfig('routes.name'))
-    ->group(function () {
+    ->group(function () use ($guard) {
         // 不登录api
-        Route::middleware('cms-guest:' . Utils::getConfig('guard'))->group(function () {
+        Route::middleware('cms-guest:' . $guard)->group(function () {
             Route::get(Utils::getConfig('routes.uri.login'), Login::class)->name('login');
             Route::get(Utils::getConfig('routes.uri.register'), Register::class)->name('register');
             Route::get(Utils::getConfig('routes.uri.forgot-password'), ForgotPassword::class)->name('forgot.password');
             Route::get(Utils::getConfig('routes.uri.reset-password'), ResetPassword::class)->name('reset.password');
         });
 
-        Route::middleware('cms-auth:' . Utils::getConfig('guard'))->group(function () {
+        Route::middleware('cms-auth:' . $guard)->group(function () {
             // 验证邮箱
             Route::get(Utils::getConfig('routes.uri.verify-email'), VerifyEmail::class)->name('verify.email');
             Route::get(Utils::getConfig('routes.uri.verify-email-verification'), VerifyEmailController::class)

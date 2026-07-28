@@ -41,10 +41,13 @@ class PostsTable
                     ->searchable()
                     ->toggleable()
                     ->badge(),
-                Tables\Columns\ViewColumn::make('publisher')
-                    ->label(__('sn-cms::cms.posts_table.publisher'))
-                    ->toggleable()
-                    ->view('sn-cms::filament.tables.columns.publisher'),
+                ColumnComponents::morphColumn(
+                    'publisher_type',
+                    __('sn-cms::cms.posts_table.publisher'),
+                    fn ($record) => $record->publisher,
+                    fn ($record) => $record->publisher_type,
+                    fn ($record) => $record->publisher_id,
+                ),
                 Tables\Columns\ViewColumn::make('flags')
                     ->label(__('sn-cms::cms.posts_table.flags'))
                     ->toggleable()

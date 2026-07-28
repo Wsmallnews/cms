@@ -48,7 +48,7 @@
                 :content-type="$contentType"
                 :can-add-comment="$canAddComment"
                 :comment-status="$commentStatus"
-                :user="$user"
+                :auth-user="$authUser"
                 page-name="cp"
             />
         </div>

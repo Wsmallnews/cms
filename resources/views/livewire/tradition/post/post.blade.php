@@ -4,7 +4,7 @@
     $scopeType = $this->getScopeType();
     $scopeId = $this->getScopeId();
 
-    $user = Utils::getUser();
+    $authUser = Utils::getAuthUser();
 
     $hasComment = Utils::commentConfig('post', 'enable', false);
     $canAddComment = Utils::commentConfig('post', 'can_add_comment', false);
@@ -24,7 +24,7 @@
         <livewire:sn-cms::components.post.post 
             :scope-type="$scopeType" 
             :scope-id="$scopeId" 
-            :user="$user" :slug="$slug" 
+            :auth-user="$authUser" :slug="$slug" 
             :has-comment="$hasComment"
             :can-add-comment="$canAddComment"
             :content-type="$contentType"

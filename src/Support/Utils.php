@@ -7,7 +7,7 @@ namespace Wsmallnews\Cms\Support;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Wsmallnews\Cms\Exceptions\CmsException;
-use Wsmallnews\Cms\Models;
+use Wsmallnews\Member\Models\Member;
 use Wsmallnews\Support\Data\ScopeableContext;
 use Wsmallnews\Support\Exceptions\InvalidScopeException;
 use Wsmallnews\Support\Models\Tag as SupportTagModel;
@@ -41,7 +41,7 @@ class Utils
         try {
             return SupportUtils::getScopeFromConfig('sn-cms.scopeable');
         } catch (InvalidScopeException $e) {
-            throw new CmsException('Scopeable配置错误: ' . $e->getMessage());
+            throw new CmsException('Scopeable configuration error. ' . $e->getMessage());
         }
     }
 
@@ -86,6 +86,22 @@ class Utils
     }
 
     /**
+     * 获取当前请求中的 Member（由 ResolveMember 中间件设置）
+     */
+    public static function getAuthMember(): ?Member
+    {
+        return current_member();
+    }
+
+    /**
+     * 获取当前请求中的认证用户（根据 auth_user 配置）
+     */
+    public static function getAuthUser(): ?Model
+    {
+        return self::getConfig('auth_user_type', 'member') === 'member' ? static::getAuthMember() : static::getUser();
+    }
+
+    /**
      * Get panel register config.
      *
      * @param  string|null  $type  Register type (pages, resources, global_default) or null for all
@@ -112,7 +128,7 @@ class Utils
         $model = self::getConfig('models')[$name] ?? null;
 
         if (blank($model) && $shouldException) {
-            throw new CmsException("模型 {$name} 不存在");
+            throw new CmsException("Model {$name} not found.");
         }
 
         return $model;
