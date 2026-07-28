@@ -68,7 +68,7 @@ return [
 
     /**
      * auth_user_type
-     * 
+     *
      * 默认为 wsmallnews/member 模块，可选 wsmallnews/user 模块, 示例值：member | user
      * 如果你使用多租户， 请设置为 member 模块
      */
