@@ -14,7 +14,7 @@
             <img src="{{ asset('image/logo.png') }}" alt="logo" class="h-full object-contain">
 
             <div class="flex gap-4">
-                @auth
+                @auth(Utils::getConfig('guard', 'web'))
                     <livewire:sn-user::components.user.menu :module="app(CmsPlugin::class)->getId()" switch-dark-mode="{{ Utils::hasDarkMode() && !Utils::hasDarkModeForced() }}" />
                 @else
                     <x-filament::button tag="a" href="{{ Utils::route('login') }}">
