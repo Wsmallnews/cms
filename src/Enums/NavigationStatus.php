@@ -7,6 +7,7 @@ use Filament\Support\Contracts\HasColor;
 use Filament\Support\Contracts\HasIcon;
 use Filament\Support\Contracts\HasLabel;
 use Filament\Support\Icons\Heroicon;
+use Illuminate\Contracts\Support\Htmlable;
 use Wsmallnews\Support\Enums\Traits\EnumHelper;
 
 enum NavigationStatus: string implements HasColor, HasIcon, HasLabel
@@ -17,7 +18,7 @@ enum NavigationStatus: string implements HasColor, HasIcon, HasLabel
 
     case Hidden = 'hidden';
 
-    public function getLabel(): ?string
+    public function getLabel(): string | Htmlable | null
     {
         return match ($this) {
             self::Normal => __('sn-cms::cms.navigation_status.normal'),
@@ -33,7 +34,7 @@ enum NavigationStatus: string implements HasColor, HasIcon, HasLabel
         };
     }
 
-    public function getIcon(): string | BackedEnum | null
+    public function getIcon(): string | BackedEnum | Htmlable | null
     {
         return match ($this) {
             self::Normal => Heroicon::OutlinedEye,

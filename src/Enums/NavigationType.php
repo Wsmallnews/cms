@@ -3,6 +3,7 @@
 namespace Wsmallnews\Cms\Enums;
 
 use Filament\Support\Contracts\HasLabel;
+use Illuminate\Contracts\Support\Htmlable;
 use Wsmallnews\Support\Enums\Traits\EnumHelper;
 
 enum NavigationType: string implements HasLabel
@@ -19,7 +20,7 @@ enum NavigationType: string implements HasLabel
 
     case Content = 'content';
 
-    public function getLabel(): ?string
+    public function getLabel(): string | Htmlable | null
     {
         return match ($this) {
             self::Child => __('sn-cms::cms.navigation_type_enum.child'),
