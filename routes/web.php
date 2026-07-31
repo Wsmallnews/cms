@@ -27,6 +27,9 @@ $middlewares = Utils::getConfig('routes.middleware') ?? [];
 $guard = Utils::getConfig('guard', 'web');
 SupportUtils::isTenancyEnabled() && array_unshift($middlewares, IdentifyTenant::class);
 
+// 用户可用性校验
+$middlewares[] = 'user-active:' . $guard;
+
 if (Utils::getConfig('auth_user_type', 'member') === 'member') {
     // 解析当前 Member 到请求上下文（传入 CMS 的 guard）
     $middlewares[] = ResolveMember::class . ':' . $guard;
