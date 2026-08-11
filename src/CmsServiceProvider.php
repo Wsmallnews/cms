@@ -23,6 +23,7 @@ use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 use Wsmallnews\Category\Models\Category as CategoryModel;
 use Wsmallnews\Cms\Commands\CmsInstallCommand;
+use Wsmallnews\Cms\Enums\PostStatus;
 use Wsmallnews\Cms\Facades\ContentRegistry as ContentRegistryFacade;
 use Wsmallnews\Cms\Facades\FlagRegistry as FlagRegistryFacade;
 use Wsmallnews\Cms\Http\Middleware\Authenticate;
@@ -35,6 +36,7 @@ use Wsmallnews\Cms\Livewire\Components\Post\Posts;
 use Wsmallnews\Cms\Livewire\Index;
 use Wsmallnews\Cms\Models\Post as PostModel;
 use Wsmallnews\Cms\Support\Utils;
+use Wsmallnews\Support\Facades\ScheduledTask;
 use Wsmallnews\User\Facades\SidebarMenuRegistry as SidebarMenuRegistryFacade;
 use Wsmallnews\User\Facades\UserConfig as UserConfigFacade;
 
@@ -239,6 +241,27 @@ class CmsServiceProvider extends PackageServiceProvider
                         'scopeId' => Utils::getScopeId(),
                     ],
                 ],
+            ],
+        ]);
+
+        // 注册 Post 的定时调度动作（publish / unpublish）
+        ScheduledTask::registers('sn_post', [
+            [
+                'action' => 'publish',
+                'label' => __('sn-cms::cms.post_form.schedule_publish'),
+                'forms' => fn () => [],
+                'handler' => fn ($task, ?array $payload): bool => $task->schedulable->update([
+                    'status' => PostStatus::Published,
+                    'published_at' => $task->schedulable->published_at ?? now(),
+                ]),
+            ],
+            [
+                'action' => 'unpublish',
+                'label' => __('sn-cms::cms.post_form.schedule_unpublish'),
+                'forms' => fn () => [],
+                'handler' => fn ($task, ?array $payload): bool => $task->schedulable->update([
+                    'status' => PostStatus::Hidden,
+                ]),
             ],
         ]);
 

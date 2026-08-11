@@ -5,6 +5,7 @@ namespace Wsmallnews\Cms\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -40,7 +41,6 @@ class Post extends SupportModel implements HasMedia, HasSnSubject
     protected $casts = [
         'counter' => CounterCast::class,
         'published_at' => 'datetime',
-        'scheduled_at' => 'datetime',
         'flags' => 'array',
         'options' => 'array',
         'status' => PostStatus::class,
@@ -129,11 +129,6 @@ class Post extends SupportModel implements HasMedia, HasSnSubject
         return $query->where('status', PostStatus::Hidden);
     }
 
-    public function scopeScheduled($query)
-    {
-        return $query->where('status', PostStatus::Scheduled);
-    }
-
     public function categories(): BelongsToMany
     {
         return $this->belongsToMany(CategoryUtils::getCategoryModel(), 'sn_category_post');
@@ -147,6 +142,14 @@ class Post extends SupportModel implements HasMedia, HasSnSubject
     public function publisher(): MorphTo
     {
         return $this->morphTo();
+    }
+
+    /**
+     * 定时调度任务关联
+     */
+    public function scheduledTasks(): MorphMany
+    {
+        return $this->morphMany(SupportUtils::getScheduledTaskModel(), 'schedulable');
     }
 
     public function team(): BelongsTo

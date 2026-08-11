@@ -20,15 +20,12 @@ enum PostStatus: string implements HasColor, HasIcon, HasLabel
 
     case Hidden = 'hidden';
 
-    case Scheduled = 'scheduled';
-
     public function getLabel(): string | Htmlable | null
     {
         return match ($this) {
             self::Draft => __('sn-cms::cms.post_status.draft'),
             self::Published => __('sn-cms::cms.post_status.published'),
             self::Hidden => __('sn-cms::cms.post_status.hidden'),
-            self::Scheduled => __('sn-cms::cms.post_status.scheduled'),
         };
     }
 
@@ -38,7 +35,6 @@ enum PostStatus: string implements HasColor, HasIcon, HasLabel
             self::Draft => 'info',
             self::Published => 'primary',
             self::Hidden => 'gray',
-            self::Scheduled => 'warning',
         };
     }
 
@@ -48,7 +44,6 @@ enum PostStatus: string implements HasColor, HasIcon, HasLabel
             self::Draft => Heroicon::OutlinedClipboardDocumentList,
             self::Published => Heroicon::OutlinedEye,
             self::Hidden => Heroicon::OutlinedEyeSlash,
-            self::Scheduled => Heroicon::OutlinedClock,
         };
     }
 }

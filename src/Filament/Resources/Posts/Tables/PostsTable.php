@@ -18,6 +18,7 @@ use Livewire\Component;
 use Wsmallnews\Cms\Facades\FlagRegistry;
 use Wsmallnews\Support\Filament\Actions\ActionComponents;
 use Wsmallnews\Support\Filament\Filters\FilterComponents;
+use Wsmallnews\Support\Filament\Resources\ScheduledTasks\Concerns\ViewScheduledTasksAction;
 use Wsmallnews\Support\Filament\Tables\ColumnComponents;
 
 class PostsTable
@@ -103,6 +104,7 @@ class PostsTable
                 ...ActionComponents::recordActions([
                     ViewAction::make(),
                     EditAction::make(),
+                    ViewScheduledTasksAction::make()->color('info'),
                     DeleteAction::make(),
                     ForceDeleteAction::make(),
                     RestoreAction::make(),

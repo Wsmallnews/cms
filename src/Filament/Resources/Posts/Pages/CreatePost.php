@@ -36,17 +36,6 @@ class CreatePost extends CreateRecord
             $data['published_at'] = now();
         }
 
-        if ($data['status'] === PostStatus::Scheduled) {
-            if ($data['scheduled_at_type'] === 'minutes_later') {
-                $data['scheduled_at'] = now()->addMinutes($data['minutes_later']);
-            } else {
-                $data['scheduled_at'] = $data['scheduled_at'];
-            }
-        }
-
-        // 移除 scheduled_at_type 和 minutes_later 参数
-        unset($data['scheduled_at_type'], $data['minutes_later']);
-
         return parent::mutateFormDataBeforeCreate($data);
     }
 }

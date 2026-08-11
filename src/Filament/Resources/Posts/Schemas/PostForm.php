@@ -16,6 +16,7 @@ use Wsmallnews\Cms\Facades\FlagRegistry;
 use Wsmallnews\Cms\Support\Utils;
 use Wsmallnews\Support\Enums\ContentType;
 use Wsmallnews\Support\Filament\Forms\FormComponents;
+use Wsmallnews\Support\Facades\ScheduledTask;
 
 class PostForm
 {
@@ -134,6 +135,9 @@ class PostForm
                                     ->visible(fn (Get $get): bool => $get('content_type') === ContentType::Markdown),
                             ])->columns(1),
                     ])->columns(1),
+                    Schemas\Components\Section::make(__('sn-support::support.scheduled_task.label'))->schema([
+                        ScheduledTask::scheduleRepeater('sn_post'),
+                    ])->columns(1),
                 ])->columns(1),
                 Schemas\Components\Section::make(__('sn-cms::cms.post_form.status_section'))->schema([
                     // Forms\Components\SpatieTagsInput::make('tags')->label('标签')->type(function (Component $livewire) {
@@ -154,39 +158,6 @@ class PostForm
                         ->default(PostStatus::Published)
                         ->inline()
                         ->options(PostStatus::class),
-                    Schemas\Components\Group::make()
-                        ->schema([
-                            Forms\Components\Radio::make('scheduled_at_type')
-                                ->label(__('sn-cms::cms.post_form.scheduled_at_type'))
-                                ->default('scheduled_at')
-                                ->inline()
-                                ->options([
-                                    'scheduled_at' => __('sn-cms::cms.post_form.scheduled_at'),
-                                    'minutes_later' => __('sn-cms::cms.post_form.minutes_later'),
-                                ]),
-                            Forms\Components\DateTimePicker::make('scheduled_at')
-                                ->label(__('sn-cms::cms.post_form.scheduled_at'))
-                                ->placeholder(__('sn-cms::cms.post_form.scheduled_at_placeholder'))
-                                ->displayFormat('Y-m-d H:i:s')
-                                ->native(false)
-                                ->required(fn (Get $get) => (bool) ($get('status') == PostStatus::Scheduled && $get('scheduled_at_type') === 'scheduled_at'))
-                                ->markAsRequired()
-                                ->visibleJs(<<<'JS'
-                                    $get('scheduled_at_type') == 'scheduled_at'
-                                JS),
-                            Forms\Components\TextInput::make('minutes_later')
-                                ->label(__('sn-cms::cms.post_form.minutes_later'))
-                                ->placeholder(__('sn-cms::cms.post_form.minutes_later_placeholder'))
-                                ->integer()
-                                ->minValue(0)
-                                ->required(fn (Get $get) => (bool) ($get('status') == PostStatus::Scheduled && $get('scheduled_at_type') === 'minutes_later'))
-                                ->markAsRequired()
-                                ->visibleJs(<<<'JS'
-                                    $get('scheduled_at_type') == 'minutes_later'
-                                JS),
-                        ])->visibleJs(<<<'JS'
-                            $get('status') == 'scheduled'
-                        JS),
                 ])->grow(false),
             ])
                 ->columnSpanFull()
