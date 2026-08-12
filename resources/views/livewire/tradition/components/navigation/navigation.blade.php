@@ -123,7 +123,7 @@
         :aria-expanded="mobileMenuIsOpen"
         x-bind:class="mobileMenuIsOpen ? 'fixed top-3 right-3 z-20' : 'absolute top-3 right-3 z-20'"
         type="button"
-        aria-label="{{ __('移动端菜单') }}"
+        aria-label="{{ __('sn-cms::cms.frontend.mobile_menu') }}"
         aria-controls="mobileMenu"
     >
         <x-filament::icon icon="heroicon-m-bars-3" class="size-6" x-cloak x-show="!mobileMenuIsOpen" aria-hidden="true" />

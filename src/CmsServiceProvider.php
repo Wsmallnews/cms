@@ -165,24 +165,24 @@ class CmsServiceProvider extends PackageServiceProvider
         ContentRegistryFacade::registers(Utils::getScopeType(), [
             [
                 'type' => 'posts',
-                'label' => '图文列表',
+                'label' => __('sn-cms::cms.content_type.posts'),
                 'forms' => fn ($fields) => [
                     // 多选分类
                     Group::make()
                         ->schema([
-                            ToggleButtons::make('categoryStyle')->label('分类类型样式')
+                            ToggleButtons::make('categoryStyle')->label(__('sn-cms::cms.post_form.category_style'))
                                 ->default('select')
                                 ->options([
-                                    'select' => __('选择指定分类'),
-                                    'tree' => __('显示分类树'),
+                                    'select' => __('sn-cms::cms.post_form.category_style_select'),
+                                    'tree' => __('sn-cms::cms.post_form.category_style_tree'),
                                 ])
                                 ->colors([
                                     'select' => 'warning',
                                     'tree' => 'info',
                                 ])
                                 ->inline()
-                                ->helperText(__('选择全部分类将在页面左侧显示分类树')),
-                            SelectTree::make('categoryIds')->label('选择分类')
+                                ->helperText(__('sn-cms::cms.post_form.category_style_helper')),
+                            SelectTree::make('categoryIds')->label(__('sn-cms::cms.post_form.categories'))
                                 ->query(query: function () {
                                     return CategoryModel::scopeable(Utils::getScopeType(), Utils::getScopeId());
                                 }, titleAttribute: 'name', parentAttribute: 'parent_id')
@@ -190,8 +190,8 @@ class CmsServiceProvider extends PackageServiceProvider
                                 ->multiple()
                                 ->enableBranchNode()
                                 ->withCount()
-                                ->placeholder(__('请选择图文分类'))
-                                ->emptyLabel(__('未搜索到分类'))
+                                ->placeholder(__('sn-cms::cms.post_form.categories_placeholder'))
+                                ->emptyLabel(__('sn-cms::cms.post_form.categories_empty'))
                                 ->treeKey('postCategories')
                                 ->visibleJs(<<<'JS'
                                     $get('categoryStyle') == 'select'
@@ -209,7 +209,7 @@ class CmsServiceProvider extends PackageServiceProvider
             ],
             [
                 'type' => 'index-posts',
-                'label' => '图文轮播列表',
+                'label' => __('sn-cms::cms.content_type.index_posts'),
                 'forms' => fn ($fields) => [],
                 'components' => [
                     IndexPosts::class => [
@@ -220,14 +220,14 @@ class CmsServiceProvider extends PackageServiceProvider
             ],
             [
                 'type' => 'post-detail',
-                'label' => '图文详情',
+                'label' => __('sn-cms::cms.content_type.post_detail'),
                 'forms' => fn ($fields) => [
                     Group::make()
                         ->schema([
-                            Select::make('id')->label('选择图文')
+                            Select::make('id')->label(__('sn-cms::cms.post_form.select_post'))
                                 ->options(PostModel::published()->scopeable(Utils::getScopeType(), Utils::getScopeId())->limit(30)->pluck('title', 'id'))
                                 ->getSearchResultsUsing(fn (string $search): array => PostModel::published()->scopeable(Utils::getScopeType(), Utils::getScopeId())->where('title', 'like', "%{$search}%")->limit(30)->pluck('title', 'id')->toArray())
-                                ->placeholder('请选择图文详情')
+                                ->placeholder(__('sn-cms::cms.post_form.select_post_placeholder'))
                                 ->searchable()
                                 ->preload()
                                 ->required(),
@@ -269,35 +269,35 @@ class CmsServiceProvider extends PackageServiceProvider
         SidebarMenuRegistryFacade::registers(app(CmsPlugin::class)->getId(), [
             fn () => [
                 'key' => 'profile',
-                'label' => '个人中心',
+                'label' => __('sn-cms::cms.sidebar.profile'),
                 'url' => Utils::route('profile'),
                 'icon' => Heroicon::OutlinedUser,
                 'active_icon' => Heroicon::User,
             ],
             fn () => [
                 'key' => 'profile-views',
-                'label' => '浏览记录',
+                'label' => __('sn-cms::cms.sidebar.profile_views'),
                 'url' => Utils::route('profile.views'),
                 'icon' => Heroicon::OutlinedEye,
                 'active_icon' => Heroicon::Eye,
             ],
             fn () => [
                 'key' => 'settings-profile',
-                'label' => '修改资料',
+                'label' => __('sn-cms::cms.sidebar.settings_profile'),
                 'url' => Utils::route('settings.profile'),
                 'icon' => Heroicon::OutlinedPencilSquare,
                 'active_icon' => Heroicon::PencilSquare,
             ],
             fn () => [
                 'key' => 'settings-password',
-                'label' => '修改密码',
+                'label' => __('sn-cms::cms.sidebar.settings_password'),
                 'url' => Utils::route('settings.password'),
                 'icon' => Heroicon::OutlinedLockClosed,
                 'active_icon' => Heroicon::LockClosed,
             ],
             fn () => [
                 'key' => 'settings-two-factor',
-                'label' => '双因素认证',
+                'label' => __('sn-cms::cms.sidebar.settings_two_factor'),
                 'url' => fn () => Utils::route('settings.two-factor'),
                 'icon' => Heroicon::OutlinedKey,
                 'active_icon' => Heroicon::Key,

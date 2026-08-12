@@ -34,7 +34,7 @@ class Breadcrumb extends Base
         // 添加首页
         $breadcrumbs->prepend([
             'url' => Utils::route('index'),
-            'label' => '首页',
+            'label' => __('sn-cms::cms.frontend.home'),
         ]);
 
         return view($this->getThemeView('components.navigation.breadcrumb'), [
