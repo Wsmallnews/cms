@@ -9,8 +9,8 @@ use Wsmallnews\Cms\Support\Utils;
 use Wsmallnews\Comment\Filament\Pages\Comment\Widgets\Comment as CommentWidget;
 use Wsmallnews\Preference\Filament\Pages\Preference\Widgets\Views as ViewsWidget;
 use Wsmallnews\Support\Enums\ContentType;
-use Wsmallnews\Support\Filament\Resources\ScheduledTasks\Widgets\ScheduledTasks as ScheduledTasksWidget;
 use Wsmallnews\Support\Filament\Resources\Concerns\Pages\Scopeable;
+use Wsmallnews\Support\Filament\Resources\ScheduledTasks\Widgets\ScheduledTasks as ScheduledTasksWidget;
 
 class ViewPost extends ViewRecord
 {
