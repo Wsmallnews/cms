@@ -63,11 +63,11 @@ class GeneralSetting extends SettingsPage
                         ->label(__('sn-cms::cms.general_setting.beian_url')),
                 ])->columns(2),
                 Schemas\Components\Section::make(__('sn-cms::cms.general_setting.qrcode_section'))->schema([
-                    FormComponents::localImageUpload('wechat_qrcode')
+                    FormComponents::plainImageUpload('wechat_qrcode')
                         ->label(__('sn-cms::cms.general_setting.wechat_qrcode'))
                         ->directory(Utils::getFileDirectory('settings'))
                         ->uploadingMessage(__('sn-cms::cms.general_setting.wechat_qrcode_uploading')),
-                    FormComponents::localImageUpload('wechat_official_qrcode')
+                    FormComponents::plainImageUpload('wechat_official_qrcode')
                         ->label(__('sn-cms::cms.general_setting.wechat_official_qrcode'))
                         ->directory(Utils::getFileDirectory('settings'))
                         ->uploadingMessage(__('sn-cms::cms.general_setting.wechat_official_qrcode_uploading')),

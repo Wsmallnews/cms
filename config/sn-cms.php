@@ -100,6 +100,21 @@ return [
      */
     'file_directory' => 'sn/cms/',
 
+    /**
+     * 内容表单配置（FormComponents::contentTypeGroup）
+     * types: 允许的内容类型；default_type: 默认内容类型
+     */
+    'contents' => [
+        'post' => [
+            'types' => null,
+            'default_type' => ContentType::Richtext,
+        ],
+        'navigation' => [
+            'types' => null,
+            'default_type' => ContentType::Markdown,
+        ],
+    ],
+
     'routes' => [
         /**
          * Whether to enable the cms routes.
