@@ -19,9 +19,11 @@
             <div>{{ __('sn-cms::cms.frontend.views') }}：{{ $post->counter['view_num'] }}</div>
         </div>
 
-        <div class="sn-descript-text sn-gray-bg p-2 rounded-md">
-            {{ $post->description }}
-        </div>
+        @if ($post->description)
+            <div class="sn-descript-text sn-gray-bg p-2 rounded-md">
+                {{ $post->description }}
+            </div>
+        @endif
 
         @if ($images)
             <x-sn-support::swiper class="w-full aspect-video" :slides="$images" />
