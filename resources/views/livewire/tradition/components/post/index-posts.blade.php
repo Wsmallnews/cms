@@ -13,7 +13,7 @@
         return [
             'image' => $post->getFirstMediaUrl('post_image'),
             'label' => $post->title,
-            'url' => \Wsmallnews\Cms\Support\Utils::route('posts.show', $post),
+            'href' => \Wsmallnews\Cms\Support\Utils::route('posts.show', $post),
         ];
     })->toArray();
 @endphp
@@ -22,7 +22,15 @@
     <x-sn-support::swiper @class([
         'sn-container sn-hover rounded-md' => $contained,
         'w-full aspect-video overflow-hidden'
-    ]) :slides="$slides" :has-thumb="false" />
+    ]) :has-thumb="true" thumb-position="left" image-fit="cover" pagination="bullets">
+        @foreach ($slides as $item)
+            <x-sn-support::swiper.slide :item="$item">
+                <div class="absolute bottom-0 left-0 right-0 z-10 text-left text-sm leading-6 text-white bg-black/50 px-2 py-1 line-clamp-1">
+                    {{ $item['label'] }}
+                </div>
+            </x-sn-support::swiper.slide>
+        @endforeach
+    </x-sn-support::swiper>
 
     <div @class([
         'sn-container sn-hover rounded-md' => $contained,
