@@ -13,6 +13,13 @@
         <div class="container mx-auto flex items-center justify-between">
             <img src="{{ asset('image/logo.png') }}" alt="logo" class="h-full object-contain">
 
+            {{-- 全局搜索：md 以上展示在页头中部，md 以下收纳进导航的移动端菜单 --}}
+            @if (Utils::getConfig('themes.header_search', true) && Utils::getConfig('search.enabled', true))
+                <div class="hidden md:block flex-1 max-w-md px-8">
+                    <livewire:sn-support-components-search :limit="5" placeholder="{{ __('sn-cms::cms.frontend.search_placeholder') }}" />
+                </div>
+            @endif
+
             <div class="flex gap-4">
                 @auth(Utils::getConfig('guard', 'web'))
                     <livewire:sn-user::components.user.menu :module="app(CmsPlugin::class)->getId()" switch-dark-mode="{{ Utils::hasDarkMode() && !Utils::hasDarkModeForced() }}" />

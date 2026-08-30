@@ -37,6 +37,7 @@ use Wsmallnews\Cms\Livewire\Index;
 use Wsmallnews\Cms\Models\Post as PostModel;
 use Wsmallnews\Cms\Support\Utils;
 use Wsmallnews\Support\Facades\ScheduledTask;
+use Wsmallnews\Support\Facades\Search;
 use Wsmallnews\User\Facades\SidebarMenuRegistry as SidebarMenuRegistryFacade;
 use Wsmallnews\User\Facades\UserConfig as UserConfigFacade;
 
@@ -264,6 +265,21 @@ class CmsServiceProvider extends PackageServiceProvider
                 ]),
             ],
         ]);
+
+        // 注册全局搜索（模块配置 search.enabled 关闭时不注册来源，前端也不渲染搜索框）
+        if (Utils::getConfig('search.enabled', true)) {
+            Search::engine(app(CmsPlugin::class)->getId(), Utils::getConfig('search.engine'))
+                ->registers(app(CmsPlugin::class)->getId(), [
+                    [
+                        'key' => 'post',
+                        'model' => Utils::getPostModel(),
+                        'group' => __('sn-cms::cms.post_resource.model_label'),
+                        'query' => fn ($query) => $query->published(),
+                        'scopeable' => Utils::getScopeable(),
+                        'url' => fn ($record) => Utils::route('posts.show', $record),
+                    ],
+                ]);
+        }
 
         // 注册用户侧边栏菜单
         SidebarMenuRegistryFacade::registers(app(CmsPlugin::class)->getId(), [

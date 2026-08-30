@@ -201,6 +201,22 @@ return [
         ],
     ],
 
+    /**
+     * 全局搜索（前端搜索框仅在本模块启用时渲染，来源也仅在启用时参与搜索）
+     */
+    'search' => [
+        /**
+         * 是否启用本模块的全局搜索
+         */
+        'enabled' => true,
+
+        /**
+         * 本模块搜索引擎：'database' | 'scout' | 引擎类名；null 走全局兜底
+         * （config('sn-support.search.engine')，默认 database）
+         */
+        'engine' => null,
+    ],
+
     'themes' => [
         // 是否启用暗黑模式
         'dark_mode' => true,

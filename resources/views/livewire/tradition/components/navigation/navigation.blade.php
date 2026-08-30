@@ -1,4 +1,6 @@
 @php
+    use Wsmallnews\Cms\Support\Utils;
+    
     $nestedset = $this->getNestedset();
 @endphp
 
@@ -129,6 +131,16 @@
         <x-filament::icon icon="heroicon-m-bars-3" class="size-6" x-cloak x-show="!mobileMenuIsOpen" aria-hidden="true" />
         <x-filament::icon icon="heroicon-m-x-mark" class="size-6" x-cloak x-show="mobileMenuIsOpen" aria-hidden="true" />
     </button>
+
+    {{-- 移动端菜单展开时，顶部显示全局搜索（md 以下；桌面端搜索在页头） --}}
+    @if (Utils::getConfig('themes.header_search', true) && Utils::getConfig('search.enabled', true))
+        <div
+            class="sn-primary-bg w-full fixed inset-x-0 top-0 z-20 px-4 pt-5 pb-4 md:hidden"
+            x-cloak x-show="mobileMenuIsOpen"
+        >
+            <livewire:sn-support-components-search :limit="5" placeholder="{{ __('sn-cms::cms.frontend.search_placeholder') }}" />
+        </div>
+    @endif
 
     <!-- Mobile Menu -->
     <ul
