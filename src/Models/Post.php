@@ -89,11 +89,6 @@ class Post extends SupportModel implements HasMedia, HasSnSubject
         return $this->getFirstMediaUrl('post_image');
     }
 
-    public function getSnSubjectHrefUrl(): string | HtmlString | null
-    {
-        return null;
-    }
-
     /**
      * post 分类多对多查询
      */

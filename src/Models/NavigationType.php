@@ -50,11 +50,6 @@ class NavigationType extends SupportModel implements HasSnSubject
         return null;
     }
 
-    public function getSnSubjectHrefUrl(): string | HtmlString | null
-    {
-        return null;
-    }
-
     public function scopeNormal($query)
     {
         return $query->where('status', 'normal');

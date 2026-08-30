@@ -21,13 +21,14 @@
                 <livewire:sn-user::components.user.sidebar-menu :module="app(\Wsmallnews\Cms\CmsPlugin::class)->getId()" />
             </div>    
             <div class="sn-container w-full">
-                <livewire:sn-preference::components.views 
+                <livewire:sn-preference::components.views
                     :scope-type="$scopeType"
                     :scope-id="$scopeId"
                     :user="$user"
                     :preferencer="$user"
                     :manageable="true"
-                    :contained="false" />
+                    :contained="false"
+                    :href-route="Utils::getConfig('routes.name') . 'posts.show'" />
             </div>
         </div>
     </div>

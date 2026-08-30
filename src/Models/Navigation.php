@@ -80,11 +80,6 @@ class Navigation extends SupportModel implements HasMedia, HasSnSubject
         return $this->getFirstMediaUrl('navigation_banner') ?: null;
     }
 
-    public function getSnSubjectHrefUrl(): string | HtmlString | null
-    {
-        return null;
-    }
-
     protected function urlInfo(): Attribute
     {
         return Attribute::make(
