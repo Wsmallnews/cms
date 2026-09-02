@@ -268,15 +268,23 @@ class CmsServiceProvider extends PackageServiceProvider
 
         // 注册全局搜索（模块配置 search.enabled 关闭时不注册来源，前端也不渲染搜索框）
         if (Utils::getConfig('search.enabled', true)) {
-            Search::engine(app(CmsPlugin::class)->getId(), Utils::getConfig('search.engine'))
+            Search::config(app(CmsPlugin::class)->getId(), [
+                'engine' => Utils::getConfig('search.engine'),
+                // 搜索结果页地址（search.display = page 时搜索框回车跳转目标）：
+                // 闭包接收搜索关键词，自行返回带 ?q= 的完整 URL
+                'page' => fn (?string $query) => Utils::route('search', ['q' => $query]),
+            ])
                 ->registers(app(CmsPlugin::class)->getId(), [
                     [
                         'key' => 'post',
                         'model' => Utils::getPostModel(),
                         'group' => __('sn-cms::cms.post_resource.model_label'),
-                        'query' => fn ($query) => $query->published(),
+                        // with('categories')：条目视图展示分类标签，预加载避免 N+1
+                        'query' => fn ($query) => $query->published()->with('categories'),
                         'scopeable' => Utils::getScopeable(),
                         'url' => fn ($record) => Utils::route('posts.show', $record),
+                        // 自定义条目视图（结构参考 cms/posts 页面的文章条目；数据：$result 含 ->record、$query、$highlight）
+                        'view' => 'sn-cms::components.search.post-item',
                     ],
                 ]);
         }

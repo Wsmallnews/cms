@@ -155,6 +155,9 @@ return [
             'posts' => 'posts',
             'posts-show' => 'posts/{slug}',
 
+            // 全局搜索结果页（search.display = 'page' 时搜索框回车跳转目标）
+            'search' => 'search',
+
             'login' => 'login',
             'register' => 'register',
             'profile' => 'profile',
@@ -215,6 +218,12 @@ return [
          * （config('sn-support.search.engine')，默认 database）
          */
         'engine' => null,
+
+        /**
+         * 搜索结果的展示方式：'dropdown'（输入即搜，浮层展示）| 'page'（回车跳转独立搜索结果页）
+         * null 走全局兜底（config('sn-support.search.display')，默认 dropdown）
+         */
+        'display' => null,
     ],
 
     'themes' => [

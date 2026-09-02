@@ -14,6 +14,7 @@ use Wsmallnews\Cms\Livewire\Post\Post;
 use Wsmallnews\Cms\Livewire\Post\Posts;
 use Wsmallnews\Cms\Livewire\Profile;
 use Wsmallnews\Cms\Livewire\Profile\Views;
+use Wsmallnews\Cms\Livewire\Search;
 use Wsmallnews\Cms\Livewire\Settings\Password as SettingsPassword;
 use Wsmallnews\Cms\Livewire\Settings\Profile as SettingsProfile;
 use Wsmallnews\Cms\Livewire\Settings\TwoFactor;
@@ -83,4 +84,9 @@ Route::domain(Utils::getConfig('routes.domain'))
         Route::get(Utils::getConfig('routes.uri.navigation-show'), Navigation::class)->name('navigation.show');
         Route::get(Utils::getConfig('routes.uri.posts'), Posts::class)->name('posts');
         Route::get(Utils::getConfig('routes.uri.posts-show'), Post::class)->name('posts.show');
+
+        if (Utils::getConfig('search.enabled', false) && Utils::getConfig('search.display', 'dropdown') === 'page') {
+            // 搜索结果页（页面地址由 routes.uri.search 配置；回车跳转地址经 Search::page 注册）
+            Route::get(Utils::getConfig('routes.uri.search'), Search::class)->name('search');
+        }
     });

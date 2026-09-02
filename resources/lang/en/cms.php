@@ -179,6 +179,7 @@ return [
     'frontend' => [
         'search' => 'Search',
         'search_placeholder' => 'Search title, description...',
+        'search_results' => 'Search Results',
         'skip_to_content' => 'Skip to main content',
         'login' => 'Login',
         'register' => 'Register',
@@ -200,7 +201,9 @@ return [
         'views' => 'Views',
         'home' => 'Home',
         'posts_list' => 'Posts List',
+        'no_posts' => 'No posts',
         'post_detail' => 'Post Detail',
+        'view_detail' => 'View Details',
         'profile' => 'Profile',
         'current_location' => 'Current Location',
         'copyright' => 'Copyright © :copytime :copyright All Rights Reserved',
