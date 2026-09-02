@@ -42,7 +42,7 @@
                     href="{{ \Wsmallnews\Cms\Support\Utils::route('posts.show', $post) }}" 
                     class="sn-link flex w-full h-28 lg:h-auto min-h-0 gap-2 group"
                 >
-                    <div class="h-full aspect-4/3 shrink-0 rounded-md overflow-hidden bg-gray-100 dark:bg-gray-800">
+                    <div class="h-full sn-aspect-landscape shrink-0 rounded-md overflow-hidden bg-gray-100 dark:bg-gray-800">
                         @if ($post->getFirstMediaUrl('post_image'))
                             <img class="sn-motion-scale w-full h-full object-cover" src="{{ $post->getFirstMediaUrl('post_image') }}" />
                         @else

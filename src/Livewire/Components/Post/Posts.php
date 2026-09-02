@@ -8,6 +8,7 @@ use Livewire\Attributes\On;
 use Livewire\Attributes\Url;
 use Livewire\WithoutUrlPagination;
 use Wsmallnews\Category\Livewire\Concerns\Categoryable;
+use Wsmallnews\Cms\Contracts\PostFlagContract;
 use Wsmallnews\Cms\Livewire\Components\Base;
 use Wsmallnews\Cms\Support\Utils;
 use Wsmallnews\Support\Livewire\Concerns\CanBeContained;
@@ -66,7 +67,7 @@ class Posts extends Base
         $allCategories = filled($categoryIds) ? $this->getCategoryIds($categories) : collect([]);
 
         // 查询图文
-        $query = Utils::getPostModel()::snScope(...$this->getScopeable())->published()->with(['media'])
+        $query = Utils::getPostModel()::snScope(...$this->getScopeable())->published()->with(['media', 'categories'])
             ->when($allCategories->isNotEmpty(), function ($query) use ($allCategories) {
                 $query->categoryIds($allCategories);
             })
@@ -79,8 +80,8 @@ class Posts extends Base
                     $query->orWhere('description', 'like', "%{$this->search}%");
                 });
             })
-            ->when($this->flag != 'top', function ($query) {
-                $query->orderByRaw('JSON_CONTAINS(flags, \'"top"\') DESC');
+            ->when($this->flag != PostFlagContract::TOP, function ($query) {
+                $query->orderByRaw('JSON_CONTAINS(flags, \'"' . PostFlagContract::TOP . '"\') DESC');
             })
             ->orderBy('order_column', 'desc')
             ->orderBy('id', 'desc');

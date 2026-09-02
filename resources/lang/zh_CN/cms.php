@@ -176,6 +176,12 @@ return [
         'wechat_official_qrcode' => '公众号二维码',
         'wechat_official_qrcode_uploading' => '公众号二维码上传中...',
     ],
+    'flags' => [
+        'hot' => '热门',
+        'new' => '新',
+        'recommend' => '推荐',
+        'top' => '置顶',
+    ],
     'frontend' => [
         'search' => '搜索',
         'search_placeholder' => '搜索标题、描述等...',
@@ -203,7 +209,6 @@ return [
         'posts_list' => '资讯列表',
         'no_posts' => '暂无资讯',
         'post_detail' => '资讯详情',
-        'view_detail' => '查看详情',
         'profile' => '个人中心',
         'current_location' => '当前位置',
         'copyright' => 'Copyright © :copytime :copyright 版权所有',

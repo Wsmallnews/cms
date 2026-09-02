@@ -7,6 +7,7 @@ namespace Wsmallnews\Cms\Support;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Wsmallnews\Cms\Exceptions\CmsException;
+use Wsmallnews\Cms\Enums\PostFlag;
 use Wsmallnews\Member\Models\Member;
 use Wsmallnews\Support\Data\ScopeableContext;
 use Wsmallnews\Support\Exceptions\InvalidScopeException;
@@ -175,11 +176,13 @@ class Utils
     }
 
     /**
-     * Get model class by name.
+     * 获取 flag enum 类（可经 sn-cms.enums.post_flag 配置替换，须实现 PostFlagContract）。
+     *
+     * @return class-string<\Wsmallnews\Cms\Contracts\PostFlagContract>
      */
-    public static function getFlags(): ?array
+    public static function getFlagEnum(): string
     {
-        return self::getConfig('flags', []);
+        return self::getConfig('enums.post_flag', PostFlag::class);
     }
 
     /**

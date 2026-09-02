@@ -11,7 +11,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 use Livewire\Component;
 use Wsmallnews\Cms\Enums\PostStatus;
-use Wsmallnews\Cms\Facades\FlagRegistry;
 use Wsmallnews\Cms\Support\Utils;
 use Wsmallnews\Support\Facades\ScheduledTask;
 use Wsmallnews\Support\Filament\Forms\FormComponents;
@@ -113,9 +112,7 @@ class PostForm
                         ->label(__('sn-cms::cms.post_form.flags'))
                         ->multiple()
                         ->inline()
-                        ->options(fn (Component $livewire) => FlagRegistry::getTypesOptions($livewire::getScopeType()))
-                        ->colors(fn (Component $livewire) => FlagRegistry::getTypesColors($livewire::getScopeType()))
-                        ->icons(fn (Component $livewire) => FlagRegistry::getTypesIcons($livewire::getScopeType())),
+                        ->options(Utils::getFlagEnum()),
                     Forms\Components\TextInput::make('order_column')->label(__('sn-cms::cms.post_form.order'))->integer()
                         ->placeholder(__('sn-cms::cms.post_form.order_placeholder'))
                         ->rules(['integer', 'min:0']),

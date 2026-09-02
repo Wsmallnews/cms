@@ -176,6 +176,12 @@ return [
         'wechat_official_qrcode' => 'Official Account QR Code',
         'wechat_official_qrcode_uploading' => 'Uploading official account QR code...',
     ],
+    'flags' => [
+        'hot' => 'Hot',
+        'new' => 'New',
+        'recommend' => 'Recommend',
+        'top' => 'Top',
+    ],
     'frontend' => [
         'search' => 'Search',
         'search_placeholder' => 'Search title, description...',
@@ -203,7 +209,6 @@ return [
         'posts_list' => 'Posts List',
         'no_posts' => 'No posts',
         'post_detail' => 'Post Detail',
-        'view_detail' => 'View Details',
         'profile' => 'Profile',
         'current_location' => 'Current Location',
         'copyright' => 'Copyright © :copytime :copyright All Rights Reserved',

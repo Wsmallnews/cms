@@ -15,13 +15,14 @@
     @endif
     role="menuitem"
 >
+    {{-- simple 样式：去掉每条的灰色背景（sn-gray-bg），悬停/激活走 sn-container 内的 sn-link / sn-active（主题色淡蓝，同文章列表） --}}
     <a @class([
             'flex w-full justify-between items-center px-4 gap-2 font-semibold group',
             'sn-primary-bg sn-hover h-14 text-white' => $style === 'vivid',
             'sn-active' => ($style === 'vivid' && $hasActive),
 
-            'sn-content-text sn-gray-bg sn-hover h-10 rounded-md' => $style === 'simple',
-            'sn-active' => $style === 'simple' && $hasActive,
+            'sn-content-text sn-link h-10 rounded-md transition-colors duration-200' => $style === 'simple',
+            'sn-active' => ($style === 'simple' && $hasActive),
         ])
         @if ($hasChild)
             @click="isExpanded = ! isExpanded"

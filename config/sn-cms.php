@@ -1,7 +1,7 @@
 <?php
 
-use Filament\Support\Icons\Heroicon;
 use Wsmallnews\Category\Filament\Pages\Category\CategoryPage as PostCategoryPage;
+use Wsmallnews\Cms\Enums;
 use Wsmallnews\Cms\Filament\Pages\GeneralSetting as GeneralSettingPage;
 use Wsmallnews\Cms\Filament\Pages\Navigation\NavigationPage;
 use Wsmallnews\Cms\Filament\Resources\NavigationTypes\NavigationTypeResource;
@@ -245,33 +245,14 @@ return [
     ],
 
     /**
-     * 推荐标签配置
-     * 用户可以自定义追加，比如精品、必看等
+     * 可自定义的 enum
+     *
+     * 替换类必须实现对应契约接口，并保证契约常量对应的值存在（值是数据库与查询逻辑的稳定契约）。
+     * 只有"展示元数据型" enum 才登记在此（label/color/icon 随站点变化、业务行为不依赖 case 身份），
+     * 业务状态机型 enum（如 PostStatus）不开放配置。
      */
-    'flags' => [
-        [
-            'type' => 'hot',
-            'label' => '热门',
-            'color' => 'danger',
-            'icon' => Heroicon::OutlinedFire,
-        ],
-        [
-            'type' => 'new',
-            'label' => '新',
-            'color' => 'danger',
-            'icon' => Heroicon::OutlinedSparkles,
-        ],
-        [
-            'type' => 'recommend',
-            'label' => '推荐',
-            'color' => 'primary',
-            'icon' => Heroicon::OutlinedStar,
-        ],
-        [
-            'type' => 'top',
-            'label' => '置顶',
-            'color' => 'warning',
-            'icon' => Heroicon::OutlinedArrowUp,
-        ],
+    'enums' => [
+        // 图文 flag，须实现 Wsmallnews\Cms\Contracts\PostFlagContract
+        'post_flag' => Enums\PostFlag::class,
     ],
 ];

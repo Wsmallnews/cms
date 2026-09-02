@@ -14,8 +14,7 @@ use Filament\Support\Enums\Width;
 use Filament\Tables;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
-use Livewire\Component;
-use Wsmallnews\Cms\Facades\FlagRegistry;
+use Wsmallnews\Cms\Support\Utils;
 use Wsmallnews\Support\Filament\Actions\ActionComponents;
 use Wsmallnews\Support\Filament\Filters\FilterComponents;
 use Wsmallnews\Support\Filament\Resources\ScheduledTasks\Concerns\ViewScheduledTasksAction;
@@ -49,12 +48,14 @@ class PostsTable
                     fn ($record) => $record->publisher_type,
                     fn ($record) => $record->publisher_id,
                 ),
-                Tables\Columns\ViewColumn::make('flags')
+                // flags 为数组 state，badge 模式下逐值渲染，闭包按单个 flag 值解析 enum 元数据
+                Tables\Columns\TextColumn::make('flags')
                     ->label(__('sn-cms::cms.posts_table.flags'))
                     ->toggleable()
-                    ->view('sn-cms::filament.tables.columns.flags-text', function (Component $livewire) {
-                        return ['scopeType' => $livewire::getScopeType()];
-                    }),
+                    ->badge()
+                    ->formatStateUsing(fn ($state) => Utils::getFlagEnum()::from($state)->getLabel())
+                    ->color(fn ($state) => Utils::getFlagEnum()::from($state)->getColor())
+                    ->icon(fn ($state) => Utils::getFlagEnum()::from($state)->getIcon()),
                 // Tables\Columns\SpatieTagsColumn::make('tags')
                 //     ->label('标签')
                 //     ->type('post_tags')
@@ -91,7 +92,7 @@ class PostsTable
             ->filters([
                 Tables\Filters\SelectFilter::make('flag')
                     ->label(__('sn-cms::cms.posts_table.flag_filter'))
-                    ->options(fn (Component $livewire) => FlagRegistry::getTypesOptions($livewire::getScopeType()))
+                    ->options(Utils::getFlagEnum())
                     ->query(function ($query, $data) {
                         if ($data['value']) {
                             $query->hasFlag($data['value']);
