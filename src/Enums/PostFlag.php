@@ -12,7 +12,7 @@ use Illuminate\Contracts\Support\Htmlable;
 use Wsmallnews\Cms\Contracts\PostFlagContract;
 use Wsmallnews\Support\Enums\Traits\EnumHelper;
 
-enum PostFlag: string implements PostFlagContract, HasLabel, HasColor, HasIcon
+enum PostFlag: string implements HasColor, HasIcon, HasLabel, PostFlagContract
 {
     use EnumHelper;
 
