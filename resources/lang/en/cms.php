@@ -161,15 +161,50 @@ return [
     ],
     'general_setting' => [
         'title' => 'General Settings',
-        'basic_info' => 'Basic Information',
+
+        // Site
+        'site_section' => 'Site Information',
+        'site_name' => 'Site Name',
+        'site_name_helper' => 'Used for browser titles and share cards; falls back to the app name when empty',
+        'site_slogan' => 'Site Slogan',
+        'site_slogan_helper' => 'One-line site description shown in the footer brand block',
+        'logo' => 'Site Logo',
+        'logo_uploading' => 'Uploading logo...',
+        'favicon' => 'Favicon',
+        'favicon_helper' => 'Recommended 1:1 PNG/ICO',
+        'favicon_uploading' => 'Uploading favicon...',
+        'homepage_banner' => 'Homepage Banner',
+        'homepage_banner_uploading' => 'Uploading banner...',
+        'default_og_image' => 'Default Share Image',
+        'default_og_image_helper' => 'Fallback OG image when sharing to social platforms; recommended 1200x630',
+        'default_og_image_uploading' => 'Uploading share image...',
+
+        // SEO
+        'seo_section' => 'SEO Settings',
+        'seo_description' => 'Default Description',
+        'seo_description_helper' => 'Site-wide fallback meta description; posts can override with their own',
+        'analytics_code' => 'Analytics Code',
+        'analytics_code_helper' => 'JS snippet (Baidu Tongji / Google Analytics) injected before </body>',
+
+        // Contact
+        'basic_info' => 'Contact Information',
         'wechat' => 'Official WeChat Account',
         'phone' => 'Contact Phone',
         'email' => 'Email',
         'address' => 'Address',
+        'work_time' => 'Working Hours',
+        'work_time_helper' => 'e.g. Mon-Fri 9:00-18:00',
+
+        // Legal
+        'legal_section' => 'Copyright & Filing',
         'copyright' => 'Copyright',
         'copytime' => 'Copyright Year',
         'beian_no' => 'ICP Filing Number',
         'beian_url' => 'MIIT URL',
+        'beian_police_no' => 'Public Security Filing Number',
+        'beian_police_url' => 'Public Security Filing URL',
+
+        // QR codes
         'qrcode_section' => 'QR Code Upload',
         'wechat_qrcode' => 'WeChat QR Code',
         'wechat_qrcode_uploading' => 'Uploading WeChat QR code...',

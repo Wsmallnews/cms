@@ -5,14 +5,28 @@
 
 @php
     use Wsmallnews\Cms\CmsPlugin;
+    use Wsmallnews\Cms\Settings\GeneralSettings;
     use Wsmallnews\Cms\Support\Utils;
+
+    $general = app(GeneralSettings::class);
+    $siteName = filled($general->site_name) ? $general->site_name : config('app.name');
+    $logoUrl = filled($general->logo) ? files_url($general->logo) : null;
+    $bannerUrl = filled($general->homepage_banner) ? files_url($general->homepage_banner) : null;
+    $hasBanner = filled($bannerUrl);
 @endphp
 
 <div {{ $attributes->merge(['class' => 'sn-cms-container-page w-full flex flex-col h-dvh']) }}>
-    {{-- 头部不能加 overflow-hidden，否则搜索下拉会被 banner 裁剪 --}}
-    <div class="w-full shrink-0 flex h-32 bg-[url({{ asset('image/banner.jpg') }})] bg-top-right bg-cover">
+    {{-- 头部不能加 overflow-hidden，否则搜索下拉会被 banner 裁剪；动态 URL 不能用 bg-[url()] 任意值类（Tailwind 编译期扫描不到），须内联 style --}}
+    <div class="w-full shrink-0 flex h-32 bg-top-right bg-cover" @if ($hasBanner) style="background-image: url('{{ $bannerUrl }}')" @endif>
         <div class="container mx-auto flex items-center justify-between gap-4">
-            <img src="{{ asset('image/logo.png') }}" alt="logo" class="h-16 lg:h-20 shrink-0 object-contain">
+            @if ($logoUrl)
+                <img src="{{ $logoUrl }}" alt="{{ $siteName }}" class="h-16 lg:h-20 shrink-0 object-contain">
+            @else
+                {{-- 无 logo 时回退渲染站点名称文字（同 Filament 面板 brand 的做法） --}}
+                <div class="h-16 lg:h-20 shrink-0 flex items-center">
+                    <span class="text-2xl lg:text-3xl font-bold tracking-wide {{ $hasBanner ? 'text-white drop-shadow-md' : 'sn-primary-text' }}">{{ $siteName }}</span>
+                </div>
+            @endif
 
             {{-- 搜索框与登录注册/个人信息 合并为一个容器整体靠右；搜索框聚焦时展开 --}}
             <div class="hidden lg:flex items-center justify-end grow gap-6">

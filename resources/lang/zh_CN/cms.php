@@ -161,15 +161,50 @@ return [
     ],
     'general_setting' => [
         'title' => '基础设置',
-        'basic_info' => '基础信息',
+
+        // 站点信息
+        'site_section' => '站点信息',
+        'site_name' => '站点名称',
+        'site_name_helper' => '用于浏览器标题、分享卡片，留空则使用应用名称',
+        'site_slogan' => '站点口号',
+        'site_slogan_helper' => '一句话介绍站点，展示在页脚品牌区',
+        'logo' => '站点 Logo',
+        'logo_uploading' => 'Logo 上传中...',
+        'favicon' => 'Favicon 图标',
+        'favicon_helper' => '建议 1:1 的 PNG/ICO 格式',
+        'favicon_uploading' => 'Favicon 上传中...',
+        'homepage_banner' => '首页 Banner 图',
+        'homepage_banner_uploading' => 'Banner 上传中...',
+        'default_og_image' => '默认分享图',
+        'default_og_image_helper' => '分享到微信/微博等平台时的兜底配图，建议 1200x630',
+        'default_og_image_uploading' => '分享图上传中...',
+
+        // SEO 默认设置
+        'seo_section' => 'SEO 设置',
+        'seo_description' => '默认描述',
+        'seo_description_helper' => '全站兜底的 meta description，文章可用自身的描述覆盖',
+        'analytics_code' => '统计代码',
+        'analytics_code_helper' => '百度统计/Google Analytics 等 JS 代码，将注入到页面底部',
+
+        // 联系方式
+        'basic_info' => '联系方式',
         'wechat' => '官方微信号',
         'phone' => '联系电话',
         'email' => '邮箱',
         'address' => '地址',
+        'work_time' => '工作时间',
+        'work_time_helper' => '如：周一至周五 9:00-18:00',
+
+        // 版权与备案
+        'legal_section' => '版权与备案',
         'copyright' => '版权信息',
         'copytime' => '版权时间',
         'beian_no' => '备案号',
         'beian_url' => '工信部网址',
+        'beian_police_no' => '公安备案号',
+        'beian_police_url' => '公安备案网址',
+
+        // 二维码
         'qrcode_section' => '二维码上传',
         'wechat_qrcode' => '微信二维码',
         'wechat_qrcode_uploading' => '微信二维码上传中...',
