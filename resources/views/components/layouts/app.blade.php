@@ -65,6 +65,9 @@
         @endif
 
         @vite('resources/css/app.css')
+
+        {{-- sn-* 设计令牌运行时覆盖（config sn-support.theme），须在 CSS 之后渲染 --}}
+        @snTheme
     </head>
 
     <body class="sn-body antialiased bg-gray-50 dark:bg-gray-950 text-gray-700 dark:text-gray-200 flex flex-col min-h-screen">

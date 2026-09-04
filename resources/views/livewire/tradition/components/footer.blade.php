@@ -37,13 +37,13 @@
                 <div class="flex justify-center gap-3">
                     @if ($general->wechat_qrcode)
                         <figure class="flex flex-col items-center gap-1">
-                            <img class="w-[100px] h-[100px] rounded-md ring-1 ring-gray-200 dark:ring-gray-700" src="{{ files_url($general->wechat_qrcode) }}" alt="{{ __('sn-cms::cms.frontend.wechat_qrcode') }}" loading="lazy" />
+                            <img class="w-full h-full rounded-md sn-ring-card" src="{{ files_url($general->wechat_qrcode) }}" alt="{{ __('sn-cms::cms.frontend.wechat_qrcode') }}" loading="lazy" />
                             <figcaption class="sn-tip-text">{{ __('sn-cms::cms.frontend.personal_wechat') }}</figcaption>
                         </figure>
                     @endif
                     @if ($general->wechat_official_qrcode)
                         <figure class="flex flex-col items-center gap-1">
-                            <img class="w-[100px] h-[100px] rounded-md ring-1 ring-gray-200 dark:ring-gray-700" src="{{ files_url($general->wechat_official_qrcode) }}" alt="{{ __('sn-cms::cms.frontend.official_qrcode') }}" loading="lazy" />
+                            <img class="w-full h-full rounded-md sn-ring-card" src="{{ files_url($general->wechat_official_qrcode) }}" alt="{{ __('sn-cms::cms.frontend.official_qrcode') }}" loading="lazy" />
                             <figcaption class="sn-tip-text">{{ __('sn-cms::cms.frontend.official_account') }}</figcaption>
                         </figure>
                     @endif

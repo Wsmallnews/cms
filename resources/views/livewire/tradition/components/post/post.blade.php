@@ -7,7 +7,7 @@
 
 <div class="w-full flex flex-col gap-4">
     <div @class([
-        'sn-container px-4 py-8' => $contained,
+        'sn-container sn-padded' => $contained,
         'w-full flex flex-col gap-4'
     ])>
         <div class="sn-h2-text">
@@ -39,7 +39,7 @@
 
     @if ($hasComment)
         <div @class([
-            'sn-container px-4 py-8' => $contained,
+            'sn-container sn-padded' => $contained,
             'w-full flex flex-col gap-4'
         ])>
             <livewire:sn-comment::components.comments
