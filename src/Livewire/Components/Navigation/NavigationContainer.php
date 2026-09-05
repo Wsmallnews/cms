@@ -8,6 +8,7 @@ use Wsmallnews\Cms\Facades\ContentRegistry;
 use Wsmallnews\Cms\Livewire\Components\Base;
 use Wsmallnews\Cms\Livewire\Concerns\Navigationable;
 use Wsmallnews\Cms\Support\Utils;
+use Wsmallnews\Support\Facades\Seo;
 
 class NavigationContainer extends Base
 {
@@ -19,6 +20,9 @@ class NavigationContainer extends Base
     {
         $navigationModel = new (Utils::getNavigationModel());
         $navigation = $this->getScopedQuery()->normal()->withDepth()->where($navigationModel->getRouteKeyName(), $this->slug)->firstOrFail();
+
+        // 导航页 SEO：以导航名称为标题、导航描述为页面描述
+        Seo::title($navigation->name)->description($navigation->description);
 
         if ($navigation->type == NavigationTypeEnum::Content) {
             $scopeType = $this->getScopeType();

@@ -81,7 +81,8 @@ class Posts extends Base
                 });
             })
             ->when($this->flag != PostFlagContract::TOP, function ($query) {
-                $query->orderByRaw('JSON_CONTAINS(flags, \'"' . PostFlagContract::TOP . '"\') DESC');
+                // 置顶文章优先（LIKE 写法兼容 MySQL/SQLite，JSON_CONTAINS 为 MySQL 专属函数）
+                $query->orderByRaw('CASE WHEN flags LIKE \'%"' . PostFlagContract::TOP . '"%\' THEN 1 ELSE 0 END DESC');
             })
             ->orderBy('order_column', 'desc')
             ->orderBy('id', 'desc');

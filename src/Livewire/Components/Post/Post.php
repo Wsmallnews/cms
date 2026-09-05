@@ -10,6 +10,7 @@ use Wsmallnews\Comment\Livewire\Concerns\HasCommentStatus;
 use Wsmallnews\Support\Livewire\Concerns\CanBeContained;
 use Wsmallnews\Support\Livewire\Concerns\HasAuth;
 use Wsmallnews\Support\Livewire\Concerns\HasContentType;
+use Wsmallnews\Support\Facades\Seo;
 
 class Post extends Base
 {
@@ -25,10 +26,20 @@ class Post extends Base
     public function render()
     {
         $model = new (Utils::getPostModel());
-        $post = $model->snScope(...$this->getScopeable())->published()->with(['media', 'content'])->where($model->getRouteKeyName(), $this->slug)->firstOrFail();
+        $post = $model->snScope(...$this->getScopeable())->published()->with(['media', 'content', 'publisher'])->where($model->getRouteKeyName(), $this->slug)->firstOrFail();
 
         // 增加浏览量
         $post->view($this->getAuthUser());
+
+        // 文章页 SEO：标题/描述/封面用文章自身数据，article() 自动组装结构化数据（author = 发布者）并切 og:type
+        Seo::title($post->title)
+            ->description($post->description)
+            ->image($post->getSnSubjectCoverUrl())
+            ->article([
+                'datePublished' => $post->published_at?->toIso8601String(),
+                'dateModified' => $post->updated_at?->toIso8601String(),
+                'author' => $post->publisher?->name,
+            ]);
 
         return view($this->getThemeView('components.post.post'), [
             'post' => $post,

@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use RalphJSmit\Livewire\Urls\Middleware\LivewireUrlsMiddleware;
+use Wsmallnews\Cms\CmsPlugin;
 use Wsmallnews\Cms\Livewire\Auth\ConfirmPassword;
 use Wsmallnews\Cms\Livewire\Auth\ForgotPassword;
 use Wsmallnews\Cms\Livewire\Auth\Login;
@@ -38,6 +39,9 @@ if (Utils::getConfig('auth_user_type', 'member') === 'member') {
 
 // 记录路由历史
 $middlewares[] = LivewireUrlsMiddleware::class;
+
+// 首屏初始化页面 SEO 上下文（模块归属由路由声明，seo-init 中间件在 support 包注册）
+$middlewares[] = 'seo-init:' . app(CmsPlugin::class)->getId();
 
 Route::domain(Utils::getConfig('routes.domain'))
     ->middleware($middlewares)

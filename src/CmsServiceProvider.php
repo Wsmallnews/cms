@@ -34,9 +34,11 @@ use Wsmallnews\Cms\Livewire\Components\Post\Post;
 use Wsmallnews\Cms\Livewire\Components\Post\Posts;
 use Wsmallnews\Cms\Livewire\Index;
 use Wsmallnews\Cms\Models\Post as PostModel;
+use Wsmallnews\Cms\Settings\GeneralSettings;
 use Wsmallnews\Cms\Support\Utils;
 use Wsmallnews\Support\Facades\ScheduledTask;
 use Wsmallnews\Support\Facades\Search;
+use Wsmallnews\Support\Facades\Seo;
 use Wsmallnews\User\Facades\SidebarMenuRegistry as SidebarMenuRegistryFacade;
 use Wsmallnews\User\Facades\UserConfig as UserConfigFacade;
 
@@ -279,6 +281,20 @@ class CmsServiceProvider extends PackageServiceProvider
                     ],
                 ]);
         }
+
+        // 注册 SEO 模块默认值（模块名 = 插件 ID，与其他模块互不覆盖）：
+        // 闭包在每次渲染时才解析 Settings，自动跟随当前租户（多租户下 GeneralSettings 走 team_database 仓库，每租户一份）
+        Seo::config(app(CmsPlugin::class)->getId(), function (): array {
+            $general = app(GeneralSettings::class);
+
+            return [
+                'site_name' => filled($general->site_name) ? $general->site_name : config('app.name'),
+                'description' => filled($general->seo_description) ? $general->seo_description : $general->site_slogan,
+                'image' => filled($general->default_og_image) ? files_url($general->default_og_image) : null,
+                'favicon' => filled($general->favicon) ? files_url($general->favicon) : null,
+                'analytics_code' => $general->analytics_code,
+            ];
+        });
 
         // 注册用户侧边栏菜单
         SidebarMenuRegistryFacade::registers(app(CmsPlugin::class)->getId(), [

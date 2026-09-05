@@ -15,7 +15,8 @@
         <meta name="csrf-token" content="{{ csrf_token() }}" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-        @stack('seo')
+        {{-- 页面 SEO 标签（模块归属由 seo-init 路由中间件声明，页面组件在 render 阶段经 Seo 门面链式声明数据） --}}
+        @snSeo
 
         <style>
             :root {
@@ -84,6 +85,9 @@
 
         @filamentScripts
         @vite('resources/js/app.js')
+
+        {{-- 统计代码（后台设置的 analytics_code），注入在 </body> 前 --}}
+        @snSeoAnalytics
 
         <script>
             document.addEventListener('livewire:init', () => {

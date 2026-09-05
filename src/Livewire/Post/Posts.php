@@ -5,6 +5,7 @@ namespace Wsmallnews\Cms\Livewire\Post;
 use Livewire\Attributes\Url;
 use Wsmallnews\Cms\Livewire\Base;
 use Wsmallnews\Cms\Support\Utils;
+use Wsmallnews\Support\Facades\Seo;
 
 class Posts extends Base
 {
@@ -18,6 +19,8 @@ class Posts extends Base
 
     public function render()
     {
+        Seo::title(__('sn-cms::cms.frontend.posts_list'));
+
         $breadcrumbs = [
             ['label' => __('sn-cms::cms.frontend.home'), 'url' => Utils::route('index')],
             ['label' => __('sn-cms::cms.frontend.posts_list'), 'url' => Utils::route('posts')],
