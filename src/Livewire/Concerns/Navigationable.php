@@ -26,7 +26,6 @@ trait Navigationable
         $this->navigationTypeId = $this->navigationType?->id;
     }
 
-
     /**
      * 导航类型是否存在（缺失时调用方应短路，不发起导航查询）
      */
