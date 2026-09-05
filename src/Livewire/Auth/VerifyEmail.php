@@ -18,6 +18,7 @@ class VerifyEmail extends Base
     public function render()
     {
         Seo::title(__('sn-cms::cms.auth.verify_email'))->robots('noindex');
+
         return view($this->getThemeView('auth.verify-email'), [
         ])->layout(Utils::getLayout());
     }

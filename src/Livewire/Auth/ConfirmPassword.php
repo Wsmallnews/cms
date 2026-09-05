@@ -11,6 +11,7 @@ class ConfirmPassword extends Base
     public function render()
     {
         Seo::title(__('sn-cms::cms.auth.confirm_password'))->robots('noindex');
+
         return view($this->getThemeView('auth.confirm-password'), [
         ])->layout(Utils::getLayout());
     }
