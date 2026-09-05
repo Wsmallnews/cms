@@ -24,6 +24,7 @@ use Spatie\LaravelPackageTools\PackageServiceProvider;
 use Wsmallnews\Category\Models\Category as CategoryModel;
 use Wsmallnews\Cms\Commands\CmsInstallCommand;
 use Wsmallnews\Cms\Enums\PostStatus;
+use Wsmallnews\Cms\Enums\NavigationType as NavigationTypeEnum;
 use Wsmallnews\Cms\Facades\ContentRegistry as ContentRegistryFacade;
 use Wsmallnews\Cms\Http\Middleware\Authenticate;
 use Wsmallnews\Cms\Http\Middleware\EnsureEmailIsVerified;
@@ -39,6 +40,7 @@ use Wsmallnews\Cms\Support\Utils;
 use Wsmallnews\Support\Facades\ScheduledTask;
 use Wsmallnews\Support\Facades\Search;
 use Wsmallnews\Support\Facades\Seo;
+use Wsmallnews\Support\Facades\Sitemap;
 use Wsmallnews\User\Facades\SidebarMenuRegistry as SidebarMenuRegistryFacade;
 use Wsmallnews\User\Facades\UserConfig as UserConfigFacade;
 
@@ -295,6 +297,55 @@ class CmsServiceProvider extends PackageServiceProvider
                 'analytics_code' => $general->analytics_code,
             ];
         });
+
+        // 注册 sitemap 内容源与 robots 规则（闭包渲染时才执行，自动跟随当前租户与 scope）：
+        // config 声明模块绑定的域名（多域名部署时，非本域名请求不输出本模块内容）
+        Sitemap::config(app(CmsPlugin::class)->getId(), [
+            'domain' => Utils::getConfig('routes.domain'),
+        ])->registers(app(CmsPlugin::class)->getId(), [
+            [
+                'key' => 'home',
+                'urls' => fn (): array => [
+                    ['loc' => Utils::route('index')],
+                ],
+            ],
+            [
+                'key' => 'posts-list',
+                'urls' => fn (): array => [
+                    ['loc' => Utils::route('posts')],
+                ],
+            ],
+            [
+                'key' => 'post',
+                'urls' => fn (): array => Utils::getPostModel()::snScope(...Utils::getScopeable())->published()
+                    ->get(['id', 'slug', 'updated_at'])
+                    ->map(fn ($post): array => [
+                        'loc' => Utils::route('posts.show', $post),
+                        'lastmod' => $post->updated_at,
+                    ])
+                    ->values()
+                    ->all(),
+            ],
+            [
+                // 导航页面（Page/Content 型、有 slug 的可访问页面）
+                'key' => 'navigation',
+                'urls' => fn (): array => Utils::getNavigationModel()::snScope(...Utils::getScopeable())->normal()
+                    ->whereIn('type', [NavigationTypeEnum::Page, NavigationTypeEnum::Content])
+                    ->whereNotNull('slug')
+                    ->get(['id', 'slug', 'updated_at'])
+                    ->map(fn ($navigation): array => [
+                        'loc' => Utils::route('navigation.show', $navigation),
+                        'lastmod' => $navigation->updated_at,
+                    ])
+                    ->values()
+                    ->all(),
+            ],
+        ])->robots(app(CmsPlugin::class)->getId(), [
+            // 搜索结果页禁爬（路径由本模块路由配置拼接，前缀/路径均可配置）
+            'disallow' => array_filter([
+                trim((string) Utils::getConfig('routes.prefix', 'cms') . '/' . (string) Utils::getConfig('routes.uri.search', 'search'), '/'),
+            ]),
+        ]);
 
         // 注册用户侧边栏菜单
         SidebarMenuRegistryFacade::registers(app(CmsPlugin::class)->getId(), [
