@@ -18,47 +18,47 @@ final class FooterNavigationPage extends Base
 
     public static function getScopeType(): string
     {
-        return static::getConfigurationValue('scopeType') ?? parent::getScopeType();
+        return self::getConfigurationValue('scopeType') ?? parent::getScopeType();
     }
 
     public static function getScopeId(): int
     {
-        return static::getConfigurationValue('scopeId') ?? parent::getScopeId();
+        return self::getConfigurationValue('scopeId') ?? parent::getScopeId();
     }
 
     public static function getLevel(): ?int
     {
-        return static::resolveCustomProperty('level') ?? parent::getLevel();
+        return self::resolveCustomProperty('level') ?? parent::getLevel();
     }
 
     public static function getModelLabel(): string
     {
-        return static::getConfigurationValue('modelLabel') ?? parent::getModelLabel();
+        return self::getConfigurationValue('modelLabel') ?? parent::getModelLabel();
     }
 
     public static function getPluralModelLabel(): string
     {
-        return static::getConfigurationValue('pluralModelLabel') ?? parent::getPluralModelLabel();
+        return self::getConfigurationValue('pluralModelLabel') ?? parent::getPluralModelLabel();
     }
 
     public function getTitle(): string
     {
-        return static::getConfigurationValue('title') ?? parent::getTitle();
+        return self::getConfigurationValue('title') ?? parent::getTitle();
     }
 
     public static function getNavigationLabel(): string
     {
-        return static::getConfigurationValue('navigationLabel') ?? parent::getNavigationLabel();
+        return self::getConfigurationValue('navigationLabel') ?? parent::getNavigationLabel();
     }
 
     public static function getEmptyLabel(): ?string
     {
-        return static::getConfigurationValue('emptyLabel') ?? parent::getEmptyLabel();
+        return self::getConfigurationValue('emptyLabel') ?? parent::getEmptyLabel();
     }
 
     public static function getEmptyTipLabel(): ?string
     {
-        return static::getConfigurationValue('emptyTipLabel') ?? parent::getEmptyTipLabel();
+        return self::getConfigurationValue('emptyTipLabel') ?? parent::getEmptyTipLabel();
     }
 
     public static function getEssentialsPlugin(): ?CmsPlugin

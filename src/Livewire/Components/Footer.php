@@ -2,7 +2,6 @@
 
 namespace Wsmallnews\Cms\Livewire\Components;
 
-use Wsmallnews\Cms\Livewire\Components\Base;
 use Wsmallnews\Cms\Livewire\Concerns\Navigationable;
 use Wsmallnews\Cms\Settings\GeneralSettings;
 use Wsmallnews\Cms\Support\Utils;
