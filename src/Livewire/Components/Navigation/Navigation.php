@@ -43,8 +43,7 @@ class Navigation extends Nestedset
 
     public function getNestedset(): Collection
     {
-        return $this->getScopedQuery()->normal()->defaultOrder()
-            ->get()->toTree();
+        return $this->getNavigationTree();
     }
 
     public function getRecordView(): string
