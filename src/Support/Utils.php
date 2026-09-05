@@ -70,6 +70,34 @@ class Utils
     }
 
     /**
+     * 底部导航的派生 scope_type（模块 scope_type + '-footer' 约定）。
+     * 后台 FooterNavigationPage 管理页面与前台 Footer 组件共用，天然与模块 scopeable 保持一致。
+     *
+     * @throws CmsException
+     */
+    public static function getFooterScopeType(): string
+    {
+        return self::getScopeType() . '-footer';
+    }
+
+    /**
+     * 底部导航的 scopeable（scope_id 跟随模块 scopeable）。
+     *
+     * @return array{scope_type: string, scope_id: int}
+     *
+     * @throws CmsException
+     */
+    public static function getFooterScopeable(): array
+    {
+        $scopeable = self::getScopeable();
+
+        return [
+            'scope_type' => $scopeable['scope_type'] . '-footer',
+            'scope_id' => $scopeable['scope_id'],
+        ];
+    }
+
+    /**
      * Get scope ID.
      *
      * @throws CmsException

@@ -15,6 +15,11 @@ class GeneralSettings extends Settings
 
     public ?string $logo = '';
 
+    /**
+     * Logo 旁是否显示站名（关闭则仅显示 Logo 图，适合上传图文一体的横版组合标）
+     */
+    public bool $logo_with_site_name = true;
+
     public ?string $favicon = '';
 
     public ?string $homepage_banner = '';

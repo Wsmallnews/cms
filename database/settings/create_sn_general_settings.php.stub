@@ -10,6 +10,7 @@ return new class extends SettingsMigration
         $this->migrator->add('cms_general.site_name', '');
         $this->migrator->add('cms_general.site_slogan', '');
         $this->migrator->add('cms_general.logo', '');
+        $this->migrator->add('cms_general.logo_with_site_name', true);
         $this->migrator->add('cms_general.favicon', '');
         $this->migrator->add('cms_general.homepage_banner', '');
         $this->migrator->add('cms_general.default_og_image', '');

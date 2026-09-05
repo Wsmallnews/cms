@@ -1,87 +1,111 @@
-<footer class="sn-bg sn-contour-only border-t-2 w-full pt-10 mt-12">
-    <div class="container mx-auto flex flex-col gap-6 px-4">
-        <div class="w-full flex flex-col md:flex-row gap-10 md:gap-16">
-            <nav class="hidden md:flex md:w-2/3 gap-8 justify-between" aria-label="{{ __('sn-cms::cms.frontend.footer_nav') }}">
-                @foreach ($navigations as $navigation)
-                    <div class="flex flex-col justify-start gap-3">
-                        <a class="sn-h3-text sn-hover inline-block focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 rounded-sm"
-                            @if ($navigation->children->count() > 0)
-                                href="javascript:;"
-                                role="presentation"
-                            @else
-                                {{ \Filament\Support\generate_href_html($navigation->url_info['url'], $navigation->url_info['target'] ?? false) }}
-                            @endif
-                        >
-                            {{ $navigation->name_label }}
-                        </a>
-                        <span class="sn-primary-bg w-9 h-1 rounded-full" aria-hidden="true"></span>
-                        @if ($navigation->children->count() > 0)
-                            <ul class="flex flex-col justify-start gap-2.5" role="list">
-                                @foreach ($navigation->children as $child)
-                                    <li>
-                                        <a class="sn-content-text sn-hover items-center focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 rounded-sm"
-                                            {{ \Filament\Support\generate_href_html($child->url_info['url'], $child->url_info['target'] ?? false) }}>
-                                            {{ $child->name_label }}
+@php
+    use function Filament\Support\generate_href_html;
+
+    // 底部导航为空时（未建树），footer 退化为 品牌区 + 合规条
+    $hasGroups = $groups->isNotEmpty();
+    $hasFlats = $flats->isNotEmpty();
+    $hasNavs = $hasGroups || $hasFlats;
+@endphp
+
+<footer class="sn-bg sn-contour-only border-t-2 w-full mt-12 pt-10">
+    <div class="container mx-auto flex flex-col px-4">
+
+        @if (! $hasNavs)
+            {{-- 空树形态：仅品牌区 --}}
+            <div class="w-full max-w-md">
+                <x-dynamic-component
+                    :component="$this->getBladeThemeView('components.footer-brand')"
+                    :general="$general"
+                    :site-name="$siteName"
+                    :logo-url="$logoUrl"
+                    :slogan="$slogan"
+                />
+            </div>
+        @elseif ($hasGroups)
+            {{-- 分组形态：品牌区 + 分组列（Grid 自适应列数，分组多时自动换行）；无子级的一级导航进下方快捷条 --}}
+            <div class="w-full flex flex-col md:flex-row gap-10 md:gap-14">
+                <div class="w-full md:w-1/3 lg:w-1/4 shrink-0">
+                    <x-dynamic-component
+                        :component="$this->getBladeThemeView('components.footer-brand')"
+                        :general="$general"
+                        :site-name="$siteName"
+                        :logo-url="$logoUrl"
+                        :slogan="$slogan"
+                    />
+                </div>
+
+                <nav class="w-full md:w-2/3 lg:w-3/4 grid grid-cols-2 md:grid-cols-[repeat(auto-fit,minmax(11rem,15rem))] gap-x-8 gap-y-10 self-start" aria-label="{{ __('sn-cms::cms.frontend.footer_nav') }}">
+                    @foreach ($groups as $group)
+                        <div class="flex flex-col gap-3.5 min-w-0">
+                            {{-- 一级导航（有子级）作为分组标题，不跳转 --}}
+                            <h3 class="sn-content-text font-semibold flex items-center gap-2">
+                                {{ $group->name }}
+                                <span class="sn-primary-bg w-7 h-1 rounded-full" aria-hidden="true"></span>
+                            </h3>
+                            <ul class="flex flex-col gap-2.5" role="list">
+                                @foreach ($group->children as $child)
+                                    <li class="min-w-0">
+                                        <a class="sn-descript-text hover:text-primary-600 dark:hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 rounded-sm block truncate"
+                                            {{ generate_href_html($child->url_info['url'], $child->url_info['target'] ?? false) }}>
+                                            {{ $child->name }}
                                         </a>
                                     </li>
                                 @endforeach
                             </ul>
-                        @endif
-                    </div>
-                @endforeach
-            </nav>
-
-            <div class="w-full md:w-1/3 flex flex-col gap-4">
-                <h2 class="sn-h3-text text-center">{{ __('sn-cms::cms.frontend.follow_us') }}</h2>
-                <p class="sn-content-text text-center">{{ __('sn-cms::cms.frontend.follow_us_desc') }}</p>
-                <div class="flex justify-center gap-3">
-                    @if ($general->wechat_qrcode)
-                        <figure class="flex flex-col items-center gap-1">
-                            <img class="w-full h-full rounded-md sn-ring-card" src="{{ files_url($general->wechat_qrcode) }}" alt="{{ __('sn-cms::cms.frontend.wechat_qrcode') }}" loading="lazy" />
-                            <figcaption class="sn-tip-text">{{ __('sn-cms::cms.frontend.personal_wechat') }}</figcaption>
-                        </figure>
-                    @endif
-                    @if ($general->wechat_official_qrcode)
-                        <figure class="flex flex-col items-center gap-1">
-                            <img class="w-full h-full rounded-md sn-ring-card" src="{{ files_url($general->wechat_official_qrcode) }}" alt="{{ __('sn-cms::cms.frontend.official_qrcode') }}" loading="lazy" />
-                            <figcaption class="sn-tip-text">{{ __('sn-cms::cms.frontend.official_account') }}</figcaption>
-                        </figure>
-                    @endif
-                </div>
-                <address class="not-italic">
-                    <dl class="flex flex-col gap-2">
-                        @if ($general->phone)
-                            <div class="flex items-center justify-start">
-                                <dt class="sn-content-text min-w-20">{{ __('sn-cms::cms.frontend.contact_phone') }}：</dt>
-                                <dd class="sn-content-text">
-                                    <a href="tel:{{ $general->phone }}" class="hover:text-primary-600 dark:hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 rounded-sm">{{ $general->phone }}</a>
-                                </dd>
-                            </div>
-                        @endif
-                        @if ($general->email)
-                            <div class="flex items-center justify-start">
-                                <dt class="sn-content-text min-w-20">{{ __('sn-cms::cms.frontend.contact_email') }}：</dt>
-                                <dd class="sn-content-text">
-                                    <a href="mailto:{{ $general->email }}" class="hover:text-primary-600 dark:hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 rounded-sm">{{ $general->email }}</a>
-                                </dd>
-                            </div>
-                        @endif
-                        @if ($general->address)
-                            <div class="flex items-start justify-start">
-                                <dt class="sn-content-text min-w-20 shrink-0">{{ __('sn-cms::cms.frontend.contact_address') }}：</dt>
-                                <dd class="sn-content-text">{{ $general->address }}</dd>
-                            </div>
-                        @endif
-                    </dl>
-                </address>
+                        </div>
+                    @endforeach
+                </nav>
             </div>
-        </div>
 
-        <div class="w-full py-4 mt-2 border-t border-gray-200 dark:border-gray-700 flex flex-wrap items-center justify-center gap-1 sn-tip-text text-center">
-            <span>{{ __('sn-cms::cms.frontend.copyright', ['copytime' => $general->copytime, 'copyright' => $general->copyright]) }}</span>
+            @if ($hasFlats)
+                {{-- 快捷链接条：无子级的一级导航横向平铺 --}}
+                <nav class="w-full py-3.5 mt-9 border-t border-gray-300 dark:border-gray-600 flex flex-wrap items-center gap-y-2" aria-label="{{ __('sn-cms::cms.frontend.footer_quick_nav') }}">
+                    @foreach ($flats as $flat)
+                        <a class="sn-content-text hover:text-primary-600 dark:hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 rounded-sm px-3 border-r border-gray-200 dark:border-gray-700 {{ $loop->last ? 'border-r-0' : '' }}"
+                            {{ generate_href_html($flat->url_info['url'], $flat->url_info['target'] ?? false) }}>
+                            {{ $flat->name }}
+                        </a>
+                    @endforeach
+                </nav>
+            @endif
+        @else
+            {{-- 全一级形态：品牌区居左 + 快捷链接居右（自动换行） --}}
+            <div class="w-full flex flex-col md:flex-row md:items-start md:justify-between gap-10">
+                <div class="w-full md:w-1/3 lg:w-1/4 shrink-0">
+                    <x-dynamic-component
+                        :component="$this->getBladeThemeView('components.footer-brand')"
+                        :general="$general"
+                        :site-name="$siteName"
+                        :logo-url="$logoUrl"
+                        :slogan="$slogan"
+                    />
+                </div>
+
+                <nav class="w-full md:w-2/3 lg:w-3/4 flex flex-wrap justify-start md:justify-end gap-x-3 gap-y-3 md:pt-1 self-start" aria-label="{{ __('sn-cms::cms.frontend.footer_quick_nav') }}">
+                    @foreach ($flats as $flat)
+                        <a class="sn-content-text hover:text-primary-600 dark:hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 rounded-sm px-4 border-r border-gray-200 dark:border-gray-700 {{ $loop->last ? 'border-r-0' : '' }}"
+                            {{ generate_href_html($flat->url_info['url'], $flat->url_info['target'] ?? false) }}>
+                            {{ $flat->name }}
+                        </a>
+                    @endforeach
+                </nav>
+            </div>
+        @endif
+
+        {{-- 合规条：版权 + ICP 备案 + 公安备案 --}}
+        <div class="w-full py-4 {{ $hasNavs ? 'mt-9' : 'mt-10' }} border-t border-gray-300 dark:border-gray-600 flex flex-wrap items-center justify-center gap-x-5 gap-y-1.5 sn-tip-text text-center">
+            @if ($general->copyright || $general->copytime)
+                <span>{{ __('sn-cms::cms.frontend.copyright', ['copytime' => $general->copytime, 'copyright' => $general->copyright]) }}</span>
+            @endif
             @if ($general->beian_url && $general->beian_no)
                 <a href="{{ $general->beian_url }}" target="_blank" rel="noopener" class="hover:text-primary-600 dark:hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 rounded-sm">
                     {{ $general->beian_no }}
+                </a>
+            @endif
+            @if ($general->beian_police_url && $general->beian_police_no)
+                <a href="{{ $general->beian_police_url }}" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 hover:text-primary-600 dark:hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 rounded-sm">
+                    <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="currentColor" opacity="0.25"/><path d="M12 4l6 2.4v5c0 4-2.6 7.2-6 8.6-3.4-1.4-6-4.6-6-8.6v-5L12 4z" fill="currentColor" opacity="0.6"/><path d="M9 12.2l2 2 4-4.2" stroke="currentColor" stroke-width="1.6" fill="none"/></svg>
+                    {{ $general->beian_police_no }}
                 </a>
             @endif
         </div>

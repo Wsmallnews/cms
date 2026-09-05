@@ -89,15 +89,6 @@ class NavigationForm
                 ->visibleJs(<<<'JS'
                     $get('options.icon_type') == 'image'
                 JS),
-            Forms\Components\Toggle::make('options.footer_show')
-                ->label(__('sn-cms::cms.navigation_form.footer_show'))
-                ->default(false)
-                ->helperText(__('sn-cms::cms.navigation_form.footer_show_helper'))
-                ->inline(false)
-                ->visible(function (Get $get) {
-                    // 只有子菜单 可以设置底部显示
-                    return in_array($get('type'), [NavigationTypeEnum::Child]);
-                }),
             Forms\Components\TextInput::make('slug')
                 ->label(__('sn-cms::cms.navigation_form.slug'))
                 ->scopedUnique(modifyQueryUsing: function (Builder $query, Component $livewire) {

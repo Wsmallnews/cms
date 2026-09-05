@@ -57,6 +57,13 @@ class GeneralSetting extends SettingsPage
                         ->label(__('sn-cms::cms.general_setting.logo'))
                         ->directory(Utils::getFileDirectory('settings'))
                         ->uploadingMessage(__('sn-cms::cms.general_setting.logo_uploading')),
+                    Forms\Components\ToggleButtons::make('logo_with_site_name')
+                        ->label(__('sn-cms::cms.general_setting.logo_with_site_name'))
+                        ->helperText(__('sn-cms::cms.general_setting.logo_with_site_name_helper'))
+                        ->boolean()
+                        ->grouped()
+                        ->default(true)
+                        ->inline(),
                     FormComponents::plainImageUpload('favicon')
                         ->label(__('sn-cms::cms.general_setting.favicon'))
                         ->helperText(__('sn-cms::cms.general_setting.favicon_helper'))

@@ -3,6 +3,7 @@
 use Wsmallnews\Category\Filament\Pages\Category\CategoryPage as PostCategoryPage;
 use Wsmallnews\Cms\Enums;
 use Wsmallnews\Cms\Filament\Pages\GeneralSetting as GeneralSettingPage;
+use Wsmallnews\Cms\Filament\Pages\Navigation\Footer\FooterNavigationPage;
 use Wsmallnews\Cms\Filament\Pages\Navigation\NavigationPage;
 use Wsmallnews\Cms\Filament\Resources\NavigationTypes\NavigationTypeResource;
 use Wsmallnews\Cms\Filament\Resources\Posts\PostResource;
@@ -58,6 +59,7 @@ return [
             ],
             GeneralSettingPage::class,
             NavigationPage::class,
+            FooterNavigationPage::class,
         ],
     ],
 
