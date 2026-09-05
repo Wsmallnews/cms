@@ -14,6 +14,7 @@ class Search extends Base
     public function render()
     {
         Seo::title(__('sn-cms::cms.frontend.search_results'))->robots('noindex');
+
         return view($this->getThemeView('search'), [
             //
         ])->layout(Utils::getLayout());

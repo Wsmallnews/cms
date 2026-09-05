@@ -11,6 +11,7 @@ class ResetPassword extends Base
     public function render()
     {
         Seo::title(__('sn-cms::cms.auth.reset_password'))->robots('noindex');
+
         return view($this->getThemeView('auth.reset-password'), [
         ])->layout(Utils::getLayout());
     }

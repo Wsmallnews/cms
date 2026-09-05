@@ -7,10 +7,10 @@ use Wsmallnews\Cms\Support\Utils;
 use Wsmallnews\Comment\Livewire\Concerns\CanAddComment;
 use Wsmallnews\Comment\Livewire\Concerns\HasComment;
 use Wsmallnews\Comment\Livewire\Concerns\HasCommentStatus;
+use Wsmallnews\Support\Facades\Seo;
 use Wsmallnews\Support\Livewire\Concerns\CanBeContained;
 use Wsmallnews\Support\Livewire\Concerns\HasAuth;
 use Wsmallnews\Support\Livewire\Concerns\HasContentType;
-use Wsmallnews\Support\Facades\Seo;
 
 class Post extends Base
 {
