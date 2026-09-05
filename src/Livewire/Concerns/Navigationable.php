@@ -2,8 +2,6 @@
 
 namespace Wsmallnews\Cms\Livewire\Concerns;
 
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Collection;
 use Kalnoy\Nestedset\QueryBuilder;
 use Livewire\Attributes\Locked;
 use Wsmallnews\Cms\Models\NavigationType as NavigationTypeModel;
@@ -17,7 +15,7 @@ trait Navigationable
     public ?NavigationTypeModel $navigationType = null;
 
     /**
-     * 解析导航类型：缺失时不抛错（navigationType 置空），取树请用 getNavigationTree()。
+     * 解析导航类型：缺失时不抛错（navigationType 置空）
      */
     public function mountNavigationable()
     {
@@ -28,19 +26,13 @@ trait Navigationable
         $this->navigationTypeId = $this->navigationType?->id;
     }
 
-    /**
-     * 当前 scope 的正常状态导航树（normal + 树序全量）。
-     * 导航类型不存在时不发起查询，直接返回空集合。
-     *
-     * @return Collection<int, mixed>
-     */
-    public function getNavigationTree(): Collection
-    {
-        if (! $this->navigationType) {
-            return collect([]);
-        }
 
-        return $this->getScopedQuery()->normal()->defaultOrder()->get()->toTree();
+    /**
+     * 导航类型是否存在（缺失时调用方应短路，不发起导航查询）
+     */
+    public function hasNavigationType(): bool
+    {
+        return ! is_null($this->navigationType);
     }
 
     public function getScoped()
@@ -57,14 +49,13 @@ trait Navigationable
     /**
      * queryBuilder 不支持调用 Nestedset 的 scoped 方法
      *
-     * 导航类型不存在时返回恒空查询（where 1=0）兜底：type_id 为 null 时走 scoped()
-     * 会被 Laravel 转成 whereNull，反而匹配到无类型的数据。标准取树请优先用
-     * getNavigationTree()（类型缺失时连查询都不发起）。
+     * 仅返回已限定 scope 的查询起点，查询条件（normal/defaultOrder 等）由调用方控制；
+     * 导航类型不存在时返回 null，调用方应短路返回空集合，不要拿空 type_id 去查库。
      */
-    protected function getScopedQuery(): string | Builder
+    protected function getScopedQuery(): ?QueryBuilder
     {
-        if (! $this->navigationType) {
-            return Utils::getNavigationModel()::query()->whereRaw('1 = 0');
+        if (! $this->hasNavigationType()) {
+            return null;
         }
 
         return Utils::getNavigationModel()::scoped($this->getScoped());

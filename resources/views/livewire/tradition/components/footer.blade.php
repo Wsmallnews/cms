@@ -16,9 +16,6 @@
                 <x-dynamic-component
                     :component="$this->getBladeThemeView('components.footer-brand')"
                     :general="$general"
-                    :site-name="$siteName"
-                    :logo-url="$logoUrl"
-                    :slogan="$slogan"
                 />
             </div>
         @elseif ($hasGroups)
@@ -28,9 +25,6 @@
                     <x-dynamic-component
                         :component="$this->getBladeThemeView('components.footer-brand')"
                         :general="$general"
-                        :site-name="$siteName"
-                        :logo-url="$logoUrl"
-                        :slogan="$slogan"
                     />
                 </div>
 
@@ -75,9 +69,6 @@
                     <x-dynamic-component
                         :component="$this->getBladeThemeView('components.footer-brand')"
                         :general="$general"
-                        :site-name="$siteName"
-                        :logo-url="$logoUrl"
-                        :slogan="$slogan"
                     />
                 </div>
 

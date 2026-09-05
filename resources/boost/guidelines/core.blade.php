@@ -167,7 +167,6 @@ CMS 包提供丰富的前端 Livewire 组件：
 | 组件 | 注册名 | 说明 |
 |---|---|---|
 | `Livewire\Components\Navigation\Navigation` | `sn-cms-navigation` | 导航菜单 |
-| `Livewire\Components\Navigation\NavigationNestedset` | `sn-cms-navigation-nestedset` | 嵌套集导航 |
 | `Livewire\Components\Navigation\Brothers` | `sn-cms-navigation-brothers` | 同级导航 |
 | `Livewire\Components\Navigation\Content` | `sn-cms-navigation-content` | 导航内容 |
 | `Livewire\Components\Navigation\Breadcrumb` | `sn-cms-navigation-breadcrumb` | 面包屑 |

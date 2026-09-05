@@ -19,6 +19,12 @@ class NavigationContainer extends Base
     public function render()
     {
         $navigationModel = new (Utils::getNavigationModel());
+
+        // 导航类型不存在时导航页本身不可达，直接 404
+        if (! $this->hasNavigationType()) {
+            abort(404);
+        }
+
         $navigation = $this->getScopedQuery()->normal()->withDepth()->where($navigationModel->getRouteKeyName(), $this->slug)->firstOrFail();
 
         // 导航页 SEO：以导航名称为标题、导航描述为页面描述

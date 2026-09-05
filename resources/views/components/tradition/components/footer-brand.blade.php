@@ -4,10 +4,14 @@
 --}}
 @props([
     'general',
-    'siteName',
-    'logoUrl' => null,
-    'slogan' => null,
 ])
+
+@php
+    $siteName = filled($general->site_name) ? $general->site_name : config('app.name');
+
+    // logo 默认为空字符串，files_url('') 会得到站点根地址，需 filled 守卫
+    $logoUrl = filled($general->logo) ? files_url($general->logo) : null;
+@endphp
 
 <div class="flex flex-col gap-4">
     <x-sn-cms::brand
@@ -18,8 +22,8 @@
     />
 
     {{-- 口号单独一行，只要填写就显示 --}}
-    @if (filled($slogan))
-        <p class="sn-descript-text -mt-2">{{ $slogan }}</p>
+    @if (filled($general->site_slogan))
+        <p class="sn-descript-text -mt-2">{{ $general->site_slogan }}</p>
     @endif
 
     <address class="not-italic flex flex-col gap-1.5">

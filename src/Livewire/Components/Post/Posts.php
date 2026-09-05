@@ -61,7 +61,11 @@ class Posts extends Base
         // 根据 categoryStyle 类型读取特定的参数
         $categoryIds = $this->categoryStyle == 'select' ? Arr::wrap($this->categoryIds) : Arr::wrap($this->categoryId);
 
-        $categories = filled($categoryIds) ? $this->getScopedQuery()->normal()->whereIn('id', $categoryIds)->get() : collect([]);
+        // 分类类型不存在时短路，不发起分类查询
+        $categories = collect([]);
+        if (filled($categoryIds) && $this->hasCategoryType()) {
+            $categories = $this->getScopedQuery()->normal()->whereIn('id', $categoryIds)->get();
+        }
 
         // 获取传入的分类的 id 以及所有子分类的 id
         $allCategories = filled($categoryIds) ? $this->getCategoryIds($categories) : collect([]);
