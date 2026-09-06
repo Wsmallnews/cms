@@ -8,7 +8,7 @@
     $recordView = $this->getBladeThemeView('components.category.category-record');
 @endphp
 
-<div class="w-full flex flex-col lg:flex-row gap-4 relative">
+<div class="w-full flex flex-col lg:flex-row sn-gap relative">
     <x-sn-support::loading.overlay />
 
     @if ($categoryStyle == 'tree')
@@ -26,7 +26,7 @@
         </div>
     @endif
 
-    <div class="w-full flex flex-col gap-4 grow min-w-0">
+    <div class="w-full flex flex-col sn-gap grow min-w-0">
         @if ($categoryStyle == 'select' && $categories->isNotEmpty())
             <div class="flex flex-wrap gap-4">
                 @foreach ($categories as $category)
@@ -38,7 +38,7 @@
         {{-- 右侧整体一个区块：头部（标签左 + 搜索右）+ 分割线 + 文章列表 --}}
         <div class="sn-container rounded-md overflow-hidden">
 
-            <div class="flex flex-wrap items-center justify-between gap-x-4 gap-y-3 px-4 py-3 border-b border-gray-200 dark:border-gray-800">
+            <div class="sn-list-header">
                 {{-- 剥掉 fi-tabs 自带的容器外观（白底/边框/阴影/内边距/居中 margin），只保留 tab 悬停与激活态 --}}
                 <x-filament::tabs label="flags" class="min-w-0 mx-0! bg-transparent! shadow-none! ring-0! rounded-none! p-0!">
                     <x-filament::tabs.item
@@ -87,7 +87,7 @@
                     @forelse ($posts as $post)
                         {{-- 行高写死；图片区 4:3 横版满行高，cover 居中裁剪；sm 起行高加大，容纳 flag 徽章行 --}}
                         <x-sn-cms::container.block-link
-                            class="group flex flex-row gap-4 h-36 sm:h-40 p-4 overflow-hidden transition-colors duration-200 motion-reduce:transition-none hover:bg-primary-50/50 dark:hover:bg-primary-900/15 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary-500"
+                            class="group flex flex-row gap-4 h-36 sm:h-40 sn-padded overflow-hidden transition-colors duration-200 motion-reduce:transition-none hover:bg-primary-50/50 dark:hover:bg-primary-900/15 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary-500"
                             href="{{ \Wsmallnews\Cms\Support\Utils::route('posts.show', $post) }}"
                         >
                             <div class="h-full sn-aspect-landscape max-w-[45%] shrink-0 rounded-md overflow-hidden bg-gray-100 dark:bg-gray-800">

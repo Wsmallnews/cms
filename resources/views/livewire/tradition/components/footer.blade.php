@@ -8,7 +8,7 @@
 @endphp
 
 <footer class="sn-bg sn-contour-only border-t-2 w-full mt-12 pt-10">
-    <div class="container mx-auto flex flex-col px-4">
+    <div class="container mx-auto sn-page-x flex flex-col">
 
         @if (! $hasNavs)
             {{-- 空树形态：仅品牌区 --}}

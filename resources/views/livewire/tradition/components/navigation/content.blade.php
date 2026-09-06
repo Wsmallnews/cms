@@ -1,5 +1,5 @@
 <div @class([
-    'sn-container p-4' => $contained,
+    'sn-container sn-padded' => $contained,
     'w-full'
 ])>
     @if ($content)

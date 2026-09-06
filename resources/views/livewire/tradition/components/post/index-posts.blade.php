@@ -18,7 +18,7 @@
     })->toArray();
 @endphp
 
-<div class="w-full flex flex-col lg:flex-row gap-2 lg:gap-4">
+<div class="w-full flex flex-col lg:flex-row sn-gap">
     <x-sn-support::swiper @class([
         'sn-container sn-hover rounded-md' => $contained,
         'w-full aspect-video overflow-hidden'
@@ -52,7 +52,7 @@
                         @endif
                     </div>
 
-                    <div class="min-w-0 flex flex-col grow py-2 px-4 gap-1">
+                    <div class="min-w-0 flex flex-col grow py-2 sn-px gap-1">
                         <div class="sn-h4-text sn-hover line-clamp-1">
                             {{ $post->title }}
                         </div>

@@ -8,8 +8,8 @@
 
 <x-filament-panels::page>
     <div @class([
-        'sn-container px-4 py-8',
-        'w-full flex flex-col gap-4'
+        'sn-container sn-padded',
+        'w-full flex flex-col sn-gap'
     ])>
         <div class="sn-h2-text">
             {{ $post->title }}

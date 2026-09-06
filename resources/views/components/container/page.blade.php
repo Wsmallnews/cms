@@ -19,7 +19,7 @@
     {{-- 头部不能加 overflow-hidden，否则搜索下拉会被 banner 裁剪；动态 URL 不能用 bg-[url()] 任意值类（Tailwind 编译期扫描不到），须内联 style --}}
     {{-- 无 banner 时收窄头部条高度，避免出现大片空白 --}}
     <div class="w-full shrink-0 flex bg-top-right bg-cover {{ $hasBanner ? 'h-32' : 'h-24 lg:h-28' }}" @if ($hasBanner) style="background-image: url('{{ $bannerUrl }}')" @endif>
-        <div class="container mx-auto flex items-center justify-between gap-4">
+        <div class="container mx-auto sn-page-x flex items-center justify-between gap-4">
             {{-- 品牌（logo + 站名，与页脚统一逻辑；banner 上站名用白字压图） --}}
             <x-sn-cms::brand
                 :logo-url="$logoUrl"

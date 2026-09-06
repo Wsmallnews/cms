@@ -5,10 +5,10 @@
     }
 @endphp
 
-<div class="w-full flex flex-col gap-4">
+<div class="w-full flex flex-col sn-gap">
     <div @class([
         'sn-container sn-padded' => $contained,
-        'w-full flex flex-col gap-4'
+        'w-full flex flex-col sn-gap'
     ])>
         <div class="sn-h2-text">
             {{ $post->title }}
@@ -40,7 +40,7 @@
     @if ($hasComment)
         <div @class([
             'sn-container sn-padded' => $contained,
-            'w-full flex flex-col gap-4'
+            'w-full flex flex-col sn-gap'
         ])>
             <livewire:sn-comment::components.comments
                 :scope-type="$scopeType"

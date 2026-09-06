@@ -6,7 +6,7 @@
 @endphp
 
 <nav class="sn-primary-bg w-full" x-data="{ mobileMenuIsOpen: false }" @click.away="mobileMenuIsOpen = false">
-    <div class="container hidden lg:flex h-16 mx-auto px-4 sm:px-0">
+    <div class="container hidden lg:flex h-16 mx-auto sn-page-x">
         <ul class="flex h-full" role="menu">
             @foreach ($nestedset as $navigation)
                 @php
