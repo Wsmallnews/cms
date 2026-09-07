@@ -5,7 +5,6 @@ namespace Wsmallnews\Cms\Filament\Resources\Links\Tables;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Wsmallnews\Cms\Enums\LinkStatus;
-use Wsmallnews\Cms\Models\Link;
 
 class LinksTable
 {

@@ -264,7 +264,7 @@ class Utils
      */
     public static function navigationConfig(?string $key = null, mixed $default = null): mixed
     {
-        return self::getConfig('navigation'.($key ? '.'.$key : ''), $default);
+        return self::getConfig('navigation' . ($key ? '.' . $key : ''), $default);
     }
 
     /**

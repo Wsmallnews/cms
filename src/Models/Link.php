@@ -2,7 +2,6 @@
 
 namespace Wsmallnews\Cms\Models;
 
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Wsmallnews\Cms\Enums\LinkStatus;
 use Wsmallnews\Support\Models\Concerns\Scopeable;
