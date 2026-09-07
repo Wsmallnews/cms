@@ -14,12 +14,13 @@
             </div>
         @endif
 
-        <div class="w-full flex flex-col md:flex-row items-start sn-gap">
-            <div class="w-full md:w-72">
+        {{-- 侧栏与内容区按比例分栏（lg 1:3，xl 起 1:4）；lg 以下上下堆叠（侧栏在上） --}}
+        <div class="w-full flex flex-col lg:grid lg:grid-cols-4 xl:grid-cols-5 items-start sn-gap">
+            <div class="w-full min-w-0">
                 <livewire:sn-user::components.user.sidebar-menu :module="app(CmsPlugin::class)->getId()" />
             </div>
 
-            <div class="sn-container w-full sn-padded">
+            <div class="sn-container w-full sn-padded lg:col-span-3 xl:col-span-4 min-w-0">
                 <div class="w-full md:w-md">
                     <livewire:sn-user::components.settings.two-factor :module="app(CmsPlugin::class)->getId()" />
                 </div>

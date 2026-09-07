@@ -35,14 +35,17 @@
  * 类名同时作为皮肤规则的钩子保留在视图元素上。
  * ==================================================================== */
 
-/* ===== 级联子菜单：默认隐藏，li.is-open 展开（Alpine 管理）；一级向下 / 深层向右 ===== */
+/* ===== 级联子菜单：默认隐藏（透明 + 不可见 + 微缩），li.is-open 展开（Alpine 管理）；
+   一级向下 / 深层向右。显隐走过渡而非 display 切换，与「更多」面板的 x-transition 弹出动画统一 ===== */
 .sn-cms-sub {
-    @apply absolute z-30 hidden min-w-44 py-1 rounded-md shadow-xl;
+    @apply absolute z-30 min-w-44 py-1 rounded-md shadow-xl;
+    @apply opacity-0 invisible scale-[0.98] pointer-events-none;
+    @apply transition-[opacity,visibility,transform] duration-150 ease-out motion-reduce:transition-none;
 }
 
 .sn-cms-sub-item.has-sub.is-open > .sn-cms-sub,
 .sn-cms-nav-item.has-sub.is-open > .sn-cms-sub {
-    @apply block;
+    @apply opacity-100 visible scale-100 pointer-events-auto;
 }
 
 /* 二级+向右弹，左缘与父行重叠 5px（消除鼠标穿越间隙的 hover 断链）；
@@ -82,9 +85,11 @@
     @apply rotate-0;
 }
 
-/* ===== "更多"下拉（溢出折叠）定位 ===== */
+/* ===== "更多"下拉（溢出折叠）定位 =====
+   限高滚动（max-h + overflow-y-auto + sn-scrollbar）由视图按 more_submenu_style 条件附加：
+   cascade 模式禁用滚动容器，否则 overflow 裁切 flyout 子菜单 */
 .sn-cms-nav-more-menu {
-    @apply absolute top-full right-0 z-40 min-w-[248px] max-h-[60vh] overflow-y-auto py-1 rounded-b-md shadow-2xl;
+    @apply absolute top-full right-0 z-40 min-w-[248px] py-1 rounded-b-md shadow-2xl;
 }
 
 /* ===== 汉堡按钮展开/收起态（定位类在视图写死，这里只管颜色：收起位于亮色页头，展开浮在导航面板上） ===== */
@@ -97,7 +102,9 @@
 }
 
 /* ====================================================================
- * 皮肤：primary（默认）—— 主题色面板 + 白字；hover 提亮 primary-400；选中更深 primary-600
+ * 皮肤：primary（默认）—— 主题色面板 + 白字
+ * 表面：亮色 primary-500 / 暗色 primary-600（与导航条 sn-primary-bg 一致）
+ * 三色体系：hover 提亮 primary-400；选中更深（亮 600 / 暗 700，始终比所在表面深一档）
  * 主行背景由调用方设置（文字是白色，必须提供深色背景，如 sn-primary-bg，否则不可见）
  * ==================================================================== */
 .sn-cms-nav-link {
@@ -110,11 +117,11 @@
 
 .sn-cms-nav-item.is-active .sn-cms-nav-link,
 .sn-cms-nav-item.is-active .sn-cms-nav-link:hover {
-    @apply bg-primary-600;
+    @apply bg-primary-600 dark:bg-primary-700;
 }
 
 .sn-cms-sub {
-    @apply bg-primary-500;
+    @apply bg-primary-500 dark:bg-primary-600;
 }
 
 .sn-cms-sub-link {
@@ -123,6 +130,12 @@
 
 .sn-cms-sub-link:hover {
     @apply bg-primary-400;
+}
+
+/* 级联子菜单项选中态（含「更多」cascade 内的折叠项）：与主行选中同一档加深 */
+.sn-cms-sub-item.is-active > .sn-cms-sub-link,
+.sn-cms-sub-item.is-active > .sn-cms-sub-link:hover {
+    @apply bg-primary-600 dark:bg-primary-700;
 }
 
 .sn-cms-nav-more-btn {
@@ -138,11 +151,11 @@
 .sn-cms-nav-more.has-active .sn-cms-nav-more-btn,
 .sn-cms-nav-more.has-active .sn-cms-nav-more-btn:hover,
 .sn-cms-nav-more.has-active.is-open .sn-cms-nav-more-btn {
-    @apply bg-primary-600;
+    @apply bg-primary-600 dark:bg-primary-700;
 }
 
 .sn-cms-nav-more-menu {
-    @apply bg-primary-500;
+    @apply bg-primary-500 dark:bg-primary-600;
 }
 
 /* 「更多」面板滚动条：sn-scrollbar 为灰系，primary 主题色面板上改用白色半透明滑块 */
@@ -160,7 +173,7 @@
 
 /* Brothers 侧栏卡片：页面内卡片与下拉面板一样自带皮肤底色（主行背景才由调用方设置） */
 .sn-cms-brothers {
-    @apply bg-primary-500;
+    @apply bg-primary-500 dark:bg-primary-600;
 }
 
 .sn-cms-acc-row {
@@ -173,7 +186,7 @@
 
 .sn-cms-acc-item.is-active > .sn-cms-acc-row,
 .sn-cms-acc-item.is-active > .sn-cms-acc-row:hover {
-    @apply bg-primary-600;
+    @apply bg-primary-600 dark:bg-primary-700;
 }
 
 .sn-cms-acc-leaf {
@@ -186,7 +199,7 @@
 
 .sn-cms-acc-item.is-active > .sn-cms-acc-leaf,
 .sn-cms-acc-item.is-active > .sn-cms-acc-leaf:hover {
-    @apply bg-primary-600 text-white;
+    @apply bg-primary-600 dark:bg-primary-700 text-white;
 }
 
 /* 一级分隔线（移动端面板，作用于 ul > li；Brothers 卡片不用分割线） */
@@ -196,7 +209,7 @@
 
 .sn-cms-nav-search-strip,
 .sn-cms-nav-mobile {
-    @apply bg-primary-500;
+    @apply bg-primary-500 dark:bg-primary-600;
 }
 
 /* ====================================================================
@@ -237,6 +250,12 @@
 
 .sn-cms-nav-minimal .sn-cms-sub-link:hover {
     @apply bg-gray-100 text-primary-700 dark:bg-gray-800 dark:text-primary-300;
+}
+
+/* 级联子菜单项选中态（minimal）：浅主题色底 + 主题色字，与主行选中语义一致 */
+.sn-cms-nav-minimal .sn-cms-sub-item.is-active > .sn-cms-sub-link,
+.sn-cms-nav-minimal .sn-cms-sub-item.is-active > .sn-cms-sub-link:hover {
+    @apply bg-primary-100 text-primary-700 dark:bg-primary-500/15 dark:text-primary-300;
 }
 
 .sn-cms-nav-minimal .sn-cms-nav-more-btn {

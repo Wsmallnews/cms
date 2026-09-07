@@ -124,7 +124,12 @@
         <div class="sn-cms-nav-more relative flex flex-none" x-ref="more" data-sn-more
             :class="{ 'is-open': moreOpen, 'has-active': moreHasActive }"
         >
-            <button type="button" class="sn-cms-nav-more-btn flex items-center justify-center min-w-12 h-full px-1 gap-1.5 text-sm font-semibold whitespace-nowrap cursor-pointer focus:outline-hidden focus-visible:underline underline-offset-2"
+            <button type="button" @class([
+                'sn-cms-nav-more-btn flex items-center justify-center min-w-12 h-full gap-1.5 text-sm font-semibold whitespace-nowrap cursor-pointer focus:outline-hidden focus-visible:underline underline-offset-2',
+                // 纯图标居中不需要横向内边距；带文字时与一级导航对齐（px-4）
+                'px-1' => $moreIconOnly,
+                'px-4' => ! $moreIconOnly,
+            ])
                 @click="moreOpen = ! moreOpen"
                 :aria-expanded="moreOpen ? 'true' : 'false'"
                 aria-haspopup="true"
@@ -138,7 +143,12 @@
                 @endif
             </button>
 
-            <div class="sn-cms-nav-more-menu sn-scrollbar" x-cloak x-show="moreOpen" x-transition>
+            {{-- cascade 模式禁止滚动容器：overflow 会裁切向左/右弹出的 flyout 子菜单（层级显示不全 + 横向滚动条），
+                长列表交由页面滚动；accordion 模式无 flyout，保留限高滚动 + 细滚动条 --}}
+            <div @class([
+                'sn-cms-nav-more-menu',
+                'max-h-[60vh] overflow-y-auto sn-scrollbar' => $moreStyle !== 'cascade',
+            ]) x-cloak x-show="moreOpen" x-transition>
                 @if ($moreStyle === 'cascade')
                     <ul class="relative" role="menu">
                         @foreach ($nestedset as $i => $navigation)
@@ -247,8 +257,11 @@
                 init() {
                     this.applyOverflow();
                     if (this.$refs.bar) {
-                        // 容器尺寸变化（含 lg 断点显隐、侧栏等）时重新测量
-                        new ResizeObserver(() => this.applyOverflow()).observe(this.$refs.bar);
+                        // 容器尺寸变化（含 lg 断点显隐、侧栏等）时重新测量 + 重新定位展开中的子菜单
+                        new ResizeObserver(() => {
+                            this.applyOverflow();
+                            this.repositionOpenCascades();
+                        }).observe(this.$refs.bar);
                     }
                     // 字体加载改变项宽
                     if (document.fonts && document.fonts.ready) {
@@ -366,19 +379,52 @@
                     });
                 },
 
+                /* ===== 弹出方向检测 =====
+                   裁切基准是导航条自身边界（overflow-x-clip 在此裁切；条在居中容器内，比视口窄），
+                   右侧与去除滚动条的可视区取小。用 window.innerWidth 会把滚动条与容器留白都算进去，
+                   导致面板实际已被裁切却判定"放得下" */
+                flipBounds() {
+                    const bar = this.$refs.bar;
+                    const clientWidth = document.documentElement.clientWidth;
+                    if (! bar) {
+                        return { left: 0, right: clientWidth };
+                    }
+
+                    const rect = bar.getBoundingClientRect();
+
+                    return { left: rect.left, right: Math.min(rect.right, clientWidth) };
+                },
+
+                /* 按左右边界决定弹出方向：默认向右；右缘放不下翻转向左；向左也放不下（深层链穿出条左缘）翻回向右 */
+                positionCascade(li) {
+                    const sub = li.querySelector(':scope > .sn-cms-sub');
+                    if (! sub) return;
+
+                    const margin = 8;    // 与边界保留的安全间距
+                    const bounds = this.flipBounds();
+
+                    sub.classList.remove('pop-left');
+                    if (sub.getBoundingClientRect().right > bounds.right - margin) {
+                        sub.classList.add('pop-left');
+                        if (sub.getBoundingClientRect().left < bounds.left + margin) {
+                            sub.classList.remove('pop-left');
+                        }
+                    }
+                },
+
+                /* 容器尺寸变化后，重新定位所有展开中的级联子菜单（方向可能需要翻转） */
+                repositionOpenCascades() {
+                    if (! this.$refs.bar) return;
+                    this.$refs.bar.querySelectorAll('li.has-sub.is-open').forEach((li) => this.positionCascade(li));
+                },
+
                 setCascadeOpen(li, open) {
                     li.classList.toggle('is-open', open);
                     const link = li.querySelector(':scope > a');
                     if (link) link.setAttribute('aria-expanded', open ? 'true' : 'false');
                     if (! open) return;
 
-                    // 打开后测量：子菜单右缘超出视口则反向向左弹
-                    const sub = li.querySelector(':scope > .sn-cms-sub');
-                    if (sub) {
-                        sub.classList.remove('pop-left');
-                        const rect = sub.getBoundingClientRect();
-                        if (rect.right > window.innerWidth - 8) sub.classList.add('pop-left');
-                    }
+                    this.positionCascade(li);
                 },
 
                 closeAllCascade() {

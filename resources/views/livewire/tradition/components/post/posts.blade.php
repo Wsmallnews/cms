@@ -8,11 +8,12 @@
     $recordView = $this->getBladeThemeView('components.category.category-record');
 @endphp
 
-<div class="w-full flex flex-col lg:flex-row sn-gap relative">
+{{-- 侧栏与内容区按比例分栏（lg 1:3，xl 起 1:4）；lg 以下上下堆叠（分类树在上） --}}
+<div class="w-full flex flex-col lg:grid lg:grid-cols-4 xl:grid-cols-5 sn-gap relative">
     <x-sn-support::loading.overlay />
 
     @if ($categoryStyle == 'tree')
-        <div class="w-full lg:w-72 shrink-0">
+        <div class="w-full min-w-0">
             {{-- 分类树区块：亮色白底 / 暗色深底 --}}
             <div class="sn-container p-2">
                 <livewire:sn-category::components.categories
@@ -26,7 +27,12 @@
         </div>
     @endif
 
-    <div class="w-full flex flex-col sn-gap grow min-w-0">
+    {{-- 无分类树时内容列占满整行，避免 grid 留空轨道 --}}
+    <div @class([
+        'w-full flex flex-col sn-gap min-w-0',
+        'lg:col-span-3 xl:col-span-4' => $categoryStyle == 'tree',
+        'lg:col-span-4 xl:col-span-5' => $categoryStyle != 'tree',
+    ])>
         @if ($categoryStyle == 'select' && $categories->isNotEmpty())
             <div class="flex flex-wrap gap-4">
                 @foreach ($categories as $category)

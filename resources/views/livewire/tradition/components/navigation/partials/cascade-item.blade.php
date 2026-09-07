@@ -10,7 +10,7 @@
     $cascadeItemView = $cascadeItemView ?? 'sn-cms::livewire.tradition.components.navigation.partials.cascade-item';
 @endphp
 
-<li @class(['sn-cms-sub-item relative', 'has-sub' => $hasChild])
+<li @class(['sn-cms-sub-item relative', 'has-sub' => $hasChild, 'is-active' => $record->has_active])
     @if (isset($ovIdx))
         x-show="hiddenFrom !== null && {{ $ovIdx }} >= hiddenFrom" x-cloak
     @endif
