@@ -5,13 +5,14 @@
     $hasGroups = $groups->isNotEmpty();
     $hasFlats = $flats->isNotEmpty();
     $hasNavs = $hasGroups || $hasFlats;
+    $showFeed = filled($feedUrl ?? null);
 @endphp
 
 <footer class="sn-bg sn-contour-only border-t-2 w-full mt-12 pt-10">
     <div class="container mx-auto sn-page-x flex flex-col">
 
         @if (! $hasNavs)
-            {{-- 空树形态：仅品牌区 --}}
+            {{-- 空树形态：仅品牌区（RSS 只出现在有导航的形态） --}}
             <div class="w-full max-w-md">
                 <x-dynamic-component
                     :component="$this->getBladeThemeView('components.footer-brand')"
@@ -52,14 +53,26 @@
             </div>
 
             @if ($hasFlats)
-                {{-- 快捷链接条：无子级的一级导航横向平铺 --}}
+                {{-- 快捷链接条：无子级的一级导航横向平铺 + RSS 订阅（尾部） --}}
                 <nav class="w-full py-3.5 mt-9 border-t border-gray-300 dark:border-gray-600 flex flex-wrap items-center gap-y-2" aria-label="{{ __('sn-cms::cms.frontend.footer_quick_nav') }}">
                     @foreach ($flats as $flat)
-                        <a class="sn-content-text hover:text-primary-600 dark:hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 rounded-sm px-3 border-r border-gray-200 dark:border-gray-700 {{ $loop->last ? 'border-r-0' : '' }}"
+                        <a class="sn-content-text hover:text-primary-600 dark:hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 rounded-sm px-3 border-r border-gray-200 dark:border-gray-700 {{ ($loop->last && ! $showFeed) ? 'border-r-0' : '' }}"
                             {{ generate_href_html($flat->url_info['url'], $flat->url_info['target'] ?? false) }}>
                             {{ $flat->name }}
                         </a>
                     @endforeach
+                    <x-dynamic-component
+                        :component="$this->getBladeThemeView('components.footer-rss')"
+                        :feed-url="$feedUrl"
+                    />
+                </nav>
+            @elseif ($showFeed)
+                {{-- 有分组但无一级平铺：快捷条仅 RSS --}}
+                <nav class="w-full py-3.5 mt-9 border-t border-gray-300 dark:border-gray-600 flex flex-wrap items-center gap-y-2" aria-label="{{ __('sn-cms::cms.frontend.footer_quick_nav') }}">
+                    <x-dynamic-component
+                        :component="$this->getBladeThemeView('components.footer-rss')"
+                        :feed-url="$feedUrl"
+                    />
                 </nav>
             @endif
         @else
@@ -74,13 +87,32 @@
 
                 <nav class="w-full md:w-2/3 lg:w-3/4 flex flex-wrap justify-start md:justify-end gap-x-3 gap-y-3 md:pt-1 self-start" aria-label="{{ __('sn-cms::cms.frontend.footer_quick_nav') }}">
                     @foreach ($flats as $flat)
-                        <a class="sn-content-text hover:text-primary-600 dark:hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 rounded-sm px-4 border-r border-gray-200 dark:border-gray-700 {{ $loop->last ? 'border-r-0' : '' }}"
+                        <a class="sn-content-text hover:text-primary-600 dark:hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 rounded-sm px-4 border-r border-gray-200 dark:border-gray-700 {{ ($loop->last && ! $showFeed) ? 'border-r-0' : '' }}"
                             {{ generate_href_html($flat->url_info['url'], $flat->url_info['target'] ?? false) }}>
                             {{ $flat->name }}
                         </a>
                     @endforeach
+                    @if ($showFeed)
+                        <x-dynamic-component
+                            :component="$this->getBladeThemeView('components.footer-rss')"
+                            :feed-url="$feedUrl"
+                        />
+                    @endif
                 </nav>
             </div>
+        @endif
+
+        {{-- 友情链接条：启用状态的友链一行平铺（合规条上方） --}}
+        @if ($links->isNotEmpty())
+            <nav class="w-full py-3.5 {{ $hasNavs ? 'mt-9' : 'mt-10' }} border-t border-gray-300 dark:border-gray-600 flex flex-wrap items-center gap-y-2" aria-label="{{ __('sn-cms::cms.frontend.friend_links') }}">
+                <span class="sn-content-text font-semibold pr-1">{{ __('sn-cms::cms.frontend.friend_links') }}：</span>
+                @foreach ($links as $link)
+                    <a href="{{ $link->url }}" target="_blank" rel="noopener{{ $link->nofollow ? ' nofollow' : '' }}"
+                        class="sn-tip-text hover:text-primary-600 dark:hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 rounded-sm px-3 border-r border-gray-200 dark:border-gray-700 {{ $loop->last ? 'border-r-0' : '' }}">
+                        {{ $link->name }}
+                    </a>
+                @endforeach
+            </nav>
         @endif
 
         {{-- 合规条：版权 + ICP 备案 + 公安备案 --}}

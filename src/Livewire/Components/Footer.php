@@ -21,10 +21,16 @@ class Footer extends Base
         $groups = $navigations->filter(fn ($navigation) => $navigation->children->isNotEmpty())->values();
         $flats = $navigations->filter(fn ($navigation) => $navigation->children->isEmpty())->values();
 
+        // 友情链接（启用状态，按 order 排序）与 RSS 订阅地址
+        $links = Utils::getLinkModel()::snScope(...Utils::getScopeable())->normal()->ordered()->get();
+        $feedUrl = Utils::getConfig('feed.enabled', true) ? Utils::route('feed') : null;
+
         return view($this->getThemeView('components.footer'), [
             'general' => $general,
             'groups' => $groups,
             'flats' => $flats,
+            'links' => $links,
+            'feedUrl' => $feedUrl,
         ]);
     }
 

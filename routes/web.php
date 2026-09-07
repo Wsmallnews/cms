@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use RalphJSmit\Livewire\Urls\Middleware\LivewireUrlsMiddleware;
 use Wsmallnews\Cms\CmsPlugin;
+use Wsmallnews\Cms\Http\Controllers\FeedController;
 use Wsmallnews\Cms\Livewire\Auth\ConfirmPassword;
 use Wsmallnews\Cms\Livewire\Auth\ForgotPassword;
 use Wsmallnews\Cms\Livewire\Auth\Login;
@@ -42,6 +43,16 @@ $middlewares[] = LivewireUrlsMiddleware::class;
 
 // 首屏初始化页面 SEO 上下文（模块归属由路由声明，seo-init 中间件在 support 包注册）
 $middlewares[] = 'seo-init:' . app(CmsPlugin::class)->getId();
+
+// RSS 订阅（站点根路径，不参与 cms 前缀；feed.enabled 关闭时不注册）
+if (Utils::getConfig('feed.enabled', true)) {
+    Route::domain(Utils::getConfig('routes.domain'))
+        ->middleware($middlewares)
+        ->name(Utils::getConfig('routes.name'))
+        ->group(function () {
+            Route::get(Utils::getConfig('routes.uri.feed', 'feed'), FeedController::class)->name('feed');
+        });
+}
 
 Route::domain(Utils::getConfig('routes.domain'))
     ->middleware($middlewares)
