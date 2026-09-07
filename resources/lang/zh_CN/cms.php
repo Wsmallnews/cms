@@ -227,6 +227,7 @@ return [
         'current_position' => '当前位置',
         'all' => '全部',
         'mobile_menu' => '移动端菜单',
+        'more' => '更多',
         'footer_nav' => '页脚导航',
         'footer_quick_nav' => '页脚快捷导航',
         'follow_us' => '关注或联系我们',

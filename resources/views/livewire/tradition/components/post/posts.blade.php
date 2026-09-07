@@ -36,7 +36,7 @@
         @endif
 
         {{-- 右侧整体一个区块：头部（标签左 + 搜索右）+ 分割线 + 文章列表 --}}
-        <div class="sn-container rounded-md overflow-hidden">
+        <div class="sn-container overflow-hidden">
 
             <div class="sn-list-header">
                 {{-- 剥掉 fi-tabs 自带的容器外观（白底/边框/阴影/内边距/居中 margin），只保留 tab 悬停与激活态 --}}

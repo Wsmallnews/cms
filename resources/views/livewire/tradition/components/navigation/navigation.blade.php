@@ -1,146 +1,186 @@
 @php
+    use Filament\Support\Icons\Heroicon;
     use Wsmallnews\Cms\CmsPlugin;
     use Wsmallnews\Cms\Support\Utils;
-    
+
     $nestedset = $this->getNestedset();
+
+    // 导航配置（config/sn-cms.php 顶层 navigation 节）
+    $style = Utils::navigationConfig('style', 'primary');
+    $desktopStyle = Utils::navigationConfig('desktop_submenu_style', 'cascade');
+    $desktopTrigger = Utils::navigationConfig('desktop_submenu_trigger', 'hover');   // cascade 深层跟随；accordion 仅一级生效
+    $itemStyle = Utils::navigationConfig('desktop_item_style', 'flush');             // 一级 hover/选中形态：flush 通栏 | rounded 胶囊
+    $moreStyle = Utils::navigationConfig('more_submenu_style', 'accordion');
+    $moreTrigger = $moreStyle === 'cascade' ? Utils::navigationConfig('more_submenu_trigger', 'click') : 'click';
+    $moreIconOnly = (bool) Utils::navigationConfig('more_icon_only', true);
+
+    // 父项可点击：仅 hover 级联生效（直达第一个可用叶子）
+    $clickable = Utils::isDesktopParentClickable();
+    $moreClickable = $moreTrigger === 'hover' && (bool) Utils::navigationConfig('parent_clickable', true);
+
+    // 递归 partial 路径按当前主题解析（主题切换时随主视图整体替换）
+    $cascadeItemView = $this->getThemeView('components.navigation.partials.cascade-item');
+    $accordionItemView = $this->getThemeView('components.navigation.partials.accordion-item');
+
+    // 一级链接形态类：通栏占满行高；胶囊上下留呼吸边 + 控件级圆角
+    $itemShapeClass = $itemStyle === 'rounded' ? 'my-2 rounded-md' : 'h-full';
 @endphp
 
-<nav class="sn-primary-bg w-full" x-data="{ mobileMenuIsOpen: false }" @click.away="mobileMenuIsOpen = false">
-    <div class="container hidden lg:flex h-16 mx-auto sn-page-x">
-        <ul class="flex h-full" role="menu">
+<nav @class(['sn-cms-nav w-full', 'sn-cms-nav-minimal' => $style === 'minimal'])
+    x-data="snCmsNav({ cascadeTrigger: '{{ $desktopTrigger }}', moreTrigger: '{{ $moreTrigger }}' })"
+    @click.away="mobileMenuIsOpen = false; moreOpen = false; closeAllCascade()"
+>
+    {{-- ===== PC 主行（lg+）：全量渲染 + Alpine 测量溢出折叠（数据不依赖后端，JS 只做显隐）=====
+        组件只占 w-full，容器由调用处外层包裹；显隐走纯 CSS（hidden/lg:flex + 布局内联关键 CSS 兜底 pre-CSS 闪块）；
+        overflow-x-clip：溢出测量前的全量渲染在本组件内裁切消化，不顶出页面横向滚动条（flyout 有右缘反向保证不超容器） --}}
+    <div class="sn-cms-nav-bar hidden lg:flex h-16 w-full overflow-x-clip"
+        x-ref="bar"
+        @mouseover="cascadeOver($event)"
+        @mouseleave="barLeave()"
+    >
+        <ul @class([
+            'sn-cms-nav-list flex h-full min-w-0 flex-1',
+            // 胶囊形态下项与项之间留间距（flush 通栏保持连续）
+            'gap-1.5' => $itemStyle === 'rounded',
+        ]) x-ref="list" role="menu">
             @foreach ($nestedset as $navigation)
                 @php
                     $hasChild = $navigation->children->count() > 0;
+                    $leafUrl = $hasChild && $clickable ? $navigation->first_leaf_url : null;
                 @endphp
-                <li @class([
-                        'sn-primary-bg sn-hover min-w-32 flex items-center relative group/child',
-                        'sn-active' => $navigation->has_active,
-                    ])
-                    @if ($hasChild)
-                        x-data="{ isOpen: false, openedWithKeyboard: false, leaveTimeout: null }"
-                        x-on:mouseover="isOpen = true; leaveTimeout ? clearTimeout(leaveTimeout) : true"
-                        x-on:mouseleave.prevent="leaveTimeout = setTimeout(() => { isOpen = false }, 50)"
-                        x-on:keydown.esc.prevent="isOpen = false, openedWithKeyboard = false"
-                        x-on:click.outside="isOpen = false, openedWithKeyboard = false"
-                    @endif
-                    role="menuitem"
+                <li @class(['sn-cms-nav-item relative flex', 'has-sub' => $hasChild, 'is-active' => $navigation->has_active])
+                    data-active="{{ $navigation->has_active ? 1 : 0 }}"
+                    role="none"
                 >
-                    <a class="flex w-full h-full justify-center items-center px-4 font-semibold text-white gap-2 underline-offset-2 focus:outline-hidden focus:underline"
-                        @if ($hasChild)
-                            href="javascript:;"
-                            x-on:keydown.space.prevent="openedWithKeyboard = true"
-                            x-on:keydown.enter.prevent="openedWithKeyboard = true"
-                            x-on:keydown.down.prevent="openedWithKeyboard = true"
-                            x-bind:aria-expanded="isOpen || openedWithKeyboard"
-                            aria-haspopup="true"
-                        @else
-                            {{ \Filament\Support\generate_href_html($navigation->url_info['url'], $navigation->url_info['target'] ?? false) }}
-                        @endif
-                    >
-                        {{ $navigation->name_label }}
-                        @if ($hasChild)
-                            <x-filament::icon icon="heroicon-m-chevron-down" class="size-6 font-semibold transform transition-transform duration-300 rotate-0 group-hover/child:rotate-180" aria-hidden="true" />
-                        @endif
-                    </a>
-
-                    @if ($hasChild) 
-                        <div class="sn-primary-bg w-full absolute top-full left-0 z-10"
-                            x-cloak x-show="isOpen || openedWithKeyboard"
-                            x-transition
-                            x-trap="openedWithKeyboard"
+                    @if ($desktopStyle === 'accordion' && $hasChild)
+                        {{-- 手风琴：一级按 trigger（默认 hover）展开，面板内部固定 click；父项纯展开 --}}
+                        <a @class([
+                            'sn-cms-nav-link flex min-w-24 w-full items-center justify-center gap-1.5 px-4 text-sm font-semibold whitespace-nowrap cursor-pointer underline-offset-2 focus:outline-hidden focus-visible:underline',
+                            $itemShapeClass,
+                        ])
+                            href="javascript:;" role="menuitem"
+                            aria-haspopup="true" aria-expanded="false"
+                            @click="cascadeClick($event)"
+                            @keydown.down.prevent="cascadeOpenByKey($event)"
+                            @keydown.esc.prevent="closeAllCascade()"
+                            wire:click="$dispatch('sn-cms-navigation-node-click', { recordId: {{ $navigation->id }}, hasChild: 1 })"
                         >
-                            <ul class="flex flex-col" role="menu">
-                                @foreach ($navigation->children as $child)
-                                    @php
-                                        $hasGrandChild = $child->children->count() > 0;
-                                    @endphp
-                                    <li @class([
-                                            'sn-primary-bg sn-hover w-full h-14 flex items-center relative group/grandchild',
-                                            'sn-active' => $child->has_active,
-                                        ])
-                                        @if ($hasGrandChild)
-                                            x-data="{ isOpen: false, openedWithKeyboard: false, leaveTimeout: null }"
-                                            x-on:mouseover="isOpen = true; leaveTimeout ? clearTimeout(leaveTimeout) : true"
-                                            x-on:mouseleave.prevent="leaveTimeout = setTimeout(() => { isOpen = false }, 50)"
-                                            x-on:keydown.esc.prevent="isOpen = false, openedWithKeyboard = false"
-                                            x-on:click.outside="isOpen = false, openedWithKeyboard = false"
-                                        @endif
-                                        role="menuitem"
-                                    >
-                                        <a class="flex w-full h-full justify-between items-center px-4 font-semibold text-white gap-2 underline-offset-2 focus:outline-hidden focus:underline"
-                                            @if ($hasGrandChild)
-                                                href="javascript:;"
-                                                x-on:keydown.space.prevent="openedWithKeyboard = true"
-                                                x-on:keydown.enter.prevent="openedWithKeyboard = true"
-                                                x-on:keydown.down.prevent="openedWithKeyboard = true"
-                                                x-bind:aria-expanded="isOpen || openedWithKeyboard"
-                                                aria-haspopup="true"
-                                            @else
-                                                {{ \Filament\Support\generate_href_html($child->url_info['url'], $child->url_info['target'] ?? false) }}
-                                            @endif
-                                        >
-                                            {{ $child->name_label }}
-                                            @if ($hasGrandChild)
-                                                <x-filament::icon icon="heroicon-m-chevron-down" class="size-6 font-semibold transform transition-transform duration-300 rotate-0 group-hover/child:-rotate-90" aria-hidden="true" />
-                                            @endif
-                                        </a>
+                            {{ $navigation->name_label }}
+                            <x-filament::icon :icon="Heroicon::ChevronDown" class="sn-cms-chev" aria-hidden="true" />
+                        </a>
 
-                                        @if ($hasGrandChild) 
-                                            <div class="sn-primary-bg w-full absolute top-0 left-full"
-                                                x-cloak x-show="isOpen || openedWithKeyboard"
-                                                x-transition
-                                                x-trap="openedWithKeyboard"
-                                            >
-                                                <ul class="flex flex-col" role="menu">
-                                                    @foreach ($child->children as $grandChild)
-                                                        <li @class([
-                                                                'sn-primary-bg sn-hover w-full h-12 flex items-center',
-                                                                'sn-active' => $grandChild->has_active,
-                                                            ])
-                                                            role="menuitem"
-                                                        >
-                                                            <a class="flex w-full h-full justify-between items-center px-4 font-semibold text-white gap-2 underline-offset-2 focus:outline-hidden focus:underline"
-                                                                
-                                                                {{ \Filament\Support\generate_href_html($grandChild->url_info['url'], $grandChild->url_info['target'] ?? false) }}
-                                                            >
-                                                                {{ $grandChild->name_label }}
-                                                            </a>
-                                                        </li>
-                                                    @endforeach
-                                                </ul>
-                                            </div>
-                                        @endif
-                                    </li>
+                        <div class="sn-cms-sub depth-1 py-1" role="menu">
+                            <ul class="sn-cms-acc flex flex-col">
+                                @foreach ($navigation->children as $child)
+                                    {{-- depthOffset=1：面板根是二级导航（绝对 depth 从 1 起），转为相对层级让首层不缩进 --}}
+                                    @include($accordionItemView, ['record' => $child, 'depthOffset' => 1])
                                 @endforeach
                             </ul>
                         </div>
+                    @else
+                        <a @class([
+                            'sn-cms-nav-link flex min-w-24 w-full items-center justify-center gap-1.5 px-4 text-sm font-semibold whitespace-nowrap cursor-pointer underline-offset-2 focus:outline-hidden focus-visible:underline',
+                            $itemShapeClass,
+                        ])
+                            role="menuitem"
+                            @if ($hasChild)
+                                {{-- hover 级联 + parent_clickable + 有可用叶子 → 真实链接直达第一个叶子；否则纯展开 --}}
+                                @if ($leafUrl)
+                                    {{ \Filament\Support\generate_href_html($leafUrl) }}
+                                @else
+                                    href="javascript:;"
+                                @endif
+                                aria-haspopup="true"
+                                aria-expanded="false"
+                                @click="cascadeClick($event)"
+                                @keydown.down.prevent="cascadeOpenByKey($event)"
+                                @keydown.esc.prevent="closeAllCascade()"
+                                wire:click="$dispatch('sn-cms-navigation-node-click', { recordId: {{ $navigation->id }}, hasChild: 1 })"
+                            @else
+                                {{ \Filament\Support\generate_href_html($navigation->url_info['url'], $navigation->url_info['target'] ?? false) }}
+                                wire:click="$dispatch('sn-cms-navigation-leaf-click', { recordId: {{ $navigation->id }}, hasChild: 0 })"
+                            @endif
+                        >
+                            {{ $navigation->name_label }}
+                            @if ($hasChild)
+                                <x-filament::icon :icon="Heroicon::ChevronDown" class="sn-cms-chev" aria-hidden="true" />
+                            @endif
+                        </a>
+
+                        @if ($hasChild)
+                            {{-- 级联：一级向下弹，深层向右（右缘溢出反向）--}}
+                            <ul class="sn-cms-sub depth-1" role="menu">
+                                @foreach ($navigation->children as $child)
+                                    @include($cascadeItemView, ['record' => $child])
+                                @endforeach
+                            </ul>
+                        @endif
                     @endif
                 </li>
             @endforeach
         </ul>
+
+        {{-- ===== "更多"按钮（溢出折叠）：自动占据最后一个能放下的导航位置 ===== --}}
+        <div class="sn-cms-nav-more relative flex flex-none" x-ref="more" data-sn-more
+            :class="{ 'is-open': moreOpen, 'has-active': moreHasActive }"
+        >
+            <button type="button" class="sn-cms-nav-more-btn flex items-center justify-center min-w-12 h-full px-1 gap-1.5 text-sm font-semibold whitespace-nowrap cursor-pointer focus:outline-hidden focus-visible:underline underline-offset-2"
+                @click="moreOpen = ! moreOpen"
+                :aria-expanded="moreOpen ? 'true' : 'false'"
+                aria-haspopup="true"
+                aria-label="{{ __('sn-cms::cms.frontend.more') }}"
+            >
+                @if ($moreIconOnly)
+                    <x-filament::icon :icon="Heroicon::EllipsisHorizontal" class="size-6" aria-hidden="true" />
+                @else
+                    <span>{{ __('sn-cms::cms.frontend.more') }}</span>
+                    <x-filament::icon :icon="Heroicon::ChevronDown" class="sn-cms-chev" aria-hidden="true" />
+                @endif
+            </button>
+
+            <div class="sn-cms-nav-more-menu sn-scrollbar" x-cloak x-show="moreOpen" x-transition>
+                @if ($moreStyle === 'cascade')
+                    <ul class="relative" role="menu">
+                        @foreach ($nestedset as $i => $navigation)
+                            @include($cascadeItemView, [
+                                'record' => $navigation,
+                                'clickable' => $moreClickable,
+                                'ovIdx' => $i,
+                            ])
+                        @endforeach
+                    </ul>
+                @else
+                    <ul class="sn-cms-acc flex flex-col" role="menu">
+                        @foreach ($nestedset as $i => $navigation)
+                            @include($accordionItemView, [
+                                'record' => $navigation,
+                                'ovIdx' => $i,
+                            ])
+                        @endforeach
+                    </ul>
+                @endif
+            </div>
+        </div>
     </div>
 
-    <!-- Mobile Menu Button -->
-    {{-- 收起时位于亮色页头上，用深色图标；展开时位于主题色面板上，用白色图标 + 半透明底 --}}
-    <button class="inline-flex items-center justify-center min-w-11 min-h-11 rounded-md cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-primary-500 transition-colors duration-200 motion-reduce:transition-none lg:hidden"
-        @click="mobileMenuIsOpen = !mobileMenuIsOpen"
-        :aria-expanded="mobileMenuIsOpen"
-        x-bind:class="mobileMenuIsOpen
-            ? 'fixed top-3 right-3 z-30 text-white bg-white/15 hover:bg-white/25'
-            : 'absolute top-3 right-3 z-20 text-gray-700 hover:bg-primary-600 hover:text-white dark:text-gray-100 dark:hover:text-white'"
-        type="button"
+    {{-- ===== 移动端菜单按钮（< lg 汉堡）=====
+        定位类直接写死（不依赖 Alpine :class）：初始化前按钮若在文档流内，会撑起 nav 高度把调用方背景透成一条色带 --}}
+    <button type="button"
+        class="sn-cms-nav-burger absolute top-3 right-3 z-20 inline-flex items-center justify-center min-w-11 min-h-11 rounded-md cursor-pointer transition-colors duration-200 motion-reduce:transition-none lg:hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2"
+        @click="mobileMenuIsOpen = ! mobileMenuIsOpen"
+        :aria-expanded="mobileMenuIsOpen ? 'true' : 'false'"
+        :class="mobileMenuIsOpen ? 'is-open' : 'is-closed'"
         aria-label="{{ __('sn-cms::cms.frontend.mobile_menu') }}"
         aria-controls="mobileMenu"
     >
-        <x-filament::icon icon="heroicon-m-bars-3" class="size-6" x-cloak x-show="!mobileMenuIsOpen" aria-hidden="true" />
-        <x-filament::icon icon="heroicon-m-x-mark" class="size-6" x-cloak x-show="mobileMenuIsOpen" aria-hidden="true" />
+        <x-filament::icon :icon="Heroicon::Bars3" class="size-6" x-cloak x-show="!mobileMenuIsOpen" aria-hidden="true" />
+        <x-filament::icon :icon="Heroicon::XMark" class="size-6" x-cloak x-show="mobileMenuIsOpen" aria-hidden="true" />
     </button>
 
     {{-- 移动端菜单展开时，顶部显示全局搜索和登录注册/个人信息（lg 以下；桌面端在页头）。
         pr-16 给右上角关闭按钮让位，避免压住输入框 --}}
     @if (Utils::getConfig('search.enabled', true))
-        <div
-            class="sn-primary-bg w-full fixed inset-x-0 top-0 z-20 pl-4 pr-16 pt-5 pb-4 lg:hidden"
+        <div class="sn-cms-nav-search-strip w-full fixed inset-x-0 top-0 z-20 pl-4 pr-16 pt-5 pb-4 lg:hidden"
             x-cloak x-show="mobileMenuIsOpen"
         >
             <livewire:sn-support::components.search
@@ -152,11 +192,11 @@
         </div>
     @endif
 
-    <!-- Mobile Menu -->
+    {{-- ===== 移动端菜单（< lg）：交互保持现状（手风琴 + 点击展开、激活链默认展开），配色随 style 换肤 ===== --}}
     {{-- pt-24 为顶部固定定位的关闭按钮（top-3 + 高 44px）保留安全距离，避免盖住首个导航项 --}}
     <ul
         @class([
-            'sn-primary-bg w-full flex flex-col fixed max-h-svh overflow-y-auto inset-x-0 top-0 z-10 rounded-b-md pb-6 pt-24 divide-y divide-primary-400 lg:hidden',
+            'sn-cms-nav-mobile sn-cms-acc-divide w-full flex flex-col fixed max-h-svh overflow-y-auto inset-x-0 top-0 z-10 sn-rounded-b pb-6 pt-24 lg:hidden',
         ])
         x-cloak x-show="mobileMenuIsOpen"
         x-transition:enter="transition motion-reduce:transition-none ease-out duration-300"
@@ -166,18 +206,8 @@
         id="mobileMenu"
         role="menu"
     >
-        @forelse($nestedset as $treeKey => $record)
-            <x-dynamic-component 
-                @class([
-                    'w-full',
-                ]) 
-                :component="$this->getRecordView()" 
-                key="categories-component-{{ $record->getKey() }}" 
-                :record="$record" 
-                :first="$loop->first" 
-                :last="$loop->last" 
-                :current-level="1" 
-            />
+        @forelse($nestedset as $record)
+            @include($accordionItemView, ['record' => $record, 'variant' => 'menu'])
         @empty
             <li class="w-full px-3 py-2 text-center">
                 {{ $this->getEmptyLabel() ?: __('sn-filament-nestedset::nestedset.nestedset.empty_label')}}
@@ -201,3 +231,161 @@
         </li>
     </ul>
 </nav>
+
+@once
+    <script>
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('snCmsNav', (config) => ({
+                hiddenFrom: null,          // 第一个放不下的主行项索引；null = 全部可见
+                moreHasActive: false,      // 被折叠项中有激活态 → 更多按钮高亮
+                moreOpen: false,
+                mobileMenuIsOpen: false,
+                cascadeCloseTimer: null,
+                cascadeTrigger: config.cascadeTrigger,
+                moreTrigger: config.moreTrigger,
+
+                init() {
+                    this.applyOverflow();
+                    if (this.$refs.bar) {
+                        // 容器尺寸变化（含 lg 断点显隐、侧栏等）时重新测量
+                        new ResizeObserver(() => this.applyOverflow()).observe(this.$refs.bar);
+                    }
+                    // 字体加载改变项宽
+                    if (document.fonts && document.fonts.ready) {
+                        document.fonts.ready.then(() => this.applyOverflow());
+                    }
+                    this.$watch('moreOpen', (open) => {
+                        if (! open) this.closeAllCascade();
+                    });
+                },
+
+                /* ===== 溢出折叠测量：主行全量渲染 → 逐项累计宽度 → 第一个放不下的项起隐藏 ===== */
+                applyOverflow() {
+                    const list = this.$refs.list;
+                    const more = this.$refs.more;
+                    if (! list || ! more) return;
+
+                    const items = Array.from(list.children);
+                    // 先全部显示 + 显示更多按钮，测量自然宽度（更多按钮宽度按实际形态预留）
+                    items.forEach((li) => li.style.display = '');
+                    more.style.display = '';
+
+                    // list 是 flex-1，clientWidth 已经排除了更多按钮占位，不能再重复扣减；
+                    // 胶囊形态下列表带 gap，逐项累计时一并计入；+1 为取整累计的舍入保护
+                    const gap = parseFloat(getComputedStyle(list).columnGap) || 0;
+                    const avail = list.clientWidth + 1;
+                    let used = 0;
+                    let cut = items.length;
+                    for (let i = 0; i < items.length; i++) {
+                        used += items[i].offsetWidth + gap;
+                        if (used > avail) { cut = i; break; }
+                    }
+
+                    const hidden = items.slice(cut);
+                    if (hidden.length) {
+                        hidden.forEach((li) => li.style.display = 'none');
+                        this.hiddenFrom = cut;
+                        this.moreHasActive = hidden.some((li) => li.dataset.active === '1');
+                    } else {
+                        more.style.display = 'none';
+                        this.hiddenFrom = null;
+                        this.moreHasActive = false;
+                        this.moreOpen = false;
+                    }
+                },
+
+                /* ===== 级联交互：hover 区（打开即时、关闭延迟 300ms、祖先链保持、同级互斥、右缘反向）===== */
+                regionTrigger(target) {
+                    return target.closest('[data-sn-more]') ? this.moreTrigger : this.cascadeTrigger;
+                },
+
+                cascadeOver(e) {
+                    if (this.regionTrigger(e.target) !== 'hover') return;
+                    this.clearCascadeTimer();
+
+                    const li = e.target.closest('li.has-sub');
+                    if (! li) {
+                        // 鼠标在普通项/空白上：收起所有子菜单（子菜单内部除外）
+                        if (! e.target.closest('.sn-cms-sub')) this.closeAllCascade();
+                        return;
+                    }
+
+                    this.closeSiblingsOf(li);
+                    this.setCascadeOpen(li, true);
+                },
+
+                barLeave() {
+                    this.clearCascadeTimer();
+                    this.cascadeCloseTimer = setTimeout(() => this.closeAllCascade(), 300);
+                },
+
+                clearCascadeTimer() {
+                    if (this.cascadeCloseTimer) {
+                        clearTimeout(this.cascadeCloseTimer);
+                        this.cascadeCloseTimer = null;
+                    }
+                },
+
+                /* 点击展开：click 区一律切换；hover 区真实链接放行跳转，占位链接（纯展开）也允许点击切换（触屏/键盘兜底） */
+                cascadeClick(e) {
+                    const li = e.target.closest('li.has-sub');
+                    if (! li) return;
+
+                    const link = li.querySelector(':scope > a');
+                    const isPlaceholder = ! link || (link.getAttribute('href') || '').startsWith('javascript:');
+                    if (this.regionTrigger(e.target) !== 'click' && ! isPlaceholder) return;
+                    e.preventDefault();
+
+                    const open = ! li.classList.contains('is-open');
+                    if (open) this.closeSiblingsOf(li);
+                    this.setCascadeOpen(li, open);
+                },
+
+                cascadeOpenByKey(e) {
+                    const li = e.target.closest('li.has-sub');
+                    if (! li) return;
+
+                    this.clearCascadeTimer();
+                    this.closeSiblingsOf(li);
+                    this.setCascadeOpen(li, true);
+                },
+
+                /* 关闭 li 之外的所有打开项（保持祖先链） */
+                closeSiblingsOf(li) {
+                    const bar = this.$refs.bar;
+                    if (! bar) return;
+
+                    const chain = new Set();
+                    let p = li;
+                    while (p && p !== bar) {
+                        chain.add(p);
+                        p = p.parentElement ? p.parentElement.closest('li.has-sub') : null;
+                    }
+                    bar.querySelectorAll('li.has-sub.is-open').forEach((el) => {
+                        if (! chain.has(el)) this.setCascadeOpen(el, false);
+                    });
+                },
+
+                setCascadeOpen(li, open) {
+                    li.classList.toggle('is-open', open);
+                    const link = li.querySelector(':scope > a');
+                    if (link) link.setAttribute('aria-expanded', open ? 'true' : 'false');
+                    if (! open) return;
+
+                    // 打开后测量：子菜单右缘超出视口则反向向左弹
+                    const sub = li.querySelector(':scope > .sn-cms-sub');
+                    if (sub) {
+                        sub.classList.remove('pop-left');
+                        const rect = sub.getBoundingClientRect();
+                        if (rect.right > window.innerWidth - 8) sub.classList.add('pop-left');
+                    }
+                },
+
+                closeAllCascade() {
+                    if (! this.$refs.bar) return;
+                    this.$refs.bar.querySelectorAll('li.has-sub.is-open').forEach((el) => this.setCascadeOpen(el, false));
+                },
+            }));
+        });
+    </script>
+@endonce

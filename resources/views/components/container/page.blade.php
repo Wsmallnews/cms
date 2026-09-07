@@ -59,7 +59,20 @@
     </div>
 
     <div class="w-full flex flex-col grow">
-        <livewire:sn-cms::components.navigation.navigation :scope-type="$scopeType" :scope-id="$scopeId" />
+        {{-- 导航组件只占 w-full（无容器无边框，可随处嵌入）；独立放置时由调用处提供容器与背景：
+            primary 文字是白色，必须设置深色背景（sn-primary-bg），否则不可见；minimal 常规白底/深底 + 底边线 --}}
+        @php
+            $navStyle = Utils::navigationConfig('style', 'primary');
+        @endphp
+        <div @class([
+            'w-full',
+            'sn-primary-bg' => $navStyle === 'primary',
+            'bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700' => $navStyle === 'minimal',
+        ])>
+            <div class="container mx-auto sn-page-x">
+                <livewire:sn-cms::components.navigation.navigation :scope-type="$scopeType" :scope-id="$scopeId" />
+            </div>
+        </div>
 
         {{ $slot }}
 

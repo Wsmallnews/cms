@@ -122,6 +122,35 @@ class Navigation extends SupportModel implements HasMedia, HasSnSubject
     }
 
     /**
+     * 第一个可用叶子的 url（hover 级联下父项的直达目标）
+     *
+     * 沿已加载的 children 向下找第一个可用（normal）子项，直到叶子；
+     * 子项全部不可用时停留在当前节点（回退为自身 url，无链接则为 null）。
+     * 整树已 toTree() 加载时递归无 N+1。
+     */
+    protected function firstLeafUrl(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                $node = $this;
+                while ($node->children->isNotEmpty()) {
+                    $next = $node->children
+                        ->filter(fn ($child) => $child->status === NavigationStatusEnum::Normal)
+                        ->first();          // 跳过隐藏项，找第一个可用子项
+
+                    if (! $next) {
+                        break;
+                    }
+
+                    $node = $next;
+                }
+
+                return $node->url_info['url'] ?? null;
+            }
+        );
+    }
+
+    /**
      * 当前是否是激活状态
      */
     protected function isActive(): Attribute

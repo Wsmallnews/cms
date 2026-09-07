@@ -195,6 +195,16 @@ class Utils
     }
 
     /**
+     * Get link (friend link) model class.
+     *
+     * @return string Models\Link
+     */
+    public static function getLinkModel(): string
+    {
+        return self::getModel('link');
+    }
+
+    /**
      * Get tag model class.
      *
      * @return string Models\Post
@@ -245,6 +255,30 @@ class Utils
     public static function getThemes(): array
     {
         return self::getConfig('themes');
+    }
+
+    /**
+     * 读取前台 navigation 配置（config/sn-cms.php 顶层 navigation 节）。
+     *
+     * @param  string|null  $key  Configuration key (dot notation, e.g. 'style')
+     */
+    public static function navigationConfig(?string $key = null, mixed $default = null): mixed
+    {
+        return self::getConfig('navigation'.($key ? '.'.$key : ''), $default);
+    }
+
+    /**
+     * PC 主行父项是否可点击（直达第一个可用叶子）。
+     * 仅「hover 级联」生效；click 级联（点击语义被展开占用）与手风琴（固定纯展开）下强制无效。
+     */
+    public static function isDesktopParentClickable(): bool
+    {
+        if (self::navigationConfig('desktop_submenu_style', 'cascade') !== 'cascade'
+            || self::navigationConfig('desktop_submenu_trigger', 'hover') !== 'hover') {
+            return false;
+        }
+
+        return (bool) self::navigationConfig('parent_clickable', true);
     }
 
     /**

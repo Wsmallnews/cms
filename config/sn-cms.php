@@ -228,6 +228,43 @@ return [
         'display' => null,
     ],
 
+    /**
+     * 前台导航（tradition 主题导航条）
+     *
+     * 注意：与 contents.navigation（内容表单）、models.navigation（模型映射）是不同层级的既有键，互不冲突。
+     */
+    'navigation' => [
+
+        // 整体风格：primary = 主题色面板+白字（默认）；minimal = 白底简约，默认黑字、hover/选中转主题色
+        // 注意：主行背景由调用方设置——primary 文字为白色，调用处必须提供深色背景（如 sn-primary-bg），否则文字不可见
+        'style' => 'primary',
+
+        // PC 主行（lg+）子菜单展开形式：cascade = 级联（一级向下，深层向左/右弹）| accordion = 手风琴
+        'desktop_submenu_style' => 'cascade',
+
+        // PC 主行一级导航的展开触发：hover | click（cascade 深层子菜单跟随同一触发；
+        // accordion 仅对一级生效，面板内部的手风琴层级固定 click）
+        'desktop_submenu_trigger' => 'hover',
+
+        // PC 一级导航 hover/选中形态：flush = 通栏着色（默认）| rounded = 圆角胶囊（上下留呼吸边）
+        'desktop_item_style' => 'flush',
+
+        // 仅「hover 级联」生效：父项是否可点击（直达第一个可用叶子）
+        'parent_clickable' => true,
+
+        // "更多"下拉（溢出折叠）里的展开形式：accordion（默认，窄面板更稳）| cascade
+        'more_submenu_style' => 'accordion',
+
+        // "更多"下拉里 cascade 形式的触发（accordion 时此值忽略）
+        'more_submenu_trigger' => 'click',
+
+        // "更多"按钮仅图标（⋯），不显示文字
+        'more_icon_only' => true,
+    ],
+
+    /**
+     * themes
+     */
     'themes' => [
         // 是否启用暗黑模式
         'dark_mode' => true,

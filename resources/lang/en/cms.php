@@ -227,6 +227,7 @@ return [
         'current_position' => 'Current Position',
         'all' => 'All',
         'mobile_menu' => 'Mobile Menu',
+        'more' => 'More',
         'footer_nav' => 'Footer Navigation',
         'footer_quick_nav' => 'Footer Quick Navigation',
         'follow_us' => 'Follow or Contact Us',

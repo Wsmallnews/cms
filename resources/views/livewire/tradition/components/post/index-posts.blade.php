@@ -20,7 +20,7 @@
 
 <div class="w-full flex flex-col lg:flex-row sn-gap">
     <x-sn-support::swiper @class([
-        'sn-container sn-hover rounded-md' => $contained,
+        'sn-container sn-hover' => $contained,
         'w-full aspect-video overflow-hidden'
     ]) :has-thumb="true" thumb-position="left" image-fit="cover" pagination="bullets">
         @foreach ($slides as $item)
@@ -33,7 +33,7 @@
     </x-sn-support::swiper>
 
     <div @class([
-        'sn-container sn-hover rounded-md' => $contained,
+        'sn-container sn-hover' => $contained,
         'w-full flex flex-col lg:grid lg:grid-rows-4 lg:aspect-video overflow-hidden sn-divide-y'
     ])>
         @foreach($posts as $post)

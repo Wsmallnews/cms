@@ -2,16 +2,12 @@
 
 namespace Wsmallnews\Cms\Livewire\Components\Navigation;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
-use Illuminate\Support\HtmlString;
 use Illuminate\View\View;
 use Wsmallnews\Cms\Livewire\Concerns\HasThemeView;
 use Wsmallnews\Cms\Models\Navigation as NavigationModel;
 use Wsmallnews\FilamentNestedset\Livewire\Components\Nestedset;
 use Wsmallnews\Support\Livewire\Concerns\Scopeable;
-
-use function Filament\Support\generate_href_html;
 
 class Brothers extends Nestedset
 {
@@ -34,28 +30,6 @@ class Brothers extends Nestedset
         }
     }
 
-    public function getRecordUrl(Model $record): string | HtmlString | null
-    {
-        // 没有子导航时，才返回 url
-        if (! $record->children->count()) {
-            $urlInfo = $record->url_info;
-
-            return generate_href_html($urlInfo['url'], $urlInfo['target']);
-        }
-
-        return null;
-    }
-
-    public function getRecordLabel(Model $record): HtmlString | string
-    {
-        return $record->name_label;
-    }
-
-    public function getHasActive(Model $record): bool
-    {
-        return $record->has_active;
-    }
-
     public function getNestedset(): Collection
     {
         $brothers = collect([]);
@@ -68,7 +42,10 @@ class Brothers extends Nestedset
                 ->get();
 
             $brothers = $brothers->map(function ($brother) {
+                // 侧栏根为二级导航（depth 1），后代递归标注绝对 depth（descendants 关联上 withDepth 以子树为基准，不可用）
+                $brother->depth = 1;
                 $children = $brother->descendants->toTree();
+                $this->markDescendantDepth($children, 2);
                 $brother->setRelation('children', $children);
 
                 return $brother;
@@ -78,9 +55,17 @@ class Brothers extends Nestedset
         return $brothers;
     }
 
-    public function getRecordView(): string
+    /**
+     * 递归标注后代节点的绝对层级（供手风琴缩进块使用）
+     *
+     * @param  Collection<int, NavigationModel>  $nodes
+     */
+    protected function markDescendantDepth(Collection $nodes, int $depth): void
     {
-        return $this->getBladeThemeView('components.navigation.navigation-record');
+        $nodes->each(function (NavigationModel $node) use ($depth) {
+            $node->depth = $depth;
+            $this->markDescendantDepth($node->children, $depth + 1);
+        });
     }
 
     public function render(): View
