@@ -287,9 +287,9 @@ return [
         'model_label' => 'Friend Link',
         'plural_model_label' => 'Friend Links',
         'navigation_label' => 'Friend Links',
-        'action_create' => 'Create & Return to List',
     ],
     'link_form' => [
+        'basic_info' => 'Basic Information',
         'name' => 'Name',
         'name_placeholder' => 'e.g. Tech Daily',
         'url' => 'URL',
@@ -312,6 +312,7 @@ return [
         'order' => 'Order',
         'status' => 'Status',
         'created_at' => 'Created At',
+        'updated_at' => 'Updated At',
     ],
     'navigation_page' => [
         'model_label' => 'Navigation',

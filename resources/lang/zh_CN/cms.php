@@ -287,9 +287,9 @@ return [
         'model_label' => '友情链接',
         'plural_model_label' => '友情链接',
         'navigation_label' => '友情链接',
-        'action_create' => '创建并返回列表',
     ],
     'link_form' => [
+        'basic_info' => '基本信息',
         'name' => '名称',
         'name_placeholder' => '如：科技日报',
         'url' => '链接',
@@ -312,6 +312,7 @@ return [
         'order' => '排序',
         'status' => '状态',
         'created_at' => '创建时间',
+        'updated_at' => '更新时间',
     ],
     'navigation_page' => [
         'model_label' => '导航',

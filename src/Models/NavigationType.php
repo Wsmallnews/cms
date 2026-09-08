@@ -18,17 +18,17 @@ class NavigationType extends SupportModel implements HasSnSubject
     use HasActivityLog;
     use SoftDeletes;
 
-    /**
-     * 搜索字段（用于 morphFilter 关键词搜索）。
-     */
-    public static array $keywordSearchFields = ['name', 'description'];
-
     protected $table = 'sn_navigation_types';
 
     protected $casts = [
         'options' => 'array',
         'status' => NavigationTypeStatus::class,
     ];
+
+    /**
+     * 搜索字段（用于 morphFilter 关键词搜索）。
+     */
+    public static array $keywordSearchFields = ['name', 'description'];
 
     public function getSnSubjectId(): int
     {
@@ -52,12 +52,12 @@ class NavigationType extends SupportModel implements HasSnSubject
 
     public function scopeNormal($query)
     {
-        return $query->where('status', 'normal');
+        return $query->where('status', NavigationTypeStatus::Normal);
     }
 
     public function scopeDisabled($query)
     {
-        return $query->where('status', 'disabled');
+        return $query->where('status', NavigationTypeStatus::Disabled);
     }
 
     public function navigations(): HasMany

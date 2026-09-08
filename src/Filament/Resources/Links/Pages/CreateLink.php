@@ -24,16 +24,4 @@ class CreateLink extends CreateRecord
 
         return parent::mutateFormDataBeforeCreate($data);
     }
-
-    protected function getHeaderActions(): array
-    {
-        return [
-            CreateAction::make('create')->label(__('sn-cms::cms.link_resource.action_create')),
-        ];
-    }
-
-    protected function getRedirectUrl(): string
-    {
-        return $this->getResource()::getUrl('index');
-    }
 }

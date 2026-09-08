@@ -3,14 +3,16 @@
 namespace Wsmallnews\Cms\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\HtmlString;
 use Wsmallnews\Cms\Enums\LinkStatus;
-use Wsmallnews\Support\Models\Concerns\Scopeable;
+use Wsmallnews\Support\Contracts\HasSnSubject;
+use Wsmallnews\Support\Models\Concerns\HasActivityLog;
 use Wsmallnews\Support\Models\SupportModel;
 use Wsmallnews\Support\Support\Utils as SupportUtils;
 
-class Link extends SupportModel
+class Link extends SupportModel implements HasSnSubject
 {
-    use Scopeable;
+    use HasActivityLog;
 
     protected $table = 'sn_links';
 
@@ -23,6 +25,26 @@ class Link extends SupportModel
      * 搜索字段（用于 morphFilter 关键词搜索）。
      */
     public static array $keywordSearchFields = ['name', 'url'];
+
+    public function getSnSubjectId(): int
+    {
+        return $this->id;
+    }
+
+    public function getSnSubjectTitle(): string | HtmlString | null
+    {
+        return $this->name;
+    }
+
+    public function getSnSubjectDescription(): string | HtmlString | null
+    {
+        return $this->description;
+    }
+
+    public function getSnSubjectCoverUrl(): string | HtmlString | null
+    {
+        return null;
+    }
 
     public function scopeNormal($query)
     {
