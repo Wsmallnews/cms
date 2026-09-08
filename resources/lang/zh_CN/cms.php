@@ -229,7 +229,7 @@ return [
         'mobile_menu' => '移动端菜单',
         'more' => '更多',
         'friend_links' => '友情链接',
-        'rss' => 'RSS 订阅',
+        'rss_posts' => '文章动态',
         'footer_nav' => '页脚导航',
         'footer_quick_nav' => '页脚快捷导航',
         'follow_us' => '关注或联系我们',

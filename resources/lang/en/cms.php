@@ -229,7 +229,7 @@ return [
         'mobile_menu' => 'Mobile Menu',
         'more' => 'More',
         'friend_links' => 'Friend Links',
-        'rss' => 'RSS Feed',
+        'rss_posts' => 'Posts',
         'footer_nav' => 'Footer Navigation',
         'footer_quick_nav' => 'Footer Quick Navigation',
         'follow_us' => 'Follow or Contact Us',

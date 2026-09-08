@@ -3,7 +3,6 @@
 use Illuminate\Support\Facades\Route;
 use RalphJSmit\Livewire\Urls\Middleware\LivewireUrlsMiddleware;
 use Wsmallnews\Cms\CmsPlugin;
-use Wsmallnews\Cms\Http\Controllers\FeedController;
 use Wsmallnews\Cms\Livewire\Auth\ConfirmPassword;
 use Wsmallnews\Cms\Livewire\Auth\ForgotPassword;
 use Wsmallnews\Cms\Livewire\Auth\Login;
@@ -23,6 +22,7 @@ use Wsmallnews\Cms\Livewire\Settings\TwoFactor;
 use Wsmallnews\Cms\Support\Utils;
 use Wsmallnews\Member\Http\Middleware\ResolveMember;
 use Wsmallnews\Support\Http\Middleware\IdentifyTenant;
+use Wsmallnews\Support\Facades\Feed;
 use Wsmallnews\Support\Support\Utils as SupportUtils;
 use Wsmallnews\User\Http\Controllers\Auth\VerifyEmailController;
 
@@ -44,21 +44,15 @@ $middlewares[] = LivewireUrlsMiddleware::class;
 // 首屏初始化页面 SEO 上下文（模块归属由路由声明，seo-init 中间件在 support 包注册）
 $middlewares[] = 'seo-init:' . app(CmsPlugin::class)->getId();
 
-// RSS 订阅（站点根路径，不参与 cms 前缀；feed.enabled 关闭时不注册）
-if (Utils::getConfig('feed.enabled', true)) {
-    Route::domain(Utils::getConfig('routes.domain'))
-        ->middleware($middlewares)
-        ->name(Utils::getConfig('routes.name'))
-        ->group(function () {
-            Route::get(Utils::getConfig('routes.uri.feed', 'feed'), FeedController::class)->name('feed');
-        });
-}
-
 Route::domain(Utils::getConfig('routes.domain'))
     ->middleware($middlewares)
     ->prefix(Utils::getConfig('routes.prefix'))
     ->name(Utils::getConfig('routes.name'))
     ->group(function () use ($guard) {
+        // RSS 订阅模块端点（仅输出本模块流；整站端点 /feed 由 support 提供）。
+        // 必须注册在 navigation/{slug} 等动态段路由之前，否则会被吃掉
+        Utils::getConfig('feed.enabled', true) && Feed::routes(app(CmsPlugin::class)->getId());
+
         // 不登录api
         Route::middleware('cms-guest:' . $guard)->group(function () {
             Route::get(Utils::getConfig('routes.uri.login'), Login::class)->name('login');

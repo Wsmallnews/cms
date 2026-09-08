@@ -5,7 +5,7 @@
     $hasGroups = $groups->isNotEmpty();
     $hasFlats = $flats->isNotEmpty();
     $hasNavs = $hasGroups || $hasFlats;
-    $showFeed = filled($feedUrl ?? null);
+    $showFeed = $feeds->isNotEmpty();
 @endphp
 
 <footer class="sn-bg sn-contour-only border-t-2 w-full mt-12 pt-10">
@@ -61,18 +61,12 @@
                             {{ $flat->name }}
                         </a>
                     @endforeach
-                    <x-dynamic-component
-                        :component="$this->getBladeThemeView('components.footer-rss')"
-                        :feed-url="$feedUrl"
-                    />
+                    @include($this->getThemeView('components.footer-rss'), ['feeds' => $feeds])
                 </nav>
             @elseif ($showFeed)
                 {{-- 有分组但无一级平铺：快捷条仅 RSS --}}
                 <nav class="w-full py-3.5 mt-9 border-t border-gray-300 dark:border-gray-600 flex flex-wrap items-center gap-y-2" aria-label="{{ __('sn-cms::cms.frontend.footer_quick_nav') }}">
-                    <x-dynamic-component
-                        :component="$this->getBladeThemeView('components.footer-rss')"
-                        :feed-url="$feedUrl"
-                    />
+                    @include($this->getThemeView('components.footer-rss'), ['feeds' => $feeds])
                 </nav>
             @endif
         @else
@@ -93,10 +87,7 @@
                         </a>
                     @endforeach
                     @if ($showFeed)
-                        <x-dynamic-component
-                            :component="$this->getBladeThemeView('components.footer-rss')"
-                            :feed-url="$feedUrl"
-                        />
+                        @include($this->getThemeView('components.footer-rss'), ['feeds' => $feeds])
                     @endif
                 </nav>
             </div>

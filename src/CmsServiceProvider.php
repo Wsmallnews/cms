@@ -38,6 +38,7 @@ use Wsmallnews\Cms\Models\Post as PostModel;
 use Wsmallnews\Cms\Settings\GeneralSettings;
 use Wsmallnews\Cms\Support\Utils;
 use Wsmallnews\Support\Facades\ScheduledTask;
+use Wsmallnews\Support\Facades\Feed;
 use Wsmallnews\Support\Facades\Search;
 use Wsmallnews\Support\Facades\Seo;
 use Wsmallnews\Support\Facades\Sitemap;
@@ -346,6 +347,56 @@ class CmsServiceProvider extends PackageServiceProvider
                 trim((string) Utils::getConfig('routes.prefix', 'cms') . '/' . (string) Utils::getConfig('routes.uri.search', 'search'), '/'),
             ]),
         ]);
+
+        // 注册 RSS feed 内容流（posts 流；端点由 support 提供：/feed 整站聚合流、/feed/posts
+        // 具名流、/cms/feed 与 /cms/feed/posts 模块端点——模块端点只输出本模块流，
+        // 路径前缀部署下多模块共用域名时内容隔离）。闭包在每次渲染时才解析 Settings
+        // 与配置，自动跟随当前租户与 scope；feed.enabled 关闭时本模块不注册流与模块端点路由
+        if (Utils::getConfig('feed.enabled', true)) {
+            Feed::config(app(CmsPlugin::class)->getId(), [
+                'domain' => Utils::getConfig('routes.domain'),
+                // 模块聚合端点（/cms/feed）的频道元数据
+                'title' => function () {
+                    $general = app(GeneralSettings::class);
+
+                    return filled($general->site_name) ? $general->site_name : config('app.name');
+                },
+                'description' => function () {
+                    $general = app(GeneralSettings::class);
+
+                    return filled($general->seo_description) ? $general->seo_description : $general->site_slogan;
+                },
+                'link' => fn () => Utils::route('index'),
+            ])->register(app(CmsPlugin::class)->getId(), 'posts', [
+                'title' => function () {
+                    $general = app(GeneralSettings::class);
+                    $siteName = filled($general->site_name) ? $general->site_name : config('app.name');
+
+                    return $siteName . ' - ' . __('sn-cms::cms.frontend.rss_posts');
+                },
+                'label' => fn () => __('sn-cms::cms.frontend.rss_posts'),
+                'description' => function () {
+                    $general = app(GeneralSettings::class);
+
+                    return filled($general->seo_description) ? $general->seo_description : $general->site_slogan;
+                },
+                'link' => fn () => Utils::route('index'),
+                'limit' => fn (): int => (int) Utils::getConfig('feed.limit', 50),
+                'items' => fn (): iterable => Utils::getPostModel()::snScope(...Utils::getScopeable())
+                    ->published()
+                    ->orderByDesc('published_at')
+                    ->orderByDesc('id')
+                    ->limit((int) Utils::getConfig('feed.limit', 50))
+                    ->get(['id', 'slug', 'title', 'description', 'published_at'])
+                    ->map(fn ($post): array => [
+                        'title' => $post->title ?? '',
+                        'url' => Utils::route('posts.show', $post),
+                        'description' => $post->description,
+                        'updated_at' => $post->published_at,
+                    ])
+                    ->all(),
+            ]);
+        }
 
         // 注册用户侧边栏菜单
         SidebarMenuRegistryFacade::registers(app(CmsPlugin::class)->getId(), [

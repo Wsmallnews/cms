@@ -1,5 +1,6 @@
 @php
     use Wsmallnews\Cms\Support\Utils;
+    use Wsmallnews\Cms\CmsPlugin;
 @endphp
 
 <!DOCTYPE html>
@@ -18,9 +19,9 @@
         {{-- 页面 SEO 标签（模块归属由 seo-init 路由中间件声明，页面组件在 render 阶段经 Seo 门面链式声明数据） --}}
         @snSeo
 
-        {{-- RSS autodiscovery（浏览器/阅读器自动发现订阅地址） --}}
+        {{-- RSS autodiscovery（浏览器/阅读器自动发现订阅地址，指令由 support 提供，参数 = 模块 ID） --}}
         @if (Utils::getConfig('feed.enabled', true))
-            <link rel="alternate" type="application/rss+xml" title="{{ config('app.name') }} RSS" href="{{ Utils::route('feed') }}" />
+            @snFeeds(app(CmsPlugin::class)->getId())
         @endif
 
         <style>
