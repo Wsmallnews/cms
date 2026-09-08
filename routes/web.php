@@ -21,8 +21,8 @@ use Wsmallnews\Cms\Livewire\Settings\Profile as SettingsProfile;
 use Wsmallnews\Cms\Livewire\Settings\TwoFactor;
 use Wsmallnews\Cms\Support\Utils;
 use Wsmallnews\Member\Http\Middleware\ResolveMember;
-use Wsmallnews\Support\Http\Middleware\IdentifyTenant;
 use Wsmallnews\Support\Facades\Feed;
+use Wsmallnews\Support\Http\Middleware\IdentifyTenant;
 use Wsmallnews\Support\Support\Utils as SupportUtils;
 use Wsmallnews\User\Http\Controllers\Auth\VerifyEmailController;
 
