@@ -8,7 +8,6 @@ use Filament\Schemas;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Str;
 use Livewire\Component;
 use Wsmallnews\Cms\Enums\PostStatus;
 use Wsmallnews\Cms\Support\Utils;
@@ -61,9 +60,7 @@ class PostForm
                             ->placeholder(__('sn-cms::cms.post_form.title_placeholder'))
                             ->required()
                             ->live(onBlur: true)
-                            ->afterStateUpdated(function (Set $set, $state) {
-                                $set('slug', Str::slug(title: $state, language: app()->getLocale()));
-                            }),
+                            ->afterStateUpdated(fn (Set $set, $state) => $set('slug', generate_slug($state, fallbackPrefix: 'post'))),
                         Forms\Components\TextInput::make('slug')
                             ->label('Slug')
                             ->scopedUnique(modifyQueryUsing: function (Builder $query, Component $livewire) {

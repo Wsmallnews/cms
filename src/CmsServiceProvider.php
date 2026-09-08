@@ -80,6 +80,7 @@ class CmsServiceProvider extends PackageServiceProvider
             'sn_navigation' => Utils::getNavigationModel(),
             'sn_navigation_type' => Utils::getNavigationTypeModel(),
             'sn_post' => Utils::getPostModel(),
+            'sn_link' => Utils::getLinkModel(),
         ]);
 
         // 定义中间件别名
