@@ -52,8 +52,8 @@ class NavigationTypeForm
                     ->grouped()
                     ->options(NavigationTypeStatus::class),
             ])
-            ->columns(2)
-            ->columnSpanFull(),
+                ->columns(2)
+                ->columnSpanFull(),
         ];
     }
 }

@@ -2,7 +2,6 @@
 
 namespace Wsmallnews\Cms\Filament\Resources\Links\Pages;
 
-use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\CreateRecord;
 use Wsmallnews\Cms\Filament\Resources\Links\LinkResource;
 use Wsmallnews\Support\Filament\Resources\Concerns\Pages\Scopeable;

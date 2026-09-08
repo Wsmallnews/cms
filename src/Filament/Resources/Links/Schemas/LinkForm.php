@@ -51,8 +51,8 @@ class LinkForm
                     ->grouped()
                     ->options(LinkStatus::class),
             ])
-            ->columns(2)
-            ->columnSpanFull(),
+                ->columns(2)
+                ->columnSpanFull(),
         ]);
     }
 }
