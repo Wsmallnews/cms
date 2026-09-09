@@ -254,11 +254,8 @@ class NavigationForm
                 })
                 ->statePath('options.components'),
 
-            Forms\Components\Radio::make('status')
-                ->label(__('sn-cms::cms.navigation_form.status'))
-                ->inline()
-                ->options(NavigationStatus::class)
-                ->default(NavigationStatus::Normal),
+            FormComponents::statusToggleButtons(NavigationStatus::class)
+                ->label(__('sn-cms::cms.navigation_form.status')),
         ];
     }
 }

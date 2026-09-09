@@ -6,6 +6,7 @@ use Filament\Forms;
 use Filament\Schemas;
 use Filament\Schemas\Schema;
 use Wsmallnews\Cms\Enums\NavigationTypeStatus;
+use Wsmallnews\Support\Filament\Forms\FormComponents;
 
 class NavigationTypeForm
 {
@@ -42,15 +43,8 @@ class NavigationTypeForm
                 Forms\Components\TextInput::make('description')->label(__('sn-cms::cms.navigation_type_form.description'))
                     ->placeholder(__('sn-cms::cms.navigation_type_form.description_placeholder'))
                     ->columnSpan(1),
-                Forms\Components\TextInput::make('order_column')->label(__('sn-cms::cms.navigation_type_form.order'))->integer()
-                    ->placeholder(__('sn-cms::cms.navigation_type_form.order_placeholder'))
-                    ->rules(['integer', 'min:0']),
-                Forms\Components\ToggleButtons::make('status')
-                    ->label(__('sn-cms::cms.navigation_type_form.status'))
-                    ->default(NavigationTypeStatus::Normal)
-                    ->inline()
-                    ->grouped()
-                    ->options(NavigationTypeStatus::class),
+                FormComponents::orderColumnInput(),
+                FormComponents::statusToggleButtons(NavigationTypeStatus::class),
             ])
                 ->columns(2)
                 ->columnSpanFull(),

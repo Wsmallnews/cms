@@ -23,6 +23,7 @@ use Wsmallnews\Preference\Models\Concerns\Preferenceable\Viewable;
 use Wsmallnews\Support\Casts\CounterCast;
 use Wsmallnews\Support\Contracts\HasSnSubject;
 use Wsmallnews\Support\Models\Concerns\HasActivityLog;
+use Wsmallnews\Support\Models\Concerns\HasOrderColumn;
 use Wsmallnews\Support\Models\SupportModel;
 use Wsmallnews\Support\Support\Utils as SupportUtils;
 
@@ -30,6 +31,7 @@ class Post extends SupportModel implements HasMedia, HasSnSubject
 {
     use Commentable;
     use HasActivityLog;
+    use HasOrderColumn;
     use HasTags;
     use InteractsWithMedia;
     use Preferenceable;

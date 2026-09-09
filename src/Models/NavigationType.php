@@ -10,12 +10,14 @@ use Wsmallnews\Cms\Enums\NavigationTypeStatus;
 use Wsmallnews\Cms\Support\Utils;
 use Wsmallnews\Support\Contracts\HasSnSubject;
 use Wsmallnews\Support\Models\Concerns\HasActivityLog;
+use Wsmallnews\Support\Models\Concerns\HasOrderColumn;
 use Wsmallnews\Support\Models\SupportModel;
 use Wsmallnews\Support\Support\Utils as SupportUtils;
 
 class NavigationType extends SupportModel implements HasSnSubject
 {
     use HasActivityLog;
+    use HasOrderColumn;
     use SoftDeletes;
 
     protected $table = 'sn_navigation_types';

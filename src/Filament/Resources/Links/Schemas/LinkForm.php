@@ -34,22 +34,13 @@ class LinkForm
                     ->label(__('sn-cms::cms.link_form.group_name'))
                     ->placeholder(__('sn-cms::cms.link_form.group_name_placeholder'))
                     ->maxLength(255),
-                Forms\Components\TextInput::make('order_column')
-                    ->label(__('sn-cms::cms.link_form.order'))
-                    ->integer()
-                    ->placeholder(__('sn-cms::cms.link_form.order_placeholder'))
-                    ->rules(['integer', 'min:0']),
+                FormComponents::orderColumnInput(),
                 Forms\Components\Toggle::make('nofollow')
                     ->label(__('sn-cms::cms.link_form.nofollow'))
                     ->helperText(__('sn-cms::cms.link_form.nofollow_helper'))
                     ->default(false)
                     ->inline(false),
-                Forms\Components\ToggleButtons::make('status')
-                    ->label(__('sn-cms::cms.link_form.status'))
-                    ->default(LinkStatus::Normal)
-                    ->inline()
-                    ->grouped()
-                    ->options(LinkStatus::class),
+                FormComponents::statusToggleButtons(LinkStatus::class),
             ])
                 ->columns(2)
                 ->columnSpanFull(),
