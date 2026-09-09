@@ -29,7 +29,7 @@ enum LinkStatus: string implements HasColor, HasIcon, HasLabel
     public function getColor(): string | array | null
     {
         return match ($this) {
-            self::Normal => 'success',
+            self::Normal => 'primary',
             self::Hidden => 'gray',
         };
     }
@@ -37,7 +37,7 @@ enum LinkStatus: string implements HasColor, HasIcon, HasLabel
     public function getIcon(): string | BackedEnum | Htmlable | null
     {
         return match ($this) {
-            self::Normal => Heroicon::OutlinedEye,
+            self::Normal => Heroicon::OutlinedCheckCircle,
             self::Hidden => Heroicon::OutlinedEyeSlash,
         };
     }

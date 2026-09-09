@@ -29,7 +29,7 @@ enum NavigationTypeStatus: string implements HasColor, HasIcon, HasLabel
     public function getColor(): string | array | null
     {
         return match ($this) {
-            self::Normal => 'success',
+            self::Normal => 'primary',
             self::Disabled => 'danger',
         };
     }
@@ -37,7 +37,7 @@ enum NavigationTypeStatus: string implements HasColor, HasIcon, HasLabel
     public function getIcon(): string | BackedEnum | Htmlable | null
     {
         return match ($this) {
-            self::Normal => Heroicon::OutlinedEye,
+            self::Normal => Heroicon::OutlinedCheckCircle,
             self::Disabled => Heroicon::OutlinedNoSymbol,
         };
     }
