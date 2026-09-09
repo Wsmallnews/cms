@@ -14,6 +14,7 @@ use Filament\Support\Enums\Width;
 use Filament\Tables;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
+use Wsmallnews\Cms\Enums\PostStatus;
 use Wsmallnews\Cms\Support\Utils;
 use Wsmallnews\Support\Filament\Actions\ActionComponents;
 use Wsmallnews\Support\Filament\Filters\FilterComponents;
@@ -27,6 +28,7 @@ class PostsTable
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('id')
+                    ->label('ID')
                     ->searchable()
                     ->sortable()
                     ->alignCenter()
@@ -71,6 +73,7 @@ class PostsTable
                     ->toggleable(),
                 Tables\Columns\TextColumn::make('status')
                     ->label(__('sn-cms::cms.posts_table.status'))
+                    ->badge()
                     ->toggleable(),
                 Tables\Columns\TextColumn::make('published_at')
                     ->label(__('sn-cms::cms.posts_table.published_at'))
@@ -85,11 +88,12 @@ class PostsTable
                     ->toggleable()
                     ->sortable(),
             ])
-            ->reorderable('order_column')
-            ->defaultSort('order_column', 'asc')
+            ->reorderable('order_column', direction: 'desc')
+            ->defaultSort('order_column', 'desc')
             ->searchPlaceholder(__('sn-cms::cms.posts_table.search_placeholder'))
             ->filtersFormWidth(Width::Medium)
             ->filters([
+                FilterComponents::statusFilter(PostStatus::class),
                 Tables\Filters\SelectFilter::make('flag')
                     ->label(__('sn-cms::cms.posts_table.flag_filter'))
                     ->options(Utils::getFlagEnum())

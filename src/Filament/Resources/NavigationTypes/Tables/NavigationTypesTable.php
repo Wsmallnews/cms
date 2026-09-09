@@ -15,6 +15,7 @@ use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use Wsmallnews\Cms\Enums\NavigationTypeStatus;
 use Wsmallnews\Support\Filament\Actions\ActionComponents;
 use Wsmallnews\Support\Filament\Filters\FilterComponents;
 
@@ -46,6 +47,7 @@ class NavigationTypesTable
                     ->toggleable(),
                 Tables\Columns\TextColumn::make('status')
                     ->label(__('sn-cms::cms.navigation_types_table.status'))
+                    ->badge()
                     ->toggleable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label(__('sn-cms::cms.navigation_types_table.created_at'))
@@ -56,11 +58,12 @@ class NavigationTypesTable
                     ->toggleable()
                     ->sortable(),
             ])
-            ->reorderable('order_column')
+            ->reorderable('order_column', direction: 'asc')
             ->defaultSort('order_column', 'asc')
             ->searchPlaceholder(__('sn-cms::cms.navigation_types_table.search_placeholder'))
             ->filtersFormWidth(Width::Medium)
             ->filters([
+                FilterComponents::statusFilter(NavigationTypeStatus::class),
                 ...FilterComponents::createUpdateRangeFilter(),
                 TrashedFilter::make(),
             ])

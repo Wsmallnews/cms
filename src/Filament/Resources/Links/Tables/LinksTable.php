@@ -48,6 +48,7 @@ class LinksTable
                     ->toggleable(),
                 Tables\Columns\TextColumn::make('status')
                     ->label(__('sn-cms::cms.link_table.status'))
+                    ->badge()
                     ->toggleable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label(__('sn-cms::cms.link_table.created_at'))
@@ -58,15 +59,13 @@ class LinksTable
                     ->sortable()
                     ->toggleable(),
             ])
-            ->reorderable('order_column')
-            ->defaultSort('order_column', 'asc')
+            ->reorderable('order_column', direction: 'desc')
+            ->defaultSort('order_column', 'desc')
             ->searchPlaceholder(__('sn-cms::cms.link_table.search_placeholder'))
             ->filtersFormWidth(Width::Medium)
             ->filters([
+                FilterComponents::statusFilter(LinkStatus::class),
                 ...FilterComponents::createUpdateRangeFilter(),
-                Tables\Filters\SelectFilter::make('status')
-                    ->label(__('sn-cms::cms.link_table.status'))
-                    ->options(LinkStatus::class),
             ])
             ->recordActions([
                 ...ActionComponents::recordActions([
