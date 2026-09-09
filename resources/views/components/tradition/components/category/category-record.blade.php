@@ -34,7 +34,7 @@
         @endif
     >
         <div class="flex items-center gap-1">
-            @if ($style == 'simple') 
+            @if ($style == 'simple')
                 @if ($currentLevel > 2)
                     @for ($i = 0; $i < ($currentLevel - 2); $i++)
                         <div class="relative flex h-14 w-6 items-center justify-center">
@@ -59,7 +59,7 @@
                         </div>
                     </div>
                 @endif
-            @else 
+            @else
                 @if ($currentLevel > 1)
                     @for ($i = 0; $i < ($currentLevel - 1); $i++)
                         {{-- 填充 --}}
@@ -74,7 +74,7 @@
         @endif
     </a>
 
-    @if ($hasChild) 
+    @if ($hasChild)
         @php
             $currentLevel++;
         @endphp
@@ -90,19 +90,19 @@
             role="menu"
         >
             @foreach ($record->children as $child)
-                <x-dynamic-component 
+                <x-dynamic-component
                     @class([
                         'w-full',
-                    ]) 
-                    :component="$this->getRecordView()" 
-                    key="nestedset-record-component-{{ $child->getKey() }}" 
-                    :record="$child" 
-                    :first="$loop->first" 
-                    :last="$loop->last" 
-                    :style="$style" 
-                    :current-level="$currentLevel" 
+                    ])
+                    :component="$this->getRecordView()"
+                    key="nestedset-record-component-{{ $child->getKey() }}"
+                    :record="$child"
+                    :first="$loop->first"
+                    :last="$loop->last"
+                    :style="$style"
+                    :current-level="$currentLevel"
                 />
             @endforeach
         </ul>
-    @endif 
+    @endif
 </li>

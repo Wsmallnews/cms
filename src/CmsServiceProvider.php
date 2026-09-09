@@ -500,6 +500,7 @@ class CmsServiceProvider extends PackageServiceProvider
             'create_sn_navigation_types_table',
             'create_sn_navigations_table',
             'create_sn_posts_table',
+            'create_sn_links_table',
         ];
     }
 }
