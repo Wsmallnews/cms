@@ -232,6 +232,7 @@ return [
         'rss_posts' => '文章动态',
         'footer_nav' => '页脚导航',
         'footer_quick_nav' => '页脚快捷导航',
+        'quick_entry' => '快捷入口',
         'follow_us' => '关注或联系我们',
         'follow_us_desc' => '添加微信或关注官方微信',
         'wechat_qrcode' => '微信二维码',
@@ -313,6 +314,7 @@ return [
         'status' => '状态',
         'created_at' => '创建时间',
         'updated_at' => '更新时间',
+        'search_placeholder' => '搜索名称、链接、分组等...',
     ],
     'navigation_page' => [
         'model_label' => '导航',

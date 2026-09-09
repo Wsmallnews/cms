@@ -232,6 +232,7 @@ return [
         'rss_posts' => 'Posts',
         'footer_nav' => 'Footer Navigation',
         'footer_quick_nav' => 'Footer Quick Navigation',
+        'quick_entry' => 'Quick Links',
         'follow_us' => 'Follow or Contact Us',
         'follow_us_desc' => 'Add WeChat or follow our official account',
         'wechat_qrcode' => 'WeChat QR Code',
@@ -313,6 +314,7 @@ return [
         'status' => 'Status',
         'created_at' => 'Created At',
         'updated_at' => 'Updated At',
+        'search_placeholder' => 'Search name, URL, group...',
     ],
     'navigation_page' => [
         'model_label' => 'Navigation',
