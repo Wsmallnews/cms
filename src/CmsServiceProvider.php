@@ -265,12 +265,13 @@ class CmsServiceProvider extends PackageServiceProvider
 
         // 注册全局搜索（模块配置 search.enabled 关闭时不注册来源，前端也不渲染搜索框）
         if (Utils::getConfig('search.enabled', true)) {
-            Search::config(app(CmsPlugin::class)->getId(), [
-                'engine' => Utils::getConfig('search.engine'),
-                // 搜索结果页地址（search.display = page 时搜索框回车跳转目标）：
-                // 闭包接收搜索关键词，自行返回带 ?q= 的完整 URL
-                'page' => fn (?string $query) => Utils::route('search', ['q' => $query]),
-            ])
+            // sn-cms.search 整节透传到搜索注册表：模块想覆盖哪些 search 配置就在配置节写哪些键
+            // （可覆盖键清单见 support 包 config/sn-support.php 的 search 节），未写的键走全局兜底；
+            // enabled 是本模块启用门控，不透传；page 未声明时用本包结果页路由闭包兜底
+            $searchConfig = collect(Utils::getConfig('search', []))->except('enabled')->all();
+            $searchConfig['page'] ??= fn (?string $query) => Utils::route('search', ['q' => $query]);
+
+            Search::config(app(CmsPlugin::class)->getId(), $searchConfig)
                 ->registers(app(CmsPlugin::class)->getId(), [
                     [
                         'key' => 'post',
