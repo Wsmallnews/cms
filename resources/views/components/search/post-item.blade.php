@@ -11,8 +11,8 @@
     $flagEnum = Utils::getFlagEnum();
 @endphp
 
-<div class="flex flex-row items-center gap-3 sm:gap-4 grow min-w-0 text-left">
-    <div class="h-24 sm:h-28 sn-aspect-landscape shrink-0 rounded-md overflow-hidden bg-gray-100 dark:bg-gray-800">
+<div class="flex flex-row items-center gap-3 @2xl:gap-4 grow min-w-0 text-left">
+    <div class="h-24 @2xl:h-28 sn-aspect-landscape shrink-0 rounded-md overflow-hidden bg-gray-100 dark:bg-gray-800">
         @if ($post && $post->getFirstMediaUrl('post_image'))
             <img
                 class="sn-motion-scale w-full h-full object-cover"

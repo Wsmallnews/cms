@@ -74,7 +74,10 @@
             </div>
         </div>
 
-        {{ $slot }}
+        {{-- 页面内容区声明为容器：全页直用的组件（posts 列表等）用容器断点自适应自身实际宽度 --}}
+        <div class="w-full @container">
+            {{ $slot }}
+        </div>
 
         <livewire:sn-cms::components.footer :scope-type="$scopeType" :scope-id="$scopeId" />
     </div>
