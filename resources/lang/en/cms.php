@@ -51,6 +51,11 @@ return [
         'content_options' => 'Options',
         'add_group' => 'Add Group',
         'status' => 'Navigation Status',
+        'composition' => 'Composition',
+        'composition_placeholder' => 'Select a composition',
+        'is_home' => 'Set as Homepage',
+        'home_badge' => 'Home',
+        'is_home_helper' => 'Once enabled, the type switches to and locks as content, and a composition must be bound; only one node per scope takes effect, the previous home node falls back to a normal content page',
     ],
     'navigation_type_enum' => [
         'child' => 'Child Navigation',
@@ -218,6 +223,7 @@ return [
         'top' => 'Top',
     ],
     'frontend' => [
+        'home_empty' => 'Homepage composition is not configured yet: create a composition in "Compositions", then mark a content-type navigation node as homepage and bind it',
         'search' => 'Search',
         'search_placeholder' => 'Search title, description...',
         'search_results' => 'Search Results',
@@ -262,6 +268,7 @@ return [
         'plural_model_label' => 'Navigation Types',
         'navigation_label' => 'Navigation Types',
     ],
+
     'post_resource' => [
         'model_label' => 'Post',
         'plural_model_label' => 'Posts',

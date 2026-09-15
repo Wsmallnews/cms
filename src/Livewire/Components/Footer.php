@@ -24,7 +24,11 @@ class Footer extends Base
         $flats = $navigations->filter(fn ($navigation) => $navigation->children->isEmpty())->values();
 
         // 友情链接（启用状态，按 order 排序）
-        $links = Utils::getLinkModel()::snScope(...Utils::getScopeable())->normal()->ordered()->get();
+        $links = Utils::getLinkModel()::query()
+            ->normal()
+            ->ordered()
+            ->snScope(...Utils::getScopeable())
+            ->get();
 
         // RSS 订阅入口：只列本模块的流（模块视角隔离——路径前缀部署下 shop 等其他
         // 模块的流不出现），链接指向模块端点 /cms/feed/{name}；feed.enabled 关闭时

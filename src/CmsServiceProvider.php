@@ -25,7 +25,6 @@ use Wsmallnews\Category\Models\Category as CategoryModel;
 use Wsmallnews\Cms\Commands\CmsInstallCommand;
 use Wsmallnews\Cms\Enums\NavigationType as NavigationTypeEnum;
 use Wsmallnews\Cms\Enums\PostStatus;
-use Wsmallnews\Cms\Facades\ContentRegistry as ContentRegistryFacade;
 use Wsmallnews\Cms\Http\Middleware\Authenticate;
 use Wsmallnews\Cms\Http\Middleware\EnsureEmailIsVerified;
 use Wsmallnews\Cms\Http\Middleware\RedirectIfAuthenticated;
@@ -37,6 +36,7 @@ use Wsmallnews\Cms\Livewire\Index;
 use Wsmallnews\Cms\Models\Post as PostModel;
 use Wsmallnews\Cms\Settings\GeneralSettings;
 use Wsmallnews\Cms\Support\Utils;
+use Wsmallnews\Support\Facades\CompositionRegistry as CompositionRegistryFacade;
 use Wsmallnews\Support\Facades\Feed;
 use Wsmallnews\Support\Facades\ScheduledTask;
 use Wsmallnews\Support\Facades\Search;
@@ -65,13 +65,7 @@ class CmsServiceProvider extends PackageServiceProvider
         }
     }
 
-    public function packageRegistered(): void
-    {
-        // 注册内容类型注册器
-        $this->app->singleton(ContentRegistry::class, function (): ContentRegistry {
-            return new ContentRegistry;
-        });
-    }
+    public function packageRegistered(): void {}
 
     public function packageBooted(): void
     {
@@ -159,8 +153,8 @@ class CmsServiceProvider extends PackageServiceProvider
             ];
         });
 
-        // 注册导航内容
-        ContentRegistryFacade::registers(Utils::getScopeType(), [
+        // 注册导航内容（key = 模块标识插件 id，与页面实例 scope 无关——footer 等派生 scope 页面共用同一套组件）
+        CompositionRegistryFacade::registers(app(CmsPlugin::class)->getId(), [
             [
                 'type' => 'posts',
                 'label' => __('sn-cms::cms.content_type.posts'),
@@ -502,6 +496,7 @@ class CmsServiceProvider extends PackageServiceProvider
             'create_sn_navigations_table',
             'create_sn_posts_table',
             'create_sn_links_table',
+            'create_sn_compositions_table',
         ];
     }
 }

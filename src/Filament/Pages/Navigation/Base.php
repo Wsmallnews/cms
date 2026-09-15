@@ -5,12 +5,15 @@ namespace Wsmallnews\Cms\Filament\Pages\Navigation;
 use BackedEnum;
 use Filament\Actions;
 use Filament\Facades\Filament;
+use Filament\Forms\Components\Field;
 use Filament\Notifications\Notification;
 use Filament\Schemas;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
 use UnitEnum;
@@ -216,6 +219,18 @@ abstract class Base extends NestedsetPage
             'scope_id' => $this->navigationType?->scope_id,
             'type_id' => $this->navigationType?->id,
         ];
+    }
+
+    /**
+     * 首页节点必须是根节点（入口指向模块首页）：勾选「设为首页」时锁定父级选择（置灰，不清空视觉状态）。
+     * is_home 本身 live，禁用状态随请求往返一并更新，单次重绘；复用包的 getParentSelect 扩展点，无需改包
+     */
+    protected function getParentSelect(): array | Field
+    {
+        return array_map(
+            fn (Field $field): Field => $field->disabled(fn (Get $get): bool => (bool) $get('options.is_home')),
+            Arr::wrap(parent::getParentSelect()),
+        );
     }
 
     protected function createSchema(array $arguments): array

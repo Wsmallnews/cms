@@ -6,15 +6,12 @@ use Filament\Forms;
 use Filament\Schemas;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
-use Filament\Support\Enums\Alignment;
 use Guava\IconPicker\Forms\Components\IconPicker;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\HtmlString;
-use Illuminate\Support\Str;
 use Livewire\Component;
 use Wsmallnews\Cms\Enums\NavigationStatus;
 use Wsmallnews\Cms\Enums\NavigationType as NavigationTypeEnum;
-use Wsmallnews\Cms\Facades\ContentRegistry;
 use Wsmallnews\Cms\Support\Utils;
 use Wsmallnews\Support\Filament\Forms\FormComponents;
 
@@ -22,16 +19,32 @@ class NavigationForm
 {
     public static function forms(array $arguments = []): array
     {
-        $scopeType = $arguments['scope_type'] ?? '';
-
         return [
+            // 首页标记：勾选后导航类型自动切换并锁定为内容类型，且必须绑定内容编排；
+            // 同 scope 内互斥（模型 saving 钩子保证），原首页节点自动退回普通内容页（仅地址变化）
+            Forms\Components\Toggle::make('options.is_home')
+                ->label(__('sn-cms::cms.navigation_form.is_home'))
+                ->helperText(__('sn-cms::cms.navigation_form.is_home_helper'))
+                ->live()
+                ->columnSpanFull()
+                ->afterStateUpdated(function (Set $set, $state) {
+                    if ($state) {
+                        // 枚举 Select 的 state cast 会双向归一（写入枚举/字符串等价）；数据层由模型 saving 钩子兜底强制
+                        $set('type', NavigationTypeEnum::Content);
+
+                        // 清空此前已选的父级：包的创建链路用 `??` 取 parent_id（null 会被当作缺失，
+                        // 回退到 createChild 动作传入的 parentId），故置 0（无父级 = 根节点）
+                        $set('parent_id', 0);
+                    }
+                }),
             Forms\Components\Select::make('type')
                 ->helperText(fn (): ?HtmlString => new HtmlString('<span style="color: #F59E0B;">' . __('sn-cms::cms.navigation_form.type_helper') . '</span>'))
                 ->label(__('sn-cms::cms.navigation_form.type'))
                 ->options(NavigationTypeEnum::class)
                 ->default(NavigationTypeEnum::Route)
                 ->live()
-                ->required(),
+                ->required()
+                ->disabled(fn (Get $get): bool => (bool) $get('options.is_home')),
             Forms\Components\TextInput::make('name')->label(__('sn-cms::cms.navigation_form.name'))
                 ->placeholder(__('sn-cms::cms.navigation_form.name_placeholder'))
                 ->required(),
@@ -97,8 +110,8 @@ class NavigationForm
                 ->required()
                 ->maxLength(255)
                 ->visible(function (Get $get) {
-                    // 只有内容 和 页面 需要设置标识
-                    return in_array($get('type'), [NavigationTypeEnum::Page, NavigationTypeEnum::Content]);
+                    // 只有内容 和 页面 需要设置标识；首页节点入口指向模块首页，无需标识
+                    return ! $get('options.is_home') && in_array($get('type'), [NavigationTypeEnum::Page, NavigationTypeEnum::Content]);
                 }),
             FormComponents::mediaImageUpload('navigation_banner', 'navigation_banner')
                 ->label(__('sn-cms::cms.navigation_form.banner'))
@@ -110,8 +123,8 @@ class NavigationForm
                 })
                 ->uploadingMessage(__('sn-cms::cms.navigation_form.banner_uploading'))
                 ->visible(function (Get $get) {
-                    // 只有内容 和 页面 需要设置 Banner
-                    return in_array($get('type'), [NavigationTypeEnum::Page, NavigationTypeEnum::Content]);
+                    // 只有内容 和 页面 需要设置 Banner；首页节点由首页编排渲染，不走导航容器
+                    return ! $get('options.is_home') && in_array($get('type'), [NavigationTypeEnum::Page, NavigationTypeEnum::Content]);
                 }),
             Forms\Components\Select::make('options.target')
                 ->label(__('sn-cms::cms.navigation_form.target_type'))
@@ -195,64 +208,31 @@ class NavigationForm
                     // 内容类型的导航，选了内容类型，并且内容类型有 form 表单
                     return $get('type') == NavigationTypeEnum::Route;
                 }),
-            Forms\Components\Repeater::make('contentComponents')
-                ->label(__('sn-cms::cms.navigation_form.custom_content'))
-                ->schema(function () use ($scopeType) {
-                    $uuid = Str::uuid();
-
-                    return [
-                        Forms\Components\Select::make('type')
-                            ->label(__('sn-cms::cms.navigation_form.content_type'))
-                            ->placeholder(__('sn-cms::cms.navigation_form.content_type_placeholder'))
-                            ->options(ContentRegistry::getTypesOptions($scopeType))
-                            ->live()
-                            ->required()
-                            ->afterStateUpdated(function (Forms\Components\Select $component, $state, Set $set) use ($uuid, $scopeType) {
-                                // 默认设置内容类型 label
-                                $set('label', ContentRegistry::getTypesOptions($scopeType)[$state] ?? '');
-
-                                // 填充组件特定字段
-                                return $state && $component
-                                    ->getContainer()
-                                    ->getComponent('dynamicExtrasFields_' . $uuid)       // 当 dynamicExtrasFields visible = false, 也就是不可见时， 这里获取的是 null
-                                    ?->getChildSchema()
-                                    ->fill();
-                            }),
-
-                        // 显示 type 对应的 label
-                        Forms\Components\TextInput::make('label')
-                            ->label(__('sn-cms::cms.navigation_form.content_name'))
-                            ->live(onBlur: true)
-                            ->placeholder(__('sn-cms::cms.navigation_form.content_name_placeholder')),
-
-                        Schemas\Components\Fieldset::make('extras')
-                            ->label(__('sn-cms::cms.navigation_form.content_options'))
-                            ->schema(function (Get $get) use ($scopeType) {
-                                return filled($get('type')) ? ContentRegistry::getTypeForms($scopeType, $get('type'), ['fields' => $get('../../../')]) : [];        // $get() 获取的为当前repeater 循环层级的数据，需要 ../../../ 获取所有变量
-                            })->visible(function (Get $get) use ($scopeType) {
-                                $hasForms = filled($get('type')) ? ContentRegistry::hasTypeForms($scopeType, $get('type'), ['fields' => $get('../../../')]) : false;    // $get() 获取的为当前repeater 循环层级的数据，需要 ../../../ 获取所有变量
-
-                                // 选了内容类型，并且内容类型有 form 表单
-                                return filled($get('type')) && $hasForms;
-                            })
-                            ->columns(['md' => 2])
-                            ->columnSpanFull()
-                            ->statePath('extras')
-                            ->key('dynamicExtrasFields_' . $uuid),
-                    ];
-                })
-                ->itemLabel(fn (array $state): ?string => $state['label'] ?? null)
-                ->required()
-                ->minItems(1)
-                ->addActionLabel(__('sn-cms::cms.navigation_form.add_group'))
-                ->collapsible()
-                ->cloneable()
-                ->addActionAlignment(Alignment::Start)
-                ->columns(['md' => 2])
+            // 内容类型 = 引用内容编排（Composition）；编排内的组件在「内容编排」资源中维护
+            Forms\Components\Select::make('options.composition_id')
+                ->label(__('sn-cms::cms.navigation_form.composition'))
+                ->placeholder(__('sn-cms::cms.navigation_form.composition_placeholder'))
+                ->options(fn (): array => Utils::getCompositionModel()::query()
+                    ->published()
+                    ->snScope(...Utils::getScopeable())
+                    ->limit(30)
+                    ->pluck('title', 'id')
+                    ->toArray())
+                ->getSearchResultsUsing(fn (string $search): array => Utils::getCompositionModel()::query()
+                    ->published()
+                    ->snScope(...Utils::getScopeable())
+                    ->where('title', 'like', "%{$search}%")
+                    ->limit(30)
+                    ->pluck('title', 'id')
+                    ->toArray())
+                ->searchable()
+                ->preload()
+                // 勾选首页标记后必须绑定编排
+                ->required(fn (Get $get): bool => (bool) $get('options.is_home'))
+                ->markAsRequired(fn (Get $get): bool => (bool) $get('options.is_home'))
                 ->visible(function (Get $get) {
                     return $get('type') == NavigationTypeEnum::Content;
-                })
-                ->statePath('options.components'),
+                }),
 
             FormComponents::statusToggleButtons(NavigationStatus::class)
                 ->label(__('sn-cms::cms.navigation_form.status')),

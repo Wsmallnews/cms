@@ -205,6 +205,16 @@ class Utils
     }
 
     /**
+     * Get composition model class（实体在 support 包，经 sn-support.models.composition 可替换）.
+     *
+     * @return string \Wsmallnews\Support\Models\Composition
+     */
+    public static function getCompositionModel(): string
+    {
+        return SupportUtils::getCompositionModel();
+    }
+
+    /**
      * Get tag model class.
      *
      * @return string Models\Post

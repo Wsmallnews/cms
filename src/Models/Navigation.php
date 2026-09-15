@@ -4,6 +4,7 @@ namespace Wsmallnews\Cms\Models;
 
 use Filament\Facades\Filament;
 use Filament\Support\Enums\IconSize;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
@@ -53,6 +54,61 @@ class Navigation extends SupportModel implements HasMedia, HasSnSubject
         }
 
         return $scopes;
+    }
+
+    protected static function booted(): void
+    {
+        static::saving(function (Navigation $navigation) {
+            if (! ($navigation->options['is_home'] ?? false)) {
+                return;
+            }
+
+            // 首页节点强制为内容类型（表单勾选设为首页时自动切换，这里兜底保证数据一致）
+            $navigation->type = NavigationTypeEnum::Content;
+
+            // 首页表单不填 slug，但退位后会以 /cms/navigation/{slug} 寻址，统一自动生成（唯一冲突自动消解）
+            if (blank($navigation->slug)) {
+                $navigation->slug = $navigation->generateUniqueSlug($navigation->name);
+            }
+
+            // 首页标记互斥：退位节点清掉标记；退位即回到普通内容页，slug 缺失的同样补生成
+            static::query()
+                ->where('options->is_home', true)
+                ->snScope($navigation->scope_type, $navigation->scope_id)
+                ->when($navigation->exists, fn (Builder $query) => $query->whereKeyNot($navigation->getKey()))
+                ->get()
+                ->each(function (Navigation $oldHome) {
+                    $oldHome->options = [...($oldHome->options ?? []), 'is_home' => false];
+
+                    if (blank($oldHome->slug)) {
+                        $oldHome->slug = $oldHome->generateUniqueSlug($oldHome->name);
+                    }
+
+                    // is_home 已置 false，saving 钩子早退，不会递归
+                    $oldHome->save();
+                });
+        });
+    }
+
+    /**
+     * 生成 scope 内唯一的 slug（首页节点 slug 表单不可见，由模型自动生成）
+     */
+    public function generateUniqueSlug(?string $name): string
+    {
+        $base = generate_slug($name, fallbackPrefix: 'nav');
+        $slug = $base;
+        $counter = 2;
+
+        while (static::query()
+            ->snScope($this->scope_type, $this->scope_id)
+            ->when($this->exists, fn (Builder $query) => $query->whereKeyNot($this->getKey()))
+            ->where('slug', $slug)
+            ->exists()) {
+            $slug = "{$base}-{$counter}";
+            $counter++;
+        }
+
+        return $slug;
     }
 
     public function getRouteKeyName()
@@ -109,8 +165,13 @@ class Navigation extends SupportModel implements HasMedia, HasSnSubject
                 }
 
                 if ($this->type == NavigationTypeEnum::Content) {
-                    // cms 内容页面，使用 Utils 路由方法拼接 cms 路由前缀
-                    $url = Utils::route('navigation.show', $this);
+                    // 标记为首页的内容节点，入口指向模块首页（前缀 + /）
+                    if ($options['is_home'] ?? false) {
+                        $url = Utils::route('index');
+                    } else {
+                        // cms 内容页面，使用 Utils 路由方法拼接 cms 路由前缀
+                        $url = Utils::route('navigation.show', $this);
+                    }
                 }
 
                 return [
@@ -218,7 +279,14 @@ class Navigation extends SupportModel implements HasMedia, HasSnSubject
                     $image && $recordLabel .= '<img src="' . files_url($image) . '" class="size-6" />';
                 }
 
-                $recordLabel .= $attributes['name'] . '</span>';
+                $recordLabel .= $attributes['name'];
+
+                // 后台树列表标记首页节点（前台导航不展示；name_label 前后台共用，按面板语境门控）
+                if (is_in_panel() && ($this->options['is_home'] ?? false)) {
+                    $recordLabel .= '<span class="ml-1 inline-flex items-center rounded-md bg-primary-100 px-1.5 py-0.5 text-xs font-medium text-primary-700 dark:bg-primary-500/10 dark:text-primary-400">' . __('sn-cms::cms.navigation_form.home_badge') . '</span>';
+                }
+
+                $recordLabel .= '</span>';
 
                 return new HtmlString($recordLabel);
             },

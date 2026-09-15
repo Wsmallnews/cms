@@ -33,9 +33,8 @@
                 'lg:col-span-3 xl:col-span-4' => $navigation->depth > 0,
                 'lg:col-span-4 xl:col-span-5' => $navigation->depth <= 0,
             ])>
-                @foreach ($components as $component)
-                    @livewire($component['component_name'], $component['extras'], key($component['component_name'] . '-' . $loop->index))
-                @endforeach
+                {{-- 统一行式渲染：内容编排（content 引用 Composition）/ 单页（page 映射通栏行）--}}
+                <x-sn-support::composition.rows :rows="$rows" />
             </div>
         </div>
     </div>

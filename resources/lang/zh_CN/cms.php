@@ -51,6 +51,11 @@ return [
         'content_options' => '选项',
         'add_group' => '添加分组',
         'status' => '导航状态',
+        'composition' => '内容编排',
+        'composition_placeholder' => '请选择内容编排',
+        'is_home' => '设为首页',
+        'home_badge' => '首页',
+        'is_home_helper' => '勾选后导航类型自动切换并锁定为内容类型，且必须绑定内容编排；同一范围内仅一个节点生效，原首页节点自动退回普通内容页',
     ],
     'navigation_type_enum' => [
         'child' => '子导航',
@@ -218,6 +223,7 @@ return [
         'top' => '置顶',
     ],
     'frontend' => [
+        'home_empty' => '首页尚未配置编排：请先在后台「内容编排」创建版块，再到「导航管理」将内容类型节点设为首页并绑定编排',
         'search' => '搜索',
         'search_placeholder' => '搜索标题、描述等...',
         'search_results' => '搜索结果',
@@ -262,6 +268,7 @@ return [
         'plural_model_label' => '导航类型',
         'navigation_label' => '导航类型',
     ],
+
     'post_resource' => [
         'model_label' => '图文',
         'plural_model_label' => '图文',
