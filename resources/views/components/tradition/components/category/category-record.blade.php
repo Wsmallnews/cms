@@ -21,7 +21,7 @@
             'sn-primary-bg sn-hover h-14 text-white' => $style === 'vivid',
             'sn-active' => ($style === 'vivid' && $hasActive),
 
-            'sn-content-text sn-link h-10 rounded-md transition-colors duration-200' => $style === 'simple',
+            'sn-content-text sn-link h-10 rounded-md' => $style === 'simple',
             'sn-active' => ($style === 'simple' && $hasActive),
         ])
         @if ($hasChild)

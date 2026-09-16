@@ -44,7 +44,7 @@ class NavigationTypeForm
                     ->placeholder(__('sn-cms::cms.navigation_type_form.description_placeholder'))
                     ->columnSpan(1),
                 FormComponents::orderColumnInput(),
-                FormComponents::statusToggleButtons(NavigationTypeStatus::class),
+                FormComponents::enumsToggleButtons(NavigationTypeStatus::class),
             ])
                 ->columns(2)
                 ->columnSpanFull(),

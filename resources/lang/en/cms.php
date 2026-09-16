@@ -255,6 +255,8 @@ return [
         'home' => 'Home',
         'posts_list' => 'Posts List',
         'no_posts' => 'No posts',
+        'no_related_posts' => 'No related posts yet',
+        'related_posts_no_source' => 'No category configured and no post component in this row to relate to',
         'post_detail' => 'Post Detail',
         'profile' => 'Profile',
         'current_location' => 'Current Location',
@@ -344,6 +346,9 @@ return [
         'posts' => 'Posts List',
         'index_posts' => 'Posts Carousel',
         'post_detail' => 'Post Detail',
+        'related_posts' => 'Related Posts',
+        'related_posts_category_helper' => 'Falls back to the categories of the current post provided by the post component in the same row when unset',
+        'related_posts_limit' => 'Limit',
     ],
     'sidebar' => [
         'profile' => 'Profile',

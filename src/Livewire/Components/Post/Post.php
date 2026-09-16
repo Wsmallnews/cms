@@ -21,12 +21,21 @@ class Post extends Base
     use HasCommentStatus;
     use HasContentType;
 
-    public string $slug;
+    /**
+     * 寻址双通道：路由页传 slug（路由键）；编排场景 post-detail 传 id（后台选择器存主键）
+     */
+    public ?string $slug = null;
+
+    public ?int $id = null;
 
     public function render()
     {
         $model = new (Utils::getPostModel());
-        $post = $model->snScope(...$this->getScopeable())->published()->with(['media', 'content', 'publisher'])->where($model->getRouteKeyName(), $this->slug)->firstOrFail();
+        $query = $model->snScope(...$this->getScopeable())->published()->with(['media', 'content', 'publisher']);
+
+        $post = filled($this->id)
+            ? $query->whereKey($this->id)->firstOrFail()
+            : $query->where($model->getRouteKeyName(), $this->slug)->firstOrFail();
 
         // 增加浏览量
         $post->view($this->getAuthUser());

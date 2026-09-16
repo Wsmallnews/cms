@@ -255,6 +255,8 @@ return [
         'home' => '首页',
         'posts_list' => '资讯列表',
         'no_posts' => '暂无资讯',
+        'no_related_posts' => '暂无相关内容',
+        'related_posts_no_source' => '未指定分类，且同行没有图文组件可提供关联',
         'post_detail' => '资讯详情',
         'profile' => '个人中心',
         'current_location' => '当前位置',
@@ -344,6 +346,9 @@ return [
         'posts' => '图文列表',
         'index_posts' => '图文轮播列表',
         'post_detail' => '图文详情',
+        'related_posts' => '相关图文',
+        'related_posts_category_helper' => '不配置时自动使用同行图文组件的当前图文所属分类',
+        'related_posts_limit' => '推荐条数',
     ],
     'sidebar' => [
         'profile' => '个人中心',

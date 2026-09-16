@@ -27,13 +27,13 @@
         @if ($general->phone)
             <div class="flex items-baseline gap-2">
                 <span class="sn-tip-text w-16 shrink-0">{{ __('sn-cms::cms.frontend.contact_phone') }}</span>
-                <a href="tel:{{ $general->phone }}" class="sn-content-text hover:text-primary-600 dark:hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 rounded-sm transition-colors">{{ $general->phone }}</a>
+                <a href="tel:{{ $general->phone }}" class="sn-content-text sn-hover rounded-sm sn-motion-colors">{{ $general->phone }}</a>
             </div>
         @endif
         @if ($general->email)
             <div class="flex items-baseline gap-2">
                 <span class="sn-tip-text w-16 shrink-0">{{ __('sn-cms::cms.frontend.contact_email') }}</span>
-                <a href="mailto:{{ $general->email }}" class="sn-content-text hover:text-primary-600 dark:hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 rounded-sm break-all transition-colors">{{ $general->email }}</a>
+                <a href="mailto:{{ $general->email }}" class="sn-content-text sn-hover rounded-sm break-all sn-motion-colors">{{ $general->email }}</a>
             </div>
         @endif
         @if ($general->address)

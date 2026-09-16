@@ -40,7 +40,7 @@ class LinkForm
                     ->helperText(__('sn-cms::cms.link_form.nofollow_helper'))
                     ->default(false)
                     ->inline(false),
-                FormComponents::statusToggleButtons(LinkStatus::class),
+                FormComponents::enumsToggleButtons(LinkStatus::class),
             ])
                 ->columns(2)
                 ->columnSpanFull(),

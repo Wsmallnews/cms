@@ -29,7 +29,7 @@
                             <ul class="flex flex-col gap-2 text-sm" role="list">
                                 @foreach ($group->children as $child)
                                     <li class="min-w-0">
-                                        <a class="sn-descript-text hover:text-primary-600 dark:hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 rounded-sm block truncate"
+                                        <a class="sn-descript-text sn-hover rounded-sm block truncate"
                                             {{ generate_href_html($child->url_info['url'], $child->url_info['target'] ?? false) }}>
                                             {{ $child->name }}
                                         </a>
@@ -49,7 +49,7 @@
                             <ul class="flex flex-col gap-2 text-sm" role="list">
                                 @foreach ($flats as $flat)
                                     <li class="min-w-0">
-                                        <a class="sn-descript-text hover:text-primary-600 dark:hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 rounded-sm block truncate"
+                                        <a class="sn-descript-text sn-hover rounded-sm block truncate"
                                             {{ generate_href_html($flat->url_info['url'], $flat->url_info['target'] ?? false) }}>
                                             {{ $flat->name }}
                                         </a>
@@ -71,7 +71,7 @@
                 <span class="sn-tip-text font-semibold tracking-wide">{{ __('sn-cms::cms.frontend.friend_links') }}</span>
                 @foreach ($links as $link)
                     <a rel="noopener{{ $link->nofollow ? ' nofollow' : '' }}" title="{{ $link->description }}"
-                        class="sn-tip-text hover:text-primary-600 dark:hover:text-primary-400 hover:underline underline-offset-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 rounded-sm transition-colors"
+                        class="sn-tip-text sn-hover hover:underline underline-offset-4 rounded-sm sn-motion-colors"
                         {{ generate_href_html($link->url, true) }}>
                         {{ $link->name }}
                     </a>
@@ -88,13 +88,13 @@
             @endif
             @if ($general->beian_url && $general->beian_no)
                 <a {{ generate_href_html($general->beian_url, true) }} rel="noopener"
-                    class="hover:text-primary-600 dark:hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 rounded-sm transition-colors">
+                    class="sn-tip-text sn-hover rounded-sm sn-motion-colors">
                     {{ $general->beian_no }}
                 </a>
             @endif
             @if ($general->beian_police_url && $general->beian_police_no)
                 <a {{ generate_href_html($general->beian_police_url, true) }} rel="noopener"
-                    class="inline-flex items-center gap-1.5 hover:text-primary-600 dark:hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 rounded-sm transition-colors">
+                    class="sn-tip-text sn-hover inline-flex items-center gap-1.5 rounded-sm sn-motion-colors">
                     <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="currentColor" opacity="0.25"/><path d="M12 4l6 2.4v5c0 4-2.6 7.2-6 8.6-3.4-1.4-6-4.6-6-8.6v-5L12 4z" fill="currentColor" opacity="0.6"/><path d="M9 12.2l2 2 4-4.2" stroke="currentColor" stroke-width="1.6" fill="none"/></svg>
                     {{ $general->beian_police_no }}
                 </a>

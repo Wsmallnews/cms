@@ -58,7 +58,7 @@ class NavigationForm
                     'image' => __('sn-cms::cms.navigation_form.icon_type_image'),
                 ])
                 ->default('none')
-                ->inline(),
+                ->inline()->grouped(),
             Schemas\Components\Fieldset::make('icons')
                 ->label(__('sn-cms::cms.navigation_form.icon_fieldset'))
                 ->schema([
@@ -234,7 +234,7 @@ class NavigationForm
                     return $get('type') == NavigationTypeEnum::Content;
                 }),
 
-            FormComponents::statusToggleButtons(NavigationStatus::class)
+            FormComponents::enumsToggleButtons(NavigationStatus::class)
                 ->label(__('sn-cms::cms.navigation_form.status')),
         ];
     }

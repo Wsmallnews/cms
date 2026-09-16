@@ -40,8 +40,8 @@
         ])>
             @foreach($posts as $post)
                 @if ($loop->index >= $listStartIndex)
-                    <x-sn-cms::container.block-link
-                        href="{{ \Wsmallnews\Cms\Support\Utils::route('posts.show', $post) }}" 
+                    <a
+                        {{ \Filament\Support\generate_href_html(\Wsmallnews\Cms\Support\Utils::route('posts.show', $post)) }}
                         class="sn-link flex w-full h-28 @4xl:h-auto min-h-0 gap-2 group"
                     >
                         <div class="h-full sn-aspect-landscape shrink-0 rounded-md overflow-hidden bg-gray-100 dark:bg-gray-800">
@@ -66,7 +66,7 @@
                                 {{ optional($post->updated_at)->format('Y-m-d') }}
                             </div>
                         </div>
-                    </x-sn-cms::container.block-link>
+                    </a>
                 @endif
             @endforeach
         </div>

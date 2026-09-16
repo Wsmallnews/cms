@@ -82,7 +82,7 @@ class PostForm
                     ->options(Utils::getFlagEnum())
                     ->columnSpanFull(),
                 FormComponents::orderColumnInput(),
-                FormComponents::statusToggleButtons(PostStatus::class),
+                FormComponents::enumsToggleButtons(PostStatus::class),
             ])->columns(2)->columnSpanFull(),
 
             Schemas\Components\Section::make(__('sn-cms::cms.post_form.content_section'))->schema([

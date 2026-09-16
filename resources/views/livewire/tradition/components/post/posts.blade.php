@@ -16,8 +16,8 @@
 
         @if ($categoryStyle == 'tree')
             <div class="w-full min-w-0">
-                {{-- 分类树区块：亮色白底 / 暗色深底 --}}
-                <div class="sn-container p-2">
+                {{-- 分类树区块：亮色白底 / 暗色深底（编排槽内去卡片外观） --}}
+                <div @class(['w-full', 'sn-container p-2' => $contained])>
                     <livewire:sn-category::components.categories
                         :scope-type="$scopeType"
                         :use-url="false"
@@ -43,8 +43,8 @@
                 </div>
             @endif
 
-            {{-- 右侧整体一个区块：头部（标签左 + 搜索右）+ 分割线 + 文章列表 --}}
-            <div class="sn-container overflow-hidden">
+            {{-- 右侧整体一个区块：头部（标签左 + 搜索右）+ 分割线 + 文章列表（编排槽内去卡片外观） --}}
+            <div @class(['w-full', 'sn-container overflow-hidden' => $contained])>
 
                 <div class="sn-list-header">
                     {{-- 剥掉 fi-tabs 自带的容器外观（白底/边框/阴影/内边距/居中 margin），只保留 tab 悬停与激活态 --}}
@@ -94,9 +94,9 @@
                     <div class="w-full flex flex-col divide-y divide-gray-100 dark:divide-gray-800/70">
                         @forelse ($posts as $post)
                             {{-- 行高写死；图片区 4:3 横版满行高，cover 居中裁剪；sm 起行高加大，容纳 flag 徽章行 --}}
-                            <x-sn-cms::container.block-link
-                                class="group flex flex-row gap-4 h-36 @2xl:h-40 sn-padded overflow-hidden transition-colors duration-200 motion-reduce:transition-none hover:bg-primary-50/50 dark:hover:bg-primary-900/15 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary-500"
-                                href="{{ \Wsmallnews\Cms\Support\Utils::route('posts.show', $post) }}"
+                            <a
+                                {{ \Filament\Support\generate_href_html(\Wsmallnews\Cms\Support\Utils::route('posts.show', $post)) }}
+                                class="sn-link sn-padded group flex flex-row gap-4 h-36 @2xl:h-40 overflow-hidden"
                             >
                                 <div class="h-full sn-aspect-landscape max-w-[45%] shrink-0 rounded-md overflow-hidden bg-gray-100 dark:bg-gray-800">
                                     @if ($post->getFirstMediaUrl('post_image'))
@@ -156,7 +156,7 @@
                                         {{ $post->updated_at->format('Y-m-d') }}
                                     </div>
                                 </div>
-                            </x-sn-cms::container.block-link>
+                            </a>
                         @empty
                             <div class="py-16 text-center sn-descript-text">{{ __('sn-cms::cms.frontend.no_posts') }}</div>
                         @endforelse
