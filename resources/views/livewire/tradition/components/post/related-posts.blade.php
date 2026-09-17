@@ -38,11 +38,12 @@
         </div>
     @else
         {{-- 空态：有来源（暂无相关）与无来源共用版式，文案区分 --}}
-        <div class="flex flex-col items-center justify-center gap-2 py-12 px-4 text-center">
-            <x-filament::icon :icon="Heroicon::OutlinedNewspaper" class="w-8 h-8 opacity-40" aria-hidden="true" />
-            <div class="sn-descript-text text-sm">
-                {{ $hasSource ? __('sn-cms::cms.frontend.no_related_posts') : __('sn-cms::cms.frontend.related_posts_no_source') }}
-            </div>
-        </div>
+        <x-sn-support::empty
+            :icon="Heroicon::OutlinedNewspaper"
+            icon-color="gray"
+            icon-size="md"
+            :description="$hasSource ? __('sn-cms::cms.frontend.no_related_posts') : __('sn-cms::cms.frontend.related_posts_no_source')"
+            :contained="false"
+        />
     @endif
 </div>

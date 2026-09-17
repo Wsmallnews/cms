@@ -54,13 +54,13 @@
         <div class="mt-auto flex gap-4">
             @if ($general->wechat_official_qrcode)
                 <figure class="flex flex-col items-center gap-1 group">
-                    <img class="w-[72px] h-[72px] rounded-lg sn-ring-card bg-gray-50 dark:bg-gray-800 p-1.5 transition-transform duration-300 group-hover:scale-105" src="{{ files_url($general->wechat_official_qrcode) }}" alt="{{ __('sn-cms::cms.frontend.official_qrcode') }}" loading="lazy" />
+                    <img class="w-18 h-18 rounded-lg sn-ring-card bg-gray-50 dark:bg-gray-800 p-1.5 sn-motion-scale" src="{{ files_url($general->wechat_official_qrcode) }}" alt="{{ __('sn-cms::cms.frontend.official_qrcode') }}" loading="lazy" />
                     <figcaption class="sn-tip-text">{{ __('sn-cms::cms.frontend.official_account') }}</figcaption>
                 </figure>
             @endif
             @if ($general->wechat_qrcode)
                 <figure class="flex flex-col items-center gap-1 group">
-                    <img class="w-[72px] h-[72px] rounded-lg sn-ring-card bg-gray-50 dark:bg-gray-800 p-1.5 transition-transform duration-300 group-hover:scale-105" src="{{ files_url($general->wechat_qrcode) }}" alt="{{ __('sn-cms::cms.frontend.wechat_qrcode') }}" loading="lazy" />
+                    <img class="w-18 h-18 rounded-lg sn-ring-card bg-gray-50 dark:bg-gray-800 p-1.5 sn-motion-scale" src="{{ files_url($general->wechat_qrcode) }}" alt="{{ __('sn-cms::cms.frontend.wechat_qrcode') }}" loading="lazy" />
                     <figcaption class="sn-tip-text">{{ __('sn-cms::cms.frontend.personal_wechat') }}</figcaption>
                 </figure>
             @endif

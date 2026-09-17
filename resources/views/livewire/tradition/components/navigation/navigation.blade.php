@@ -176,7 +176,7 @@
     {{-- ===== 移动端菜单按钮（< lg 汉堡）=====
         定位类直接写死（不依赖 Alpine :class）：初始化前按钮若在文档流内，会撑起 nav 高度把调用方背景透成一条色带 --}}
     <button type="button"
-        class="sn-cms-nav-burger absolute top-3 right-3 z-20 inline-flex items-center justify-center min-w-11 min-h-11 rounded-md cursor-pointer transition-colors duration-200 motion-reduce:transition-none lg:hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2"
+        class="sn-cms-nav-burger absolute top-3 right-3 z-20 inline-flex items-center justify-center min-w-11 min-h-11 rounded-md cursor-pointer transition-colors duration-200 motion-reduce:transition-none lg:hidden"
         @click="mobileMenuIsOpen = ! mobileMenuIsOpen"
         :aria-expanded="mobileMenuIsOpen ? 'true' : 'false'"
         :class="mobileMenuIsOpen ? 'is-open' : 'is-closed'"
