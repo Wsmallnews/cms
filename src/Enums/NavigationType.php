@@ -18,8 +18,6 @@ enum NavigationType: string implements HasLabel
 
     case Url = 'url';
 
-    case Content = 'content';
-
     public function getLabel(): string | Htmlable | null
     {
         return match ($this) {
@@ -27,7 +25,6 @@ enum NavigationType: string implements HasLabel
             self::Url => __('sn-cms::cms.navigation_type_enum.url'),
             self::Route => __('sn-cms::cms.navigation_type_enum.route'),
             self::Page => __('sn-cms::cms.navigation_type_enum.page'),
-            self::Content => __('sn-cms::cms.navigation_type_enum.content'),
         };
     }
 }

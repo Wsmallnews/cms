@@ -28,6 +28,11 @@ class Post extends Base
 
     public ?int $id = null;
 
+    /**
+     * 是否作为编排块嵌入：嵌入时 SEO 归宿主页面所有，本组件不再覆盖标题等页面级数据
+     */
+    public bool $embedded = false;
+
     public function render()
     {
         $model = new (Utils::getPostModel());
@@ -41,14 +46,17 @@ class Post extends Base
         $post->view($this->getAuthUser());
 
         // 文章页 SEO：标题/描述/封面用文章自身数据，article() 自动组装结构化数据（author = 发布者）并切 og:type
-        Seo::title($post->title)
-            ->description($post->description)
-            ->image($post->getSnSubjectCoverUrl())
-            ->article([
-                'datePublished' => $post->published_at?->toIso8601String(),
-                'dateModified' => $post->updated_at?->toIso8601String(),
-                'author' => $post->publisher?->name,
-            ]);
+        // 编排嵌入（embedded）时让渡给宿主页面的 SEO，避免块内容覆盖页面标题
+        if (! $this->embedded) {
+            Seo::title($post->title)
+                ->description($post->description)
+                ->image($post->getSnSubjectCoverUrl())
+                ->article([
+                    'datePublished' => $post->published_at?->toIso8601String(),
+                    'dateModified' => $post->updated_at?->toIso8601String(),
+                    'author' => $post->publisher?->name,
+                ]);
+        }
 
         return view($this->getThemeView('components.post.post'), [
             'post' => $post,

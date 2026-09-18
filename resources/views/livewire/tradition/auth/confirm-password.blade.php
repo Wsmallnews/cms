@@ -6,8 +6,8 @@
 @endphp
 
 <x-dynamic-component :component="$this->getPageContainer()" :scope-type="$scopeType" :scope-id="$scopeId">
-    <div class="sn-page">
-        <div class="w-full mx-auto md:w-96 sn-padded">
+    <div class="sn-content">
+        <div class="w-full mx-auto @2xl:w-96 sn-padded">
             <livewire:sn-user::components.auth.confirm-password :module="app(CmsPlugin::class)->getId()" />
         </div>
     </div>

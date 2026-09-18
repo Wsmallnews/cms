@@ -10,7 +10,7 @@ use Wsmallnews\Cms\Livewire\Auth\Register;
 use Wsmallnews\Cms\Livewire\Auth\ResetPassword;
 use Wsmallnews\Cms\Livewire\Auth\VerifyEmail;
 use Wsmallnews\Cms\Livewire\Index;
-use Wsmallnews\Cms\Livewire\Navigation\Navigation;
+use Wsmallnews\Cms\Livewire\Pages\Page as PagesPage;
 use Wsmallnews\Cms\Livewire\Post\Post;
 use Wsmallnews\Cms\Livewire\Post\Posts;
 use Wsmallnews\Cms\Livewire\Profile;
@@ -50,7 +50,7 @@ Route::domain(Utils::getConfig('routes.domain'))
     ->name(Utils::getConfig('routes.name'))
     ->group(function () use ($guard) {
         // RSS 订阅模块端点（仅输出本模块流；整站端点 /feed 由 support 提供）。
-        // 必须注册在 navigation/{slug} 等动态段路由之前，否则会被吃掉
+        // 必须注册在 pages/{slug} 等动态段路由之前，否则会被吃掉
         Utils::getConfig('feed.enabled', true) && Feed::routes(app(CmsPlugin::class)->getId());
 
         // 不登录api
@@ -90,9 +90,11 @@ Route::domain(Utils::getConfig('routes.domain'))
 
         // 普通用户路由
         Route::get(Utils::getConfig('routes.uri.index'), Index::class)->name('index');
-        Route::get(Utils::getConfig('routes.uri.navigation-show'), Navigation::class)->name('navigation.show');
         Route::get(Utils::getConfig('routes.uri.posts'), Posts::class)->name('posts');
         Route::get(Utils::getConfig('routes.uri.posts-show'), Post::class)->name('posts.show');
+
+        // 站点页面（Page 实体：slug → composition 绑定）
+        Route::get(Utils::getConfig('routes.uri.pages-show'), PagesPage::class)->name('pages.show');
 
         if (Utils::getConfig('search.enabled', false) && Utils::getConfig('search.display', 'dropdown') === 'page') {
             // 搜索结果页（页面地址由 routes.uri.search 配置；回车跳转地址经 Search::page 注册）

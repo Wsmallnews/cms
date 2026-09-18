@@ -4,7 +4,7 @@
 @endphp
 
 <x-dynamic-component :component="$this->getPageContainer()" :scope-type="$scopeType" :scope-id="$scopeId">
-    <div class="sn-page">
+    <div class="sn-content">
         @if($breadcrumbs)
             <div class="sn-descript-text w-full flex items-center gap-2 text-left">
                 {{ __('sn-cms::cms.frontend.current_location') }} :

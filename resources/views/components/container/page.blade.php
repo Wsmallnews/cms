@@ -6,6 +6,7 @@
 @php
     use Wsmallnews\Cms\CmsPlugin;
     use Wsmallnews\Cms\Settings\GeneralSettings;
+    use Wsmallnews\Cms\Support\NavigationContext;
     use Wsmallnews\Cms\Support\Utils;
 
     $general = app(GeneralSettings::class);
@@ -13,6 +14,9 @@
     $logoUrl = filled($general->logo) ? files_url($general->logo) : null;
     $bannerUrl = filled($general->homepage_banner) ? files_url($general->homepage_banner) : null;
     $hasBanner = filled($bannerUrl);
+
+    // 导航分区装饰：当前请求匹配到导航时，显示该分区 banner（通栏，自身无图继承最近祖先）
+    $sectionBannerUrl = NavigationContext::bannerUrl($scopeType, $scopeId);
 @endphp
 
 <div {{ $attributes->merge(['class' => 'sn-cms-container-page w-full flex flex-col h-dvh']) }}>
@@ -74,9 +78,45 @@
             </div>
         </div>
 
-        {{-- 页面内容区声明为容器：全页直用的组件（posts 列表等）用容器断点自适应自身实际宽度 --}}
+        {{-- 分区 banner：导航条下方的通栏横图（container 外全宽）；匹配节点自身无图时继承最近祖先 --}}
+        @if (filled($sectionBannerUrl))
+            <div class="w-full shrink-0">
+                <img src="{{ $sectionBannerUrl }}" class="w-full bg-gray-100 dark:bg-gray-800" loading="lazy" alt="">
+            </div>
+        @endif
+
+        {{-- ===== 页面级容器（sn-page 全站唯一，页面视图禁止再写）：宽度对齐 + 页面节奏 + 兄弟导航注入 =====
+            brothers 开关与形态由 sn-cms.php navigation 段配置：
+            - top = 内容上方（PC 按钮排 / 手机手风琴卡片），间距由 sn-page 的 gap 提供
+            - sidebar = 左侧分栏（lg 4 列 / xl 5 列，主列 3/4；lg 以下侧栏卡片在内容上方堆叠）
+            内容级响应式一律容器断点（sn-content 自带 @container，posts 等全页组件消费最近容器） --}}
+        @php
+            $brothersEnabled = Utils::navigationConfig('brothers_enabled', true);
+            $brothersLayout = Utils::navigationConfig('brothers_layout', 'top');
+            $hasBrothers = $brothersEnabled && NavigationContext::hasBrothers($scopeType, $scopeId);
+        @endphp
+
         <div class="w-full @container">
-            {{ $slot }}
+            <div class="sn-page">
+                @if ($brothersEnabled && $brothersLayout === 'top' && $hasBrothers)
+                    {{-- top 形态：内容上方（含手机手风琴），组件自身处理断点显隐 --}}
+                    <livewire:sn-cms::components.navigation.brothers :scope-type="$scopeType" :scope-id="$scopeId" />
+                @endif
+
+                @if ($brothersEnabled && $brothersLayout === 'sidebar' && $hasBrothers)
+                    {{-- sidebar 形态：左栏手风琴卡片 + 主列分栏（sn-split：容器断点，brothers 侧栏有无切换时行为一致） --}}
+                    <div class="sn-split">
+                        <aside class="w-full min-w-0">
+                            <livewire:sn-cms::components.navigation.brothers :scope-type="$scopeType" :scope-id="$scopeId" layout="sidebar" />
+                        </aside>
+                        <div class="sn-split-main">
+                            {{ $slot }}
+                        </div>
+                    </div>
+                @else
+                    {{ $slot }}
+                @endif
+            </div>
         </div>
 
         <livewire:sn-cms::components.footer :scope-type="$scopeType" :scope-id="$scopeId" />

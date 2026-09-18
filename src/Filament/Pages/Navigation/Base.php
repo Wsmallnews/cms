@@ -259,6 +259,6 @@ abstract class Base extends NestedsetPage
 
     protected function getEloquentQuery($query)
     {
-        return $query->with(['content']);
+        return $query->with(['page']);
     }
 }

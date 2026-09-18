@@ -176,6 +176,38 @@
     @apply bg-primary-500 dark:bg-primary-600;
 }
 
+/* Brothers top 按钮排（PC）：纯 CSS hover/focus 展开级联——主导航主行走 Alpine is-open，
+   这里按钮彼此独立、无互斥需求，hover + 键盘 focus-within 即可达；显隐过渡复用 .sn-cms-sub 既有定义 */
+.sn-cms-brothers-top .has-sub:hover > .sn-cms-sub,
+.sn-cms-brothers-top .has-sub:focus-within > .sn-cms-sub {
+    @apply opacity-100 visible scale-100 pointer-events-auto;
+}
+
+.sn-cms-brothers-top .has-sub:hover > .sn-cms-nav-link .sn-cms-chev,
+.sn-cms-brothers-top .has-sub:focus-within > .sn-cms-nav-link .sn-cms-chev {
+    @apply rotate-180;
+}
+
+.sn-cms-brothers-top .sn-cms-sub-item.has-sub:hover > .sn-cms-sub-link .sn-cms-chev,
+.sn-cms-brothers-top .sn-cms-sub-item.has-sub:focus-within > .sn-cms-sub-link .sn-cms-chev {
+    @apply rotate-0;
+}
+
+/* 桥接按钮与下拉之间的呼吸间隙：伪元素垫上后鼠标穿越时仍在容器 hover 范围内，
+   面板不消失（面板是 .has-sub 的 DOM 子级，hover 面板本身也保持容器 hover；同主导航 depth-n 重叠消除断链思路） */
+.sn-cms-brothers-top .has-sub::after {
+    @apply absolute left-0 right-0 top-full h-1.5;
+    content: '';
+}
+
+/* Brothers 按钮是独立圆角面板（等价永久胶囊形态）：下拉四角圆角，与按钮之间留呼吸边
+   （主导航 depth-1 的 rounded-t-none 贴边逻辑仅服务通栏/胶囊主行，不适用于独立按钮） */
+.sn-cms-brothers-top .sn-cms-sub.depth-1 {
+    @apply rounded-md;
+
+    top: calc(100% + 0.375rem);
+}
+
 .sn-cms-acc-row {
     @apply text-white;
 }

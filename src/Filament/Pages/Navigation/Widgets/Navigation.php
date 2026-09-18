@@ -59,6 +59,6 @@ class Navigation extends Nestedset
 
     public function getEloquentQuery($query)
     {
-        return $query->with(['content']);
+        return $query->with(['page']);
     }
 }

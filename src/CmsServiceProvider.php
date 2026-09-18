@@ -22,7 +22,6 @@ use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 use Wsmallnews\Category\Models\Category as CategoryModel;
 use Wsmallnews\Cms\Commands\CmsInstallCommand;
-use Wsmallnews\Cms\Enums\NavigationType as NavigationTypeEnum;
 use Wsmallnews\Cms\Enums\PostStatus;
 use Wsmallnews\Cms\Http\Middleware\Authenticate;
 use Wsmallnews\Cms\Http\Middleware\EnsureEmailIsVerified;
@@ -42,6 +41,7 @@ use Wsmallnews\Support\Facades\ScheduledTask;
 use Wsmallnews\Support\Facades\Search;
 use Wsmallnews\Support\Facades\Seo;
 use Wsmallnews\Support\Facades\Sitemap;
+use Wsmallnews\Support\Support\Utils as SupportUtils;
 use Wsmallnews\User\Facades\SidebarMenuRegistry as SidebarMenuRegistryFacade;
 use Wsmallnews\User\Facades\UserConfig as UserConfigFacade;
 
@@ -347,15 +347,13 @@ class CmsServiceProvider extends PackageServiceProvider
                     ->all(),
             ],
             [
-                // 导航页面（Page/Content 型、有 slug 的可访问页面）
-                'key' => 'navigation',
-                'urls' => fn (): array => Utils::getNavigationModel()::snScope(...Utils::getScopeable())->normal()
-                    ->whereIn('type', [NavigationTypeEnum::Page, NavigationTypeEnum::Content])
-                    ->whereNotNull('slug')
+                // 站点页面以 Page 实体为源（published 即进 sitemap，与是否挂导航无关）
+                'key' => 'pages',
+                'urls' => fn (): array => SupportUtils::getPageModel()::query()->snScope(...Utils::getScopeable())->published()
                     ->get(['id', 'slug', 'updated_at'])
-                    ->map(fn ($navigation): array => [
-                        'loc' => Utils::route('navigation.show', $navigation),
-                        'lastmod' => $navigation->updated_at,
+                    ->map(fn ($page): array => [
+                        'loc' => Utils::route('pages.show', $page->slug),
+                        'lastmod' => $page->updated_at,
                     ])
                     ->values()
                     ->all(),

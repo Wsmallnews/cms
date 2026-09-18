@@ -12,6 +12,7 @@ use Wsmallnews\Cms\Models;
 use Wsmallnews\Comment\Enums\CommentStatus;
 use Wsmallnews\Support\Enums\ContentType;
 use Wsmallnews\Support\Filament\Resources\Compositions\CompositionResource;
+use Wsmallnews\Support\Filament\Resources\Pages\PageResource;
 
 return [
     /**
@@ -69,6 +70,11 @@ return [
                 'scope_type' => 'sn-cms',
                 'scope_id' => 0,
                 'module_id' => 'sn-cms',
+            ],
+            // 站点页面资源（Page 实体：slug → composition 绑定）
+            PageResource::class => [
+                'scope_type' => 'sn-cms',
+                'scope_id' => 0,
             ],
         ],
         'pages' => [
@@ -134,10 +140,6 @@ return [
             'types' => null,
             'default_type' => ContentType::Richtext,
         ],
-        'navigation' => [
-            'types' => null,
-            'default_type' => ContentType::Markdown,
-        ],
     ],
 
     'routes' => [
@@ -168,7 +170,6 @@ return [
          * Default route key name for the cms models.
          */
         'route_key_name' => [
-            'navigation' => 'slug',
             'post' => 'slug',
         ],
         /**
@@ -176,9 +177,9 @@ return [
          */
         'uri' => [
             'index' => '/',
-            'navigation-show' => 'navigation/{slug}',
             'posts' => 'posts',
             'posts-show' => 'posts/{slug}',
+            'pages-show' => 'pages/{slug}',
 
             // 全局搜索结果页（search.display = 'page' 时搜索框回车跳转目标）
             'search' => 'search',
@@ -252,7 +253,6 @@ return [
      * 注意：与 contents.navigation（内容表单）、models.navigation（模型映射）是不同层级的既有键，互不冲突。
      */
     'navigation' => [
-
         // 整体风格：primary = 主题色面板+白字（默认）；minimal = 白底简约，默认黑字、hover/选中转主题色
         // 注意：主行背景由调用方设置——primary 文字为白色，调用处必须提供深色背景（如 sn-primary-bg），否则文字不可见
         'style' => 'primary',
@@ -278,6 +278,18 @@ return [
 
         // "更多"按钮仅图标（⋯），不显示文字
         'more_icon_only' => true,
+
+        // 同级导航（brothers）：当前页面匹配到二级及以下导航时，展示其所在二级分组的兄弟节点
+        // 是否显示（false 时骨架不注入；匹配不到二级分组时组件自身也不渲染）
+        'brothers_enabled' => true,
+        // 展示形态：top = 页面内容上方一排按钮（多级以 hover 下拉展开）| sidebar = 左侧手风琴卡片（左侧分栏形态落地前，非 top 时骨架不注入）
+        'brothers_layout' => 'sidebar',
+        // PC 按钮的下拉展开形式（仅 brothers_layout = top 时生效，sidebar 恒为手风琴）：
+        // cascade = 级联（深层向右弹）| accordion = 手风琴（下拉面板内点击展开层级）
+        'brothers_submenu_style' => 'cascade',
+
+        // top 形态下按钮排的水平对齐：left 居左 | center 居中 | right 居右（sidebar 形态不适用）
+        'brothers_align' => 'left',
     ],
 
     /**

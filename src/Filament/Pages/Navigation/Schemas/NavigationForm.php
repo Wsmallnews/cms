@@ -14,14 +14,15 @@ use Wsmallnews\Cms\Enums\NavigationStatus;
 use Wsmallnews\Cms\Enums\NavigationType as NavigationTypeEnum;
 use Wsmallnews\Cms\Support\Utils;
 use Wsmallnews\Support\Filament\Forms\FormComponents;
+use Wsmallnews\Support\Support\Utils as SupportUtils;
 
 class NavigationForm
 {
     public static function forms(array $arguments = []): array
     {
         return [
-            // 首页标记：勾选后导航类型自动切换并锁定为内容类型，且必须绑定内容编排；
-            // 同 scope 内互斥（模型 saving 钩子保证），原首页节点自动退回普通内容页（仅地址变化）
+            // 首页标记：勾选后导航类型自动切换并锁定为页面类型，且必须绑定页面（首页内容经 Page 承载）；
+            // 同 scope 内互斥（模型 saving 钩子保证），原首页节点自动退回普通页面节点（仅地址变化）
             Forms\Components\Toggle::make('options.is_home')
                 ->label(__('sn-cms::cms.navigation_form.is_home'))
                 ->helperText(__('sn-cms::cms.navigation_form.is_home_helper'))
@@ -30,7 +31,7 @@ class NavigationForm
                 ->afterStateUpdated(function (Set $set, $state) {
                     if ($state) {
                         // 枚举 Select 的 state cast 会双向归一（写入枚举/字符串等价）；数据层由模型 saving 钩子兜底强制
-                        $set('type', NavigationTypeEnum::Content);
+                        $set('type', NavigationTypeEnum::Page);
 
                         // 清空此前已选的父级：包的创建链路用 `??` 取 parent_id（null 会被当作缺失，
                         // 回退到 createChild 动作传入的 parentId），故置 0（无父级 = 根节点）
@@ -102,17 +103,24 @@ class NavigationForm
                 ->visibleJs(<<<'JS'
                     $get('options.icon_type') == 'image'
                 JS),
-            Forms\Components\TextInput::make('slug')
-                ->label(__('sn-cms::cms.navigation_form.slug'))
-                ->scopedUnique(modifyQueryUsing: function (Builder $query, Component $livewire) {
-                    return $query->scopeable($livewire->getScopeType(), $livewire->getScopeId());
+            // 页面节点：绑定 Page 实体（内容双通道在 Page 侧管理：自有内容或编排）；
+            // 首页节点的入口由 urlInfo 指向模块首页，但仍需绑定页面承载首页内容
+            Forms\Components\Select::make('page_id')
+                ->label(__('sn-cms::cms.navigation_form.page'))
+                ->placeholder(__('sn-cms::cms.navigation_form.page_placeholder'))
+                ->options(function (Component $livewire): array {
+                    return SupportUtils::getPageModel()::query()
+                        ->snScope($livewire->getScopeType(), $livewire->getScopeId())
+                        ->orderBy('order_column')
+                        ->get(['id', 'title', 'slug'])
+                        ->mapWithKeys(fn ($page) => [$page->id => "{$page->title}（{$page->slug}）"])
+                        ->all();
                 })
-                ->required()
-                ->maxLength(255)
-                ->visible(function (Get $get) {
-                    // 只有内容 和 页面 需要设置标识；首页节点入口指向模块首页，无需标识
-                    return ! $get('options.is_home') && in_array($get('type'), [NavigationTypeEnum::Page, NavigationTypeEnum::Content]);
-                }),
+                ->searchable()
+                ->preload()
+                ->required(fn (Get $get): bool => $get('type') == NavigationTypeEnum::Page)
+                ->markAsRequired(fn (Get $get): bool => $get('type') == NavigationTypeEnum::Page)
+                ->visible(fn (Get $get): bool => $get('type') == NavigationTypeEnum::Page),
             FormComponents::mediaImageUpload('navigation_banner', 'navigation_banner')
                 ->label(__('sn-cms::cms.navigation_form.banner'))
                 ->customProperties(function (Component $livewire) {
@@ -121,11 +129,7 @@ class NavigationForm
                         'team_id' => current_tenant()?->id,
                     ];
                 })
-                ->uploadingMessage(__('sn-cms::cms.navigation_form.banner_uploading'))
-                ->visible(function (Get $get) {
-                    // 只有内容 和 页面 需要设置 Banner；首页节点由首页编排渲染，不走导航容器
-                    return ! $get('options.is_home') && in_array($get('type'), [NavigationTypeEnum::Page, NavigationTypeEnum::Content]);
-                }),
+                ->uploadingMessage(__('sn-cms::cms.navigation_form.banner_uploading')),
             Forms\Components\Select::make('options.target')
                 ->label(__('sn-cms::cms.navigation_form.target_type'))
                 ->options([
@@ -136,15 +140,6 @@ class NavigationForm
                 ->visible(function (Get $get) {
                     // 没有子导航了，就显示跳转类型
                     return $get('type') != NavigationTypeEnum::Child;
-                }),
-            FormComponents::contentTypeGroup(
-                types: Utils::getConfig('contents.navigation.types'),
-                defaultType: Utils::getConfig('contents.navigation.default_type'),
-                directory: Utils::getFileDirectory('contents'),
-            )
-                ->visible(function (Get $get) {
-                    // page 页面设置页面详情
-                    return $get('type') == NavigationTypeEnum::Page;
                 }),
             Forms\Components\TextInput::make('options.url')
                 ->label(__('sn-cms::cms.navigation_form.url'))
@@ -205,33 +200,8 @@ class NavigationForm
                 ->columns(2)
                 ->statePath('options._url_params')
                 ->visible(function (Get $get) {
-                    // 内容类型的导航，选了内容类型，并且内容类型有 form 表单
+                    // 路由类型的导航，可配置路由参数与查询参数
                     return $get('type') == NavigationTypeEnum::Route;
-                }),
-            // 内容类型 = 引用内容编排（Composition）；编排内的组件在「内容编排」资源中维护
-            Forms\Components\Select::make('options.composition_id')
-                ->label(__('sn-cms::cms.navigation_form.composition'))
-                ->placeholder(__('sn-cms::cms.navigation_form.composition_placeholder'))
-                ->options(fn (): array => Utils::getCompositionModel()::query()
-                    ->published()
-                    ->snScope(...Utils::getScopeable())
-                    ->limit(30)
-                    ->pluck('title', 'id')
-                    ->toArray())
-                ->getSearchResultsUsing(fn (string $search): array => Utils::getCompositionModel()::query()
-                    ->published()
-                    ->snScope(...Utils::getScopeable())
-                    ->where('title', 'like', "%{$search}%")
-                    ->limit(30)
-                    ->pluck('title', 'id')
-                    ->toArray())
-                ->searchable()
-                ->preload()
-                // 勾选首页标记后必须绑定编排
-                ->required(fn (Get $get): bool => (bool) $get('options.is_home'))
-                ->markAsRequired(fn (Get $get): bool => (bool) $get('options.is_home'))
-                ->visible(function (Get $get) {
-                    return $get('type') == NavigationTypeEnum::Content;
                 }),
 
             FormComponents::enumsToggleButtons(NavigationStatus::class)

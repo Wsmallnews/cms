@@ -63,15 +63,11 @@ class Navigation extends SupportModel implements HasMedia, HasSnSubject
                 return;
             }
 
-            // 首页节点强制为内容类型（表单勾选设为首页时自动切换，这里兜底保证数据一致）
-            $navigation->type = NavigationTypeEnum::Content;
+            // 首页节点强制为页面类型（表单勾选设为首页时自动切换，这里兜底保证数据一致）；
+            // 首页内容经 page_id → Page 承载
+            $navigation->type = NavigationTypeEnum::Page;
 
-            // 首页表单不填 slug，但退位后会以 /cms/navigation/{slug} 寻址，统一自动生成（唯一冲突自动消解）
-            if (blank($navigation->slug)) {
-                $navigation->slug = $navigation->generateUniqueSlug($navigation->name);
-            }
-
-            // 首页标记互斥：退位节点清掉标记；退位即回到普通内容页，slug 缺失的同样补生成
+            // 首页标记互斥：退位节点清掉标记（is_home 已置 false，saving 钩子早退，不会递归）
             static::query()
                 ->where('options->is_home', true)
                 ->snScope($navigation->scope_type, $navigation->scope_id)
@@ -79,41 +75,9 @@ class Navigation extends SupportModel implements HasMedia, HasSnSubject
                 ->get()
                 ->each(function (Navigation $oldHome) {
                     $oldHome->options = [...($oldHome->options ?? []), 'is_home' => false];
-
-                    if (blank($oldHome->slug)) {
-                        $oldHome->slug = $oldHome->generateUniqueSlug($oldHome->name);
-                    }
-
-                    // is_home 已置 false，saving 钩子早退，不会递归
                     $oldHome->save();
                 });
         });
-    }
-
-    /**
-     * 生成 scope 内唯一的 slug（首页节点 slug 表单不可见，由模型自动生成）
-     */
-    public function generateUniqueSlug(?string $name): string
-    {
-        $base = generate_slug($name, fallbackPrefix: 'nav');
-        $slug = $base;
-        $counter = 2;
-
-        while (static::query()
-            ->snScope($this->scope_type, $this->scope_id)
-            ->when($this->exists, fn (Builder $query) => $query->whereKeyNot($this->getKey()))
-            ->where('slug', $slug)
-            ->exists()) {
-            $slug = "{$base}-{$counter}";
-            $counter++;
-        }
-
-        return $slug;
-    }
-
-    public function getRouteKeyName()
-    {
-        return Utils::getConfig('routes.route_key_name.navigation', 'slug');
     }
 
     public function getSnSubjectId(): int
@@ -156,22 +120,19 @@ class Navigation extends SupportModel implements HasMedia, HasSnSubject
                 }
 
                 if ($this->type == NavigationTypeEnum::Page) {
-                    // cms 导航页面，使用 Utils 路由方法拼接 cms 路由前缀
-                    $url = Utils::route('navigation.show', $this);
+                    // 页面节点：首页标记指向模块首页（前缀 + /）；否则指向 Page 规范地址；
+                    // 未绑定 page_id（配置未完成）输出空链接
+                    if ($options['is_home'] ?? false) {
+                        $url = Utils::route('index');
+                    } elseif ($this->page?->slug) {
+                        $url = Utils::route('pages.show', $this->page->slug);
+                    } else {
+                        $url = '#';
+                    }
                 }
 
                 if ($this->type == NavigationTypeEnum::Url && isset($options['url'])) {
                     $url = $options['url'];
-                }
-
-                if ($this->type == NavigationTypeEnum::Content) {
-                    // 标记为首页的内容节点，入口指向模块首页（前缀 + /）
-                    if ($options['is_home'] ?? false) {
-                        $url = Utils::route('index');
-                    } else {
-                        // cms 内容页面，使用 Utils 路由方法拼接 cms 路由前缀
-                        $url = Utils::route('navigation.show', $this);
-                    }
                 }
 
                 return [
@@ -303,9 +264,12 @@ class Navigation extends SupportModel implements HasMedia, HasSnSubject
         return $query->where('status', NavigationStatusEnum::Hidden);
     }
 
-    public function content(): MorphOne
+    /**
+     * 页面节点引用的 Page 实体（urlInfo / 前台渲染按需预加载）
+     */
+    public function page(): BelongsTo
     {
-        return $this->morphOne(SupportUtils::getContentModel(), 'contentable');
+        return $this->belongsTo(SupportUtils::getPageModel());
     }
 
     public function team(): BelongsTo
