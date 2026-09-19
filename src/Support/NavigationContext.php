@@ -100,7 +100,7 @@ class NavigationContext
             return null;
         }
 
-        $currentPath = '/'.trim(request()->getPathInfo(), '/');
+        $currentPath = '/' . trim(request()->getPathInfo(), '/');
 
         // 必须用 kalnoy 的 scoped()（而非 snScope）：withDepth 的深度子查询依赖 scoped 查询上下文，
         // 普通 where 过滤下深度恒为 -1，兄弟分组推导会失效
@@ -140,7 +140,7 @@ class NavigationContext
             }
 
             // 首页节点（path = /）只参与精确匹配，避免成为全站前缀
-            if ($path === '/' || ! str_starts_with($currentPath, $path.'/')) {
+            if ($path === '/' || ! str_starts_with($currentPath, $path . '/')) {
                 continue;
             }
 
@@ -178,7 +178,7 @@ class NavigationContext
 
         $path = parse_url($url, PHP_URL_PATH) ?: '/';
 
-        return '/'.trim($path, '/');
+        return '/' . trim($path, '/');
     }
 
     /**
