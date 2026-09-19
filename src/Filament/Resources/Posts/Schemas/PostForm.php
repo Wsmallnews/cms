@@ -62,7 +62,7 @@ class PostForm
                     ->afterStateUpdated(fn (Set $set, $state) => $set('slug', generate_slug($state, fallbackPrefix: 'post'))),
                 Forms\Components\TextInput::make('slug')
                     ->label('Slug')
-                    ->scopedUnique(modifyQueryUsing: function (Builder $query, Component $livewire) {
+                    ->scopedUnique(modifyQueryUsing: function (Builder $query, Component $livewire): Builder {
                         return $query->scopeable($livewire::getScopeType(), $livewire::getScopeId());
                     })
                     ->required()

@@ -350,6 +350,9 @@ return [
         'related_posts_category_helper' => 'Falls back to the categories of the current post provided by the post component in the same row when unset',
         'related_posts_limit' => 'Limit',
     ],
+    'composition_purposes' => [
+        'post_sidebar' => 'Post Sidebar',
+    ],
     'sidebar' => [
         'profile' => 'Profile',
         'profile_views' => 'Browse History',

@@ -67,10 +67,12 @@ class Navigation extends SupportModel implements HasMedia, HasSnSubject
             // 首页内容经 page_id → Page 承载
             $navigation->type = NavigationTypeEnum::Page;
 
-            // 首页标记互斥：退位节点清掉标记（is_home 已置 false，saving 钩子早退，不会递归）
+            // 首页标记互斥：退位节点清掉标记（is_home 已置 false，saving 钩子早退，不会递归）；
+            // 互斥范围限定在同一导航类型（type_id）内——同 scope 的多棵导航树各自持有首页标记
             static::query()
                 ->where('options->is_home', true)
                 ->snScope($navigation->scope_type, $navigation->scope_id)
+                ->where('type_id', $navigation->type_id ?? 0)
                 ->when($navigation->exists, fn (Builder $query) => $query->whereKeyNot($navigation->getKey()))
                 ->get()
                 ->each(function (Navigation $oldHome) {

@@ -350,6 +350,9 @@ return [
         'related_posts_category_helper' => '不配置时自动使用同行图文组件的当前图文所属分类',
         'related_posts_limit' => '推荐条数',
     ],
+    'composition_purposes' => [
+        'post_sidebar' => '详情页侧栏',
+    ],
     'sidebar' => [
         'profile' => '个人中心',
         'profile_views' => '浏览记录',
