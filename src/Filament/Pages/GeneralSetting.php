@@ -8,7 +8,6 @@ use Filament\Pages\SettingsPage;
 use Filament\Schemas;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
-use Wsmallnews\Cms\CmsPlugin;
 use Wsmallnews\Cms\Settings\GeneralSettings;
 use Wsmallnews\Cms\Support\Utils;
 use Wsmallnews\Support\Filament\Concerns\CanBeConfigured;
@@ -169,10 +168,5 @@ class GeneralSetting extends SettingsPage
                     ])
                     ->columnSpanFull(),
             ]);
-    }
-
-    public static function getEssentialsPlugin(): ?CmsPlugin
-    {
-        return CmsPlugin::get();
     }
 }

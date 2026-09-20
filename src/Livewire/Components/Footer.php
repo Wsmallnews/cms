@@ -55,10 +55,10 @@ class Footer extends Base
     }
 
     /**
-     * 底部导航的 scopeable（派生约定：模块 scope_type + '-footer'，与后台 FooterNavigationPage 共用）
+     * 底部导航的 scopeable（config scopeables 的 footer 实例，与后台 FooterNavigationPage 共用）
      */
     public function getScopeable(): array
     {
-        return Utils::getFooterScopeable();
+        return Utils::getScopeable('footer');
     }
 }

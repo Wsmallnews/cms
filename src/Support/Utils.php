@@ -36,75 +36,54 @@ class Utils
     /**
      * Get scopeable configuration as ScopeableContext object.
      *
+     * @param  string|null  $key  实例键（null = main 默认实例，差异实例如 'footer' 在 config scopeables 中声明）
+     *
      * @throws CmsException
      */
-    public static function getScopeableContext(): ScopeableContext
+    public static function getScopeableContext(?string $key = null): ScopeableContext
     {
         try {
-            return SupportUtils::getScopeFromConfig('sn-cms.scopeable');
+            return SupportUtils::getScopeFromInstances('sn-cms.scopeables', $key);
         } catch (InvalidScopeException $e) {
             throw new CmsException('Scopeable configuration error. ' . $e->getMessage());
         }
     }
 
     /**
-     * Get scopeable array (legacy method for backward compatibility).
+     * Get scopeable array.
      *
+     * @param  string|null  $key  实例键（null = main 默认实例）
      * @return array{scope_type: string, scope_id: int}
      *
      * @throws CmsException
      */
-    public static function getScopeable(): array
+    public static function getScopeable(?string $key = null): array
     {
-        return self::getScopeableContext()->toArray();
+        return self::getScopeableContext($key)->toArray();
     }
 
     /**
      * Get scope type.
      *
-     * @throws CmsException
-     */
-    public static function getScopeType(): string
-    {
-        return self::getScopeableContext()->scopeType;
-    }
-
-    /**
-     * 底部导航的派生 scope_type（模块 scope_type + '-footer' 约定）。
-     * 后台 FooterNavigationPage 管理页面与前台 Footer 组件共用，天然与模块 scopeable 保持一致。
+     * @param  string|null  $key  实例键（null = main 默认实例）
      *
      * @throws CmsException
      */
-    public static function getFooterScopeType(): string
+    public static function getScopeType(?string $key = null): string
     {
-        return self::getScopeType() . '-footer';
-    }
-
-    /**
-     * 底部导航的 scopeable（scope_id 跟随模块 scopeable）。
-     *
-     * @return array{scope_type: string, scope_id: int}
-     *
-     * @throws CmsException
-     */
-    public static function getFooterScopeable(): array
-    {
-        $scopeable = self::getScopeable();
-
-        return [
-            'scope_type' => $scopeable['scope_type'] . '-footer',
-            'scope_id' => $scopeable['scope_id'],
-        ];
+        return self::getScopeableContext($key)->scopeType;
     }
 
     /**
      * Get scope ID.
      *
+     * @param  string|null  $key  实例键（null = main 默认实例）
+     *
      * @throws CmsException
      */
-    public static function getScopeId(): int
+    public static function getScopeId(?string $key = null): int
     {
-        return self::getScopeableContext()->scopeId;
+        return self::getScopeableContext($key)->scopeId;
     }
 
     /**

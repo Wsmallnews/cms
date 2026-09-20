@@ -153,7 +153,7 @@ class CmsServiceProvider extends PackageServiceProvider
             ];
         });
 
-        // 注册导航内容（key = 模块标识插件 id，与页面实例 scope 无关——footer 等派生 scope 页面共用同一套组件）
+        // 注册导航内容（key = 模块标识插件 id，与页面实例 scope 无关——footer 等差异实例页面共用同一套组件）
         CompositionRegistryFacade::registers(app(CmsPlugin::class)->getId(), [
             [
                 'type' => 'posts',

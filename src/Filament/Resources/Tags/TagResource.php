@@ -2,7 +2,6 @@
 
 namespace Wsmallnews\Cms\Filament\Resources\Tags;
 
-use Wsmallnews\Cms\CmsPlugin;
 use Wsmallnews\Cms\Filament\Resources\Tags\Pages\CreateTag;
 use Wsmallnews\Cms\Filament\Resources\Tags\Pages\EditTag;
 use Wsmallnews\Cms\Filament\Resources\Tags\Pages\ListTags;
@@ -31,10 +30,5 @@ final class TagResource extends BaseTagResource
     public static function getTagType(): string
     {
         return self::resolveCustomProperty('tag_type') ?? parent::getTagType();
-    }
-
-    public static function getEssentialsPlugin(): ?CmsPlugin
-    {
-        return CmsPlugin::get();
     }
 }

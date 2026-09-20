@@ -2,7 +2,6 @@
 
 namespace Wsmallnews\Cms\Filament\Pages\Navigation;
 
-use Wsmallnews\Cms\CmsPlugin;
 use Wsmallnews\Support\Filament\Concerns\CanBeConfigured;
 use Wsmallnews\Support\Filament\Pages\PageConfiguration;
 
@@ -35,10 +34,5 @@ final class NavigationPage extends Base
     public static function getEmptyTipLabel(): ?string
     {
         return self::resolveCustomProperty('emptyTipLabel') ?? parent::getEmptyTipLabel();
-    }
-
-    public static function getEssentialsPlugin(): ?CmsPlugin
-    {
-        return CmsPlugin::get();
     }
 }

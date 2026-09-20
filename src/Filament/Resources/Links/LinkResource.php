@@ -5,7 +5,6 @@ namespace Wsmallnews\Cms\Filament\Resources\Links;
 use Closure;
 use Filament\Schemas\Schema;
 use Filament\Tables\Table;
-use Wsmallnews\Cms\CmsPlugin;
 use Wsmallnews\Cms\Filament\Resources\Links\Pages\CreateLink;
 use Wsmallnews\Cms\Filament\Resources\Links\Pages\EditLink;
 use Wsmallnews\Cms\Filament\Resources\Links\Pages\ListLinks;
@@ -39,10 +38,5 @@ final class LinkResource extends BaseResource
         $resolveTable = self::resolveCustomProperty('table');
 
         return $resolveTable instanceof Closure ? $resolveTable($table, self::class) : parent::table($table);
-    }
-
-    public static function getEssentialsPlugin(): ?CmsPlugin
-    {
-        return CmsPlugin::get();
     }
 }
