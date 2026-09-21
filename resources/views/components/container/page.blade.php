@@ -74,7 +74,23 @@
             'bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700' => $navStyle === 'minimal',
         ])>
             <div class="container mx-auto sn-page-x">
-                <livewire:sn-cms::components.navigation.navigation :scope-type="$scopeType" :scope-id="$scopeId" />
+                <livewire:sn-cms::components.navigation.navigation :scope-type="$scopeType" :scope-id="$scopeId">
+                    {{-- 用户区（移动端菜单底部）：在 cms 的模块语境里生成链接与组件参数 --}}
+                    <x-slot:userZone>
+                        @auth(Utils::getConfig('guard', 'web'))
+                            <livewire:sn-user::components.user.menu :module="app(CmsPlugin::class)->getId()" placement="bottom-start" switch-dark-mode="{{ Utils::hasDarkMode() && ! Utils::hasDarkModeForced() }}" />
+                        @else
+                            <div class="flex gap-3">
+                                <x-filament::button tag="a" href="{{ Utils::route('login') }}" class="flex-1">
+                                    {{ __('sn-cms::cms.frontend.login') }}
+                                </x-filament::button>
+                                <x-filament::button color="gray" tag="a" href="{{ Utils::route('register') }}" class="flex-1">
+                                    {{ __('sn-cms::cms.frontend.register') }}
+                                </x-filament::button>
+                            </div>
+                        @endauth
+                    </x-slot:userZone>
+                </livewire:sn-cms::components.navigation.navigation>
             </div>
         </div>
 
@@ -119,6 +135,10 @@
             </div>
         </div>
 
-        <livewire:sn-cms::components.footer :scope-type="$scopeType" :scope-id="$scopeId" />
+        {{-- 页脚：footer 差异实例的 scope 在调用处解析后显式传入（组件内部不解析 scope） --}}
+        @php
+            $footerScopeable = Utils::getScopeable('footer');
+        @endphp
+        <livewire:sn-cms::components.footer :scope-type="$footerScopeable['scope_type']" :scope-id="$footerScopeable['scope_id']" />
     </div>
 </div>

@@ -1,22 +1,20 @@
 @php
     use Filament\Support\Icons\Heroicon;
-    use Wsmallnews\Cms\CmsPlugin;
-    use Wsmallnews\Cms\Support\Utils;
 
     $nestedset = $this->getNestedset();
 
-    // 导航配置（config/sn-cms.php 顶层 navigation 节）
-    $style = Utils::navigationConfig('style', 'primary');
-    $desktopStyle = Utils::navigationConfig('desktop_submenu_style', 'cascade');
-    $desktopTrigger = Utils::navigationConfig('desktop_submenu_trigger', 'hover');   // cascade 深层跟随；accordion 仅一级生效
-    $itemStyle = Utils::navigationConfig('desktop_item_style', 'flush');             // 一级 hover/选中形态：flush 通栏 | rounded 胶囊
-    $moreStyle = Utils::navigationConfig('more_submenu_style', 'accordion');
-    $moreTrigger = $moreStyle === 'cascade' ? Utils::navigationConfig('more_submenu_trigger', 'click') : 'click';
-    $moreIconOnly = (bool) Utils::navigationConfig('more_icon_only', true);
+    // 导航配置：module 感知（消费模块的 navigation 节优先，回落 cms 默认；复用方传 :module="sn-xxx"）
+    $style = $this->navigationConfig('style', 'primary');
+    $desktopStyle = $this->navigationConfig('desktop_submenu_style', 'cascade');
+    $desktopTrigger = $this->navigationConfig('desktop_submenu_trigger', 'hover');   // cascade 深层跟随；accordion 仅一级生效
+    $itemStyle = $this->navigationConfig('desktop_item_style', 'flush');             // 一级 hover/选中形态：flush 通栏 | rounded 胶囊
+    $moreStyle = $this->navigationConfig('more_submenu_style', 'accordion');
+    $moreTrigger = $moreStyle === 'cascade' ? $this->navigationConfig('more_submenu_trigger', 'click') : 'click';
+    $moreIconOnly = (bool) $this->navigationConfig('more_icon_only', true);
 
     // 父项可点击：仅 hover 级联生效（直达第一个可用叶子）
-    $clickable = Utils::isDesktopParentClickable();
-    $moreClickable = $moreTrigger === 'hover' && (bool) Utils::navigationConfig('parent_clickable', true);
+    $clickable = $this->isDesktopParentClickable();
+    $moreClickable = $moreTrigger === 'hover' && (bool) $this->navigationConfig('parent_clickable', true);
 
     // 递归 partial 路径按当前主题解析（主题切换时随主视图整体替换）
     $cascadeItemView = $this->getThemeView('components.navigation.partials.cascade-item');
@@ -189,14 +187,14 @@
 
     {{-- 移动端菜单展开时，顶部显示全局搜索和登录注册/个人信息（lg 以下；桌面端在页头）。
         pr-16 给右上角关闭按钮让位，避免压住输入框 --}}
-    @if (Utils::getConfig('search.enabled', true))
+    @if ($this->moduleConfig('search.enabled', true))
         <div class="sn-cms-nav-search-strip w-full fixed inset-x-0 top-0 z-20 pl-4 pr-16 pt-5 pb-4 lg:hidden"
             x-cloak x-show="mobileMenuIsOpen"
         >
             <livewire:sn-support::components.search
                 :limit="5"
-                :module="app(CmsPlugin::class)->getId()"
-                :display="Utils::getConfig('search.display')"
+                :module="$this->getModule()"
+                :display="$this->moduleConfig('search.display')"
                 placeholder="{{ __('sn-cms::cms.frontend.search_placeholder') }}"
             />
         </div>
@@ -224,21 +222,13 @@
             </li>
         @endforelse
 
-        {{-- lg 以下页头不展示登录注册/个人信息，收纳在移动端菜单底部；弹卡从左侧触发器向右展开，避免超出视口 --}}
-        <li class="w-full px-3 py-4">
-            @auth(Utils::getConfig('guard', 'web'))
-                <livewire:sn-user::components.user.menu :module="app(CmsPlugin::class)->getId()" placement="bottom-start" switch-dark-mode="{{ Utils::hasDarkMode() && !Utils::hasDarkModeForced() }}" />
-            @else
-                <div class="flex gap-3">
-                    <x-filament::button tag="a" href="{{ Utils::route('login') }}" class="flex-1">
-                        {{ __('sn-cms::cms.frontend.login') }}
-                    </x-filament::button>
-                    <x-filament::button color="gray" tag="a" href="{{ Utils::route('register') }}" class="flex-1">
-                        {{ __('sn-cms::cms.frontend.register') }}
-                    </x-filament::button>
-                </div>
-            @endauth
-        </li>
+        {{-- 用户区（登录注册/个人信息）：页面级内容，由调用方以命名 slot 注入——
+            链接与组件 props 在调用方的模块语境里生成，导航组件不感知路由与用户 --}}
+        @isset($userZone)
+            <li class="w-full px-3 py-4">
+                {{ $userZone }}
+            </li>
+        @endisset
     </ul>
 </nav>
 

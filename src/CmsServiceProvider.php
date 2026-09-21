@@ -41,6 +41,8 @@ use Wsmallnews\Support\Facades\ScheduledTask;
 use Wsmallnews\Support\Facades\Search;
 use Wsmallnews\Support\Facades\Seo;
 use Wsmallnews\Support\Facades\Sitemap;
+use Wsmallnews\Support\Features\Modules\Module;
+use Wsmallnews\Support\Features\Modules\ModuleRegistry;
 use Wsmallnews\Support\Support\Utils as SupportUtils;
 use Wsmallnews\User\Facades\SidebarMenuRegistry as SidebarMenuRegistryFacade;
 use Wsmallnews\User\Facades\UserConfig as UserConfigFacade;
@@ -65,11 +67,19 @@ class CmsServiceProvider extends PackageServiceProvider
         }
     }
 
-    public function packageRegistered(): void {}
+    public function packageRegistered(): void
+    {
+        // 模块身份登记（ModuleRegistry 单一事实源：类反查/存在性校验/插件实例）
+        ModuleRegistry::register(new Module(
+            id: static::$name,
+            namespace: 'Wsmallnews\\Cms',
+            plugin: CmsPlugin::class,
+        ));
+    }
 
     public function packageBooted(): void
     {
-        // / 注册模型别名
+        // 注册模型别名
         Relation::enforceMorphMap([
             'sn_navigation' => Utils::getNavigationModel(),
             'sn_navigation_type' => Utils::getNavigationTypeModel(),

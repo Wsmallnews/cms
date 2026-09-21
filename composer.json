@@ -30,7 +30,8 @@
         "wsmallnews/filament-nestedset": "^3.0",
         "wsmallnews/member": "^1.0",
         "wsmallnews/preference": "^1.0",
-        "wsmallnews/support": "^1.0"
+        "wsmallnews/support": "^1.0",
+        "wsmallnews/user": "^1.0"
     },
     "require-dev": {
         "laravel/pint": "^1.0",

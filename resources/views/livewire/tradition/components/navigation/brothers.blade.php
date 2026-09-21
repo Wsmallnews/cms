@@ -1,12 +1,12 @@
 @php
     use Filament\Support\Icons\Heroicon;
-    use Wsmallnews\Cms\Support\Utils;
 
     // 同级导航（brothers）：匹配到二级分组时展示兄弟节点，layout 形态在本视图内分支
+    // 配置经 HasModuleContext 解析（消费模块的 navigation 节优先，回落 cms）
     $nestedset = $this->getNestedset();
-    $style = Utils::navigationConfig('style', 'primary');
-    $submenuStyle = Utils::navigationConfig('brothers_submenu_style', 'cascade');
-    $alignClass = match (Utils::navigationConfig('brothers_align', 'left')) {
+    $style = $this->navigationConfig('style', 'primary');
+    $submenuStyle = $this->navigationConfig('brothers_submenu_style', 'cascade');
+    $alignClass = match ($this->navigationConfig('brothers_align', 'left')) {
         'center' => 'justify-center',
         'right' => 'justify-end',
         default => null,
@@ -17,7 +17,7 @@
     $accordionItemView = $this->getThemeView('components.navigation.partials.accordion-item');
 
     // hover 级联下父项直达第一个可用叶子（与主导航 PC 主行同语义）
-    $clickable = Utils::isDesktopParentClickable();
+    $clickable = $this->isDesktopParentClickable();
 
     // 独立按钮自带边界：primary = 主题色面板；minimal = 白底描边（文字/hover/激活色由皮肤规则接管）
     $buttonSkinClass = $style === 'minimal'

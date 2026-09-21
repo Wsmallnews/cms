@@ -4,24 +4,28 @@ namespace Wsmallnews\Cms\Livewire\Components\Navigation;
 
 use Illuminate\Support\Collection;
 use Illuminate\View\View;
+use Wsmallnews\Cms\CmsPlugin;
+use Wsmallnews\Cms\Livewire\Concerns\HasNavigationContext;
 use Wsmallnews\Cms\Livewire\Concerns\HasThemeView;
 use Wsmallnews\Cms\Models\Navigation as NavigationModel;
 use Wsmallnews\Cms\Support\NavigationContext;
-use Wsmallnews\Cms\Support\Utils;
 use Wsmallnews\FilamentNestedset\Livewire\Components\Nestedset;
+use Wsmallnews\Support\Livewire\Concerns\HasModuleContext;
 use Wsmallnews\Support\Livewire\Concerns\Scopeable;
 
 /**
  * 同级导航列表：当前请求匹配到二级（或更深）导航时，展示其所在二级分组的兄弟节点。
  *
  * 寻址双通道：调用方显式传 navigation（旧用法）；不传时由 NavigationContext 按当前请求解析。
- * layout 形态（视图内分支渲染，配置见 sn-cms.php navigation 段）：
+ * layout 形态（视图内分支渲染，配置经 HasModuleContext 解析：消费模块的 navigation 节优先，回落 cms）：
  * - top = 内容上方一排按钮，深层子级以 hover 下拉树展开（支持多级）
  * - sidebar = 左侧手风琴卡片（支持多级）
  * 无导航上下文 / 匹配到顶级节点时渲染隐藏占位（Livewire 需要根节点），零视觉占位。
  */
 class Brothers extends Nestedset
 {
+    use HasModuleContext;
+    use HasNavigationContext;
     use HasThemeView;
     use Scopeable;
 
@@ -31,10 +35,15 @@ class Brothers extends Nestedset
 
     public string $layout = '';
 
+    public function getOwnerModule(): string
+    {
+        return app(CmsPlugin::class)->getId();
+    }
+
     public function mount()
     {
-        // 形态未显式指定时读模块配置（调用方一般无需传）
-        blank($this->layout) && $this->layout = Utils::navigationConfig('brothers_layout', 'top');
+        // 形态未显式指定时读模块配置（调用方一般无需传；消费模块的 navigation 节优先）
+        blank($this->layout) && $this->layout = $this->navigationConfig('brothers_layout', 'top');
 
         // 未显式传入时，从当前请求解析导航上下文（一次请求内与其他装饰共享缓存）
         $this->navigation = $this->navigation
