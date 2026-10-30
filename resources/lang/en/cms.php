@@ -275,6 +275,9 @@ return [
         'model_label' => 'Post',
         'plural_model_label' => 'Posts',
         'navigation_label' => 'Post Management',
+        'tabs' => [
+            'all' => 'All',
+        ],
     ],
     'tag_resource' => [
         'model_label' => 'Tag',

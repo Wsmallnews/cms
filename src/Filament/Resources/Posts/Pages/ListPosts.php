@@ -4,6 +4,9 @@ namespace Wsmallnews\Cms\Filament\Resources\Posts\Pages;
 
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
+use Filament\Schemas\Components\Tabs\Tab;
+use Illuminate\Database\Eloquent\Builder;
+use Wsmallnews\Cms\Enums\PostStatus;
 use Wsmallnews\Cms\Filament\Resources\Posts\PostResource;
 use Wsmallnews\Support\Filament\Resources\Concerns\Pages\Scopeable;
 
@@ -27,79 +30,32 @@ class ListPosts extends ListRecords
         ];
     }
 
-    // protected function getTableQuery(): ?Builder
-    // {
-    //     $query = static::getResource()::getEloquentQuery();
+    public function getTabs(): array
+    {
+        $tabs = [
+            'all' => Tab::make()
+                ->label(__('sn-cms::cms.post_resource.tabs.all'))
+                ->badge(fn (): int => $this->getCount()),
+        ];
 
-    //     if ($this->category_id) {
-    //         // 可多选时候的条件
-    //         $childrenIds = (new Tree(function () {
-    //             return Category::query();
-    //         }))->getChildFields($this->category_id);
+        foreach (PostStatus::cases() as $status) {
+            $tabs[$status->value] = Tab::make()
+                ->label($status->getLabel())
+                ->badge(fn (): int => $this->getCount($status))
+                ->modifyQueryUsing(fn (Builder $query): Builder => $query->where('status', $status));
+        }
 
-    //         // $childrenIds = array_map('strval', $childrenIds);
+        return $tabs;
+    }
 
-    //         // $query->whereCategoryIn($childrenIds);
+    protected function getCount(?PostStatus $status = null): int
+    {
+        $query = static::getResource()::getEloquentQuery()->withoutTrashed();
 
-    //         // 分类单选时候的条件
-    //         $query->whereIn('category_id', $childrenIds);
-    //     }
+        if ($status) {
+            $query->where('status', $status);
+        }
 
-    //     return $query;
-    // }
-
-    /**
-     * @return array<NavigationItem | NavigationGroup>
-     */
-    // public function getSubNavigation(): array
-    // {
-    //     $categories = (new Tree(function () {
-    //         return Category::query()->orderBy('order_column')->orderBy('id', 'asc');
-    //     }))->getTree(resultCb: function ($trees) use (&$navigationItems) {
-    //         return $trees->map(function ($tree) {
-    //             if ($translatableContentDriver = $this->makeFilamentTranslatableContentDriver()) {
-    //                 return $translatableContentDriver->setRecordLocale($tree);
-    //             }
-    //         });
-    //     });
-
-    //     $navigations = $this->getNavigationsByCategories($categories);
-    //     return $navigations;
-    // }
-
-    // private function getNavigationsByCategories(Collection $categories): array
-    // {
-    //     $navigations[] = NavigationItem::make()
-    //         ->label('全部')
-    //         ->icon('heroicon-o-rectangle-stack')
-    //         ->url(self::getUrl())
-    //         ->isActiveWhen(fn(): bool => $this->category_id == 0);
-
-    //     $navigationItems = $this->getNavigationItemsByCategories($categories);
-
-    //     $navigations[] = NavigationGroup::make()
-    //         ->label('筛选分类')
-    //         ->items($navigationItems);
-
-    //     return $navigations;
-    // }
-
-    // private function getNavigationItemsByCategories(Collection $categories)
-    // {
-    //     $navigations = $categories->map(function ($category) {
-    //         $current = NavigationItem::make()
-    //             ->label($category->name)
-    //             ->icon('heroicon-o-rectangle-stack')
-    //             ->url(self::getUrl(['category_id' => $category->id]))
-    //             ->isActiveWhen(fn(): bool => $this->category_id == $category->id);
-
-    //         if (isset($category->children) && $category->children->isNotEmpty()) {
-    //             $current->childItems($this->getNavigationItemsByCategories($category->children));
-    //         }
-
-    //         return $current;
-    //     });
-
-    //     return $navigations->toArray();
-    // }
+        return $query->count();
+    }
 }

@@ -275,6 +275,9 @@ return [
         'model_label' => '图文',
         'plural_model_label' => '图文',
         'navigation_label' => '图文管理',
+        'tabs' => [
+            'all' => '全部',
+        ],
     ],
     'tag_resource' => [
         'model_label' => '标签',
