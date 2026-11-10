@@ -334,6 +334,7 @@ return [
         'title' => '导航管理',
         'navigation_label' => '导航管理',
         'save_success' => '保存成功',
+        'tenant_missing' => '未识别到当前租户，无法保存导航配置',
         'empty_label' => '暂无导航',
         'empty_tip_label' => '暂无导航数据，请创建一个导航',
     ],

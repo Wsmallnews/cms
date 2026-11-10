@@ -334,6 +334,7 @@ return [
         'title' => 'Navigation Management',
         'navigation_label' => 'Navigation Management',
         'save_success' => 'Save Success',
+        'tenant_missing' => 'No tenant is active, the navigation settings cannot be saved',
         'empty_label' => 'No navigations',
         'empty_tip_label' => 'No navigations found. Please create one.',
     ],
