@@ -4,14 +4,12 @@ declare(strict_types=1);
 
 namespace Wsmallnews\Cms\Support;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Auth;
+use Wsmallnews\Cms\CmsPlugin;
 use Wsmallnews\Cms\Contracts\PostFlagContract;
 use Wsmallnews\Cms\Enums\PostFlag;
 use Wsmallnews\Cms\Exceptions\CmsException;
-use Wsmallnews\Member\Models\Member;
 use Wsmallnews\Support\Data\ScopeableContext;
-use Wsmallnews\Support\Exceptions\InvalidScopeException;
+use Wsmallnews\Support\Features\Site\SiteContext;
 use Wsmallnews\Support\Models\Tag as SupportTagModel;
 use Wsmallnews\Support\Support\Utils as SupportUtils;
 
@@ -20,108 +18,64 @@ use Wsmallnews\Support\Support\Utils as SupportUtils;
  */
 class Utils
 {
+    /** Module plugin id; also the config root (config/{pluginId}.php). */
+    public static function getPluginId(): string
+    {
+        return app(CmsPlugin::class)->getId();
+    }
+
     /**
-     * Get configuration value.
+     * Read module config by its full path, e.g. 'options.feed.limit' or
+     * 'contents.post.types'. Never reads site options — use
+     * {@see SiteUtils::getConfig()} for the current site.
      *
-     * @param  string|null  $name  Configuration key (dot notation)
+     * @param  string  $name  Full config path under the module root
      * @param  mixed  $default  Default value if not found
      */
-    public static function getConfig(?string $name = null, mixed $default = null): mixed
+    public static function getConfig(string $name, mixed $default = null): mixed
     {
-        $config = config('sn-cms');
-
-        return $name ? (data_get($config, $name) ?? $default) : $config;
+        return config(self::getPluginId() . ".{$name}", $default);
     }
 
     /**
      * Get scopeable configuration as ScopeableContext object.
      *
-     * @param  string|null  $key  实例键（null = main 默认实例，差异实例如 'footer' 在 config scopeables 中声明）
-     *
-     * @throws CmsException
+     * @param  string|null  $key  Sub-scope suffix (footer, etc.)
      */
     public static function getScopeableContext(?string $key = null): ScopeableContext
     {
-        try {
-            return SupportUtils::getScopeFromInstances('sn-cms.scopeables', $key);
-        } catch (InvalidScopeException $e) {
-            throw new CmsException('Scopeable configuration error. ' . $e->getMessage());
-        }
+        return ScopeableContext::fromArray(self::getScopeable($key));
     }
 
     /**
-     * Get scopeable array.
+     * Get scopeable array: current site scope, plus an optional sub-scope suffix.
      *
-     * @param  string|null  $key  实例键（null = main 默认实例）
+     * @param  string|null  $key  Sub-scope suffix (footer, etc.)
      * @return array{scope_type: string, scope_id: int}
-     *
-     * @throws CmsException
      */
     public static function getScopeable(?string $key = null): array
     {
-        return self::getScopeableContext($key)->toArray();
+        return app(SiteContext::class)->scopeableOrDefault(self::getPluginId(), $key);
     }
 
     /**
      * Get scope type.
      *
-     * @param  string|null  $key  实例键（null = main 默认实例）
-     *
-     * @throws CmsException
+     * @param  string|null  $key  Sub-scope suffix (footer, etc.)
      */
     public static function getScopeType(?string $key = null): string
     {
-        return self::getScopeableContext($key)->scopeType;
+        return self::getScopeable($key)['scope_type'];
     }
 
     /**
      * Get scope ID.
      *
-     * @param  string|null  $key  实例键（null = main 默认实例）
-     *
-     * @throws CmsException
+     * @param  string|null  $key  Sub-scope suffix (footer, etc.)
      */
     public static function getScopeId(?string $key = null): int
     {
-        return self::getScopeableContext($key)->scopeId;
-    }
-
-    /**
-     * 当前 cms 用户端认证用户
-     */
-    public static function getUser(): ?Model
-    {
-        return Auth::guard(self::getConfig('guard', 'web'))->user();
-    }
-
-    /**
-     * 获取当前请求中的 Member（由 ResolveMember 中间件设置）
-     */
-    public static function getAuthMember(): ?Member
-    {
-        return current_member();
-    }
-
-    /**
-     * 获取当前请求中的认证用户（根据 auth_user 配置）
-     */
-    public static function getAuthUser(): ?Model
-    {
-        return self::getConfig('auth_user_type', 'member') === 'member' ? static::getAuthMember() : static::getUser();
-    }
-
-    /**
-     * Get panel register config.
-     *
-     * @param  string|null  $type  Register type (pages, resources, global_default) or null for all
-     */
-    public static function getPanelRegister(?string $type = null): mixed
-    {
-        if (blank($type)) {
-            return self::getConfig('panel_register', null);
-        }
-
-        return self::getConfig("panel_register.$type", null);
+        return self::getScopeable($key)['scope_id'];
     }
 
     /**
@@ -214,21 +168,6 @@ class Utils
     }
 
     /**
-     * 获取 module 是否支持 评论
-     *
-     * @param  string  $module  Module name
-     * @param  string|null  $key  Configuration key
-     * @param  mixed  $default  Default value if not found
-     */
-    public static function commentConfig(string $module, ?string $key = null, $default = null): mixed
-    {
-        $modules = self::getConfig('comments', []);
-        $moduleConfig = $modules[$module] ?? [];
-
-        return filled($key) ? $moduleConfig[$key] ?? $default : $moduleConfig;
-    }
-
-    /**
      * Get file directory path with optional type and date.
      *
      * @param  string|null  $type  Directory type
@@ -239,21 +178,14 @@ class Utils
     }
 
     /**
-     * Get theme configuration.
-     */
-    public static function getThemes(): array
-    {
-        return self::getConfig('themes');
-    }
-
-    /**
-     * 读取前台 navigation 配置（config/sn-cms.php 顶层 navigation 节）。
+     * 读取模块级 navigation 默认配置（sn-cms.options.navigation）。
+     * 站点级导航形态由组件经 moduleConfig 读取，不走这里。
      *
      * @param  string|null  $key  Configuration key (dot notation, e.g. 'style')
      */
     public static function navigationConfig(?string $key = null, mixed $default = null): mixed
     {
-        return self::getConfig('navigation' . ($key ? '.' . $key : ''), $default);
+        return self::getConfig('options.navigation' . ($key ? '.' . $key : ''), $default);
     }
 
     /**
@@ -268,67 +200,5 @@ class Utils
         }
 
         return (bool) self::navigationConfig('parent_clickable', true);
-    }
-
-    /**
-     * Get default dark mode setting.
-     */
-    public static function getDefaultDarkMode(): string
-    {
-        return self::getConfig('themes.default_dark_mode', 'system');
-    }
-
-    /**
-     * Check if dark mode is enabled.
-     */
-    public static function hasDarkMode(): bool
-    {
-        return self::getConfig('themes.dark_mode', false);
-    }
-
-    /**
-     * Check if dark mode is forced.
-     */
-    public static function hasDarkModeForced(): bool
-    {
-        return self::getConfig('themes.dark_mode_forced', false);
-    }
-
-    /**
-     * Get current theme name.
-     */
-    public static function getTheme(): string
-    {
-        return self::getConfig('themes.theme', 'default');
-    }
-
-    /**
-     * Get layout view path.
-     */
-    public static function getLayout(): string
-    {
-        return self::getConfig('themes.layout', 'sn-cms::components.layouts.app');
-    }
-
-    /**
-     * Get page container view path.
-     */
-    public static function getPageContainer(): string
-    {
-        return self::getConfig('themes.page_container', 'sn-cms::container.page');
-    }
-
-    /**
-     * Generate CMS route with configured prefix.
-     *
-     * @param  string  $name  Route name
-     * @param  mixed  $parameters  Route parameters
-     * @param  bool  $absolute  Generate absolute URL
-     */
-    public static function route(string $name, mixed $parameters = [], bool $absolute = true): string
-    {
-        $name = self::getConfig('routes.name', '') . $name;
-
-        return sn_route($name, $parameters, $absolute);
     }
 }

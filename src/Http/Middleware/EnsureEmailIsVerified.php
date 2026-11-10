@@ -8,7 +8,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Wsmallnews\Cms\Support\Utils;
+use Wsmallnews\Cms\Support\SiteUtils;
 
 class EnsureEmailIsVerified extends BaseEnsureEmailIsVerified
 {
@@ -29,7 +29,7 @@ class EnsureEmailIsVerified extends BaseEnsureEmailIsVerified
 
             return $request->expectsJson()
                 ? abort(403, 'Your email address is not verified.')
-                : redirect(Utils::route('verify.email'));
+                : redirect(SiteUtils::route('verify.email'));
         }
 
         return $next($request);

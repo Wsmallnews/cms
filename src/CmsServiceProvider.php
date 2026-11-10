@@ -2,50 +2,28 @@
 
 namespace Wsmallnews\Cms;
 
-use CodeWithDennis\FilamentSelectTree\SelectTree;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\ToggleButtons;
+use Filament\Facades\Filament;
 use Filament\Support\Assets\AlpineComponent;
 use Filament\Support\Assets\Asset;
 use Filament\Support\Assets\Css;
 use Filament\Support\Assets\Js;
 use Filament\Support\Facades\FilamentAsset;
 use Filament\Support\Facades\FilamentIcon;
-use Filament\Support\Icons\Heroicon;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Filesystem\Filesystem;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\URL;
 use Livewire\Livewire;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use Wsmallnews\Category\Models\Category as CategoryModel;
 use Wsmallnews\Cms\Commands\CmsInstallCommand;
-use Wsmallnews\Cms\Enums\PostStatus;
 use Wsmallnews\Cms\Http\Middleware\Authenticate;
 use Wsmallnews\Cms\Http\Middleware\EnsureEmailIsVerified;
 use Wsmallnews\Cms\Http\Middleware\RedirectIfAuthenticated;
 use Wsmallnews\Cms\Http\Middleware\RequirePassword;
-use Wsmallnews\Cms\Livewire\Components\Post\IndexPosts;
-use Wsmallnews\Cms\Livewire\Components\Post\Post;
-use Wsmallnews\Cms\Livewire\Components\Post\Posts;
-use Wsmallnews\Cms\Livewire\Components\Post\RelatedPosts;
 use Wsmallnews\Cms\Livewire\Index;
-use Wsmallnews\Cms\Models\Post as PostModel;
-use Wsmallnews\Cms\Settings\GeneralSettings;
 use Wsmallnews\Cms\Support\Utils;
-use Wsmallnews\Support\Facades\CompositionRegistry as CompositionRegistryFacade;
-use Wsmallnews\Support\Facades\Feed;
-use Wsmallnews\Support\Facades\ScheduledTask;
-use Wsmallnews\Support\Facades\Search;
-use Wsmallnews\Support\Facades\Seo;
-use Wsmallnews\Support\Facades\Sitemap;
 use Wsmallnews\Support\Features\Modules\Module;
 use Wsmallnews\Support\Features\Modules\ModuleRegistry;
-use Wsmallnews\Support\Support\Utils as SupportUtils;
-use Wsmallnews\User\Facades\SidebarMenuRegistry as SidebarMenuRegistryFacade;
-use Wsmallnews\User\Facades\UserConfig as UserConfigFacade;
+use Wsmallnews\Support\Features\Site\SiteRegistry;
 
 class CmsServiceProvider extends PackageServiceProvider
 {
@@ -61,10 +39,6 @@ class CmsServiceProvider extends PackageServiceProvider
             ->hasMigrations($this->getMigrations())
             ->hasTranslations()
             ->hasViews(static::$viewNamespace);
-
-        if (Utils::getConfig('routes.enabled') !== false) {     // 只要不等于 false 就注册路由
-            $package->hasRoutes($this->getRoutes());
-        }
     }
 
     public function packageRegistered(): void
@@ -130,363 +104,19 @@ class CmsServiceProvider extends PackageServiceProvider
         // 路由处理器反向查找注册（Route::get(Index::class) 需要类名→别名映射）
         Livewire::component('sn-cms::index', Index::class);
 
-        // 注册用户认证信息
-        UserConfigFacade::config(app(CmsPlugin::class)->getId(), function () {
-            return [
-                'guard' => Utils::getConfig('guard', 'web'),
-                'two_factor' => Utils::getConfig('two_factor', []),
-                'urls' => [
-                    'index' => Utils::route('index'),
-                    'login' => Utils::route('login'),
-                    'register' => Utils::route('register'),
-                    'profile' => Utils::route('profile'),
-                    'forgot-password' => Utils::route('forgot.password'),
-                    'reset-password' => fn ($params) => Utils::route('reset.password', $params),
-                    'verify-email' => Utils::route('verify.email'),
-                    'verify-email-verification' => function ($parameters) {
-                        // @sn todo ，这里先直接填入 租户参数
-                        if (! isset($parameters['tenant'])) {        // 没有租户参数,则添加租户参数
-                            $tenant = current_tenant();
-                            $parameters['tenant'] = $tenant;        // 租户参数
-                        }
+        // 模块级注册（配置、内容源、菜单）：与站点无关，只执行一次
+        $this->app->make(CmsSiteServices::class)->registerModules();
 
-                        $parameters['module'] = app(CmsPlugin::class)->getId();             // 当前模块名
+        // 站点级注册：所有 panel 注册完成后 SiteRegistry 才完整。getPanels() 是冗余预防：
+        // 若 Filament 改为懒解析且这里不触发，插件 register() 不执行，本回调取到的站点必为空，站点服务全部缺失。
+        $this->app->booted(function (): void {
+            Filament::getPanels();
 
-                        return URL::temporarySignedRoute(
-                            Utils::getConfig('routes.name', '') . 'verify.email.verification',
-                            Carbon::now()->addMinutes(Config::get('auth.verification.expire', 60)),
-                            $parameters
-                        );
-                    },
-                    'password-confirm' => Utils::route('password.confirm'),
-                ],
-            ];
+            $pipeline = $this->app->make(CmsSiteServices::class)->pipeline();
+
+            $pipeline->registerAll(app(SiteRegistry::class)->forPlugin(app(CmsPlugin::class)->getId()));
+            $pipeline->finish();
         });
-
-        // 注册导航内容（key = 模块标识插件 id，与页面实例 scope 无关——footer 等差异实例页面共用同一套组件）
-        CompositionRegistryFacade::registers(app(CmsPlugin::class)->getId(), [
-            [
-                'type' => 'posts',
-                'label' => __('sn-cms::cms.content_type.posts'),
-                // 字段平铺：外层 extras Fieldset 已统一单列（编排槽位有宽窄，注册表单不要再嵌自带列数的布局组件）
-                'forms' => fn ($fields) => [
-                    // 多选分类
-                    ToggleButtons::make('categoryStyle')->label(__('sn-cms::cms.post_form.category_style'))
-                        ->default('select')
-                        ->options([
-                            'select' => __('sn-cms::cms.post_form.category_style_select'),
-                            'tree' => __('sn-cms::cms.post_form.category_style_tree'),
-                        ])
-                        ->colors([
-                            'select' => 'warning',
-                            'tree' => 'info',
-                        ])
-                        ->inline()
-                        ->grouped()
-                        ->helperText(__('sn-cms::cms.post_form.category_style_helper')),
-                    SelectTree::make('categoryIds')->label(__('sn-cms::cms.post_form.categories'))
-                        ->query(query: function () {
-                            return CategoryModel::scopeable(Utils::getScopeType(), Utils::getScopeId());
-                        }, titleAttribute: 'name', parentAttribute: 'parent_id')
-                        ->searchable()
-                        ->multiple()
-                        ->enableBranchNode()
-                        ->withCount()
-                        ->placeholder(__('sn-cms::cms.post_form.categories_placeholder'))
-                        ->emptyLabel(__('sn-cms::cms.post_form.categories_empty'))
-                        ->treeKey('postCategories')
-                        ->visibleJs(<<<'JS'
-                            $get('categoryStyle') == 'select'
-                        JS),
-                ],
-                'components' => [
-                    Posts::class => [
-                        'scopeType' => Utils::getScopeType(),
-                        'scopeId' => Utils::getScopeId(),
-                    ],
-                ],
-            ],
-            [
-                'type' => 'index-posts',
-                'label' => __('sn-cms::cms.content_type.index_posts'),
-                'forms' => fn ($fields) => [],
-                'components' => [
-                    IndexPosts::class => [
-                        'scopeType' => Utils::getScopeType(),
-                        'scopeId' => Utils::getScopeId(),
-                    ],
-                ],
-            ],
-            [
-                'type' => 'post-detail',
-                'label' => __('sn-cms::cms.content_type.post_detail'),
-                'forms' => fn ($fields) => [
-                    Select::make('id')->label(__('sn-cms::cms.post_form.select_post'))
-                        ->options(PostModel::published()->scopeable(Utils::getScopeType(), Utils::getScopeId())->limit(30)->pluck('title', 'id'))
-                        ->getSearchResultsUsing(fn (string $search): array => PostModel::published()->scopeable(Utils::getScopeType(), Utils::getScopeId())->where('title', 'like', "%{$search}%")->limit(30)->pluck('title', 'id')->toArray())
-                        ->placeholder(__('sn-cms::cms.post_form.select_post_placeholder'))
-                        ->searchable()
-                        ->preload()
-                        ->required(),
-                ],
-                'components' => [
-                    Post::class => [
-                        'scopeType' => Utils::getScopeType(),
-                        'scopeId' => Utils::getScopeId(),
-                    ],
-                ],
-                // 上下文提供者：选定的文章并入行上下文袋，供同行后续组件（如相关推荐）消费
-                'provides' => fn (array $extras) => filled($extras['id'] ?? null) ? ['post' => PostModel::find($extras['id'])] : [],
-            ],
-            [
-                'type' => 'related-posts',
-                'label' => __('sn-cms::cms.content_type.related_posts'),
-                'forms' => fn ($fields) => [
-                    SelectTree::make('categoryIds')->label(__('sn-cms::cms.post_form.categories'))
-                        ->query(query: function () {
-                            return CategoryModel::scopeable(Utils::getScopeType(), Utils::getScopeId());
-                        }, titleAttribute: 'name', parentAttribute: 'parent_id')
-                        ->searchable()
-                        ->multiple()
-                        ->enableBranchNode()
-                        ->withCount()
-                        ->placeholder(__('sn-cms::cms.post_form.categories_placeholder'))
-                        ->emptyLabel(__('sn-cms::cms.post_form.categories_empty'))
-                        ->treeKey('relatedPostCategories')
-                        ->helperText(__('sn-cms::cms.content_type.related_posts_category_helper')),
-                    Select::make('limit')->label(__('sn-cms::cms.content_type.related_posts_limit'))
-                        ->options(array_combine(range(3, 12), range(3, 12)))
-                        ->default(6),
-                ],
-                // 上下文消费者：未显式配置分类时，自动注入同行文章组件提供的 post
-                'context' => ['post'],
-                'components' => [
-                    RelatedPosts::class => [
-                        'scopeType' => Utils::getScopeType(),
-                        'scopeId' => Utils::getScopeId(),
-                    ],
-                ],
-            ],
-        ]);
-
-        // 注册编排用途槽位（模块自有业务语义；support 侧编排表单按模块读取渲染 purpose 下拉与位置表单）。
-        // 标签用闭包延迟翻译（无 boot 顺序竞态）；同槽位多条已发布编排时渲染 order_column 最前的一条
-        CompositionRegistryFacade::registerPurposes(app(CmsPlugin::class)->getId(), [
-            'post-sidebar' => [
-                'label' => fn (): string => __('sn-cms::cms.composition_purposes.post_sidebar'),
-                'positions' => ['left', 'right'],
-                'default' => 'right',
-                // pageContext 提供者：路由参数（slug）→ 当前文章，供 related-posts 等 context 消费者使用。
-                // 路由壳据此保持薄壳（不感知 Post 模型），provider 未命中（文章不存在）返回 null 由渲染链剔除
-                'context' => function (array $params, array $scopeable): array {
-                    $postModel = Utils::getPostModel();
-
-                    return [
-                        'post' => $postModel::query()
-                            ->published()
-                            ->snScope($scopeable['scope_type'], $scopeable['scope_id'])
-                            ->where((new $postModel)->getRouteKeyName(), $params['slug'] ?? null)
-                            ->first(),
-                    ];
-                },
-            ],
-        ]);
-
-        // 注册 Post 的定时调度动作（publish / unpublish）
-        ScheduledTask::registers('sn_post', [
-            [
-                'action' => 'publish',
-                'label' => __('sn-cms::cms.post_form.schedule_publish'),
-                'forms' => fn () => [],
-                'handler' => fn ($task, ?array $payload): bool => $task->schedulable->update([
-                    'status' => PostStatus::Published,
-                    'published_at' => $task->schedulable->published_at ?? now(),
-                ]),
-            ],
-            [
-                'action' => 'unpublish',
-                'label' => __('sn-cms::cms.post_form.schedule_unpublish'),
-                'forms' => fn () => [],
-                'handler' => fn ($task, ?array $payload): bool => $task->schedulable->update([
-                    'status' => PostStatus::Hidden,
-                ]),
-            ],
-        ]);
-
-        // 注册全局搜索（模块配置 search.enabled 关闭时不注册来源，前端也不渲染搜索框）
-        if (Utils::getConfig('search.enabled', true)) {
-            // sn-cms.search 整节透传到搜索注册表：模块想覆盖哪些 search 配置就在配置节写哪些键
-            // （可覆盖键清单见 support 包 config/sn-support.php 的 search 节），未写的键走全局兜底；
-            // enabled 是本模块启用门控，不透传；page 未声明时用本包结果页路由闭包兜底
-            $searchConfig = collect(Utils::getConfig('search', []))->except('enabled')->all();
-            $searchConfig['page'] ??= fn (?string $query) => Utils::route('search', ['q' => $query]);
-
-            Search::config(app(CmsPlugin::class)->getId(), $searchConfig)
-                ->registers(app(CmsPlugin::class)->getId(), [
-                    [
-                        'key' => 'post',
-                        'model' => Utils::getPostModel(),
-                        'group' => __('sn-cms::cms.post_resource.model_label'),
-                        // with('categories')：条目视图展示分类标签，预加载避免 N+1
-                        'query' => fn ($query) => $query->published()->with('categories'),
-                        'scopeable' => Utils::getScopeable(),
-                        'url' => fn ($record) => Utils::route('posts.show', $record),
-                        // 自定义条目视图（结构参考 cms/posts 页面的文章条目；数据：$result 含 ->record、$query、$highlight）
-                        'view' => 'sn-cms::components.search.post-item',
-                    ],
-                ]);
-        }
-
-        // 注册 SEO 模块默认值（模块名 = 插件 ID，与其他模块互不覆盖）：
-        // 闭包在每次渲染时才解析 Settings，自动跟随当前租户（多租户下 GeneralSettings 走 team_database 仓库，每租户一份）
-        Seo::config(app(CmsPlugin::class)->getId(), function (): array {
-            $general = app(GeneralSettings::class);
-
-            return [
-                'site_name' => filled($general->site_name) ? $general->site_name : config('app.name'),
-                'description' => filled($general->seo_description) ? $general->seo_description : $general->site_slogan,
-                'image' => filled($general->default_og_image) ? files_url($general->default_og_image) : null,
-                'favicon' => filled($general->favicon) ? files_url($general->favicon) : null,
-                'analytics_code' => $general->analytics_code,
-            ];
-        });
-
-        // 注册 sitemap 内容源与 robots 规则（闭包渲染时才执行，自动跟随当前租户与 scope）：
-        // config 声明模块绑定的域名（多域名部署时，非本域名请求不输出本模块内容）
-        Sitemap::config(app(CmsPlugin::class)->getId(), [
-            'domain' => Utils::getConfig('routes.domain'),
-        ])->registers(app(CmsPlugin::class)->getId(), [
-            [
-                'key' => 'home',
-                'urls' => fn (): array => [
-                    ['loc' => Utils::route('index')],
-                ],
-            ],
-            [
-                'key' => 'posts-list',
-                'urls' => fn (): array => [
-                    ['loc' => Utils::route('posts')],
-                ],
-            ],
-            [
-                'key' => 'post',
-                'urls' => fn (): array => Utils::getPostModel()::snScope(...Utils::getScopeable())->published()
-                    ->get(['id', 'slug', 'updated_at'])
-                    ->map(fn ($post): array => [
-                        'loc' => Utils::route('posts.show', $post),
-                        'lastmod' => $post->updated_at,
-                    ])
-                    ->values()
-                    ->all(),
-            ],
-            [
-                // 站点页面以 Page 实体为源（published 即进 sitemap，与是否挂导航无关）
-                'key' => 'pages',
-                'urls' => fn (): array => SupportUtils::getPageModel()::query()->snScope(...Utils::getScopeable())->published()
-                    ->get(['id', 'slug', 'updated_at'])
-                    ->map(fn ($page): array => [
-                        'loc' => Utils::route('pages.show', $page->slug),
-                        'lastmod' => $page->updated_at,
-                    ])
-                    ->values()
-                    ->all(),
-            ],
-        ])->robots(app(CmsPlugin::class)->getId(), [
-            // 搜索结果页禁爬（路径由本模块路由配置拼接，前缀/路径均可配置）
-            'disallow' => array_filter([
-                trim((string) Utils::getConfig('routes.prefix', 'cms') . '/' . (string) Utils::getConfig('routes.uri.search', 'search'), '/'),
-            ]),
-        ]);
-
-        // 注册 RSS feed 内容流（posts 流；端点由 support 提供：/feed 整站聚合流、/feed/posts
-        // 具名流、/cms/feed 与 /cms/feed/posts 模块端点——模块端点只输出本模块流，
-        // 路径前缀部署下多模块共用域名时内容隔离）。闭包在每次渲染时才解析 Settings
-        // 与配置，自动跟随当前租户与 scope；feed.enabled 关闭时本模块不注册流与模块端点路由
-        if (Utils::getConfig('feed.enabled', true)) {
-            Feed::config(app(CmsPlugin::class)->getId(), [
-                'domain' => Utils::getConfig('routes.domain'),
-                // 模块聚合端点（/cms/feed）的频道元数据
-                'title' => function () {
-                    $general = app(GeneralSettings::class);
-
-                    return filled($general->site_name) ? $general->site_name : config('app.name');
-                },
-                'description' => function () {
-                    $general = app(GeneralSettings::class);
-
-                    return filled($general->seo_description) ? $general->seo_description : $general->site_slogan;
-                },
-                'link' => fn () => Utils::route('index'),
-            ])->register(app(CmsPlugin::class)->getId(), 'posts', [
-                'title' => function () {
-                    $general = app(GeneralSettings::class);
-                    $siteName = filled($general->site_name) ? $general->site_name : config('app.name');
-
-                    return $siteName . ' - ' . __('sn-cms::cms.frontend.rss_posts');
-                },
-                'label' => fn () => __('sn-cms::cms.frontend.rss_posts'),
-                'description' => function () {
-                    $general = app(GeneralSettings::class);
-
-                    return filled($general->seo_description) ? $general->seo_description : $general->site_slogan;
-                },
-                'link' => fn () => Utils::route('index'),
-                'limit' => fn (): int => (int) Utils::getConfig('feed.limit', 50),
-                'items' => fn (): iterable => Utils::getPostModel()::snScope(...Utils::getScopeable())
-                    ->published()
-                    ->orderByDesc('published_at')
-                    ->orderByDesc('id')
-                    ->limit((int) Utils::getConfig('feed.limit', 50))
-                    ->get(['id', 'slug', 'title', 'description', 'published_at'])
-                    ->map(fn ($post): array => [
-                        'title' => $post->title ?? '',
-                        'url' => Utils::route('posts.show', $post),
-                        'description' => $post->description,
-                        'updated_at' => $post->published_at,
-                    ])
-                    ->all(),
-            ]);
-        }
-
-        // 注册用户侧边栏菜单
-        SidebarMenuRegistryFacade::registers(app(CmsPlugin::class)->getId(), [
-            fn () => [
-                'key' => 'profile',
-                'label' => __('sn-cms::cms.sidebar.profile'),
-                'url' => Utils::route('profile'),
-                'icon' => Heroicon::OutlinedUser,
-                'active_icon' => Heroicon::User,
-            ],
-            fn () => [
-                'key' => 'profile-views',
-                'label' => __('sn-cms::cms.sidebar.profile_views'),
-                'url' => Utils::route('profile.views'),
-                'icon' => Heroicon::OutlinedEye,
-                'active_icon' => Heroicon::Eye,
-            ],
-            fn () => [
-                'key' => 'settings-profile',
-                'label' => __('sn-cms::cms.sidebar.settings_profile'),
-                'url' => Utils::route('settings.profile'),
-                'icon' => Heroicon::OutlinedPencilSquare,
-                'active_icon' => Heroicon::PencilSquare,
-            ],
-            fn () => [
-                'key' => 'settings-password',
-                'label' => __('sn-cms::cms.sidebar.settings_password'),
-                'url' => Utils::route('settings.password'),
-                'icon' => Heroicon::OutlinedLockClosed,
-                'active_icon' => Heroicon::LockClosed,
-            ],
-            fn () => [
-                'key' => 'settings-two-factor',
-                'label' => __('sn-cms::cms.sidebar.settings_two_factor'),
-                'url' => fn () => Utils::route('settings.two-factor'),
-                'icon' => Heroicon::OutlinedKey,
-                'active_icon' => Heroicon::Key,
-                'hidden' => fn () => ! Utils::getConfig('two_factor.enabled', false),
-            ],
-        ]);
     }
 
     protected function getAssetPackageName(): ?string
@@ -522,14 +152,6 @@ class CmsServiceProvider extends PackageServiceProvider
     protected function getIcons(): array
     {
         return [];
-    }
-
-    /**
-     * @return array<string>
-     */
-    protected function getRoutes(): array
-    {
-        return ['web'];
     }
 
     /**

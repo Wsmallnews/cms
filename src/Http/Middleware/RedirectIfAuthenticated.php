@@ -4,7 +4,7 @@ namespace Wsmallnews\Cms\Http\Middleware;
 
 use Illuminate\Auth\Middleware\RedirectIfAuthenticated as BaseRedirectIfAuthenticated;
 use Illuminate\Http\Request;
-use Wsmallnews\Cms\Support\Utils;
+use Wsmallnews\Cms\Support\SiteUtils;
 
 class RedirectIfAuthenticated extends BaseRedirectIfAuthenticated
 {
@@ -13,6 +13,6 @@ class RedirectIfAuthenticated extends BaseRedirectIfAuthenticated
      */
     protected function redirectTo(Request $request): ?string
     {
-        return Utils::route('profile');
+        return SiteUtils::route('profile');
     }
 }

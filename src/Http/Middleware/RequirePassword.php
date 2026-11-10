@@ -5,7 +5,7 @@ namespace Wsmallnews\Cms\Http\Middleware;
 use Closure;
 use Illuminate\Auth\Middleware\RequirePassword as BaseRequirePassword;
 use Illuminate\Http\Request;
-use Wsmallnews\Cms\Support\Utils;
+use Wsmallnews\Cms\Support\SiteUtils;
 
 class RequirePassword extends BaseRequirePassword
 {
@@ -28,7 +28,7 @@ class RequirePassword extends BaseRequirePassword
 
             return $this->responseFactory->redirectGuest(
                 $redirectToRoute ? $this->urlGenerator->route($redirectToRoute)
-                    : Utils::route('password.confirm')
+                    : SiteUtils::route('password.confirm')
             );
         }
 

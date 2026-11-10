@@ -4,7 +4,7 @@ namespace Wsmallnews\Cms\Http\Middleware;
 
 use Illuminate\Auth\Middleware\Authenticate as BaseAuthenticate;
 use Illuminate\Http\Request;
-use Wsmallnews\Cms\Support\Utils;
+use Wsmallnews\Cms\Support\SiteUtils;
 
 class Authenticate extends BaseAuthenticate
 {
@@ -15,6 +15,6 @@ class Authenticate extends BaseAuthenticate
      */
     protected function redirectTo(Request $request)
     {
-        return Utils::route('login');
+        return SiteUtils::route('login');
     }
 }
