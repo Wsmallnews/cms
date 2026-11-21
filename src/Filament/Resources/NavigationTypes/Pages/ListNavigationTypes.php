@@ -5,11 +5,11 @@ namespace Wsmallnews\Cms\Filament\Resources\NavigationTypes\Pages;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 use Wsmallnews\Cms\Filament\Resources\NavigationTypes\NavigationTypeResource;
-use Wsmallnews\Support\Filament\Resources\Concerns\Pages\Scopeable;
+use Wsmallnews\Support\Filament\Resources\Concerns\Pages\ForwardsResourceScope;
 
 class ListNavigationTypes extends ListRecords
 {
-    use Scopeable;
+    use ForwardsResourceScope;
 
     protected static string $resource = NavigationTypeResource::class;
 

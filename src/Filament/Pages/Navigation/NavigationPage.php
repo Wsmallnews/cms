@@ -3,13 +3,10 @@
 namespace Wsmallnews\Cms\Filament\Pages\Navigation;
 
 use Wsmallnews\Support\Filament\Concerns\CanBeConfigured;
-use Wsmallnews\Support\Filament\Pages\PageConfiguration;
 
 final class NavigationPage extends Base
 {
     use CanBeConfigured;
-
-    protected static ?string $configurationClass = PageConfiguration::class;
 
     public static function getLevel(): ?int
     {

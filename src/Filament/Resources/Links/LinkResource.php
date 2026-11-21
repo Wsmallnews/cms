@@ -9,13 +9,10 @@ use Wsmallnews\Cms\Filament\Resources\Links\Pages\CreateLink;
 use Wsmallnews\Cms\Filament\Resources\Links\Pages\EditLink;
 use Wsmallnews\Cms\Filament\Resources\Links\Pages\ListLinks;
 use Wsmallnews\Support\Filament\Concerns\CanBeConfigured;
-use Wsmallnews\Support\Filament\Resources\ResourceConfiguration;
 
 final class LinkResource extends BaseResource
 {
     use CanBeConfigured;
-
-    protected static ?string $configurationClass = ResourceConfiguration::class;
 
     public static function getPages(): array
     {

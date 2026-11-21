@@ -6,11 +6,11 @@ use Filament\Facades\Filament;
 use Filament\Resources\Pages\CreateRecord;
 use Wsmallnews\Cms\Enums\PostStatus;
 use Wsmallnews\Cms\Filament\Resources\Posts\PostResource;
-use Wsmallnews\Support\Filament\Resources\Concerns\Pages\Scopeable;
+use Wsmallnews\Support\Filament\Resources\Concerns\Pages\ForwardsResourceScope;
 
 class CreatePost extends CreateRecord
 {
-    use Scopeable;
+    use ForwardsResourceScope;
 
     protected static string $resource = PostResource::class;
 

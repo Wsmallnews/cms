@@ -12,11 +12,14 @@ use UnitEnum;
 use Wsmallnews\Cms\Filament\Resources\Links\Schemas\LinkForm;
 use Wsmallnews\Cms\Filament\Resources\Links\Tables\LinksTable;
 use Wsmallnews\Cms\Support\Utils;
-use Wsmallnews\Support\Filament\Resources\Concerns\Scopeable;
+use Wsmallnews\Support\Filament\Resources\Concerns\ScopedQueries;
+use Wsmallnews\Support\Filament\Resources\ResourceConfiguration;
 
 abstract class BaseResource extends Resource
 {
-    use Scopeable;
+    use ScopedQueries;
+
+    protected static ?string $configurationClass = ResourceConfiguration::class;
 
     protected static string | BackedEnum | null $navigationIcon = Heroicon::OutlinedLink;
 
@@ -65,6 +68,6 @@ abstract class BaseResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        return static::applyScopeableToQuery(parent::getEloquentQuery());
+        return static::applyScopeToQuery(parent::getEloquentQuery());
     }
 }

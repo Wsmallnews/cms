@@ -11,13 +11,10 @@ use Wsmallnews\Cms\Filament\Resources\Posts\Pages\ListPosts;
 use Wsmallnews\Cms\Filament\Resources\Posts\Pages\ViewPost;
 use Wsmallnews\Cms\Filament\Resources\Tags\TagResource;
 use Wsmallnews\Support\Filament\Concerns\CanBeConfigured;
-use Wsmallnews\Support\Filament\Resources\ResourceConfiguration;
 
 final class PostResource extends BaseResource
 {
     use CanBeConfigured;
-
-    protected static ?string $configurationClass = ResourceConfiguration::class;
 
     public static function getPages(): array
     {

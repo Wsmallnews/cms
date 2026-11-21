@@ -8,11 +8,11 @@ use Filament\Schemas\Components\Tabs\Tab;
 use Illuminate\Database\Eloquent\Builder;
 use Wsmallnews\Cms\Enums\PostStatus;
 use Wsmallnews\Cms\Filament\Resources\Posts\PostResource;
-use Wsmallnews\Support\Filament\Resources\Concerns\Pages\Scopeable;
+use Wsmallnews\Support\Filament\Resources\Concerns\Pages\ForwardsResourceScope;
 
 class ListPosts extends ListRecords
 {
-    use Scopeable;
+    use ForwardsResourceScope;
 
     public int $category_id = 0;
 

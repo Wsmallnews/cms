@@ -5,16 +5,17 @@ namespace Wsmallnews\Cms\Filament\Resources\Posts\Pages;
 use Filament\Actions\EditAction;
 use Filament\Resources\Pages\ViewRecord;
 use Wsmallnews\Cms\Filament\Resources\Posts\PostResource;
-use Wsmallnews\Cms\Support\Utils;
+use Wsmallnews\Cms\Support\SiteUtils;
 use Wsmallnews\Comment\Filament\Pages\Comment\Widgets\Comment as CommentWidget;
 use Wsmallnews\Preference\Filament\Pages\Preference\Widgets\Views as ViewsWidget;
 use Wsmallnews\Support\Enums\ContentType;
-use Wsmallnews\Support\Filament\Resources\Concerns\Pages\Scopeable;
+use Wsmallnews\Support\Features\Site\SiteContext;
+use Wsmallnews\Support\Filament\Resources\Concerns\Pages\ForwardsResourceScope;
 use Wsmallnews\Support\Filament\Resources\ScheduledTasks\Widgets\ScheduledTasks as ScheduledTasksWidget;
 
 class ViewPost extends ViewRecord
 {
-    use Scopeable;
+    use ForwardsResourceScope;
 
     protected static string $resource = PostResource::class;
 
@@ -29,31 +30,39 @@ class ViewPost extends ViewRecord
 
     protected function getFooterWidgets(): array
     {
-        $record = $this->getRecord();
+        $site = static::getSite();
 
-        $widgets = [];
-
-        if (Utils::commentConfig('post', 'enable', false)) {
-            $widgets[] = CommentWidget::make([
-                'properties' => method_exists(static::getResource(), 'getProperties') ? static::getResource()::getProperties() : [],
-                'widgetType' => 'commentable',
-                'scopeType' => static::getScopeType(),
-                'scopeId' => static::getScopeId(),
-                'canAddComment' => Utils::commentConfig('post', 'can_add_comment', false),
-                'contentType' => Utils::commentConfig('post', 'content_type', ContentType::Textarea),
-                'commentStatus' => Utils::commentConfig('post', 'comment_status'),
-            ]);
+        if (! $site) {
+            return [];
         }
 
-        $widgets[] = ViewsWidget::make([
-            'properties' => method_exists(static::getResource(), 'getProperties') ? static::getResource()::getProperties() : [],
-            'widgetType' => 'preferenceable',
-            'scopeType' => static::getScopeType(),
-            'scopeId' => static::getScopeId(),
-        ]);
+        return SiteContext::run($site, function () use ($site): array {
+            $widgets = [];
 
-        $widgets[] = ScheduledTasksWidget::make();
+            if (SiteUtils::getCommentConfig('post', 'enable', false)) {
+                $widgets[] = CommentWidget::make([
+                    'properties' => method_exists(static::getResource(), 'getProperties') ? static::getResource()::getProperties() : [],
+                    'widgetType' => 'commentable',
+                    'siteId' => $site->id(),
+                    'scopeType' => static::getScopeType(),
+                    'scopeId' => static::getScopeId(),
+                    'canAddComment' => SiteUtils::getCommentConfig('post', 'can_add_comment', false),
+                    'contentType' => SiteUtils::getCommentConfig('post', 'content_type', ContentType::Textarea),
+                    'commentStatus' => SiteUtils::getCommentConfig('post', 'comment_status'),
+                ]);
+            }
 
-        return $widgets;
+            $widgets[] = ViewsWidget::make([
+                'properties' => method_exists(static::getResource(), 'getProperties') ? static::getResource()::getProperties() : [],
+                'widgetType' => 'preferenceable',
+                'siteId' => $site->id(),
+                'scopeType' => static::getScopeType(),
+                'scopeId' => static::getScopeId(),
+            ]);
+
+            $widgets[] = ScheduledTasksWidget::make();
+
+            return $widgets;
+        });
     }
 }

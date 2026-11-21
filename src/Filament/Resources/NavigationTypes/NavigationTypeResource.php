@@ -9,13 +9,10 @@ use Wsmallnews\Cms\Filament\Resources\NavigationTypes\Pages\CreateNavigationType
 use Wsmallnews\Cms\Filament\Resources\NavigationTypes\Pages\EditNavigationType;
 use Wsmallnews\Cms\Filament\Resources\NavigationTypes\Pages\ListNavigationTypes;
 use Wsmallnews\Support\Filament\Concerns\CanBeConfigured;
-use Wsmallnews\Support\Filament\Resources\ResourceConfiguration;
 
 final class NavigationTypeResource extends BaseResource
 {
     use CanBeConfigured;
-
-    protected static ?string $configurationClass = ResourceConfiguration::class;
 
     public static function getPages(): array
     {

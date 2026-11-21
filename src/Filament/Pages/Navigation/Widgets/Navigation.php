@@ -10,15 +10,27 @@ use Wsmallnews\Cms\Filament\Pages\Navigation\Schemas\NavigationInfolist;
 use Wsmallnews\Cms\Models\NavigationType as NavigationTypeModel;
 use Wsmallnews\Cms\Support\Utils;
 use Wsmallnews\FilamentNestedset\Filament\Pages\Widgets\Nestedset;
+use Wsmallnews\Support\Features\Site\Site;
+use Wsmallnews\Support\Filament\Widgets\Concerns\ResolvesSite;
 
 class Navigation extends Nestedset
 {
+    use ResolvesSite;
+
+    // Reactive: synced from the parent page, so it cannot be #[Locked] (the
+    // reactive update path triggers the update hook). Tenant isolation comes
+    // from the record's type_id.
     #[Reactive]
     public ?NavigationTypeModel $record = null;
 
-    public function boot()
+    public function mount(?NavigationTypeModel $record = null): void
     {
-        static::$level = $this->record?->level ?? null;
+        static::$level = $record?->level;
+    }
+
+    public function boot(): void
+    {
+        static::$level = $this->record?->level;
     }
 
     public static function getModel(): ?string
@@ -34,6 +46,12 @@ class Navigation extends Nestedset
     public function getRecordLabel(Model $record): HtmlString | string
     {
         return $record->name_label;
+    }
+
+    /** Site owning the navigation type being edited, passed by the rendering page. */
+    public function getNavigationSite(): ?Site
+    {
+        return $this->getSite();
     }
 
     public function nestedScoped(): array

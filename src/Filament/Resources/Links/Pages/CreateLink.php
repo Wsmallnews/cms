@@ -4,11 +4,11 @@ namespace Wsmallnews\Cms\Filament\Resources\Links\Pages;
 
 use Filament\Resources\Pages\CreateRecord;
 use Wsmallnews\Cms\Filament\Resources\Links\LinkResource;
-use Wsmallnews\Support\Filament\Resources\Concerns\Pages\Scopeable;
+use Wsmallnews\Support\Filament\Resources\Concerns\Pages\ForwardsResourceScope;
 
 class CreateLink extends CreateRecord
 {
-    use Scopeable;
+    use ForwardsResourceScope;
 
     protected static string $resource = LinkResource::class;
 

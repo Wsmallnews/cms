@@ -43,9 +43,9 @@ class PostForm
                 // 多选分类
                 SelectTree::make('categories')->label(__('sn-cms::cms.post_form.categories'))
                     ->relationship(relationship: 'categories', titleAttribute: 'name', parentAttribute: 'parent_id', modifyQueryUsing: function ($query, Component $livewire) {
-                        return $query->scopeable($livewire::getScopeType(), $livewire::getScopeId());
+                        return $query->forScopeable($livewire::getRelatedScopeable('categories'));
                     }, modifyChildQueryUsing: function ($query, Component $livewire) {
-                        return $query->scopeable($livewire::getScopeType(), $livewire::getScopeId());
+                        return $query->forScopeable($livewire::getRelatedScopeable('categories'));
                     })
                     ->searchable()
                     ->enableBranchNode()
@@ -63,7 +63,7 @@ class PostForm
                 Forms\Components\TextInput::make('slug')
                     ->label('Slug')
                     ->scopedUnique(modifyQueryUsing: function (Builder $query, Component $livewire): Builder {
-                        return $query->scopeable($livewire::getScopeType(), $livewire::getScopeId());
+                        return $query->forScopeable($livewire::getScopeable());
                     })
                     ->required()
                     ->maxLength(255),

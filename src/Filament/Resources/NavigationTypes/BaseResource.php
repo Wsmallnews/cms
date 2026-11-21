@@ -14,11 +14,14 @@ use Wsmallnews\Cms\Filament\Pages\Navigation\Widgets\Navigation as NavigationWid
 use Wsmallnews\Cms\Filament\Resources\NavigationTypes\Schemas\NavigationTypeForm;
 use Wsmallnews\Cms\Filament\Resources\NavigationTypes\Tables\NavigationTypesTable;
 use Wsmallnews\Cms\Support\Utils;
-use Wsmallnews\Support\Filament\Resources\Concerns\Scopeable;
+use Wsmallnews\Support\Filament\Resources\Concerns\ScopedQueries;
+use Wsmallnews\Support\Filament\Resources\ResourceConfiguration;
 
 abstract class BaseResource extends Resource
 {
-    use Scopeable;
+    use ScopedQueries;
+
+    protected static ?string $configurationClass = ResourceConfiguration::class;
 
     protected static string | BackedEnum | null $navigationIcon = Heroicon::OutlinedBars3BottomRight;
 
@@ -74,7 +77,7 @@ abstract class BaseResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        return static::applyScopeableToQuery(parent::getEloquentQuery())
+        return static::applyScopeToQuery(parent::getEloquentQuery())
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
             ]);

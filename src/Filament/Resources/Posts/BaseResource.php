@@ -15,11 +15,14 @@ use Wsmallnews\Cms\Filament\Resources\Posts\Tables\PostsTable;
 use Wsmallnews\Cms\Support\Utils;
 use Wsmallnews\Comment\Filament\Pages\Comment\Widgets\Comment as CommentWidget;
 use Wsmallnews\Preference\Filament\Pages\Preference\Widgets\Views as ViewsWidget;
-use Wsmallnews\Support\Filament\Resources\Concerns\Scopeable;
+use Wsmallnews\Support\Filament\Resources\Concerns\ScopedQueries;
+use Wsmallnews\Support\Filament\Resources\ResourceConfiguration;
 
 abstract class BaseResource extends Resource
 {
-    use Scopeable;
+    use ScopedQueries;
+
+    protected static ?string $configurationClass = ResourceConfiguration::class;
 
     protected static string | BackedEnum | null $navigationIcon = Heroicon::OutlinedDocumentText;
 
@@ -76,7 +79,7 @@ abstract class BaseResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        return static::applyScopeableToQuery(parent::getEloquentQuery())
+        return static::applyScopeToQuery(parent::getEloquentQuery())
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
             ]);

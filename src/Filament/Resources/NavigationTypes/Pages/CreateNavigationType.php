@@ -4,11 +4,11 @@ namespace Wsmallnews\Cms\Filament\Resources\NavigationTypes\Pages;
 
 use Filament\Resources\Pages\CreateRecord;
 use Wsmallnews\Cms\Filament\Resources\NavigationTypes\NavigationTypeResource;
-use Wsmallnews\Support\Filament\Resources\Concerns\Pages\Scopeable;
+use Wsmallnews\Support\Filament\Resources\Concerns\Pages\ForwardsResourceScope;
 
 class CreateNavigationType extends CreateRecord
 {
-    use Scopeable;
+    use ForwardsResourceScope;
 
     protected static string $resource = NavigationTypeResource::class;
 

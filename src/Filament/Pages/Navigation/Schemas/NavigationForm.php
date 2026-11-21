@@ -11,6 +11,7 @@ use Illuminate\Support\HtmlString;
 use Livewire\Component;
 use Wsmallnews\Cms\Enums\NavigationStatus;
 use Wsmallnews\Cms\Enums\NavigationType as NavigationTypeEnum;
+use Wsmallnews\Cms\Support\NavigationRouteOptions;
 use Wsmallnews\Cms\Support\Utils;
 use Wsmallnews\Support\Filament\Forms\FormComponents;
 use Wsmallnews\Support\Support\Utils as SupportUtils;
@@ -109,11 +110,17 @@ class NavigationForm
                 ->placeholder(__('sn-cms::cms.navigation_form.page_placeholder'))
                 ->options(function (Component $livewire): array {
                     return SupportUtils::getPageModel()::query()
-                        ->snScope($livewire->getScopeType(), $livewire->getScopeId())
+                        ->forScopeable($livewire::getRelatedScopeable('pages'))
                         ->orderBy('order_column')
                         ->get(['id', 'title', 'slug'])
                         ->mapWithKeys(fn ($page) => [$page->id => "{$page->title}（{$page->slug}）"])
                         ->all();
+                })
+                // A page may be hidden or soft-deleted after being bound: keep its label readable.
+                ->getOptionLabelUsing(function ($value): ?string {
+                    $page = SupportUtils::getPageModel()::query()->withTrashed()->whereKey($value)->first();
+
+                    return $page ? "{$page->title}（{$page->slug}）" : null;
                 })
                 ->searchable()
                 ->preload()
@@ -148,12 +155,15 @@ class NavigationForm
                     // Url 类型显示 跳转链接
                     return $get('type') == NavigationTypeEnum::Url;
                 }),
-            Forms\Components\TextInput::make('options.route')
+            Forms\Components\Select::make('options.route')
                 ->label(__('sn-cms::cms.navigation_form.route_name'))
                 ->placeholder(__('sn-cms::cms.navigation_form.route_name_placeholder'))
+                ->options(fn (Component $livewire): array => NavigationRouteOptions::forSite($livewire->getNavigationSite()))
+                ->searchable()
+                ->preload()
                 ->required()
                 ->visible(function (Get $get) {
-                    // 跳转路由,填写路由名称
+                    // 跳转路由，从当前站点的路由列表中选择完整路由名
                     return $get('type') == NavigationTypeEnum::Route;
                 }),
             Schemas\Components\Fieldset::make('url_params')

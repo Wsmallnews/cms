@@ -4,7 +4,6 @@ namespace Wsmallnews\Cms\Filament\Pages\Navigation;
 
 use BackedEnum;
 use Filament\Actions;
-use Filament\Facades\Filament;
 use Filament\Forms\Components\Field;
 use Filament\Notifications\Notification;
 use Filament\Schemas;
@@ -16,6 +15,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
+use Livewire\Attributes\Locked;
 use UnitEnum;
 use Wsmallnews\Cms\Enums\NavigationTypeStatus;
 use Wsmallnews\Cms\Filament\Pages\Navigation\Schemas\NavigationForm;
@@ -24,17 +24,22 @@ use Wsmallnews\Cms\Filament\Resources\NavigationTypes\Schemas\NavigationTypeForm
 use Wsmallnews\Cms\Models\NavigationType as NavigationTypeModel;
 use Wsmallnews\Cms\Support\Utils;
 use Wsmallnews\FilamentNestedset\Filament\Pages\NestedsetPage;
-use Wsmallnews\Support\Filament\Pages\Concerns\Scopeable;
+use Wsmallnews\Support\Features\Site\Site;
+use Wsmallnews\Support\Filament\Concerns\RequiresConfiguration;
+use Wsmallnews\Support\Filament\Pages\PageConfiguration;
 
 abstract class Base extends NestedsetPage
 {
-    use Scopeable;
+    use RequiresConfiguration;
+
+    protected static ?string $configurationClass = PageConfiguration::class;
 
     /**
      * @var array<string, mixed> | null
      */
     public ?array $data = [];
 
+    #[Locked]
     public ?NavigationTypeModel $navigationType = null;
 
     protected static string | BackedEnum | null $navigationIcon = Heroicon::OutlinedBars3BottomLeft;
@@ -130,26 +135,31 @@ abstract class Base extends NestedsetPage
         return static::$emptyTipLabel ?? __('sn-cms::cms.navigation_page.empty_tip_label');
     }
 
+    /** Site owning the current navigation page; used by the route-name selector. */
+    public function getNavigationSite(): ?Site
+    {
+        return static::getSite();
+    }
+
     public function getNavigationType(): ?NavigationTypeModel
     {
         $navigationType = Utils::getNavigationTypeModel()::query()
-            ->snScope(static::getScopeType(), static::getScopeId())
+            ->panelContext(static::getScopeable())
             ->first();
 
         if (! $navigationType && ! static::getCanManage()) {
-            // 自动创建导航类型
-            $navigationType = Utils::getNavigationTypeModel()::create([
+            $navigationType = Utils::getNavigationTypeModel()::query()->create([
+                'team_id' => current_tenant()?->getKey(),
+                'scope_type' => static::getScopeType(),
+                'scope_id' => static::getScopeId(),
                 'name' => Str::title(static::getScopeType()),
                 'level' => static::getLevel(),
                 'status' => NavigationTypeStatus::Normal,
-                ...static::getScopeable(),
-                'team_id' => Filament::getTenant()?->id,
             ]);
         }
 
-        // 不可管理模式，自动更新自定义设置的层级
-        if ($navigationType && ! static::getCanManage()) {
-            // 固定层级
+        // 不可管理模式，自动更新自定义设置的层级（仅在与库中值不同时写库）
+        if ($navigationType && ! static::getCanManage() && (int) $navigationType->level !== (int) static::getLevel()) {
             $navigationType->level = static::getLevel();
             $navigationType->save();
         }
@@ -185,9 +195,11 @@ abstract class Base extends NestedsetPage
 
         if (! $this->navigationType) {
             $this->navigationType = new (Utils::getNavigationTypeModel());
-            if (static::isScopedToTenant() && ($tenant = Filament::getTenant())) {
-                $this->navigationType->team_id = $tenant->id;
+
+            if (($tenantId = current_tenant()?->getKey()) !== null) {
+                $this->navigationType->team_id = $tenantId;
             }
+
             $this->navigationType->scope_type = static::getScopeType();
             $this->navigationType->scope_id = static::getScopeId();
         }
