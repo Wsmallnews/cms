@@ -1,5 +1,6 @@
 @php
     use Filament\Support\Icons\Heroicon;
+    use function Filament\Support\generate_href_html;
 @endphp
 
 {{-- 相关文章推荐：块头（标题/描述）由编排 block 包装层输出，组件只渲染列表。
@@ -12,7 +13,7 @@
         <div class="w-full flex flex-col divide-y divide-gray-100 dark:divide-gray-800/70">
             @foreach ($posts as $post)
                 <a
-                    {{ \Filament\Support\generate_href_html(\Wsmallnews\Cms\Support\Utils::route('posts.show', $post)) }}
+                    {{ generate_href_html($this->routeUrl('detail', $post)) }}
                     class="sn-link group flex flex-row items-center gap-3 sn-padded"
                 >
                     <div class="h-16 shrink-0 sn-aspect-landscape rounded-md overflow-hidden bg-gray-100 dark:bg-gray-800">

@@ -1,5 +1,6 @@
 @php
     use Filament\Support\Icons\Heroicon;
+    use function Filament\Support\generate_href_html;
     
     $maxListNum = 4;
     $count = $posts->count();
@@ -13,7 +14,7 @@
         return [
             'image' => $post->getFirstMediaUrl('post_image'),
             'label' => $post->title,
-            'href' => \Wsmallnews\Cms\Support\Utils::route('posts.show', $post),
+            'href' => $this->routeUrl('detail', $post),
         ];
     })->toArray();
 @endphp
@@ -41,7 +42,7 @@
             @foreach($posts as $post)
                 @if ($loop->index >= $listStartIndex)
                     <a
-                        {{ \Filament\Support\generate_href_html(\Wsmallnews\Cms\Support\Utils::route('posts.show', $post)) }}
+                        {{ generate_href_html($this->routeUrl('detail', $post)) }}
                         class="sn-link flex w-full h-28 @4xl:h-auto min-h-0 gap-2 group"
                     >
                         <div class="h-full sn-aspect-landscape shrink-0 rounded-md overflow-hidden bg-gray-100 dark:bg-gray-800">

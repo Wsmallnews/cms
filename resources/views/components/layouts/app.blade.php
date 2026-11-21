@@ -1,13 +1,12 @@
 @php
-    use Wsmallnews\Cms\Support\Utils;
-    use Wsmallnews\Cms\CmsPlugin;
+    use Wsmallnews\Cms\Support\SiteUtils;
 @endphp
 
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="ltr"
     @class([
         'sn',
-        'dark' => Utils::hasDarkModeForced(),
+        'dark' => SiteUtils::hasDarkModeForced(),
     ])
 >
     <head>
@@ -16,39 +15,44 @@
         <meta name="csrf-token" content="{{ csrf_token() }}" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-        {{-- 页面 SEO 标签（模块归属由 seo-init 路由中间件声明，页面组件在 render 阶段经 Seo 门面链式声明数据） --}}
+        {{-- 页面 SEO 标签（模块归属由 sn-resolve-seo 路由中间件声明，页面组件在 render 阶段经 Seo 门面链式声明数据） --}}
         @snSeo
 
         {{-- RSS autodiscovery（浏览器/阅读器自动发现订阅地址，指令由 support 提供，参数 = 模块 ID） --}}
-        @if (Utils::getConfig('feed.enabled', true))
-            @snFeeds(app(CmsPlugin::class)->getId())
+        @if (SiteUtils::getConfig('feed.enabled', true))
+            @snFeeds
         @endif
 
         <style>
             :root {
                 /** 默认主题设置变量，可以通过读取该变量获取默认主题色 **/
-                --default-theme-mode: {{ Utils::getDefaultDarkMode() }};
+                --default-theme-mode: {{ SiteUtils::getDefaultDarkMode() }};
             }
         </style>
 
+        {{-- 主题偏好按站点隔离：同域名的多个站点共用一个 localStorage --}}
+        <script>
+            window.__snThemeKey = @js('sn-support-frontend-theme:' . (app(\Wsmallnews\Support\Features\Site\SiteContext::class)->site()?->id() ?? 'default'))
+        </script>
+
         @filamentStyles
 
-        @if (! Utils::hasDarkMode())
+        @if (! SiteUtils::hasDarkMode())
             <!-- 如果没开启暗黑模式，则主题一直是亮色 -->
             <script>
-                localStorage.setItem('sn-support-frontend-theme', 'light')
+                localStorage.setItem(window.__snThemeKey, 'light')
             </script>
-        @elseif (Utils::hasDarkModeForced())
+        @elseif (SiteUtils::hasDarkModeForced())
             <!-- 如果强制暗黑模式，则主题一直是暗色 -->
             <script>
-                localStorage.setItem('sn-support-frontend-theme', 'dark')
+                localStorage.setItem(window.__snThemeKey, 'dark')
                 document.documentElement.classList.add('dark')
             </script>
         @else
             <!-- 如果开启了主题，并且未强制暗黑，则加载 storage 中的主题配置 或者 默认主题配置 -->
             <script>
                 const loadDarkMode = () => {
-                    window.theme = localStorage.getItem('sn-support-frontend-theme') ?? @js(Utils::getDefaultDarkMode())
+                    window.theme = localStorage.getItem(window.__snThemeKey) ?? @js(SiteUtils::getDefaultDarkMode())
 
                     if (
                         window.theme === 'dark' ||

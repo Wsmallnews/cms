@@ -1,18 +1,12 @@
 @php
-    use Wsmallnews\Cms\Support\Utils;
 
-    $scopeType = $this->getScopeType();
-    $scopeId = $this->getScopeId();
-
-    $authUser = Utils::getAuthUser();
-
-    $hasComment = Utils::commentConfig('post', 'enable', false);
-    $canAddComment = Utils::commentConfig('post', 'can_add_comment', false);
-    $contentType = Utils::commentConfig('post', 'content_type', false);
-    $commentStatus = Utils::commentConfig('post', 'comment_status', false);
+    $hasComment = $this->commentOption('post', 'enable', false);
+    $canAddComment = $this->commentOption('post', 'can_add_comment', false);
+    $contentType = $this->commentOption('post', 'content_type', false);
+    $commentStatus = $this->commentOption('post', 'comment_status', false);
 @endphp
 
-<x-dynamic-component :component="$this->getPageContainer()" :scope-type="$scopeType" :scope-id="$scopeId">
+<x-dynamic-component :component="$this->getPageContainer()">
     <div class="sn-content">
         @if($breadcrumbs)
             <div class="sn-descript-text w-full flex items-center gap-2 text-left">
@@ -33,9 +27,7 @@
 
                 <div class="sn-split-main">
                     <livewire:sn-cms::components.post.post
-                        :scope-type="$scopeType"
-                        :scope-id="$scopeId"
-                        :auth-user="$authUser" :slug="$slug"
+                        :slug="$slug"
                         :has-comment="$hasComment"
                         :can-add-comment="$canAddComment"
                         :content-type="$contentType"
@@ -53,9 +45,7 @@
         @else
             {{-- 无 post-sidebar 编排：全宽回退（与既有布局一致） --}}
             <livewire:sn-cms::components.post.post
-                :scope-type="$scopeType"
-                :scope-id="$scopeId"
-                :auth-user="$authUser" :slug="$slug"
+                :slug="$slug"
                 :has-comment="$hasComment"
                 :can-add-comment="$canAddComment"
                 :content-type="$contentType"

@@ -1,12 +1,14 @@
 @php
     use Filament\Support\Icons\Heroicon;
 
+    use function Filament\Support\generate_href_html;
+
     // 同级导航（brothers）：匹配到二级分组时展示兄弟节点，layout 形态在本视图内分支
-    // 配置经 HasModuleContext 解析（消费模块的 navigation 节优先，回落 cms）
+    // 配置按站点解析（站点 options > 站点所属模块默认 > cms 默认）
     $nestedset = $this->getNestedset();
-    $style = $this->navigationConfig('style', 'primary');
-    $submenuStyle = $this->navigationConfig('brothers_submenu_style', 'cascade');
-    $alignClass = match ($this->navigationConfig('brothers_align', 'left')) {
+    $style = $this->navigationOption('style', 'primary');
+    $submenuStyle = $this->navigationOption('brothers_submenu_style', 'cascade');
+    $alignClass = match ($this->navigationOption('brothers_align', 'left')) {
         'center' => 'justify-center',
         'right' => 'justify-end',
         default => null,
@@ -78,14 +80,14 @@
                     role="menuitem"
                     @if ($hasChild)
                         @if ($leafUrl)
-                            {{ \Filament\Support\generate_href_html($leafUrl) }}
+                            {{ generate_href_html($leafUrl) }}
                         @else
                             href="javascript:;"
                         @endif
                         aria-haspopup="true" aria-expanded="false"
                         wire:click="$dispatch('sn-cms-navigation-node-click', { recordId: {{ $record->id }}, hasChild: 1 })"
                     @else
-                        {{ \Filament\Support\generate_href_html($record->url_info['url'], $record->url_info['target'] ?? false) }}
+                        {{ generate_href_html($record->url_info['url'], $record->url_info['target'] ?? false) }}
                         wire:click="$dispatch('sn-cms-navigation-leaf-click', { recordId: {{ $record->id }}, hasChild: 0 })"
                     @endif
                 >

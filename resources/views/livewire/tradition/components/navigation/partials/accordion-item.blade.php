@@ -1,5 +1,6 @@
 @php
     use Filament\Support\Icons\Heroicon;
+    use function Filament\Support\generate_href_html;
 
     // 递归手风琴项：「更多」下拉 / PC 主行 accordion / 移动端菜单 / Brothers 同级导航共用
     // 父子级区分 = 缩进块（在 <a> 内部、文字之前，N = depth，hover/选中背景通栏）+ 父级字重 600 / 叶子 400
@@ -60,7 +61,7 @@
             'px-4 py-3.5' => $isMenu,
         ])
             role="menuitem"
-            {{ \Filament\Support\generate_href_html($record->url_info['url'], $record->url_info['target'] ?? false) }}
+            {{ generate_href_html($record->url_info['url'], $record->url_info['target'] ?? false) }}
             wire:click="$dispatch('sn-cms-navigation-leaf-click', { recordId: {{ $record->id }}, hasChild: 0 })"
         >
             @for ($i = 0; $i < $depth; $i++)

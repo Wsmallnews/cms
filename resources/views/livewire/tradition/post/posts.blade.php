@@ -1,9 +1,4 @@
-@php
-    $scopeType = $this->getScopeType();
-    $scopeId = $this->getScopeId();
-@endphp
-
-<x-dynamic-component :component="$this->getPageContainer()" :scope-type="$scopeType" :scope-id="$scopeId">
+<x-dynamic-component :component="$this->getPageContainer()">
     <div class="sn-content">
         @if($breadcrumbs)
             <div class="sn-descript-text w-full flex items-center gap-2 text-left">
@@ -12,6 +7,9 @@
             </div>
         @endif
 
-        <livewire:sn-cms::components.post.posts :scope-type="$scopeType" :scope-id="$scopeId" :category-ids="$categoryId" category-style="tree" />
+        <livewire:sn-cms::components.post.posts
+            :category-ids="$categoryId"
+            category-style="tree"
+            :custom-routes="['detail' => 'posts.show']" />
     </div>
 </x-dynamic-component>

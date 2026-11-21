@@ -1,5 +1,6 @@
 @php
     use Filament\Support\Icons\Heroicon;
+    use function Filament\Support\generate_href_html;
 
     // 级联子菜单行（递归）：一级向下弹在主行 li 上，本 partial 的子级一律 depth-n（向右弹，右缘溢出反向）
     // 上下文变量：$record（必传）、$clickable 由父视图 include 上下文继承（hover 级联下父项直达第一个叶子）
@@ -21,7 +22,7 @@
         @if ($hasChild)
             {{-- hover 级联 + parent_clickable + 有可用叶子 → 真实链接直达；否则纯展开 --}}
             @if ($leafUrl)
-                {{ \Filament\Support\generate_href_html($leafUrl) }}
+                {{ generate_href_html($leafUrl) }}
             @else
                 href="javascript:;"
             @endif
@@ -32,7 +33,7 @@
             @keydown.esc.prevent="closeAllCascade()"
             wire:click="$dispatch('sn-cms-navigation-node-click', { recordId: {{ $record->id }}, hasChild: 1 })"
         @else
-            {{ \Filament\Support\generate_href_html($record->url_info['url'], $record->url_info['target'] ?? false) }}
+            {{ generate_href_html($record->url_info['url'], $record->url_info['target'] ?? false) }}
             wire:click="$dispatch('sn-cms-navigation-leaf-click', { recordId: {{ $record->id }}, hasChild: 0 })"
         @endif
     >

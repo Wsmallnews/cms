@@ -1,6 +1,7 @@
 @php
     use Filament\Support\Icons\Heroicon;
     use Wsmallnews\Cms\Support\Utils;
+    use function Filament\Support\generate_href_html;
 
     $flagEnum = Utils::getFlagEnum();
 
@@ -19,7 +20,7 @@
                 {{-- 分类树区块：亮色白底 / 暗色深底（编排槽内去卡片外观） --}}
                 <div @class(['w-full', 'sn-container p-2' => $contained])>
                     <livewire:sn-category::components.categories
-                        :scope-type="$scopeType"
+                       
                         :use-url="false"
                         :active-category-id="$categoryId"
                         :view="$view"
@@ -95,7 +96,7 @@
                         @forelse ($posts as $post)
                             {{-- 行高写死；图片区 4:3 横版满行高，cover 居中裁剪；sm 起行高加大，容纳 flag 徽章行 --}}
                             <a
-                                {{ \Filament\Support\generate_href_html(\Wsmallnews\Cms\Support\Utils::route('posts.show', $post)) }}
+                                {{ generate_href_html($this->routeUrl('detail', $post)) }}
                                 class="sn-link sn-padded group flex flex-row gap-4 h-36 @2xl:h-40 overflow-hidden"
                             >
                                 <div class="h-full sn-aspect-landscape max-w-[45%] shrink-0 rounded-md overflow-hidden bg-gray-100 dark:bg-gray-800">

@@ -1,20 +1,22 @@
 @php
     use Filament\Support\Icons\Heroicon;
 
+    use function Filament\Support\generate_href_html;
+
     $nestedset = $this->getNestedset();
 
-    // 导航配置：module 感知（消费模块的 navigation 节优先，回落 cms 默认；复用方传 :module="sn-xxx"）
-    $style = $this->navigationConfig('style', 'primary');
-    $desktopStyle = $this->navigationConfig('desktop_submenu_style', 'cascade');
-    $desktopTrigger = $this->navigationConfig('desktop_submenu_trigger', 'hover');   // cascade 深层跟随；accordion 仅一级生效
-    $itemStyle = $this->navigationConfig('desktop_item_style', 'flush');             // 一级 hover/选中形态：flush 通栏 | rounded 胶囊
-    $moreStyle = $this->navigationConfig('more_submenu_style', 'accordion');
-    $moreTrigger = $moreStyle === 'cascade' ? $this->navigationConfig('more_submenu_trigger', 'click') : 'click';
-    $moreIconOnly = (bool) $this->navigationConfig('more_icon_only', true);
+    // 导航配置：站点感知（站点 options > 站点所属模块默认 > cms 默认）
+    $style = $this->navigationOption('style', 'primary');
+    $desktopStyle = $this->navigationOption('desktop_submenu_style', 'cascade');
+    $desktopTrigger = $this->navigationOption('desktop_submenu_trigger', 'hover');   // cascade 深层跟随；accordion 仅一级生效
+    $itemStyle = $this->navigationOption('desktop_item_style', 'flush');             // 一级 hover/选中形态：flush 通栏 | rounded 胶囊
+    $moreStyle = $this->navigationOption('more_submenu_style', 'accordion');
+    $moreTrigger = $moreStyle === 'cascade' ? $this->navigationOption('more_submenu_trigger', 'click') : 'click';
+    $moreIconOnly = (bool) $this->navigationOption('more_icon_only', true);
 
     // 父项可点击：仅 hover 级联生效（直达第一个可用叶子）
     $clickable = $this->isDesktopParentClickable();
-    $moreClickable = $moreTrigger === 'hover' && (bool) $this->navigationConfig('parent_clickable', true);
+    $moreClickable = $moreTrigger === 'hover' && (bool) $this->navigationOption('parent_clickable', true);
 
     // 递归 partial 路径按当前主题解析（主题切换时随主视图整体替换）
     $cascadeItemView = $this->getThemeView('components.navigation.partials.cascade-item');
@@ -84,7 +86,7 @@
                             @if ($hasChild)
                                 {{-- hover 级联 + parent_clickable + 有可用叶子 → 真实链接直达第一个叶子；否则纯展开 --}}
                                 @if ($leafUrl)
-                                    {{ \Filament\Support\generate_href_html($leafUrl) }}
+                                    {{ generate_href_html($leafUrl) }}
                                 @else
                                     href="javascript:;"
                                 @endif
@@ -95,7 +97,7 @@
                                 @keydown.esc.prevent="closeAllCascade()"
                                 wire:click="$dispatch('sn-cms-navigation-node-click', { recordId: {{ $navigation->id }}, hasChild: 1 })"
                             @else
-                                {{ \Filament\Support\generate_href_html($navigation->url_info['url'], $navigation->url_info['target'] ?? false) }}
+                                {{ generate_href_html($navigation->url_info['url'], $navigation->url_info['target'] ?? false) }}
                                 wire:click="$dispatch('sn-cms-navigation-leaf-click', { recordId: {{ $navigation->id }}, hasChild: 0 })"
                             @endif
                         >
@@ -187,14 +189,13 @@
 
     {{-- 移动端菜单展开时，顶部显示全局搜索和登录注册/个人信息（lg 以下；桌面端在页头）。
         pr-16 给右上角关闭按钮让位，避免压住输入框 --}}
-    @if ($this->moduleConfig('search.enabled', true))
+    @if ($this->siteOption('search.enabled', true))
         <div class="sn-cms-nav-search-strip w-full fixed inset-x-0 top-0 z-20 pl-4 pr-16 pt-5 pb-4 lg:hidden"
             x-cloak x-show="mobileMenuIsOpen"
         >
             <livewire:sn-support::components.search
                 :limit="5"
-                :module="$this->getModule()"
-                :display="$this->moduleConfig('search.display')"
+                :display="$this->siteOption('search.display')"
                 placeholder="{{ __('sn-cms::cms.frontend.search_placeholder') }}"
             />
         </div>

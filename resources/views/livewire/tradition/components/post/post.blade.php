@@ -43,8 +43,6 @@
             'w-full flex flex-col sn-gap'
         ])>
             <livewire:sn-comment::components.comments
-                :scope-type="$scopeType"
-                :scope-id="$scopeId"
                 :contained="false"
                 :commentable="$post"
                 :content-type="$contentType"
