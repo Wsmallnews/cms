@@ -14,7 +14,6 @@ use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\HtmlString;
-use Illuminate\Support\Str;
 use Livewire\Attributes\Locked;
 use UnitEnum;
 use Wsmallnews\Cms\Enums\NavigationTypeStatus;
@@ -25,11 +24,13 @@ use Wsmallnews\Cms\Models\NavigationType as NavigationTypeModel;
 use Wsmallnews\Cms\Support\Utils;
 use Wsmallnews\FilamentNestedset\Filament\Pages\NestedsetPage;
 use Wsmallnews\Support\Features\Site\Site;
+use Wsmallnews\Support\Filament\Concerns\HasPanelScopedType;
 use Wsmallnews\Support\Filament\Concerns\RequiresConfiguration;
 use Wsmallnews\Support\Filament\Pages\PageConfiguration;
 
 abstract class Base extends NestedsetPage
 {
+    use HasPanelScopedType;
     use RequiresConfiguration;
 
     protected static ?string $configurationClass = PageConfiguration::class;
@@ -143,20 +144,7 @@ abstract class Base extends NestedsetPage
 
     public function getNavigationType(): ?NavigationTypeModel
     {
-        $navigationType = Utils::getNavigationTypeModel()::query()
-            ->panelContext(static::getScopeable())
-            ->first();
-
-        if (! $navigationType && ! static::getCanManage()) {
-            $navigationType = Utils::getNavigationTypeModel()::query()->create([
-                'team_id' => current_tenant()?->getKey(),
-                'scope_type' => static::getScopeType(),
-                'scope_id' => static::getScopeId(),
-                'name' => Str::title(static::getScopeType()),
-                'level' => static::getLevel(),
-                'status' => NavigationTypeStatus::Normal,
-            ]);
-        }
+        $navigationType = $this->resolvePanelType();
 
         // 不可管理模式，自动更新自定义设置的层级（仅在与库中值不同时写库）
         if ($navigationType && ! static::getCanManage() && (int) $navigationType->level !== (int) static::getLevel()) {
@@ -165,6 +153,20 @@ abstract class Base extends NestedsetPage
         }
 
         return $navigationType;
+    }
+
+    protected function typeModel(): string
+    {
+        return Utils::getNavigationTypeModel();
+    }
+
+    protected function typeDefaults(): array
+    {
+        return [
+            'name' => $this->typeNameFromScope(),
+            'level' => static::getLevel(),
+            'status' => NavigationTypeStatus::Normal,
+        ];
     }
 
     public function form(Schema $schema): Schema
@@ -195,13 +197,7 @@ abstract class Base extends NestedsetPage
 
         if (! $this->navigationType) {
             $this->navigationType = new (Utils::getNavigationTypeModel());
-
-            if (($tenantId = current_tenant()?->getKey()) !== null) {
-                $this->navigationType->team_id = $tenantId;
-            }
-
-            $this->navigationType->scope_type = static::getScopeType();
-            $this->navigationType->scope_id = static::getScopeId();
+            $this->navigationType->fill($this->panelScopedAttributes());
         }
 
         $this->navigationType->fill($data);

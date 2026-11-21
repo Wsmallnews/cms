@@ -20,7 +20,7 @@
                 {{-- 分类树区块：亮色白底 / 暗色深底（编排槽内去卡片外观） --}}
                 <div @class(['w-full', 'sn-container p-2' => $contained])>
                     <livewire:sn-category::components.categories
-                       
+                        :scope-suffix="$this->relatedScopeSuffix['categories'] ?? null"
                         :use-url="false"
                         :active-category-id="$categoryId"
                         :view="$view"

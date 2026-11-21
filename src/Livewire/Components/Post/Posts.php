@@ -23,6 +23,12 @@ class Posts extends Base
     use HasCustomRoutes;
     use WithoutUrlPagination;
 
+    /** Categories default to the site base; declare relatedScopeSuffix to partition them. */
+    protected function typeScopeable(): array
+    {
+        return $this->getRelatedScopeable('categories');
+    }
+
     public int | array | null $categoryIds = [];
 
     #[Url(except: 0)]
@@ -65,7 +71,7 @@ class Posts extends Base
 
         // 分类类型不存在时短路，不发起分类查询
         $categories = collect([]);
-        if (filled($categoryIds) && $this->hasCategoryType()) {
+        if (filled($categoryIds) && $this->hasType()) {
             $categories = $this->getScopedQuery()->normal()->whereIn('id', $categoryIds)->get();
         }
 
@@ -73,7 +79,7 @@ class Posts extends Base
         $allCategories = filled($categoryIds) ? $this->getCategoryIds($categories) : collect([]);
 
         // 查询图文
-        $query = Utils::getPostModel()::siteContext()->published()->with(['media', 'categories'])
+        $query = Utils::getPostModel()::forScopeable($this->getScopeable())->published()->with(['media', 'categories'])
             ->when($allCategories->isNotEmpty(), function ($query) use ($allCategories) {
                 $query->categoryIds($allCategories);
             })
@@ -128,6 +134,7 @@ class Posts extends Base
             'flag' => $this->flag,
             'categoryIds' => json_encode($this->categoryIds),
             'categoryId' => $this->categoryId,
+            'relatedScopeSuffix' => $this->relatedScopeSuffix,
             ...$this->getScopeable(),
         ]));
     }

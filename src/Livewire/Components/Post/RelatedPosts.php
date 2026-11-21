@@ -48,7 +48,7 @@ class RelatedPosts extends Base
 
         return Utils::getPostModel()::query()
             ->published()
-            ->siteContext()
+            ->forScopeable($this->getScopeable())
             ->categoryIds($categoryIds)
             ->when(filled($this->post?->id), fn ($query) => $query->whereKeyNot($this->post->id))
             ->with(['media'])

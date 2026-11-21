@@ -17,10 +17,15 @@ class Footer extends Base
 {
     use Navigationable;
 
-    /** Footer runs on its own sub-scope: {site scope}::footer. */
+    /** Footer runs on its own sub-scope, so its navigation type follows it. */
     public static function getScopeSuffix(): string
     {
         return 'footer';
+    }
+
+    protected function typeScopeable(): array
+    {
+        return $this->getScopeable();
     }
 
     public function render()

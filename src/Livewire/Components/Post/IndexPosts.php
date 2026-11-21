@@ -16,7 +16,7 @@ class IndexPosts extends Base
 
     public function render()
     {
-        $posts = Utils::getPostModel()::siteContext()->published()
+        $posts = Utils::getPostModel()::forScopeable($this->getScopeable())->published()
             ->with(['media'])
             ->orderBy('order_column', 'desc')
             ->orderBy('id', 'desc')

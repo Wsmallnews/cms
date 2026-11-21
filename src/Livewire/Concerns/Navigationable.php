@@ -6,57 +6,60 @@ use Kalnoy\Nestedset\QueryBuilder;
 use Livewire\Attributes\Locked;
 use Wsmallnews\Cms\Models\NavigationType as NavigationTypeModel;
 use Wsmallnews\Cms\Support\Utils;
+use Wsmallnews\Support\Livewire\Concerns\HasScopedType;
 
+/**
+ * Navigation tree helpers for a component: resolves its container type and
+ * returns a query already constrained to one data space.
+ *
+ * Requires ScopedBySite on the host component. The data space defaults to the
+ * site base scope; a host with its own partition overrides typeScopeable().
+ */
 trait Navigationable
 {
+    use HasScopedType;
+
     #[Locked]
     public ?int $navigationTypeId = null;
 
     public ?NavigationTypeModel $navigationType = null;
 
-    /**
-     * 解析导航类型：缺失时不抛错（navigationType 置空）
-     */
-    public function mountNavigationable()
+    public function mountNavigationable(): void
     {
-        $this->navigationType = Utils::getNavigationTypeModel()::query()->forScopeable($this->getScopeable())->when($this->navigationTypeId, function ($query) {
-            $query->where('id', $this->navigationTypeId);
-        })->first();
-
-        $this->navigationTypeId = $this->navigationType?->id;
+        $this->navigationType = $this->resolveType();
+        $this->navigationTypeId = $this->navigationType?->getKey();
     }
 
-    /**
-     * 导航类型是否存在（缺失时调用方应短路，不发起导航查询）
-     */
-    public function hasNavigationType(): bool
+    /** Data space of the navigation tree; override to follow a partition. */
+    protected function typeScopeable(): array
     {
-        return ! is_null($this->navigationType);
+        return $this->getBaseScopeable();
     }
 
+    protected function typeModel(): string
+    {
+        return Utils::getNavigationTypeModel();
+    }
+
+    protected function typeIdValue(): ?int
+    {
+        return $this->navigationTypeId;
+    }
+
+    /** Scope + type id shared by the type and its rows. */
     public function getScoped()
     {
-        $scoped = [
-            ...$this->getScopeable(),
-            'type_id' => $this->navigationType?->id,
-        ];
-        $scoped['team_id'] = current_tenant()?->getKey();
-
-        return $scoped;
+        return $this->scopedType();
     }
 
     /**
-     * queryBuilder 不支持调用 Nestedset 的 scoped 方法
-     *
-     * 仅返回已限定 scope 的查询起点，查询条件（normal/defaultOrder 等）由调用方控制；
-     * 导航类型不存在时返回 null，调用方应短路返回空集合，不要拿空 type_id 去查库。
+     * Query starting point of the navigation tree; null when the type is
+     * missing, so callers must short-circuit instead of querying an empty tree.
      */
     protected function getScopedQuery(): ?QueryBuilder
     {
-        if (! $this->hasNavigationType()) {
-            return null;
-        }
-
-        return Utils::getNavigationModel()::scoped($this->getScoped());
+        return $this->hasType()
+            ? Utils::getNavigationModel()::scoped($this->scopedType())
+            : null;
     }
 }

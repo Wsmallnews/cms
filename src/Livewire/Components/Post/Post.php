@@ -36,7 +36,7 @@ class Post extends Base
     public function render()
     {
         $model = new (Utils::getPostModel());
-        $query = $model->siteContext()->published()->with(['media', 'content', 'publisher']);
+        $query = $model->forScopeable($this->getScopeable())->published()->with(['media', 'content', 'publisher']);
 
         $post = filled($this->id)
             ? $query->whereKey($this->id)->firstOrFail()

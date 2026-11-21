@@ -17,6 +17,12 @@ class Navigation extends Nestedset
     use Navigationable;
     use ScopedBySite;
 
+    /** The tree's own scope is its data scope (site base by default). */
+    protected function typeScopeable(): array
+    {
+        return $this->getScopeable();
+    }
+
     public function getNestedset(): Collection
     {
         // withDepth：树节点带 depth（根为 0），供手风琴缩进块等使用
