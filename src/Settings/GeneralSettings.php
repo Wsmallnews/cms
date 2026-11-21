@@ -3,6 +3,7 @@
 namespace Wsmallnews\Cms\Settings;
 
 use Spatie\LaravelSettings\Settings;
+use Wsmallnews\Support\Features\Site\SiteContext;
 
 class GeneralSettings extends Settings
 {
@@ -68,11 +69,15 @@ class GeneralSettings extends Settings
 
     public static function repository(): ?string
     {
-        return current_tenant() ? 'team_database' : 'database';
+        return 'site_database';
     }
 
     public static function cacheKey(): string
     {
-        return static::class . (current_tenant() ? '_tenant_' . current_tenant()->getKey() : '');
+        $scopeable = app(SiteContext::class)->scopeableOrDefault();
+
+        return static::class
+            . '_tenant_' . (current_tenant()?->getKey() ?? 'platform')
+            . '_site_' . $scopeable['scope_type'] . ':' . $scopeable['scope_id'];
     }
 }

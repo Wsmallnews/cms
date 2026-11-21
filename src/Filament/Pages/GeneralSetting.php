@@ -11,12 +11,14 @@ use Filament\Support\Icons\Heroicon;
 use Wsmallnews\Cms\Settings\GeneralSettings;
 use Wsmallnews\Cms\Support\Utils;
 use Wsmallnews\Support\Filament\Concerns\CanBeConfigured;
+use Wsmallnews\Support\Filament\Concerns\InteractsWithSiteSettings;
 use Wsmallnews\Support\Filament\Forms\FormComponents;
 use Wsmallnews\Support\Filament\Pages\PageConfiguration;
 
 class GeneralSetting extends SettingsPage
 {
     use CanBeConfigured;
+    use InteractsWithSiteSettings;
 
     protected static ?string $configurationClass = PageConfiguration::class;
 
@@ -27,6 +29,12 @@ class GeneralSetting extends SettingsPage
     protected static string | BackedEnum | null $activeNavigationIcon = Heroicon::OutlinedCog6Tooth;
 
     protected static ?int $navigationSort = 5;
+
+    public function canEdit(): bool
+    {
+        // Aggregate sites inherit the source site's settings rows: read-only.
+        return ! static::getSite()?->isAggregate();
+    }
 
     public static function getNavigationLabel(): string
     {

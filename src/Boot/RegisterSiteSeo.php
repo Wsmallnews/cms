@@ -15,7 +15,7 @@ final class RegisterSiteSeo extends SiteService
 {
     public function register(Site $site): void
     {
-        // 闭包在每次渲染时才解析 Settings，自动跟随当前租户（多租户下 GeneralSettings 走 team_database 仓库，每租户一份）
+        // 闭包在每次渲染时才解析 Settings，自动跟随当前站点（GeneralSettings 走 site_database 仓库，每站点一份、站点内再按租户分区）
         Seo::config(app(CmsPlugin::class)->getId(), function (): array {
             $general = app(GeneralSettings::class);
 
