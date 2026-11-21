@@ -3,7 +3,6 @@
 namespace Wsmallnews\Cms\Livewire\Concerns;
 
 use Illuminate\Support\Str;
-use Wsmallnews\Cms\Support\Utils;
 
 trait HasThemeView
 {
@@ -17,7 +16,7 @@ trait HasThemeView
             return $this->themeView;
         }
 
-        $theme = Utils::getTheme();
+        $theme = $this->resolveTheme();
         $hasViewSpace = Str::contains($theme, 'livewire.');
         $theme = $hasViewSpace ? $theme : "sn-cms::livewire.{$theme}.";
 
@@ -30,11 +29,20 @@ trait HasThemeView
             return $this->bladeThemeView;
         }
 
-        $theme = Utils::getTheme();
+        $theme = $this->resolveTheme();
         $hasViewSpace = Str::contains($theme, 'livewire.');
 
         $theme = $hasViewSpace ? Str::replaceFirst('livewire.', '', $theme) : "sn-cms::{$theme}.";
 
         return $theme . $name;
+    }
+
+    /**
+     * Theme of the current site; the cms package config is the last resort when
+     * the site (and its own module) declares nothing.
+     */
+    protected function resolveTheme(): string
+    {
+        return (string) $this->themeOption('theme', 'default');
     }
 }

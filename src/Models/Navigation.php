@@ -13,7 +13,7 @@ use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Wsmallnews\Cms\Enums\NavigationStatus as NavigationStatusEnum;
 use Wsmallnews\Cms\Enums\NavigationType as NavigationTypeEnum;
-use Wsmallnews\Cms\Support\Utils;
+use Wsmallnews\Cms\Support\SiteUtils;
 use Wsmallnews\Support\Contracts\HasSnSubject;
 use Wsmallnews\Support\Models\Concerns\HasActivityLog;
 use Wsmallnews\Support\Models\SupportModel;
@@ -47,12 +47,7 @@ class Navigation extends SupportModel implements HasMedia, HasSnSubject
 
     public function getScopeAttributes(): array
     {
-        $scopes = ['scope_type', 'scope_id', 'type_id'];
-        if (SupportUtils::isTenancyEnabled()) {        // 多租户 时，自动增加 租户相关参数
-            $scopes[] = 'team_id';
-        }
-
-        return $scopes;
+        return ['scope_type', 'scope_id', 'type_id', 'team_id'];
     }
 
     protected static function booted(): void
@@ -70,7 +65,7 @@ class Navigation extends SupportModel implements HasMedia, HasSnSubject
             // 互斥范围限定在同一导航类型（type_id）内——同 scope 的多棵导航树各自持有首页标记
             static::query()
                 ->where('options->is_home', true)
-                ->snScope($navigation->scope_type, $navigation->scope_id)
+                ->forScopeable(['scope_type' => $navigation->scope_type, 'scope_id' => $navigation->scope_id])
                 ->where('type_id', $navigation->type_id ?? 0)
                 ->when($navigation->exists, fn (Builder $query) => $query->whereKeyNot($navigation->getKey()))
                 ->get()
@@ -124,9 +119,9 @@ class Navigation extends SupportModel implements HasMedia, HasSnSubject
                     // 页面节点：首页标记指向模块首页（前缀 + /）；否则指向 Page 规范地址；
                     // 未绑定 page_id（配置未完成）输出空链接
                     if ($options['is_home'] ?? false) {
-                        $url = Utils::route('index');
+                        $url = SiteUtils::route('index');
                     } elseif ($this->page?->slug) {
-                        $url = Utils::route('pages.show', $this->page->slug);
+                        $url = SiteUtils::route('pages.show', $this->page->slug);
                     } else {
                         $url = '#';
                     }

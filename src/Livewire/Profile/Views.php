@@ -3,7 +3,6 @@
 namespace Wsmallnews\Cms\Livewire\Profile;
 
 use Wsmallnews\Cms\Livewire\Base;
-use Wsmallnews\Cms\Support\Utils;
 use Wsmallnews\Support\Facades\Seo;
 
 class Views extends Base
@@ -12,12 +11,12 @@ class Views extends Base
     {
         Seo::title(__('sn-cms::cms.sidebar.profile_views'))->robots('noindex');
         $breadcrumbs = [
-            ['label' => __('sn-cms::cms.sidebar.profile'), 'url' => Utils::route('profile')],
-            ['label' => __('sn-cms::cms.sidebar.profile_views'), 'url' => Utils::route('profile.views')],
+            ['label' => __('sn-cms::cms.sidebar.profile'), 'url' => $this->site()?->route('profile')],
+            ['label' => __('sn-cms::cms.sidebar.profile_views'), 'url' => $this->site()?->route('profile.views')],
         ];
 
         return view($this->getThemeView('profile.views'), [
             'breadcrumbs' => $breadcrumbs,
-        ])->layout(Utils::getLayout());
+        ])->layout($this->getLayout());
     }
 }

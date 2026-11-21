@@ -2,7 +2,6 @@
 
 namespace Wsmallnews\Cms\Livewire;
 
-use Wsmallnews\Cms\CmsPlugin;
 use Wsmallnews\Cms\Support\Utils;
 use Wsmallnews\Support\Facades\Seo;
 use Wsmallnews\Support\Models\Page;
@@ -17,8 +16,7 @@ class Index extends Base
 
         return view($this->getThemeView('index'), [
             'homePage' => $this->getHomePage(),
-            'module' => app(CmsPlugin::class)->getId(),
-        ])->layout(Utils::getLayout());
+        ])->layout($this->getLayout());
     }
 
     /**
@@ -33,7 +31,7 @@ class Index extends Base
 
         $home = $navigationModel->query()
             ->normal()
-            ->snScope(...$this->getScopeable())
+            ->siteContext()
             ->where('options->is_home', true)
             ->first();
 
@@ -43,7 +41,7 @@ class Index extends Base
 
         return SupportUtils::getPageModel()::query()
             ->published()
-            ->snScope(...$this->getScopeable())
+            ->siteContext()
             ->with('content')
             ->find($home->page_id);
     }

@@ -19,7 +19,7 @@ trait Navigationable
      */
     public function mountNavigationable()
     {
-        $this->navigationType = Utils::getNavigationTypeModel()::scopeable(...$this->getScopeable())->when($this->navigationTypeId, function ($query) {
+        $this->navigationType = Utils::getNavigationTypeModel()::query()->forScopeable($this->getScopeable())->when($this->navigationTypeId, function ($query) {
             $query->where('id', $this->navigationTypeId);
         })->first();
 
@@ -40,7 +40,7 @@ trait Navigationable
             ...$this->getScopeable(),
             'type_id' => $this->navigationType?->id,
         ];
-        has_tenancy() && $scoped['team_id'] = current_tenant()?->id;
+        $scoped['team_id'] = current_tenant()?->getKey();
 
         return $scoped;
     }

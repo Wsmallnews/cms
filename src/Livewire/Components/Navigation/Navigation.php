@@ -4,26 +4,18 @@ namespace Wsmallnews\Cms\Livewire\Components\Navigation;
 
 use Illuminate\Support\Collection;
 use Illuminate\View\View;
-use Wsmallnews\Cms\CmsPlugin;
-use Wsmallnews\Cms\Livewire\Concerns\HasNavigationContext;
+use Wsmallnews\Cms\Livewire\Concerns\HasCmsConfig;
 use Wsmallnews\Cms\Livewire\Concerns\HasThemeView;
 use Wsmallnews\Cms\Livewire\Concerns\Navigationable;
 use Wsmallnews\FilamentNestedset\Livewire\Components\Nestedset;
-use Wsmallnews\Support\Livewire\Concerns\HasModuleContext;
-use Wsmallnews\Support\Livewire\Concerns\Scopeable;
+use Wsmallnews\Support\Livewire\Concerns\ScopedBySite;
 
 class Navigation extends Nestedset
 {
-    use HasModuleContext;
-    use HasNavigationContext;
+    use HasCmsConfig;
     use HasThemeView;
     use Navigationable;
-    use Scopeable;
-
-    public function getOwnerModule(): string
-    {
-        return app(CmsPlugin::class)->getId();
-    }
+    use ScopedBySite;
 
     public function getNestedset(): Collection
     {

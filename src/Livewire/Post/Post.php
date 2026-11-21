@@ -4,7 +4,6 @@ namespace Wsmallnews\Cms\Livewire\Post;
 
 use Wsmallnews\Cms\CmsPlugin;
 use Wsmallnews\Cms\Livewire\Base;
-use Wsmallnews\Cms\Support\Utils;
 use Wsmallnews\Support\Features\Composition\CompositionRenderer;
 
 class Post extends Base
@@ -14,8 +13,8 @@ class Post extends Base
     public function render()
     {
         $breadcrumbs = [
-            ['label' => __('sn-cms::cms.frontend.home'), 'url' => Utils::route('index')],
-            ['label' => __('sn-cms::cms.frontend.post_detail'), 'url' => Utils::route('posts.show', $this->slug)],
+            ['label' => __('sn-cms::cms.frontend.home'), 'url' => $this->site()?->route('index')],
+            ['label' => __('sn-cms::cms.frontend.post_detail'), 'url' => $this->site()?->route('posts.show', $this->slug)],
         ];
 
         // purpose 侧栏（post-sidebar）：槽位注册的 context 提供者按路由参数解析当前文章，
@@ -32,6 +31,6 @@ class Post extends Base
         return view($this->getThemeView('post.post'), [
             'breadcrumbs' => $breadcrumbs,
             'sidebar' => $sidebar,
-        ])->layout(Utils::getLayout());
+        ])->layout($this->getLayout());
     }
 }

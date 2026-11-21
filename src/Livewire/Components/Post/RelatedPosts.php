@@ -5,6 +5,7 @@ namespace Wsmallnews\Cms\Livewire\Components\Post;
 use Wsmallnews\Cms\Livewire\Components\Base;
 use Wsmallnews\Cms\Support\Utils;
 use Wsmallnews\Support\Livewire\Concerns\CanBeContained;
+use Wsmallnews\Support\Livewire\Concerns\HasCustomRoutes;
 
 /**
  * 相关文章推荐：来源回退链——显式配置的分类（categoryIds）> 同行文章组件提供的当前文章（$post）> 空态。
@@ -13,6 +14,7 @@ use Wsmallnews\Support\Livewire\Concerns\CanBeContained;
 class RelatedPosts extends Base
 {
     use CanBeContained;
+    use HasCustomRoutes;
 
     public ?array $categoryIds = null;
 
@@ -46,7 +48,7 @@ class RelatedPosts extends Base
 
         return Utils::getPostModel()::query()
             ->published()
-            ->snScope(...$this->getScopeable())
+            ->siteContext()
             ->categoryIds($categoryIds)
             ->when(filled($this->post?->id), fn ($query) => $query->whereKeyNot($this->post->id))
             ->with(['media'])

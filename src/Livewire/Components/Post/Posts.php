@@ -13,12 +13,14 @@ use Wsmallnews\Cms\Livewire\Components\Base;
 use Wsmallnews\Cms\Support\Utils;
 use Wsmallnews\Support\Livewire\Concerns\CanBeContained;
 use Wsmallnews\Support\Livewire\Concerns\CanPagination;
+use Wsmallnews\Support\Livewire\Concerns\HasCustomRoutes;
 
 class Posts extends Base
 {
     use CanBeContained;
     use CanPagination;
     use Categoryable;
+    use HasCustomRoutes;
     use WithoutUrlPagination;
 
     public int | array | null $categoryIds = [];
@@ -71,7 +73,7 @@ class Posts extends Base
         $allCategories = filled($categoryIds) ? $this->getCategoryIds($categories) : collect([]);
 
         // 查询图文
-        $query = Utils::getPostModel()::snScope(...$this->getScopeable())->published()->with(['media', 'categories'])
+        $query = Utils::getPostModel()::siteContext()->published()->with(['media', 'categories'])
             ->when($allCategories->isNotEmpty(), function ($query) use ($allCategories) {
                 $query->categoryIds($allCategories);
             })

@@ -2,9 +2,7 @@
 
 namespace Wsmallnews\Cms\Livewire\Pages;
 
-use Wsmallnews\Cms\CmsPlugin;
 use Wsmallnews\Cms\Livewire\Base;
-use Wsmallnews\Cms\Support\Utils;
 
 /**
  * 站点页面路由页（/cms/pages/{slug}）：薄壳，页面解析与渲染由 support 的
@@ -17,7 +15,6 @@ class Page extends Base
     public function render()
     {
         return view($this->getThemeView('pages.page'), [
-            'module' => app(CmsPlugin::class)->getId(),
-        ])->layout(Utils::getLayout());
+        ])->layout($this->getLayout());
     }
 }

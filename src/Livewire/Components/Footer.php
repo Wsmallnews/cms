@@ -2,7 +2,6 @@
 
 namespace Wsmallnews\Cms\Livewire\Components;
 
-use Wsmallnews\Cms\CmsPlugin;
 use Wsmallnews\Cms\Livewire\Concerns\Navigationable;
 use Wsmallnews\Cms\Settings\GeneralSettings;
 use Wsmallnews\Cms\Support\Utils;
@@ -11,12 +10,18 @@ use Wsmallnews\Support\Facades\Feed;
 /**
  * 站点页脚（cms 自用组件）。
  *
- * scopeable 由调用处显式传入（footer 差异实例：Utils::getScopeable('footer')），
- * 组件内部不解析 scope——内嵌组件的数据上下文一律经 props 注入。
+ * footer 子 scope 由组件自声明（getScopeSuffix）：站点注册表登记的
+ * footer 后缀映射解析（Site::$scopes），未登记时 fail-closed。
  */
 class Footer extends Base
 {
     use Navigationable;
+
+    /** Footer runs on its own sub-scope: {site scope}::footer. */
+    public static function getScopeSuffix(): string
+    {
+        return 'footer';
+    }
 
     public function render()
     {
@@ -29,21 +34,23 @@ class Footer extends Base
         $groups = $navigations->filter(fn ($navigation) => $navigation->children->isNotEmpty())->values();
         $flats = $navigations->filter(fn ($navigation) => $navigation->children->isEmpty())->values();
 
-        // 友情链接（启用状态，按 order 排序；cms main 实例）
+        // 友情链接（启用状态，按 order 排序；cms main 实例——主 scope，非 footer 子 scope）
         $links = Utils::getLinkModel()::query()
             ->normal()
             ->ordered()
-            ->snScope(...Utils::getScopeable())
+            ->siteContext()
             ->get();
 
-        // RSS 订阅入口：只列本模块的流（链接指向模块端点 /cms/feed/{name}）；
+        // RSS 订阅入口：只列本站点所属模块的流（链接指向模块端点 /cms/feed/{name}）；
         // feed.enabled 关闭时前台不渲染（boot 期已决定流与模块端点是否注册，这里是渲染层开关）
-        $feeds = Utils::getConfig('feed.enabled', true)
-            ? Feed::moduleFeeds(app(CmsPlugin::class)->getId())->map(function (array $feed, string $name): array {
+        $site = $this->site();
+
+        $feeds = $site && $this->siteOption('feed.enabled', true)
+            ? Feed::getFeeds($site)->map(function (array $feed, string $name) use ($site): array {
                 $title = (string) value($feed['title'] ?? null ?: config('app.name'));
 
                 return [
-                    'url' => Feed::feedUrl($name),
+                    'url' => Feed::feedUrl($name, $site),
                     'title' => $title,
                     'label' => (string) (value($feed['label'] ?? null) ?: $title),
                 ];
