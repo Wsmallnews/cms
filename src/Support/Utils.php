@@ -8,8 +8,6 @@ use Wsmallnews\Cms\CmsPlugin;
 use Wsmallnews\Cms\Contracts\PostFlagContract;
 use Wsmallnews\Cms\Enums\PostFlag;
 use Wsmallnews\Cms\Exceptions\CmsException;
-use Wsmallnews\Support\Data\ScopeableContext;
-use Wsmallnews\Support\Features\Site\SiteContext;
 use Wsmallnews\Support\Models\Tag as SupportTagModel;
 use Wsmallnews\Support\Support\Utils as SupportUtils;
 
@@ -35,47 +33,6 @@ class Utils
     public static function getConfig(string $name, mixed $default = null): mixed
     {
         return config(self::getPluginId() . ".{$name}", $default);
-    }
-
-    /**
-     * Get scopeable configuration as ScopeableContext object.
-     *
-     * @param  string|null  $key  Sub-scope suffix (footer, etc.)
-     */
-    public static function getScopeableContext(?string $key = null): ScopeableContext
-    {
-        return ScopeableContext::fromArray(self::getScopeable($key));
-    }
-
-    /**
-     * Get scopeable array: current site scope, plus an optional sub-scope suffix.
-     *
-     * @param  string|null  $key  Sub-scope suffix (footer, etc.)
-     * @return array{scope_type: string, scope_id: int}
-     */
-    public static function getScopeable(?string $key = null): array
-    {
-        return app(SiteContext::class)->scopeableOrDefault(self::getPluginId(), $key);
-    }
-
-    /**
-     * Get scope type.
-     *
-     * @param  string|null  $key  Sub-scope suffix (footer, etc.)
-     */
-    public static function getScopeType(?string $key = null): string
-    {
-        return self::getScopeable($key)['scope_type'];
-    }
-
-    /**
-     * Get scope ID.
-     *
-     * @param  string|null  $key  Sub-scope suffix (footer, etc.)
-     */
-    public static function getScopeId(?string $key = null): int
-    {
-        return self::getScopeable($key)['scope_id'];
     }
 
     /**
@@ -175,30 +132,5 @@ class Utils
     public static function getFileDirectory(?string $type = null): string
     {
         return self::getConfig('file_directory', 'sn/cms/') . ($type ? $type . '/' : '') . date('Ymd');
-    }
-
-    /**
-     * 读取模块级 navigation 默认配置（sn-cms.options.navigation）。
-     * 站点级导航形态由组件经 moduleConfig 读取，不走这里。
-     *
-     * @param  string|null  $key  Configuration key (dot notation, e.g. 'style')
-     */
-    public static function navigationConfig(?string $key = null, mixed $default = null): mixed
-    {
-        return self::getConfig('options.navigation' . ($key ? '.' . $key : ''), $default);
-    }
-
-    /**
-     * PC 主行父项是否可点击（直达第一个可用叶子）。
-     * 仅「hover 级联」生效；click 级联（点击语义被展开占用）与手风琴（固定纯展开）下强制无效。
-     */
-    public static function isDesktopParentClickable(): bool
-    {
-        if (self::navigationConfig('desktop_submenu_style', 'cascade') !== 'cascade'
-            || self::navigationConfig('desktop_submenu_trigger', 'hover') !== 'hover') {
-            return false;
-        }
-
-        return (bool) self::navigationConfig('parent_clickable', true);
     }
 }

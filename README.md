@@ -100,27 +100,99 @@ return [
 ];
 ```
 
-Use `sn-cms.panel_register` to control which Filament pages/resources are registered, `sn-cms.routes` to control frontend route generation, and `sn-cms.themes` to control frontend layout and dark mode behavior.
+`sn-cms.routes` only keeps `route_key_name`; shared URI defaults live in `sn-cms.options.route_uris`, and sites override them via `options(['route_uris' => [...]])`. Other site behaviour defaults (feed/search/comments/two_factor/navigation/themes) live under `sn-cms.options`; prefix, domain, middleware, route name and frontend flag are declared on each site.
 
 ## Filament plugin
 
-Register the plugin on your Filament panel:
+Cms is a standalone site plugin and requires an explicit site:
 
 ```php
 use Wsmallnews\Cms\CmsPlugin;
+use Wsmallnews\Support\Features\Site\SiteConfig;
 
-$panel
-    ->plugin(CmsPlugin::make());
+$panel->plugin(
+    CmsPlugin::make()
+        ->site('main', fn (SiteConfig $site) => $site
+            ->prefix('cms/{tenant:slug}')   // required
+            ->routeNamePrefix('sn-cms.tenant.')   // optional; auto-generated when omitted
+            ->options([
+                'route_uris' => ['search' => 's'],
+                'search' => ['display' => 'page'],
+                'two_factor' => ['enabled' => false],
+            ])
+        )
+);
 ```
 
-`CmsPlugin` registers the pages and resources configured in `sn-cms.panel_register`, including:
+`scopeable()` is optional: `main` uses `sn-cms` (the plugin id), additional
+sites derive `sn-cms-{siteKey}` automatically. `footer` style sub-scopes derive
+`{site.scopeType}::footer`; a site scope type itself must not contain `:`.
 
-- `Wsmallnews\Cms\Filament\Pages\Navigation\NavigationPage`
-- `Wsmallnews\Cms\Filament\Pages\Category`
-- `Wsmallnews\Cms\Filament\Pages\GeneralSetting`
-- `Wsmallnews\Cms\Filament\Resources\NavigationTypes\NavigationTypeResource`
-- `Wsmallnews\Cms\Filament\Resources\Posts\PostResource`
-- `Wsmallnews\Cms\Filament\Resources\Tags\TagResource`
+Register several sites in one panel when the same admin hosts more than one
+frontend content space (for example a main site and a campaign site). Each site
+gets its own scope and its own copy of the resources/pages:
+
+```php
+CmsPlugin::make()
+    ->site('main', fn (SiteConfig $site) => $site
+        ->prefix('cms/{tenant:slug}'))
+    ->site('campaign', fn (SiteConfig $site) => $site
+        ->prefix('cms/{tenant:slug}/campaign')
+        ->label('Campaign')
+        // Per-site admin defaults, merged between global_default and the entry
+        ->panelDefaults(['navigation_group' => 'Campaign']))
+```
+
+A panel with several sites names each navigation group after the site label
+unless the site sets `panelDefaults(['navigation_group' => ...])`; an entry's own
+`navigation_group` still wins.
+
+The default resources and pages live in the published config under
+`panel_register` — comment an entry out to drop it globally. `resources()` and
+`pages()` on the plugin **append** entries or override an existing class by
+merging its overrides. Keys are always derived from panel, plugin, site and
+class (a default entry must never pin one); URLs stay clean (single site uses
+the class default slug, several sites nest under the site key).
+
+```php
+CmsPlugin::make()
+    ->site('main', fn (SiteConfig $site) => $site->prefix('cms'))
+    ->resources([PostResource::class, PageResource::class])
+    ->pages([
+        NavigationPage::class,
+        // 子 scope 由类自述：FooterNavigationPage::getScopeSuffix() = 'footer'
+        FooterNavigationPage::class,
+    ]);
+```
+
+Pages from other packages can be registered the same way — for example the
+category page is registered by cms into its own site scope:
+
+```php
+->pages([\Wsmallnews\Category\Filament\Pages\Category\CategoryPage::class])
+```
+
+Sub-scopes (`{site.scopeType}::{suffix}`) are declared on the component class
+via `getScopeSuffix()`, or per entry with `scope_suffix`. The suffix is a
+**name** and the pair is always derived from the site, so the frontend and the
+admin can never disagree about where a partition lives. Entries cannot declare
+`scope_type` / `scope_id` / `scopeable`: the pair belongs to the site, and two
+non-aggregate sites may never share one.
+
+Registering the same class twice needs the tuple form (a map entry only
+overrides the default entry). Every extra instance must pass its own `key` and
+declare its own `scope_suffix`:
+
+```php
+->resources([
+    ProductResource::class,                                                   // main scope
+    [ProductResource::class, ['key' => 'vip', 'scope_suffix' => 'vip']],      // sn-shop::vip
+    [ProductResource::class, ['key' => 'group', 'scope_suffix' => 'group']],  // sn-shop::group
+])
+```
+
+The frontend page for a partition looks it up by name
+(`$site->getScope('vip')`) and fails closed when the site did not register it.
 
 ## Usage
 

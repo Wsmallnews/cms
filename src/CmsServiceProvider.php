@@ -20,6 +20,7 @@ use Wsmallnews\Cms\Http\Middleware\EnsureEmailIsVerified;
 use Wsmallnews\Cms\Http\Middleware\RedirectIfAuthenticated;
 use Wsmallnews\Cms\Http\Middleware\RequirePassword;
 use Wsmallnews\Cms\Livewire\Index;
+use Wsmallnews\Cms\Support\NavigationContext;
 use Wsmallnews\Cms\Support\Utils;
 use Wsmallnews\Support\Features\Modules\Module;
 use Wsmallnews\Support\Features\Modules\ModuleRegistry;
@@ -43,6 +44,10 @@ class CmsServiceProvider extends PackageServiceProvider
 
     public function packageRegistered(): void
     {
+        // 导航上下文按请求一份：Octane / Swoole 在请求结束时释放 scoped 实例，
+        // 静态缓存会在常驻进程里跨请求保留，导致串站点、串租户
+        $this->app->scoped(NavigationContext::class, fn () => new NavigationContext);
+
         // 模块身份登记（ModuleRegistry 单一事实源：类反查/存在性校验/插件实例）
         ModuleRegistry::register(new Module(
             id: static::$name,

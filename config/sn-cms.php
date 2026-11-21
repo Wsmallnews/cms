@@ -1,15 +1,18 @@
 <?php
 
+use Wsmallnews\Category\Filament\Pages\Category\CategoryPage as PostCategoryPage;
+use Wsmallnews\Category\Filament\Resources\CategoryTypes\CategoryTypeResource;
 use Wsmallnews\Cms\Enums;
-use Wsmallnews\Cms\Models;
 use Wsmallnews\Cms\Filament\Pages\GeneralSetting as GeneralSettingPage;
 use Wsmallnews\Cms\Filament\Pages\Navigation\Footer\FooterNavigationPage;
 use Wsmallnews\Cms\Filament\Pages\Navigation\NavigationPage;
 use Wsmallnews\Cms\Filament\Resources\Links\LinkResource;
 use Wsmallnews\Cms\Filament\Resources\NavigationTypes\NavigationTypeResource;
 use Wsmallnews\Cms\Filament\Resources\Posts\PostResource;
-use Wsmallnews\Category\Filament\Pages\Category\CategoryPage as PostCategoryPage;
+use Wsmallnews\Cms\Models;
 use Wsmallnews\Comment\Enums\CommentStatus;
+use Wsmallnews\Comment\Filament\Pages\Comment\CommentPage;
+use Wsmallnews\Comment\Filament\Resources\Comments\CommentResource;
 use Wsmallnews\Support\Enums\ContentType;
 use Wsmallnews\Support\Filament\Resources\Compositions\CompositionResource;
 use Wsmallnews\Support\Filament\Resources\Pages\PageResource;
@@ -48,6 +51,10 @@ return [
             // support 的编排/站点页资源零代码注册：module_id 由注册插件注入，默认主 scope。
             CompositionResource::class,
             PageResource::class,
+
+            // 能力包资源：宿主站点派生 scope，注册即归属（module_id = sn-cms）
+            // CategoryTypeResource::class,
+            // CommentResource::class,
         ],
         'pages' => [
             // Category 提供页面类；cms 持有 cms 站点维度的实例。
@@ -58,6 +65,9 @@ return [
             NavigationPage::class,
             // Footer 导航的子 scope 由页面类 getScopeSuffix() 自述（返回 'footer'）。
             FooterNavigationPage::class,
+
+            // comment 提供页面类；cms 持有 cms 站点维度的实例。
+            // CommentPage::class,
         ],
     ],
 
@@ -110,10 +120,15 @@ return [
      */
     'options' => [
         /**
-         * 认证配置（站点可通过 options 覆盖）
+         * 认证配置（站点可通过 options.auth.* 覆盖）
          */
-        'guard' => 'web',
-        'auth_user_type' => 'member',
+        'auth' => [
+            // 当前站点使用的 guard
+            'guard' => 'web',
+
+            // 认证主体类型：member（wsmallnews/member）或 user（wsmallnews/user）
+            'user_type' => 'member',
+        ],
 
         /**
          * 各站共用的默认 URI；站点可在 site()->options(['route_uris' => [...]]) 覆盖单条。

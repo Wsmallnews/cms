@@ -102,7 +102,7 @@ PostResource 提供文章的 CRUD 管理，支持 Scopeable、定时调度和评
 use Wsmallnews\Cms\Filament\Resources\Posts\BaseResource;
 
 // BaseResource 已提供：
-// - use Scopeable（applyScopeableToQuery 自动过滤）
+// - use ScopedQueries（applyScopeToQuery 自动过滤）
 // - form() → PostForm（含 mediaImageUpload、richEditor、markdownEditor）
 // - table() → PostsTable（含 modelColumn、morphColumn、ScheduledTask 相关操作）
 // - 图标、slug、导航排序、翻译标签
@@ -125,7 +125,7 @@ NavigationTypeResource 提供导航类型的 CRUD 管理：
 use Wsmallnews\Cms\Filament\Resources\NavigationTypes\BaseResource;
 
 // BaseResource 已提供：
-// - use Scopeable（applyScopeableToQuery 自动过滤）
+// - use ScopedQueries（applyScopeToQuery 自动过滤）
 // - form() → NavigationTypeForm
 // - table() → NavigationTypesTable
 // - getWidgets() → Navigation Widget
@@ -174,7 +174,32 @@ CMS 包提供丰富的前端 Livewire 组件：
 | `Livewire\Components\Post\Posts` | `sn-cms-posts` | 文章列表（分页） |
 | `Livewire\Components\Post\IndexPosts` | `sn-cms-index-posts` | 首页文章列表 |
 
-所有组件继承 `Wsmallnews\Cms\Livewire\Components\Base`（→ `Wsmallnews\Support\Livewire\Base`），使用 `Scopeable` trait。
+所有组件继承 `Wsmallnews\Cms\Livewire\Components\Base`（→ `Wsmallnews\Support\Livewire\Base`），使用 `ScopedBySite` trait。
+
+### 站点前台路由扩展
+
+站点前台路由由 `Cms\Support\CmsFrontendRoutes::register($site)` 注册。宿主要追加自己的页面（例如带 `scope_suffix` 的文章分区 `aaa`），用 support 的 `SiteRoutes` 注册进站点分组，前缀 / 域名 / 中间件 / 路由名前缀自动继承：
+
+```php
+use Wsmallnews\Cms\Support\CmsFrontendRoutes;
+use Wsmallnews\Support\Facades\SiteRoutes;
+use Wsmallnews\Support\Features\Site\Site;
+
+// AppServiceProvider::boot()
+SiteRoutes::extend('sn-cms', CmsFrontendRoutes::SLOT_AUTH, function (Site $site): void {
+    Route::get('aaa/my-posts', AaaMyPostsPage::class)->name('aaa.my-posts');
+});
+```
+
+| 槽位常量 | 进入的中间件组 | 用途 |
+|---|---|---|
+| `SLOT_PUBLIC` | 站点组（含 `sn-resolve-site-context` 等） | 公开页面，无需登录 |
+| `SLOT_GUEST` | `cms-guest:{guard}` | 仅未登录用户 |
+| `SLOT_AUTH` | `cms-auth:{guard}` | 必须登录 |
+
+- 回调**每个站点执行一次**，拿到当前 `Site`；路由名最终是 `sn-cms.{siteKey}.aaa.my-posts`；
+- `SLOT_PUBLIC` 在 `pages/{slug}` 和搜索页之前执行，**不要注册 catch-all**，也不要复用内置路由名；
+- 槽位词表属于 cms（shop 等模块定义自己的槽位），support 只负责按 `module + slot` 存回调。
 
 ### 定时调度
 
@@ -199,18 +224,31 @@ ScheduledTask::scheduleRepeater('sn_post');
 
 | 方法 | 说明 |
 |---|---|
-| `getConfig(?string $name, $default)` | 读取 `sn-cms` 配置（dot notation） |
-| `getScopeableContext()` | 从配置创建 ScopeableContext 值对象 |
+| `getConfig(string $name, $default)` | 只读配置文件，必须写完整路径（`options.feed.limit` / `contents.post.types`）；根取 `getPluginId()` |
+| `getPluginId()` | 模块 id / 配置根（`config/{pluginId}.php`） |
+| `getScopeableContext()` | 由当前 Site 派生 ScopeableContext 值对象 |
 | `getScopeable()` | 返回 `['scope_type' => '...', 'scope_id' => 0]` |
 | `getScopeType()` | 获取默认 scope_type |
 | `getScopeId()` | 获取默认 scope_id |
-| `getPanelRegister($type)` | 获取面板注册配置（pages/resources） |
 | `getModel(string $name, bool $shouldException = true)` | 获取配置的模型类名 |
 | `getPostModel()` | `getModel('post')` 快捷方式 |
 | `getNavigationModel()` | `getModel('navigation')` 快捷方式 |
 | `getNavigationTypeModel()` | `getModel('navigation_type')` 快捷方式 |
 | `getFileDirectory(?string $type)` | 获取文件目录（自动追加日期） |
-| `route($name, $params, $absolute)` | CMS 内部路由（自动添加路由前缀 + 租户参数） |
+
+`Wsmallnews\Cms\Support\SiteUtils` — 当前站点（无站点上下文抛 `InvalidSiteException`）。**只用于没有 Livewire 组件实例的地方**（布局、Blade 容器组件、中间件、模型、注册期闭包）；Livewire 组件类及其内容视图优先 `$this->siteOption()` / `$this->themeOption()` / `$this->searchOption()` / `$this->getLayout()` / `$this->site()?->route()`。
+
+| 方法 | 说明 |
+|---|---|
+| `getConfig(string $name, $default)` | 站点 options > `config("{pluginId}.options.*")` |
+| `getSite()` | 当前 cms 站点（跨模块站点抛异常） |
+| `getCommentConfig(string $module, ?string $key, $default)` | comments 节的模块配置 |
+| `getDefaultDarkMode()` / `hasDarkMode()` / `hasDarkModeForced()` | 主题暗黑开关（布局视图用） |
+| `route(string $name, $params, $absolute)` | 当前站点 URL（路由前缀 + 租户参数） |
+
+`HasCmsConfig`（Livewire 组件内）另提供 `navigationOption()` / `themeOption()` / `searchOption()` / `commentOption()` / `getLayout()` / `getPageContainer()` / `isDesktopParentClickable()`。
+
+注册期/命令已持有 `Site` 时，直接 `$site->route()` / `$site->getOption()`，不要依赖当前上下文。
 
 ### 正确命名空间速查
 
@@ -240,4 +278,4 @@ ScheduledTask::scheduleRepeater('sn_post');
 - **多租户 scope 需要模型定义 `getScopeAttributes()`**，返回的字段必须包含 `team_id`。
 - **`CanPagination` 已包含 `WithPagination`**，不要在 Livewire 组件中重复 `use WithPagination`。
 - **counter 字段使用 JSON 格式**，模型中需配合 support 包的 `CounterCast` 使用。
-- **`Utils` 所有方法都是静态的**，使用 `Utils::getConfig()` 而非 `(new Utils)->getConfig()`。
+- **`Utils` 所有方法都是静态的**；文件配置用 `Utils::getConfig()`。请求期站点配置/路由：Livewire 组件类与内容视图用 `$this->siteOption()` / `$this->themeOption()` / `$this->getLayout()` / `$this->site()?->route()`；布局、Blade 容器组件（`<x-dynamic-component>`）、中间件、模型等无组件实例处才用 `SiteUtils::getConfig()` / `SiteUtils::route()`（见 `Cms\Support\SiteUtils`）。已持有 Site 时直接 `$site->getOption()` / `$site->route()`。`Utils::route()` 已删除，删掉 firstSite 兜底后无站点上下文会直接抛异常。

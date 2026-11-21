@@ -22,9 +22,9 @@ use Wsmallnews\Cms\Livewire\Settings\Password as SettingsPassword;
 use Wsmallnews\Cms\Livewire\Settings\Profile as SettingsProfile;
 use Wsmallnews\Cms\Livewire\Settings\TwoFactor;
 use Wsmallnews\Support\Facades\Feed;
-use Wsmallnews\Support\Features\Site\Site;
 use Wsmallnews\Support\Facades\Sitemap;
-use Wsmallnews\Support\Support\Utils as SupportUtils;
+use Wsmallnews\Support\Facades\SiteRoutes;
+use Wsmallnews\Support\Features\Site\Site;
 use Wsmallnews\User\Http\Controllers\Auth\VerifyEmailController;
 
 /**
@@ -36,26 +36,31 @@ use Wsmallnews\User\Http\Controllers\Auth\VerifyEmailController;
  */
 class CmsFrontendRoutes
 {
+    /** Public site routes: no sign-in requirement. */
+    public const SLOT_PUBLIC = 'public';
+
+    /** Guest-only routes, registered inside `cms-guest:{guard}`. */
+    public const SLOT_GUEST = 'guest';
+
+    /** Authenticated routes, registered inside `cms-auth:{guard}`. */
+    public const SLOT_AUTH = 'auth';
+
     public static function register(Site $site): void
     {
         $pluginId = app(CmsPlugin::class)->getId();
-        $guard = (string) $site->getOption('guard', 'web');
+        $guard = (string) $site->getOption('auth.guard', 'web');
 
         $middlewares = $site->middleware;
 
-        if ($site->mode->isTenant() && SupportUtils::isTenancyEnabled()) {
-            $middlewares[] = 'sn-resolve-tenant';
-        }
+        // Site + tenant resolution in one pass (tenant follows the site mode)
+        $middlewares[] = 'sn-resolve-site-context';
 
-        // Resolve the site after the tenant is known, so tenant mode can bind it.
-        $middlewares[] = 'sn-resolve-site';
+        // 认证主体可用性校验（guard 由站点 auth.guard 决定，中间件自己读取）
+        $middlewares[] = 'sn-ensure-user-active';
 
-        // 用户可用性校验
-        $middlewares[] = 'user-active:' . $guard;
-
-        if ((string) $site->getOption('auth_user_type', 'member') === 'member') {
-            // 解析当前 Member 到请求上下文（传入 CMS 的 guard）
-            $middlewares[] = 'sn-resolve-member:' . $guard;
+        if ((string) $site->getOption('auth.user_type', 'member') === 'member') {
+            // 会员状态校验；身份解析由 SiteContext 按 auth.user_type 完成
+            $middlewares[] = 'sn-ensure-member-active';
         }
 
         // 记录路由历史
@@ -85,14 +90,17 @@ class CmsFrontendRoutes
             }
 
             // 不登录api
-            Route::middleware('cms-guest:' . $guard)->group(function () use ($site): void {
+            Route::middleware('cms-guest:' . $guard)->group(function () use ($site, $pluginId): void {
                 Route::get(self::uri($site, 'login'), Login::class)->name('login');
                 Route::get(self::uri($site, 'register'), Register::class)->name('register');
                 Route::get(self::uri($site, 'forgot-password'), ForgotPassword::class)->name('forgot.password');
                 Route::get(self::uri($site, 'reset-password'), ResetPassword::class)->name('reset.password');
+
+                // 宿主扩展：仅未登录可见的路由
+                SiteRoutes::apply($pluginId, $site, self::SLOT_GUEST);
             });
 
-            Route::middleware('cms-auth:' . $guard)->group(function () use ($site): void {
+            Route::middleware('cms-auth:' . $guard)->group(function () use ($site, $pluginId): void {
                 // 验证邮箱
                 Route::get(self::uri($site, 'verify-email'), VerifyEmail::class)->name('verify.email');
                 Route::get(self::uri($site, 'verify-email-verification'), VerifyEmailController::class)
@@ -117,12 +125,18 @@ class CmsFrontendRoutes
                         Route::get(self::uri($site, 'settings.two-factor'), TwoFactor::class)->name('settings.two-factor');
                     });
                 }
+
+                // 宿主扩展：登录后可访问的路由
+                SiteRoutes::apply($pluginId, $site, self::SLOT_AUTH);
             });
 
             // 普通用户路由
             Route::get(self::uri($site, 'index'), Index::class)->name('index');
             Route::get(self::uri($site, 'posts'), Posts::class)->name('posts');
             Route::get(self::uri($site, 'posts-show'), Post::class)->name('posts.show');
+
+            // 宿主扩展：无需登录的公开路由（须在 pages/{slug} 等动态段之前）
+            SiteRoutes::apply($pluginId, $site, self::SLOT_PUBLIC);
 
             // 站点页面（Page 实体：slug → composition 绑定）
             Route::get(self::uri($site, 'pages-show'), PagesPage::class)->name('pages.show');
