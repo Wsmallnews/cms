@@ -176,6 +176,16 @@ CMS 包提供丰富的前端 Livewire 组件：
 
 所有组件继承 `Wsmallnews\Cms\Livewire\Components\Base`（→ `Wsmallnews\Support\Livewire\Base`），使用 `ScopedBySite` trait。
 
+### NavigationContext（导航分区上下文）
+
+`Cms\Support\NavigationContext` 提供「当前请求命中的导航节点」：分区 banner、兄弟导航判据、节点路径。
+
+- **生命周期**：容器 scoped 单例（`CmsServiceProvider` 注册），每请求一份，请求结束由框架释放；Octane / Swoole 下不会跨请求串站点或租户。
+- **缓存分区**：key 含站点 + 租户 + scope，同一请求内 `SiteContext::run()` 切换上下文（测试、多站点嵌入）不会互相污染；要重解析调 `flush()`。
+- **匹配规则**：scope 内 normal 且可寻址的节点；精确 path 优先（首页 `/` 只精确匹配），其次最长前缀 + 段边界（防 `/posts-x` 吃掉 `/posts`）；同一 URL 被多个节点引用取树序第一个；站外链接不参与。
+- **只在初始页面请求用**：Livewire update 的 path 是 `/livewire/update`，不要在组件 update 生命周期里调用；`hasBrothers()` 与 Brothers 组件 mount 共用同一判断。
+- `nodePath()` 只对 `Url` 类型判 host：Route / Page / Child 的 URL 由当前站点实时生成，恒为本站，换域名后 path 仍有效。
+
 ### 站点前台路由扩展
 
 站点前台路由由 `Cms\Support\CmsFrontendRoutes::register($site)` 注册。宿主要追加自己的页面（例如带 `scope_suffix` 的文章分区 `aaa`），用 support 的 `SiteRoutes` 注册进站点分组，前缀 / 域名 / 中间件 / 路由名前缀自动继承：
@@ -200,6 +210,23 @@ SiteRoutes::extend('sn-cms', CmsFrontendRoutes::SLOT_AUTH, function (Site $site)
 - 回调**每个站点执行一次**，拿到当前 `Site`；路由名最终是 `sn-cms.{siteKey}.aaa.my-posts`；
 - `SLOT_PUBLIC` 在 `pages/{slug}` 和搜索页之前执行，**不要注册 catch-all**，也不要复用内置路由名；
 - 槽位词表属于 cms（shop 等模块定义自己的槽位），support 只负责按 `module + slot` 存回调。
+
+### 分区内容组件
+
+公共文章组件接受两个 scope 参数，由页面组件显式传入：
+
+- `scope-suffix`：文章自身的数据分区（不传 = 站点 base）；
+- `related-scope-suffix`：`关联key => suffix`，如 `['categories' => 'aaa']`；未传的 key 回落站点 base。
+
+```blade
+<livewire:sn-cms::components.post.posts
+    scope-suffix="aaa"
+    :related-scope-suffix="['categories' => 'aaa']" />
+```
+
+内置页面（`Livewire\Post\Posts` / `Post`）不传，全部走 base。`related-scope-suffix` 与后台条目的 `related_scope_suffix` 是同一语义，但两端各自声明：前端没有「资源实例」可继承，分区页面由宿主自己负责。
+
+导航树（`components.navigation.navigation` / `components.footer`）用 `typeScopeable()` 决定数据空间：页头跟自身 `getScopeable()`，footer 固定 `::footer`。
 
 ### 定时调度
 

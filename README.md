@@ -81,21 +81,25 @@ The package configuration lives in `config/sn-cms.php`:
 
 ```php
 return [
-    'scopeable' => [
-        'scope_type' => 'sn-cms',
-        'scope_id' => 0,
-    ],
-
     'models' => [
         'navigation' => Wsmallnews\Cms\Models\Navigation::class,
         'navigation_type' => Wsmallnews\Cms\Models\NavigationType::class,
         'post' => Wsmallnews\Cms\Models\Post::class,
+        'link' => Wsmallnews\Cms\Models\Link::class,
     ],
 
     'routes' => [
-        'enabled' => true,
-        'prefix' => 'cms',
-        'name' => 'sn-cms.',
+        'route_key_name' => [
+            'post' => 'slug',
+        ],
+    ],
+
+    'options' => [
+        'auth' => [
+            'guard' => 'web',
+            'user_type' => 'member',
+        ],
+        // feed / search / comments / two_factor / navigation / themes / route_uris …
     ],
 ];
 ```
