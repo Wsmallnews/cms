@@ -28,7 +28,7 @@ final class RegisterCompositionPurposes
                     return [
                         'post' => $postModel::query()
                             ->published()
-                            ->snScope($scopeable['scope_type'], $scopeable['scope_id'])
+                            ->forScopeable($scopeable)
                             ->where((new $postModel)->getRouteKeyName(), $params['slug'] ?? null)
                             ->first(),
                     ];

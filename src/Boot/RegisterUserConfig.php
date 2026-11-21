@@ -22,9 +22,9 @@ final class RegisterUserConfig extends SiteService
     {
         $module = app(CmsPlugin::class)->getId();
 
-        UserConfigFacade::config($module, function () use ($module, $site): array {
+        UserConfigFacade::config($module, function () use ($site): array {
             return [
-                'guard' => $site->getOption('guard', 'web'),
+                'guard' => $site->getOption('auth.guard', 'web'),
                 'two_factor' => $site->getOption('two_factor', []),
                 'urls' => [
                     'index' => $site->route('index'),
@@ -34,13 +34,11 @@ final class RegisterUserConfig extends SiteService
                     'forgot-password' => $site->route('forgot.password'),
                     'reset-password' => fn ($params) => $site->route('reset.password', $params),
                     'verify-email' => $site->route('verify.email'),
-                    'verify-email-verification' => function ($parameters) use ($module, $site) {
+                    'verify-email-verification' => function ($parameters) use ($site) {
                         // 租户参数只在存在当前租户时补，避免单租户下塞入 null
                         if (($tenant = current_tenant()) && ! isset($parameters['tenant'])) {
                             $parameters['tenant'] = $tenant;
                         }
-
-                        $parameters['module'] = $module;
 
                         return URL::temporarySignedRoute(
                             $site->routeName('verify.email.verification'),

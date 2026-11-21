@@ -38,7 +38,6 @@ final class RegisterSiteSearch extends SiteService
                     'group' => __('sn-cms::cms.post_resource.model_label'),
                     // with('categories')：条目视图展示分类标签，预加载避免 N+1
                     'query' => fn ($query) => $query->published()->with('categories'),
-                    'scopeable' => fn (): array => Utils::getScopeable(),
                     'url' => fn ($record) => $site->route('posts.show', $record),
                     // 自定义条目视图（结构参考 cms/posts 页面的文章条目；数据：$result 含 ->record、$query、$highlight）
                     'view' => 'sn-cms::components.search.post-item',

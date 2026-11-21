@@ -7,6 +7,7 @@ use Wsmallnews\Cms\Settings\GeneralSettings;
 use Wsmallnews\Cms\Support\Utils;
 use Wsmallnews\Support\Facades\Feed;
 use Wsmallnews\Support\Features\Site\Site;
+use Wsmallnews\Support\Features\Site\SiteRegistry;
 use Wsmallnews\Support\Features\Site\SiteService;
 
 /**
@@ -55,11 +56,12 @@ final class RegisterSiteFeed extends SiteService
                 return filled($general->seo_description) ? $general->seo_description : $general->site_slogan;
             },
             'link' => fn () => $site->route('index'),
-            'items' => fn (): iterable => Utils::getPostModel()::snScope(...Utils::getScopeable())
+            'items' => fn (): iterable => Utils::getPostModel()::query()
                 ->published()
+                ->forScopeable(app(SiteRegistry::class)->scopeableFor($site))
                 ->orderByDesc('published_at')
                 ->orderByDesc('id')
-                ->limit((int) Feed::resolveConfig($module, 'limit', $site, 50))
+                ->limit((int) Feed::resolveConfig($site, 'limit', 50))
                 ->get(['id', 'slug', 'title', 'description', 'published_at'])
                 ->map(fn ($post): array => [
                     'title' => $post->title ?? '',

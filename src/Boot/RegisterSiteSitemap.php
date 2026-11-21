@@ -7,6 +7,7 @@ use Wsmallnews\Cms\Support\CmsFrontendRoutes;
 use Wsmallnews\Cms\Support\Utils;
 use Wsmallnews\Support\Facades\Sitemap;
 use Wsmallnews\Support\Features\Site\Site;
+use Wsmallnews\Support\Features\Site\SiteRegistry;
 use Wsmallnews\Support\Features\Site\SiteService;
 use Wsmallnews\Support\Support\Utils as SupportUtils;
 
@@ -48,7 +49,9 @@ final class RegisterSiteSitemap extends SiteService
             ],
             [
                 'key' => 'post',
-                'urls' => fn (): array => Utils::getPostModel()::snScope(...Utils::getScopeable())->published()
+                'urls' => fn (): array => Utils::getPostModel()::query()
+                    ->published()
+                    ->forScopeable(app(SiteRegistry::class)->scopeableFor($site))
                     ->get(['id', 'slug', 'updated_at'])
                     ->map(fn ($post): array => [
                         'loc' => $site->route('posts.show', $post),
@@ -60,7 +63,9 @@ final class RegisterSiteSitemap extends SiteService
             [
                 // 站点页面以 Page 实体为源（published 即进 sitemap，与是否挂导航无关）
                 'key' => 'pages',
-                'urls' => fn (): array => SupportUtils::getPageModel()::query()->snScope(...Utils::getScopeable())->published()
+                'urls' => fn (): array => SupportUtils::getPageModel()::query()
+                    ->published()
+                    ->forScopeable(app(SiteRegistry::class)->scopeableFor($site))
                     ->get(['id', 'slug', 'updated_at'])
                     ->map(fn ($page): array => [
                         'loc' => $site->route('pages.show', $page->slug),
