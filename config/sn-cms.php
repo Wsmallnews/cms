@@ -203,7 +203,7 @@ return [
                 /**
                  * 是否启用评论
                  */
-                'enable' => true,
+                'enabled' => true,
                 /**
                  * 是否启用添加评论
                  */

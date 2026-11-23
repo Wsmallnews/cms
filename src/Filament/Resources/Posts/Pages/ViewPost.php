@@ -39,7 +39,7 @@ class ViewPost extends ViewRecord
         return SiteContext::run($site, function () use ($site): array {
             $widgets = [];
 
-            if (SiteUtils::getCommentConfig('post', 'enable', false)) {
+            if (SiteUtils::getCommentConfig('post', 'enabled', false)) {
                 $widgets[] = CommentWidget::make([
                     'properties' => method_exists(static::getResource(), 'getProperties') ? static::getResource()::getProperties() : [],
                     'widgetType' => 'commentable',

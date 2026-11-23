@@ -66,7 +66,7 @@ class Navigation extends SupportModel implements HasMedia, HasSnSubject
             static::query()
                 ->where('options->is_home', true)
                 ->forScopeable(['scope_type' => $navigation->scope_type, 'scope_id' => $navigation->scope_id])
-                ->where('type_id', $navigation->type_id ?? 0)
+                ->where('type_id', $navigation->type_id)
                 ->when($navigation->exists, fn (Builder $query) => $query->whereKeyNot($navigation->getKey()))
                 ->get()
                 ->each(function (Navigation $oldHome) {
@@ -104,6 +104,9 @@ class Navigation extends SupportModel implements HasMedia, HasSnSubject
                 $url = null;
 
                 if ($this->type == NavigationTypeEnum::Route && isset($options['route'])) {
+                    // 存完整路由名，渲染期经 sn_route 全局解析：URL prefix 在路由 URI 里，
+                    // 换 prefix / domain 后链接跟随现行路由表，节点不烘焙任何派生数据；
+                    // query 参数并入（route() 把非路由参数追加为 query string），不参与激活判断
                     $params = [];       // 路由参数与 query 合并为一个数组，route 方法会自动区分路由参数，其他的参数 跟在地址栏后面
                     $hasRoutes = $options['_url_params']['has_routes'] ?? false;
                     $hasQueries = $options['_url_params']['has_queries'] ?? false;
@@ -111,7 +114,6 @@ class Navigation extends SupportModel implements HasMedia, HasSnSubject
                     $params = $hasRoutes ? array_merge($params, $options['_url_params']['routes'] ?? []) : [];
                     $params = $hasQueries ? array_merge($params, $options['_url_params']['queries'] ?? []) : $params;
 
-                    // 这里的 route 必须是完整 name
                     $url = sn_route($options['route'], $params);
                 }
 
@@ -179,10 +181,26 @@ class Navigation extends SupportModel implements HasMedia, HasSnSubject
                 if ($panel) {       // 在 panel 面板中时不校验活动状态
                     return false;
                 }
-                $urlInfo = $this->url_info;
-                $fullUrl = request()->fullUrl();
 
-                return $urlInfo['url'] == $fullUrl;
+                $url = $this->url_info['url'] ?? null;
+
+                if (blank($url) || $url === '#') {
+                    return false;
+                }
+
+                // Url 类型可能指向站外：外域不激活；站内类型（Route/Page/Child）的地址
+                // 是站点相对 path，host 不参与判断。query 一律不参与（带参访问仍激活）
+                if ($this->type == NavigationTypeEnum::Url) {
+                    $host = parse_url($url, PHP_URL_HOST);
+
+                    if ($host !== null && $host !== request()->getHost()) {
+                        return false;
+                    }
+                }
+
+                $path = '/' . trim((string) (parse_url($url, PHP_URL_PATH) ?: '/'), '/');
+
+                return $path === '/' . trim(request()->path(), '/');
             }
         );
     }

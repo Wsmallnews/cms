@@ -1,6 +1,6 @@
 @php
 
-    $hasComment = $this->commentOption('post', 'enable', false);
+    $hasComment = $this->commentOption('post', 'enabled', false);
     $canAddComment = $this->commentOption('post', 'can_add_comment', false);
     $contentType = $this->commentOption('post', 'content_type', false);
     $commentStatus = $this->commentOption('post', 'comment_status', false);

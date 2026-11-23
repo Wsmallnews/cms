@@ -42,7 +42,7 @@ trait HasCmsConfig
         return $this->siteOption('themes.page_container', 'sn-cms::container.page');
     }
 
-    /** Read one key of a module's comments section (e.g. comments.post.enable). */
+    /** Read one key of a module's comments section (e.g. comments.post.enabled). */
     public function commentOption(string $module, ?string $key = null, mixed $default = null): mixed
     {
         return $this->siteOption('comments.' . $module . ($key ? ".{$key}" : ''), $default);

@@ -8,8 +8,10 @@ use Wsmallnews\Support\Features\Site\Site;
 /**
  * Builds the route-name options for the navigation form.
  *
- * Only routes registered for the current site are exposed; the value stored in
- * navigation options is the full route name (e.g. sn-cms.admin.main.posts.show).
+ * Only routes registered for the current site are exposed; the stored value is
+ * the full route name and rendering resolves it through sn_route() at render
+ * time, so the site's URL prefix follows the live route table — nothing derived
+ * is baked into the node.
  */
 final class NavigationRouteOptions
 {
