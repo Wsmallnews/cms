@@ -18,14 +18,15 @@ class Post extends Base
         ];
 
         // purpose 侧栏（post-sidebar）：槽位注册的 context 提供者按路由参数解析当前文章，
-        // 路由壳不感知 Post 模型；未命中/空编排返回 null，视图回退全宽
-        $scopeable = $this->getScopeable();
+        // 路由壳不感知 Post 模型；未命中/空编排返回 null，视图回退全宽。
+        // 编排分区不传 = 站点 base（各分区详情页共用一份侧栏编排；分区页面要独立编排时显式传）；
+        // context 按页面自己的分区解析当前文章
         $sidebar = CompositionRenderer::resolveForPurpose(
             'post-sidebar',
             app(CmsPlugin::class)->getId(),
-            $scopeable['scope_type'],
-            $scopeable['scope_id'],
-            ['slug' => $this->slug],
+            params: ['slug' => $this->slug],
+            site: $this->site(),
+            pageScopeable: $this->getScopeable(),
         );
 
         return view($this->getThemeView('post.post'), [

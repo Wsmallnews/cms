@@ -21,8 +21,13 @@ final class RegisterCompositionPurposes
                 'positions' => ['left', 'right'],
                 'default' => 'right',
                 // pageContext 提供者：路由参数（slug）→ 当前文章，供 related-posts 等 context 消费者使用。
-                // 路由壳据此保持薄壳（不感知 Post 模型），provider 未命中（文章不存在）返回 null 由渲染链剔除
-                'context' => function (array $params, array $scopeable): array {
+                // 路由壳据此保持薄壳（不感知 Post 模型），provider 未命中（文章不存在）返回 null 由渲染链剔除。
+                // 收调用页面的 scopeable（渲染器已解析：页面分区 ?? 站点 base）；无解析来源时收 null，返回空上下文
+                'pageContext' => function (array $params, ?array $scopeable): array {
+                    if ($scopeable === null) {
+                        return ['post' => null];
+                    }
+
                     $postModel = Utils::getPostModel();
 
                     return [
