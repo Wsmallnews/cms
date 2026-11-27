@@ -45,10 +45,10 @@ final class RegisterComposition
     {
         // key = 模块标识插件 id，与站点 scope 无关——同一套类型服务所有站点，分区在渲染期按站点解析
         CompositionRegistryFacade::registers(app(CmsPlugin::class)->getId(), [
-            static::postsType('posts', __('sn-cms::cms.content_type.posts')),
-            static::indexPostsType('index-posts', __('sn-cms::cms.content_type.index_posts')),
-            static::postDetailType('post-detail', __('sn-cms::cms.content_type.post_detail')),
-            static::relatedPostsType('related-posts', __('sn-cms::cms.content_type.related_posts')),
+            self::postsType('posts', __('sn-cms::cms.content_type.posts')),
+            self::indexPostsType('index-posts', __('sn-cms::cms.content_type.index_posts')),
+            self::postDetailType('post-detail', __('sn-cms::cms.content_type.post_detail')),
+            self::relatedPostsType('related-posts', __('sn-cms::cms.content_type.related_posts')),
         ]);
     }
 
@@ -67,7 +67,7 @@ final class RegisterComposition
             'scopeSuffix' => $scopeSuffix,
             'relatedScopeSuffix' => $relatedScopeSuffix,
             // 字段平铺：外层 extras Fieldset 已统一单列（编排槽位有宽窄，编排表单不要再嵌自带列数的布局组件）
-            'forms' => fn (array $fields, ?Site $site, ?string $scopeSuffix, array $relatedScopeSuffix) => static::postsForm($fields, $site, $scopeSuffix, $relatedScopeSuffix),
+            'forms' => fn (array $fields, ?Site $site, ?string $scopeSuffix, array $relatedScopeSuffix) => self::postsForm($fields, $site, $scopeSuffix, $relatedScopeSuffix),
             'components' => [
                 // 链接由调用处给：公共组件不猜站点路由名
                 Posts::class => [
@@ -111,12 +111,12 @@ final class RegisterComposition
             'label' => $label,
             'scopeSuffix' => $scopeSuffix,
             'relatedScopeSuffix' => $relatedScopeSuffix,
-            'forms' => fn (array $fields, ?Site $site, ?string $scopeSuffix, array $relatedScopeSuffix) => static::postDetailForm($fields, $site, $scopeSuffix, $relatedScopeSuffix),
+            'forms' => fn (array $fields, ?Site $site, ?string $scopeSuffix, array $relatedScopeSuffix) => self::postDetailForm($fields, $site, $scopeSuffix, $relatedScopeSuffix),
             'components' => [
                 Post::class,
             ],
             // 只接受本类型分区内的文章：手工 POST / 导入的跨 scope id 不注入
-            'provides' => static::postDetailProvides(),
+            'provides' => self::postDetailProvides(),
         ];
     }
 
@@ -134,7 +134,7 @@ final class RegisterComposition
             'label' => $label,
             'scopeSuffix' => $scopeSuffix,
             'relatedScopeSuffix' => $relatedScopeSuffix,
-            'forms' => fn (array $fields, ?Site $site, ?string $scopeSuffix, array $relatedScopeSuffix) => static::relatedPostsForm($fields, $site, $scopeSuffix, $relatedScopeSuffix),
+            'forms' => fn (array $fields, ?Site $site, ?string $scopeSuffix, array $relatedScopeSuffix) => self::relatedPostsForm($fields, $site, $scopeSuffix, $relatedScopeSuffix),
             'consumes' => ['post'],
             'components' => [
                 RelatedPosts::class => [
@@ -167,7 +167,7 @@ final class RegisterComposition
                 ->grouped()
                 ->helperText(__('sn-cms::cms.post_form.category_style_helper')),
             SelectTree::make('categoryIds')->label(__('sn-cms::cms.post_form.categories'))
-                ->query(query: fn () => static::categoryTreeQuery($site, $relatedScopeSuffix), titleAttribute: 'name', parentAttribute: 'parent_id')
+                ->query(query: fn () => self::categoryTreeQuery($site, $relatedScopeSuffix), titleAttribute: 'name', parentAttribute: 'parent_id')
                 ->searchable()
                 ->multiple()
                 ->enableBranchNode()
@@ -237,7 +237,7 @@ final class RegisterComposition
     {
         return [
             SelectTree::make('categoryIds')->label(__('sn-cms::cms.post_form.categories'))
-                ->query(query: fn () => static::categoryTreeQuery($site, $relatedScopeSuffix), titleAttribute: 'name', parentAttribute: 'parent_id')
+                ->query(query: fn () => self::categoryTreeQuery($site, $relatedScopeSuffix), titleAttribute: 'name', parentAttribute: 'parent_id')
                 ->searchable()
                 ->multiple()
                 ->enableBranchNode()
