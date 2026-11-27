@@ -13,8 +13,9 @@ use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Wsmallnews\Cms\Enums\NavigationStatus as NavigationStatusEnum;
 use Wsmallnews\Cms\Enums\NavigationType as NavigationTypeEnum;
-use Wsmallnews\Cms\Support\SiteUtils;
 use Wsmallnews\Support\Contracts\HasSnSubject;
+use Wsmallnews\Support\Exceptions\InvalidSiteException;
+use Wsmallnews\Support\Features\Site\SiteContext;
 use Wsmallnews\Support\Models\Concerns\HasActivityLog;
 use Wsmallnews\Support\Models\SupportModel;
 use Wsmallnews\Support\Support\Utils as SupportUtils;
@@ -118,12 +119,16 @@ class Navigation extends SupportModel implements HasMedia, HasSnSubject
                 }
 
                 if ($this->type == NavigationTypeEnum::Page) {
-                    // 页面节点：首页标记指向模块首页（前缀 + /）；否则指向 Page 规范地址；
+                    // 链接按渲染所在站点解析：导航树被多个模块的站点共用，模块专属的路由助手会拒绝其他模块的站点
+                    $site = app(SiteContext::class)->site()
+                        ?? throw InvalidSiteException::noCurrentSite('route');
+
+                    // 页面节点：首页标记指向站点首页；否则指向 Page 规范地址；
                     // 未绑定 page_id（配置未完成）输出空链接
                     if ($options['is_home'] ?? false) {
-                        $url = SiteUtils::route('index');
+                        $url = $site->route('index');
                     } elseif ($this->page?->slug) {
-                        $url = SiteUtils::route('pages.show', $this->page->slug);
+                        $url = $site->route('pages.show', $this->page->slug);
                     } else {
                         $url = '#';
                     }
