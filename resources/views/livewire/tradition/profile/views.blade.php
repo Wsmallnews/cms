@@ -1,4 +1,6 @@
 @php
+    use Wsmallnews\Cms\Models\Post;
+
     $user = $this->getAuthUser();
 @endphp
 
@@ -17,11 +19,13 @@
                 <livewire:sn-user::components.user.sidebar-menu />
             </div>
             <div class="sn-container sn-split-main">
+                {{-- 浏览记录只列文章：主体类型用类名给出，组件自己解析别名 --}}
                 <livewire:sn-preference::components.views
                     :preferencer="$user"
+                    :subject-type="Post::class"
                     :manageable="true"
                     :contained="false"
-                    :href-route="$this->site()?->routeName('posts.show')" />
+                    :custom-routes="['detail' => 'posts.show']" />
             </div>
         </div>
     </div>

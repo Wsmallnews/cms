@@ -18,8 +18,7 @@ use Wsmallnews\Category\Support\Utils as CategoryUtils;
 use Wsmallnews\Cms\Enums\PostStatus;
 use Wsmallnews\Cms\Support\Utils;
 use Wsmallnews\Comment\Models\Concerns\Commentable;
-use Wsmallnews\Preference\Models\Concerns\Preferenceable;
-use Wsmallnews\Preference\Models\Concerns\Preferenceable\Viewable;
+use Wsmallnews\Preference\Models\Concerns\HasPreferences;
 use Wsmallnews\Support\Casts\CounterCast;
 use Wsmallnews\Support\Contracts\HasSnSubject;
 use Wsmallnews\Support\Models\Concerns\HasActivityLog;
@@ -32,11 +31,10 @@ class Post extends SupportModel implements HasMedia, HasSnSubject
     use Commentable;
     use HasActivityLog;
     use HasOrderColumn;
+    use HasPreferences;
     use HasTags;
     use InteractsWithMedia;
-    use Preferenceable;
     use SoftDeletes;
-    use Viewable;
 
     protected $table = 'sn_posts';
 

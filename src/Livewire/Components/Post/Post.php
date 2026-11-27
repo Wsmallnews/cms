@@ -43,7 +43,7 @@ class Post extends Base
             : $query->where($model->getRouteKeyName(), $this->slug)->firstOrFail();
 
         // 增加浏览量
-        $post->view($this->getAuthUser());
+        $post->markViewed($this->getAuthUser());
 
         // 文章页 SEO：标题/描述/封面用文章自身数据，article() 自动组装结构化数据（author = 发布者）并切 og:type
         // 编排嵌入（embedded）时让渡给宿主页面的 SEO，避免块内容覆盖页面标题
