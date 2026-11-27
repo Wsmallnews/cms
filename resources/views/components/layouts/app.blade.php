@@ -30,9 +30,9 @@
             }
         </style>
 
-        {{-- 主题偏好按站点隔离：同域名的多个站点共用一个 localStorage --}}
+        {{-- 主题偏好按站点和租户隔离：同域名的多个站点 / 租户共用一个 localStorage --}}
         <script>
-            window.__snThemeKey = @js('sn-support-frontend-theme:' . (app(\Wsmallnews\Support\Features\Site\SiteContext::class)->site()?->id() ?? 'default'))
+            window.__snThemeKey = @js(sn_theme_key())
         </script>
 
         @filamentStyles
