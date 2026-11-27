@@ -22,6 +22,9 @@ class GeneralSetting extends SettingsPage
 
     protected static ?string $configurationClass = PageConfiguration::class;
 
+    // Stated here, not left to the class name: another module's settings page would otherwise default to the same slug
+    protected static ?string $slug = 'general-setting';
+
     protected static string $settings = GeneralSettings::class;
 
     protected static string | BackedEnum | null $navigationIcon = Heroicon::OutlinedCog6Tooth;
